@@ -48,6 +48,10 @@ public final class MtContextCallable<V> implements Callable<V> {
      * @return Wrapped {@link Callable}
      */
     public static <T> MtContextCallable<T> get(Callable<T> callable) {
+        if (null == callable) {
+            throw new NullPointerException("input argument is null!");
+        }
+
         if (callable instanceof MtContextCallable) {
             return (MtContextCallable<T>) callable;
         }

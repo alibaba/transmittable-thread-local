@@ -48,6 +48,10 @@ public final class MtContextRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      */
     public static MtContextRunnable get(Runnable runnable) {
+        if (null == runnable) {
+            throw new NullPointerException("input argument is null!");
+        }
+
         if (runnable instanceof MtContextRunnable) {
             return (MtContextRunnable) runnable;
         }
