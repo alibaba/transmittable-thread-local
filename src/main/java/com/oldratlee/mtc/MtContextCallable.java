@@ -1,5 +1,8 @@
 package com.oldratlee.mtc;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -60,5 +63,19 @@ public final class MtContextCallable<V> implements Callable<V> {
             return (MtContextCallable<T>) callable;
         }
         return new MtContextCallable<T>(callable);
+    }
+
+    /**
+     * wrapper input {@link Callable} Collection to {@link MtContextCallable} Collection.
+     */
+    public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks) {
+        if (null == tasks) {
+            return null;
+        }
+        List<MtContextCallable<T>> copy = new ArrayList<MtContextCallable<T>>();
+        for (Callable<T> task : tasks) {
+            copy.add(MtContextCallable.get(task));
+        }
+        return copy;
     }
 }

@@ -3,7 +3,6 @@ package com.oldratlee.mtc.threadpool;
 import com.oldratlee.mtc.MtContextCallable;
 import com.oldratlee.mtc.MtContextRunnable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -64,34 +63,23 @@ public class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements Exe
         return executorService.submit(MtContextRunnable.get(task));
     }
 
-    private <T> List<Callable<T>> copy(Collection<? extends Callable<T>> tasks) {
-        if (null == tasks) {
-            return null;
-        }
-        List<Callable<T>> copy = new ArrayList<Callable<T>>();
-        for (Callable<T> task : tasks) {
-            copy.add(MtContextCallable.get(task));
-        }
-        return copy;
-    }
-
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
-        return executorService.invokeAll(copy(tasks));
+        return executorService.invokeAll(MtContextCallable.gets(tasks));
     }
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
-        return invokeAll(copy(tasks), timeout, unit);
+        return invokeAll(MtContextCallable.gets(tasks), timeout, unit);
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-        return invokeAny(copy(tasks));
+        return invokeAny(MtContextCallable.gets(tasks));
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return invokeAny(copy(tasks), timeout, unit);
+        return invokeAny(MtContextCallable.gets(tasks), timeout, unit);
     }
 }
