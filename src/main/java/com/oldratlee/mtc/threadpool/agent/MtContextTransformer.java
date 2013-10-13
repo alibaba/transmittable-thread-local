@@ -1,5 +1,7 @@
 package com.oldratlee.mtc.threadpool.agent;
 
+import com.oldratlee.mtc.MtContextCallable;
+import com.oldratlee.mtc.MtContextRunnable;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -25,8 +27,8 @@ public class MtContextTransformer implements ClassFileTransformer {
     private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
 
-    private static final String MTCONTEXT_RUNNABLE_CLASS_NAME = "com.oldratlee.mtc.MtContextRunnable";
-    private static final String MTCONTEXT_CALLABLE_CLASS_NAME = "com.oldratlee.mtc.MtContextCallable";
+    private static final String MTCONTEXT_RUNNABLE_CLASS_NAME = MtContextRunnable.class.getName();
+    private static final String MTCONTEXT_CALLABLE_CLASS_NAME = MtContextCallable.class.getName();
 
     private static final String THREAD_POOL_CLASS_FILE = "java.util.concurrent.ThreadPoolExecutor".replace('.', '/');
     private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
@@ -83,10 +85,12 @@ public class MtContextTransformer implements ClassFileTransformer {
         for (int i = 0; i < parameterTypes.length; i++) {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d);\n", i, MTCONTEXT_RUNNABLE_CLASS_NAME, i);
+                String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_RUNNABLE_CLASS_NAME, i + 1);
+                logger.debug("insert code before method {}: ", method.toString() ,code);
                 insertCode.append(code);
             } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d);\n", i, MTCONTEXT_CALLABLE_CLASS_NAME, i);
+                String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_CALLABLE_CLASS_NAME, i + 1);
+                logger.debug("insert code before method {}: ", method.toString() ,code);
                 insertCode.append(code);
             }
         }
