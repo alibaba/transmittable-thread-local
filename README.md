@@ -55,7 +55,7 @@ executorService.submit(mtContextCallable);
 String value = MtContext.get("key");
 ```
 
-### 3. 使用修饰过的线程池，简化`Runnable`和`Callable`的修饰操作
+### 3. 修饰线程池，简化`Runnable`和`Callable`的修饰操作
 
 ```java
 
@@ -74,11 +74,14 @@ String value = MtContext.get("key");
 
 ### 使用JDK Agent完成线程池修饰操作
 
+代码透明完成`MtContext`传递。
+\# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，使用这2个线程池的实现时，
+
 在Java的启动参数加上`-javaagent:path/to/multithread-context-x.y.z.jar`，示例如下：
 
 ```bash
 java -javaagent:multithread-context-0.9.0-SNAPSHOT.jar \
-    -cp dependency/javassist-3.18.1-GA.jar:dependency/log4j-1.2.17.jar:dependency/slf4j-api-1.5.6.jar:dependency/slf4j-log4j12-1.5.6.jar:multithread-context-0.9.0-SNAPSHOT.jar
+    -cp dependency/javassist-3.18.1-GA.jar:dependency/log4j-1.2.17.jar:dependency/slf4j-api-1.5.6.jar:dependency/slf4j-log4j12-1.5.6.jar:multithread-context-0.9.0-SNAPSHOT.jar \
     com.oldratlee.mtc.threadpool.agent.AgentDemo
 ```
 
