@@ -5,16 +5,16 @@ import java.util.concurrent.Callable;
 /**
  * @author ding.lid
  */
-class Call implements Callable<String> {
-    final String value;
+public class Call implements Callable<String> {
+    public final String value;
 
-    Call(String value) {
+    public Call(String value) {
         this.value = value;
     }
 
-    MtContext context;
+    public MtContext context;
 
-    MtContext copiedContext;
+    public MtContext copiedContext;
 
     @Override
     public String call() {

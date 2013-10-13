@@ -3,16 +3,16 @@ package com.oldratlee.mtc;
 /**
  * @author ding.lid
  */
-class Task implements Runnable {
-    final String value;
+public class Task implements Runnable {
+    public final String value;
 
-    Task(String value) {
+    public Task(String value) {
         this.value = value;
     }
 
-    MtContext context;
+    public MtContext context;
 
-    MtContext copiedContext;
+    public MtContext copiedContext;
 
     @Override
     public void run() {

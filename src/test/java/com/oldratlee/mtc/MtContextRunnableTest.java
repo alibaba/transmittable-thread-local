@@ -29,7 +29,7 @@ public class MtContextRunnableTest {
         Task task = new Task("1");
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
         assertEquals(task, mtContextRunnable.getRunnable());
-        executorService.submit(mtContextRunnable);
+        executorService.execute(mtContextRunnable);
 
         Thread.sleep(100);
 
