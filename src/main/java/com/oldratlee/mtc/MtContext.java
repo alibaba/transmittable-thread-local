@@ -16,7 +16,7 @@ public final class MtContext implements Serializable {
     private Map<String, Object> content = new HashMap<String, Object>();
 
     /**
-     * Get whole context content.
+     * Get the whole context content.
      */
     public Map<String, Object> get() {
         return content;
@@ -25,8 +25,9 @@ public final class MtContext implements Serializable {
     /**
      * Get the value of key in context.
      */
-    public Object get(String key) {
-        return content.get(key);
+    @SuppressWarnings("unchecked")
+    public <V> V get(String key) {
+        return (V) content.get(key);
     }
 
     /**
