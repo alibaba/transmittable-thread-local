@@ -81,3 +81,9 @@ java -javaagent:multithread-context-0.9.0-SNAPSHOT.jar \
     -cp dependency/javassist-3.18.1-GA.jar:dependency/log4j-1.2.17.jar:dependency/slf4j-api-1.5.6.jar:dependency/slf4j-log4j12-1.5.6.jar:multithread-context-0.9.0-SNAPSHOT.jar
     com.oldratlee.mtc.threadpool.agent.AgentDemo
 ```
+
+FAQ
+=====================================
+
+* Mac OS X下，使用javaagent，报JavaLaunchHelper的出错信息  
+JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
