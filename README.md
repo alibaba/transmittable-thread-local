@@ -56,7 +56,7 @@ String value = MtContext.get("key");
 
 ```java
 
-MtContextExecutors.getMtcExecutorService(executorService); // 额外的处理，生成修饰了的对象executorService
+executorService = MtContextExecutors.getMtcExecutorService(executorService); // 额外的处理，生成修饰了的对象executorService
 
 MtContext.set("key", "value-set-in-parent");
 
