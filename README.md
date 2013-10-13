@@ -72,10 +72,10 @@ executorService.submit(call);
 String value = MtContext.get("key");
 ```
 
-### 使用JDK Agent完成线程池修饰操作
+### 4. 使用JDK Agent来完成线程池的修饰操作
 
-代码透明完成`MtContext`传递。
-\# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，使用这2个线程池的实现时，
+这种方式，线程池的`MtContext`传递，代码是透明的。  
+\# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`两个实现类。
 
 在Java的启动参数加上`-javaagent:path/to/multithread-context-x.y.z.jar`，示例如下：
 
