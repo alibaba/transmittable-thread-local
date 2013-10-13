@@ -34,8 +34,7 @@ public final class MtContextCallable<V> implements Callable<V> {
         final Map<String, Object> old = mtContext.get();
         try {
             mtContext.set(context);
-            V ret = callable.call();
-            return ret;
+            return callable.call();
         } finally {
             mtContext.set(old); // restore MtContext
         }
@@ -47,6 +46,8 @@ public final class MtContextCallable<V> implements Callable<V> {
 
     /**
      * Factory method, wrapper input {@link Callable} to {@link MtContextCallable}.
+     * <p/>
+     * This method is idempotent.
      *
      * @param callable input {@link Callable}
      * @return Wrapped {@link Callable}
@@ -56,7 +57,7 @@ public final class MtContextCallable<V> implements Callable<V> {
             throw new NullPointerException("input argument is null!");
         }
 
-        if (callable instanceof MtContextCallable) {
+        if (callable instanceof MtContextCallable) { // avoid redundant decoration, and ensure idempotency
             return (MtContextCallable<T>) callable;
         }
         return new MtContextCallable<T>(callable);

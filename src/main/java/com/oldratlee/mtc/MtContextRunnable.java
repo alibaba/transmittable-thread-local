@@ -47,6 +47,8 @@ public final class MtContextRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link MtContextRunnable}.
+     * <p/>
+     * This method is idempotent.
      *
      * @param runnable input {@link Runnable}
      * @return Wrapped {@link Runnable}
@@ -56,7 +58,7 @@ public final class MtContextRunnable implements Runnable {
             throw new NullPointerException("input argument is null!");
         }
 
-        if (runnable instanceof MtContextRunnable) {
+        if (runnable instanceof MtContextRunnable) { // avoid redundant decoration, and ensure idempotency
             return (MtContextRunnable) runnable;
         }
         return new MtContextRunnable(runnable);
