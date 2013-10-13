@@ -1,5 +1,8 @@
 package com.oldratlee.mtc;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,5 +64,19 @@ public final class MtContextRunnable implements Runnable {
             return (MtContextRunnable) runnable;
         }
         return new MtContextRunnable(runnable);
+    }
+
+    /**
+     * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
+     */
+    public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks) {
+        if (null == tasks) {
+            return null;
+        }
+        List<MtContextRunnable> copy = new ArrayList<MtContextRunnable>();
+        for (Runnable task : tasks) {
+            copy.add(MtContextRunnable.get(task));
+        }
+        return copy;
     }
 }
