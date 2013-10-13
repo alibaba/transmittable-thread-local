@@ -18,9 +18,6 @@ multi-thread context(MTC)
 
 ### 1. 简单使用MtContext
 
-代码示例
-----------------------------
-
 ```java
 // 在父线程中设置
 MtContext.set("key", "value-set-in-parent");
@@ -48,7 +45,7 @@ String value = MtContext.get("key");
 MtContext.set("key", "value-set-in-parent");
 
 Callable call = new Call("1");
-Callable mtContextCallable = MtContextCallable.get(call); // 额外的处理，生成修饰了的对象mtContextRunnable
+Callable mtContextCallable = MtContextCallable.get(call); // 额外的处理，生成修饰了的对象mtContextCallable
 executorService.submit(mtContextCallable);
 
 // Call中可以读取, 值是"value-set-in-parent"
