@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+
+Premain-Class: com.oldratlee.mtc.threadpool.agent.MtContextAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+Can-Set-Native-Method-Prefix: false
