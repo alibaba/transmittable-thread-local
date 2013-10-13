@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  * to the execution time of {@link Runnable} or {@link Callable}.
  *
  * @author ding.lid
+ * @since 0.9.0
  */
 class ScheduledExecutorServiceMtcWrapper extends ExecutorServiceMtcWrapper implements ScheduledExecutorService {
     final ScheduledExecutorService scheduledExecutorService;

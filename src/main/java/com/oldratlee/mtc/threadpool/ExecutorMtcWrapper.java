@@ -10,6 +10,7 @@ import java.util.concurrent.Executor;
  * to the execution time of {@link Runnable}.
  *
  * @author ding.lid
+ * @since 0.9.0
  */
 class ExecutorMtcWrapper implements Executor {
     final Executor executor;
