@@ -4,11 +4,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * {@link MtContextCallable} uses to get @{@link MtContext}
- * and transmit it to the time of {@link Callable} execution,
- * so as to use {@link Callable} to thread pool.
+ * {@link MtContextCallable} decorate {@link Callable}, so as to get @{@link MtContext}
+ * and transmit it to the time of {@link Callable} execution, needed when use {@link Callable} to thread pool.
  * <p/>
- * Use factory method {@link #get(Callable)} to create instance.
+ * Use factory method {@link #get(Callable)} to get decorated instance.
  *
  * @author ding.lid
  * @see java.util.concurrent.CompletionService

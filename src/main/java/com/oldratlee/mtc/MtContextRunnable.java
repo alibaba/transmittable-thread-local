@@ -3,9 +3,8 @@ package com.oldratlee.mtc;
 import java.util.Map;
 
 /**
- * {@link MtContextRunnable} uses to get @{@link MtContext}
- * and transmit it to the time of {@link Runnable} execution,
- * so as to use {@link Runnable} to thread pool.
+ * {@link MtContextRunnable} decorate {@link Runnable}, so as to get @{@link MtContext}
+ * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p/>
  * Use factory method {@link #get(Runnable)} to create instance.
  *
