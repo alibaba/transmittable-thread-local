@@ -54,7 +54,7 @@ public final class MtContextRunnable implements Runnable {
      */
     public static MtContextRunnable get(Runnable runnable) {
         if (null == runnable) {
-            throw new NullPointerException("input argument is null!");
+            throw new NullPointerException("runnable argument is null!");
         }
 
         if (runnable instanceof MtContextRunnable) { // avoid redundant decoration, and ensure idempotency
