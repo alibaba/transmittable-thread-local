@@ -32,9 +32,12 @@ public final class MtContextRunnable implements Runnable {
     public void run() {
         MtContext mtContext = MtContext.getContext();
         final Map<String, Object> old = mtContext.get();
-        mtContext.set(context);
-        runnable.run();
-        mtContext.set(old); // restore MtContext
+        try {
+            mtContext.set(context);
+            runnable.run();
+        } finally {
+            mtContext.set(old); // restore MtContext
+        }
     }
 
     public Runnable getRunnable() {

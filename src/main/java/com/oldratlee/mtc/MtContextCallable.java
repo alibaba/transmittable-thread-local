@@ -31,10 +31,13 @@ public final class MtContextCallable<V> implements Callable<V> {
     public V call() throws Exception {
         MtContext mtContext = MtContext.getContext();
         final Map<String, Object> old = mtContext.get();
-        mtContext.set(context);
-        V ret = callable.call();
-        mtContext.set(old); // restore MtContext
-        return ret;
+        try {
+            mtContext.set(context);
+            V ret = callable.call();
+            return ret;
+        } finally {
+            mtContext.set(old); // restore MtContext
+        }
     }
 
     public Callable<V> getCallable() {
