@@ -14,14 +14,23 @@ public final class MtContext implements Serializable {
 
     private Map<String, Object> content = new HashMap<String, Object>();
 
+    /**
+     * Get whole context content.
+     */
     public Map<String, Object> get() {
         return content;
     }
 
+    /**
+     * Get the value of key in context.
+     */
     public Object get(String key) {
         return content.get(key);
     }
 
+    /**
+     * reset context content.
+     */
     public void set(Map<String, Object> context) {
         if (null == context) {
             throw new NullPointerException("context argument is null!");
@@ -29,6 +38,9 @@ public final class MtContext implements Serializable {
         this.content = new HashMap<String, Object>(context); // shallow copied map!!
     }
 
+    /**
+     * set the value of key.
+     */
     public void set(String key, Object value) {
         content.put(key, value);
     }
@@ -47,6 +59,9 @@ public final class MtContext implements Serializable {
         }
     };
 
+    /**
+     * Get the context of current thread.
+     */
     public static MtContext getContext() {
         return contextHolder.get();
     }
