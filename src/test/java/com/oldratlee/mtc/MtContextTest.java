@@ -11,23 +11,6 @@ import static org.junit.Assert.assertNull;
  */
 public class MtContextTest {
 
-    static class Task implements Runnable {
-        final String value;
-
-        Task(String value) {
-            this.value = value;
-        }
-
-        MtContext context;
-
-        @Override
-        public void run() {
-            context = MtContext.getContext();
-            context.set("key", value);
-            context.set("p", context.get("p") + value);
-        }
-    }
-
     @Test
     public void test_thread_independent() throws Exception {
         MtContext.getContext().set("parent", "parent");

@@ -17,6 +17,13 @@ public final class MtContext implements Serializable {
 
     private Map<String, Object> content = new HashMap<String, Object>();
 
+    MtContext() {
+    }
+
+    MtContext(MtContext context) {
+        this.content.putAll(context.content); // shallow copied map!!
+    }
+
     /**
      * Get the whole context content.
      */
@@ -39,7 +46,8 @@ public final class MtContext implements Serializable {
         if (null == context) {
             throw new NullPointerException("context argument is null!");
         }
-        this.content = new HashMap<String, Object>(context); // shallow copied map!!
+        this.content.clear();
+        this.content.putAll(context); // shallow copied map!!
     }
 
     /**
@@ -57,9 +65,7 @@ public final class MtContext implements Serializable {
 
         @Override
         protected MtContext childValue(MtContext parentValue) {
-            MtContext ret = new MtContext();
-            ret.content = new HashMap<String, Object>(parentValue.content); // shallow copied map!!
-            return ret;
+            return new MtContext(parentValue);
         }
     };
 
