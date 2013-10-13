@@ -6,6 +6,8 @@ import java.util.Map;
 
 /**
  * {@link MtContext} maintains the multi-thread context.
+ * <p/>
+ * Use method {@link #get()} to get {@link MtContext} instance.
  *
  * @author ding.lid
  * @since 0.9.0
