@@ -14,8 +14,8 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * {@link com.oldratlee.mtc.MtContext} Wrapper of {@link java.util.concurrent.ExecutorService},
- * transmit the {@link com.oldratlee.mtc.MtContext} of the time submit task
- * to the time of execution of {@link Runnable} or {@link Callable}.
+ * transmit the {@link com.oldratlee.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
+ * to the execution time of {@link Runnable} or {@link Callable}.
  *
  * @author ding.lid
  */

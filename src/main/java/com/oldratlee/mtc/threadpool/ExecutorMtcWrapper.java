@@ -6,8 +6,8 @@ import java.util.concurrent.Executor;
 
 /**
  * {@link com.oldratlee.mtc.MtContext} Wrapper of {@link Executor},
- * transmit the {@link com.oldratlee.mtc.MtContext} of the time submit task
- * to the time of execution of {@link Runnable}.
+ * transmit the {@link com.oldratlee.mtc.MtContext} from the task submit time of {@link Runnable}
+ * to the execution time of {@link Runnable}.
  *
  * @author ding.lid
  */
