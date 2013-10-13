@@ -5,6 +5,10 @@ import com.oldratlee.mtc.MtContextRunnable;
 import java.util.concurrent.Executor;
 
 /**
+ * {@link com.oldratlee.mtc.MtContext} Wrapper of {@link Executor},
+ * transmit the {@link com.oldratlee.mtc.MtContext} of the time submit task
+ * to the time of execution of {@link Runnable}.
+ *
  * @author ding.lid
  */
 public class ExecutorMtcWrapper implements Executor {

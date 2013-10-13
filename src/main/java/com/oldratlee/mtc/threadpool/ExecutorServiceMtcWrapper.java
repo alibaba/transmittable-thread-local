@@ -13,6 +13,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * {@link com.oldratlee.mtc.MtContext} Wrapper of {@link java.util.concurrent.ExecutorService},
+ * transmit the {@link com.oldratlee.mtc.MtContext} of the time submit task
+ * to the time of execution of {@link Runnable} or {@link Callable}.
+ *
  * @author ding.lid
  */
 public class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements ExecutorService {
