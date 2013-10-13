@@ -25,21 +25,21 @@ public class ScheduledExecutorServiceMtcWrapper extends ExecutorServiceMtcWrappe
 
     @Override
     public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
-        return schedule(MtContextRunnable.get(command), delay, unit);
+        return scheduledExecutorService.schedule(MtContextRunnable.get(command), delay, unit);
     }
 
     @Override
     public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
-        return schedule(MtContextCallable.get(callable), delay, unit);
+        return scheduledExecutorService.schedule(MtContextCallable.get(callable), delay, unit);
     }
 
     @Override
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-        return scheduleAtFixedRate(MtContextRunnable.get(command), initialDelay, period, unit);
+        return scheduledExecutorService.scheduleAtFixedRate(MtContextRunnable.get(command), initialDelay, period, unit);
     }
 
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        return scheduleWithFixedDelay(MtContextRunnable.get(command), initialDelay, delay, unit);
+        return scheduledExecutorService.scheduleWithFixedDelay(MtContextRunnable.get(command), initialDelay, delay, unit);
     }
 }

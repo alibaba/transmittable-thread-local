@@ -74,16 +74,16 @@ public class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements Exe
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
-        return invokeAll(MtContextCallable.gets(tasks), timeout, unit);
+        return executorService.invokeAll(MtContextCallable.gets(tasks), timeout, unit);
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-        return invokeAny(MtContextCallable.gets(tasks));
+        return executorService.invokeAny(MtContextCallable.gets(tasks));
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return invokeAny(MtContextCallable.gets(tasks), timeout, unit);
+        return executorService.invokeAny(MtContextCallable.gets(tasks), timeout, unit);
     }
 }
