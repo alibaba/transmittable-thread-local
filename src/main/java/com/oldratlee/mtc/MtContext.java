@@ -5,30 +5,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * {@link MtContext} maintains the multi-thread context.
+ *
  * @author ding.lid
  */
 public final class MtContext implements Serializable {
     private static final long serialVersionUID = -6658225204997224329L;
 
-    private Map<String, Object> context = new HashMap<String, Object>();
+    private Map<String, Object> content = new HashMap<String, Object>();
 
     public Map<String, Object> get() {
-        return context;
+        return content;
     }
 
     public Object get(String key) {
-        return context.get(key);
+        return content.get(key);
     }
 
     public void set(Map<String, Object> context) {
         if (null == context) {
             throw new NullPointerException("context argument is null!");
         }
-        this.context = new HashMap<String, Object>(context); // shallow copied map!!
+        this.content = new HashMap<String, Object>(context); // shallow copied map!!
     }
 
     public void set(String key, Object value) {
-        context.put(key, value);
+        content.put(key, value);
     }
 
     private static InheritableThreadLocal<MtContext> contextHolder = new InheritableThreadLocal<MtContext>() {
@@ -40,7 +42,7 @@ public final class MtContext implements Serializable {
         @Override
         protected MtContext childValue(MtContext parentValue) {
             MtContext ret = new MtContext();
-            ret.context = new HashMap<String, Object>(parentValue.context); // shallow copied map!!
+            ret.content = new HashMap<String, Object>(parentValue.content); // shallow copied map!!
             return ret;
         }
     };
