@@ -72,10 +72,10 @@ public class MtContextTransformer implements ClassFileTransformer {
     }
 
     static void updateMethod(CtMethod method) throws NotFoundException, CannotCompileException {
-        int modifiers = method.getModifiers();
         if (!updateMethodNames.contains(method.getName())) {
             return;
         }
+        int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) {
             return;
         }
