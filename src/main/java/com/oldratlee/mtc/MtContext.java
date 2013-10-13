@@ -8,6 +8,7 @@ import java.util.Map;
  * {@link MtContext} maintains the multi-thread context.
  *
  * @author ding.lid
+ * @since 0.9.0
  */
 public final class MtContext implements Serializable {
     private static final long serialVersionUID = -6658225204997224329L;
