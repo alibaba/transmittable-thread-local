@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author ding.lid
  */
-public class ScheduledExecutorServiceMtcWrapper extends ExecutorServiceMtcWrapper implements ScheduledExecutorService {
+class ScheduledExecutorServiceMtcWrapper extends ExecutorServiceMtcWrapper implements ScheduledExecutorService {
     final ScheduledExecutorService scheduledExecutorService;
 
     public ScheduledExecutorServiceMtcWrapper(ScheduledExecutorService scheduledExecutorService) {

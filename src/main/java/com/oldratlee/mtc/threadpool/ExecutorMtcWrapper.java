@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
  *
  * @author ding.lid
  */
-public class ExecutorMtcWrapper implements Executor {
+class ExecutorMtcWrapper implements Executor {
     final Executor executor;
 
     public ExecutorMtcWrapper(Executor executor) {

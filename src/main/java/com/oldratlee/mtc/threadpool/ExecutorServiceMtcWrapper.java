@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException;
  *
  * @author ding.lid
  */
-public class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements ExecutorService {
+class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements ExecutorService {
     final ExecutorService executorService;
 
     public ExecutorServiceMtcWrapper(ExecutorService executorService) {
