@@ -1,6 +1,7 @@
 package com.alibaba.mtc;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,11 @@ import static org.junit.Assert.assertSame;
  */
 public class MtContextCallableTest {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        Thread.sleep(1000);
+    }
 
     @AfterClass
     public static void afterClass() throws Exception {

@@ -4,6 +4,7 @@ import com.alibaba.mtc.Call;
 import com.alibaba.mtc.MtContext;
 import com.alibaba.mtc.Task;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -17,6 +18,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExecutorServiceMtcWrapperTest {
     static ExecutorService executorService = new ExecutorServiceMtcWrapper(Executors.newFixedThreadPool(3));
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        Thread.sleep(1000);
+    }
 
     @AfterClass
     public static void afterClass() throws Exception {
