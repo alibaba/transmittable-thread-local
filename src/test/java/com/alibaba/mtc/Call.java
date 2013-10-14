@@ -1,5 +1,7 @@
 package com.alibaba.mtc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -12,18 +14,23 @@ public class Call implements Callable<String> {
         this.value = value;
     }
 
-    public MtContext context;
+    public volatile MtContext context;
 
-    public MtContext copiedContext;
+    public volatile Map<String, Object> copiedContent;
 
     @Override
     public String call() {
-        context = MtContext.getContext();
-        context.set("key", value);
-        context.set("p", context.get("p") + value);
+        try {
+            context = MtContext.getContext();
+            context.set("key", value);
+            context.set("p", context.get("p") + value);
 
-        copiedContext = new MtContext(context);
+            copiedContent = new HashMap<String, Object>(context.get());
 
-        return "ok";
+            return "ok";
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

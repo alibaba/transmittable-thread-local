@@ -1,5 +1,8 @@
 package com.alibaba.mtc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author ding.lid
  */
@@ -10,16 +13,24 @@ public class Task implements Runnable {
         this.value = value;
     }
 
-    public MtContext context;
+    public volatile MtContext context;
 
-    public MtContext copiedContext;
+    public volatile Map<String, Object> copiedContent;
 
     @Override
     public void run() {
-        context = MtContext.getContext();
-        context.set("key", value);
-        context.set("p", context.get("p") + value);
+        try {
+            context = MtContext.getContext();
+            System.out.println("Task " + value + " running1: " + context.get());
 
-        copiedContext = new MtContext(context);
+            context.set("key", value);
+            context.set("p", context.get("p") + value);
+            System.out.println("Task " + value + " running2: " + context.get());
+
+            copiedContent = new HashMap<String, Object>(context.get());
+            System.out.println("Task " + value + " running3: " + copiedContent);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }

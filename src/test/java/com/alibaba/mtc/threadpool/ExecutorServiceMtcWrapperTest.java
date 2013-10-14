@@ -40,9 +40,9 @@ public class ExecutorServiceMtcWrapperTest {
         Thread.sleep(100);
 
         // Child independent & Inheritable
-        assertEquals("1", task.copiedContext.get("key"));
-        assertEquals("p01", task.copiedContext.get("p"));
-        assertEquals("parent", task.copiedContext.get("parent"));
+        assertEquals("1", task.copiedContent.get("key"));
+        assertEquals("p01", task.copiedContent.get("p"));
+        assertEquals("parent", task.copiedContent.get("parent"));
 
         // restored
         assertEquals(0, task.context.get().size());
@@ -65,9 +65,9 @@ public class ExecutorServiceMtcWrapperTest {
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
-        assertEquals("1", call.copiedContext.get("key"));
-        assertEquals("p01", call.copiedContext.get("p"));
-        assertEquals("parent", call.copiedContext.get("parent"));
+        assertEquals("1", call.copiedContent.get("key"));
+        assertEquals("p01", call.copiedContent.get("p"));
+        assertEquals("parent", call.copiedContent.get("parent"));
 
         // restored
         assertEquals(0, call.context.get().size());

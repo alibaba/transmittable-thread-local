@@ -42,9 +42,9 @@ public class MtContextCallableTest {
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
-        assertEquals("1", call.copiedContext.get("key"));
-        assertEquals("p01", call.copiedContext.get("p"));
-        assertEquals("parent", call.copiedContext.get("parent"));
+        assertEquals("1", call.copiedContent.get("key"));
+        assertEquals("p01", call.copiedContent.get("p"));
+        assertEquals("parent", call.copiedContent.get("parent"));
 
         // restored
         assertEquals(0, call.context.get().size());

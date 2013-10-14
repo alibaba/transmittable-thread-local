@@ -55,7 +55,7 @@ public class AgentDemo {
         executorService.shutdown();
         executorService.awaitTermination(3, TimeUnit.MINUTES);
 
-        if ("value7".equals(task.copiedContext.get("key7")))
+        if ("value7".equals(task.copiedContent.get("key7")))
             System.out.println("OK");
         else {
             System.err.println("!!!!Fail!!!!");

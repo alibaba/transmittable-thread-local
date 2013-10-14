@@ -41,9 +41,9 @@ public class MtContextRunnableTest {
         Thread.sleep(100);
 
         // Child independent & Inheritable
-        assertEquals("1", task.copiedContext.get("key"));
-        assertEquals("p01", task.copiedContext.get("p"));
-        assertEquals("parent", task.copiedContext.get("parent"));
+        assertEquals("1", task.copiedContent.get("key"));
+        assertEquals("p01", task.copiedContent.get("p"));
+        assertEquals("parent", task.copiedContent.get("parent"));
 
         // restored
         assertEquals(0, task.context.get().size());
