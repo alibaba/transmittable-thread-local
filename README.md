@@ -69,12 +69,14 @@ executorService.submit(call);
 String value = MtContext.get("key");
 ```
 
-### 4. 使用JDK Agent来完成线程池的修饰操作
+### 4. 使用Java Agent来完成线程池的修饰操作
 
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 \# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`两个实现类。
 
-在Java的启动参数加上`-javaagent:path/to/multithread.context-x.y.z.jar`，示例如下：
+在Java的启动参数加上`-javaagent:path/to/multithread.context-x.y.z.jar`。
+
+Java命令行示例如下：
 
 ```bash
 java -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
@@ -82,9 +84,10 @@ java -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
+代码代码中提供了Demo演示『使用Java Agent来完成线程池的修饰操作』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/oldratlee/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
+
 FAQ
 =====================================
 
 * Mac OS X下，使用javaagent，报JavaLaunchHelper的出错信息  
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
-* 
