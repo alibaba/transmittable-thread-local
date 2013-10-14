@@ -2,6 +2,8 @@ package com.alibaba.mtc;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -10,9 +12,9 @@ import static org.junit.Assert.assertNull;
  * @author ding.lid
  */
 public class MtContextTest {
-
     @Test
     public void test_thread_independent() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
         MtContext.getContext().set("parent", "parent");
         MtContext.getContext().set("p", "p0");
 

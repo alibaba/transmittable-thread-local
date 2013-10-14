@@ -3,10 +3,11 @@ package com.alibaba.mtc.threadpool;
 import com.alibaba.mtc.Call;
 import com.alibaba.mtc.MtContext;
 import com.alibaba.mtc.Task;
+import com.alibaba.mtc.Utils;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 public class ExecutorServiceMtcWrapperTest {
     static ExecutorService executorService = new ExecutorServiceMtcWrapper(Executors.newFixedThreadPool(3));
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        Thread.sleep(1000);
+    static {
+        MtContext.getContext().set(new HashMap<String, Object>());
+        Utils.expandThreadPool(executorService);
     }
 
     @AfterClass
@@ -31,6 +32,7 @@ public class ExecutorServiceMtcWrapperTest {
 
     @Test
     public void test_MtContextRunnable() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
         MtContext.getContext().set("parent", "parent");
         MtContext.getContext().set("p", "p0");
 
@@ -55,6 +57,7 @@ public class ExecutorServiceMtcWrapperTest {
 
     @Test
     public void test_MtContextCallable() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
         MtContext.getContext().set("parent", "parent");
         MtContext.getContext().set("p", "p0");
 

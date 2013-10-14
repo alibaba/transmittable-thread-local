@@ -28,7 +28,8 @@ public class Task implements Runnable {
             System.out.println("Task " + value + " running2: " + context.get());
 
             copiedContent = new HashMap<String, Object>(context.get());
-            System.out.println("Task " + value + " running3: " + copiedContent);
+
+            System.out.println("Task " + value + " finished!");
         } catch (Throwable e) {
             e.printStackTrace();
         }
