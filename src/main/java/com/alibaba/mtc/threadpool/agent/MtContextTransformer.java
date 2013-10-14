@@ -44,7 +44,7 @@ public class MtContextTransformer implements ClassFileTransformer {
             final String className = toClassName(classFile);
 
             try {
-                logger.warn("Transforming class " + classFile);
+                logger.warn("Transforming class " + className);
                 CtClass clazz = ClassPool.getDefault().get(className);
                 clazz.defrost();
 
