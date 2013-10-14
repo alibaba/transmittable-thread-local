@@ -25,9 +25,13 @@ public final class MtContext implements Serializable {
     }
 
     /**
-     * Get the whole context content.
+     * Get the <b>copy</b> of the whole context content.
      */
     public Map<String, Object> get() {
+        return new HashMap<String, Object>(content);
+    }
+
+    Map<String, Object> get0() {
         return content;
     }
 
@@ -42,12 +46,16 @@ public final class MtContext implements Serializable {
     /**
      * reset context content.
      */
-    public void set(Map<String, Object> context) {
-        if (null == context) {
+    public void set(Map<String, Object> content) {
+        if (null == content) {
             throw new NullPointerException("context argument is null!");
         }
         this.content.clear();
-        this.content.putAll(context); // shallow copied map!!
+        this.content.putAll(content); // shallow copied map!!
+    }
+
+    public void set0(Map<String, Object> content) {
+        this.content = content;
     }
 
     /**
