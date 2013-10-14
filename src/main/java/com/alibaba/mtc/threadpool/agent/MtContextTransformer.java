@@ -8,6 +8,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
+import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.Modifier;
@@ -45,7 +46,7 @@ public class MtContextTransformer implements ClassFileTransformer {
 
             try {
                 logger.warning("Transforming class " + className);
-                CtClass clazz = ClassPool.getDefault().get(className);
+                CtClass clazz = ClassPool.getDefault().makeClass(new ByteArrayInputStream(classFileBuffer), false);
                 clazz.defrost();
 
                 for (CtMethod method : clazz.getMethods()) {
@@ -81,7 +82,7 @@ public class MtContextTransformer implements ClassFileTransformer {
         }
 
         CtClass[] parameterTypes = method.getParameterTypes();
-        StringBuffer insertCode = new StringBuffer();
+        StringBuilder insertCode = new StringBuilder();
         for (int i = 0; i < parameterTypes.length; i++) {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
