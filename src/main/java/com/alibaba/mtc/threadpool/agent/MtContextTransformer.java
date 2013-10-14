@@ -7,8 +7,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -16,13 +14,15 @@ import java.lang.reflect.Modifier;
 import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * @author ding.lid
  * @since 0.9.0
  */
 public class MtContextTransformer implements ClassFileTransformer {
-    private static final Logger logger = LoggerFactory.getLogger(MtContextTransformer.class.getName());
+
+    private static Logger logger = Logger.getLogger(MtContextTransformer.class.getName());
 
     private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
@@ -44,7 +44,7 @@ public class MtContextTransformer implements ClassFileTransformer {
             final String className = toClassName(classFile);
 
             try {
-                logger.warn("Transforming class " + className);
+                logger.warning("Transforming class " + className);
                 CtClass clazz = ClassPool.getDefault().get(className);
                 clazz.defrost();
 
@@ -54,7 +54,7 @@ public class MtContextTransformer implements ClassFileTransformer {
                 return clazz.toBytecode();
             } catch (Exception e) {
                 String msg = "Fail to transform class " + className + ", cause: " + e.getMessage();
-                logger.error(msg, e);
+                logger.severe(msg);
                 throw new IllegalStateException(msg, e);
             }
         }
@@ -86,11 +86,11 @@ public class MtContextTransformer implements ClassFileTransformer {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_RUNNABLE_CLASS_NAME, i + 1);
-                logger.debug("insert code before method {}: {}", method.toString() ,code);
+                logger.info("insert code before method " + method + ": " + code);
                 insertCode.append(code);
             } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_CALLABLE_CLASS_NAME, i + 1);
-                logger.debug("insert code before method {}: {}", method.toString() ,code);
+                logger.info("insert code before method " + method + ": " + code);
                 insertCode.append(code);
             }
         }

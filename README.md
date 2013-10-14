@@ -81,9 +81,9 @@ String value = MtContext.get("key");
 Java命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:multithread.context-0.9.0-SNAPSHOT.jar:javassist-3.18.1-GA.jar \
-    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
-    -cp dependency/log4j-1.2.17.jar:dependency/slf4j-api-1.5.6.jar:dependency/slf4j-log4j12-1.5.6.jar:classes \
+java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.9.0-SNAPSHOT.jar
+    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar 
+    -cp classes
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
