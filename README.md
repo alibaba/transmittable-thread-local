@@ -69,14 +69,17 @@ executorService.submit(call);
 String value = MtContext.get("key");
 ```
 
-### 4. 使用Java Agent来完成线程池的修饰操作
+### 4. 使用Java Agent来完成线程池实现类的修饰操作
 
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 \# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`两个实现类。
 
-在Java的启动参数加上`-Xbootclasspath/a:multithread.context-0.9.0-SNAPSHOT.jar:javassist-3.18.1-GA.jar -javaagent:path/to/multithread.context-x.y.z.jar`。  
+在Java的启动参数加上`-Xbootclasspath/a:multithread.context-x.y.z.jar:javassist-3.18.1-GA.jar -javaagent:path/to/multithread.context-x.y.z.jar`。  
 
-**注意**： 因为Agent修改的是JDK的类，所以Agent的Jar要加到`bootclasspath`上。
+**注意**： 
+
+* 因为Agent修改的是JDK的类，所以Agent的Jar要加到`bootclasspath`上。
+* 使用`javassist`来修改类的实现，所以`bootclasspath`还在加上`javassist`的Jar。
 
 Java命令行示例如下：
 
