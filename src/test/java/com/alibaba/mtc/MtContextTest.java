@@ -30,16 +30,16 @@ public class MtContextTest {
         thread2.join();
 
         // Child independent & Inheritable
+        assertEquals(3, task1.context.get().size());
         assertEquals("1", task1.context.get("key"));
         assertEquals("parent", task1.context.get("parent"));
         assertEquals("p01", task1.context.get("p"));
         assertNull(task1.context.get("NotExisted"));
-        assertEquals(3, task1.context.get().size());
 
+        assertEquals(3, task2.context.get().size());
         assertEquals("2", task2.context.get("key"));
         assertEquals("p02", task2.context.get("p"));
         assertNull(task2.context.get("NotExisted"));
-        assertEquals(3, task2.context.get().size());
 
         // Context is not same
         assertNotSame(task1.context, task2.context);

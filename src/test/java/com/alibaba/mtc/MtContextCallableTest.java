@@ -35,6 +35,34 @@ public class MtContextCallableTest {
         MtContext.getContext().set("p", "p0");
 
         Call call = new Call("1");
+        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
+        assertEquals(call, mtContextCallable.getCallable());
+
+        MtContext.getContext().set("after", "after");
+
+        String ret = mtContextCallable.call();
+        assertEquals("ok", ret);
+
+        // Child independent & Inheritable
+        assertEquals(3, call.copiedContent.size());
+        assertEquals("1", call.copiedContent.get("key"));
+        assertEquals("p01", call.copiedContent.get("p"));
+        assertEquals("parent", call.copiedContent.get("parent"));
+
+        // children do not effect parent
+        assertEquals(3, MtContext.getContext().get().size());
+        assertEquals("parent", MtContext.getContext().get("parent"));
+        assertEquals("p0", MtContext.getContext().get("p"));
+        assertEquals("after", MtContext.getContext().get("after"));
+    }
+
+    @Test
+    public void test_MtContextCallable_withExecutorService() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
+        MtContext.getContext().set("parent", "parent");
+        MtContext.getContext().set("p", "p0");
+
+        Call call = new Call("1");
         MtContextCallable mtContextCallable = MtContextCallable.get(call);
         assertEquals(call, mtContextCallable.getCallable());
         Future future = executorService.submit(mtContextCallable);
@@ -43,6 +71,7 @@ public class MtContextCallableTest {
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
+        assertEquals(3, call.copiedContent.size());
         assertEquals("1", call.copiedContent.get("key"));
         assertEquals("p01", call.copiedContent.get("p"));
         assertEquals("parent", call.copiedContent.get("parent"));

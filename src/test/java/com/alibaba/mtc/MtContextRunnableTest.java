@@ -36,11 +36,39 @@ public class MtContextRunnableTest {
         Task task = new Task("1");
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
         assertEquals(task, mtContextRunnable.getRunnable());
+
+        MtContext.getContext().set("after", "after");
+        
+        mtContextRunnable.run();
+
+        // Child independent & Inheritable
+        assertEquals(3, task.copiedContent.size());
+        assertEquals("1", task.copiedContent.get("key"));
+        assertEquals("p01", task.copiedContent.get("p"));
+        assertEquals("parent", task.copiedContent.get("parent"));
+
+        // children do not effect parent
+        assertEquals(3, MtContext.getContext().get().size());
+        assertEquals("parent", MtContext.getContext().get("parent"));
+        assertEquals("p0", MtContext.getContext().get("p"));
+        assertEquals("after", MtContext.getContext().get("after"));
+    }
+
+    @Test
+    public void test_MtContextRunnable_withExecutorService() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
+        MtContext.getContext().set("parent", "parent");
+        MtContext.getContext().set("p", "p0");
+
+        Task task = new Task("1");
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
+        assertEquals(task, mtContextRunnable.getRunnable());
         executorService.execute(mtContextRunnable);
 
         Thread.sleep(100);
 
         // Child independent & Inheritable
+        assertEquals(3, task.copiedContent.size());
         assertEquals("1", task.copiedContent.get("key"));
         assertEquals("p01", task.copiedContent.get("p"));
         assertEquals("parent", task.copiedContent.get("parent"));
