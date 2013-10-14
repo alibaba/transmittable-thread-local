@@ -3,15 +3,16 @@ multi-thread context(MTC)
 
 解决多线程传递Context的需求。
 
-需求场景
-----------------------------
-
-
 功能
 ----------------------------
 
 1. 父线程创建子线程时，Context传递。
 1. 使用线程池时，执行任务Context能传递。
+
+需求场景
+----------------------------
+
+TODO
 
 使用说明
 =====================================
@@ -52,7 +53,7 @@ executorService.submit(mtContextCallable);
 String value = MtContext.get("key");
 ```
 
-### 3. 修饰线程池，简化`Runnable`和`Callable`的修饰操作
+### 3. 修饰线程池，省去`Runnable`和`Callable`的修饰
 
 ```java
 
@@ -69,7 +70,7 @@ executorService.submit(call);
 String value = MtContext.get("key");
 ```
 
-### 4. 使用Java Agent来完成线程池实现类的修饰操作
+### 4. 使用Java Agent来修饰线程池实现类
 
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 \# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`两个实现类。
@@ -90,10 +91,17 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
-代码代码中提供了Demo演示『使用Java Agent来完成线程池的修饰操作』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/oldratlee/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
+代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/oldratlee/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
 FAQ
 =====================================
 
 * Mac OS X下，使用javaagent，报JavaLaunchHelper的出错信息  
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
+
+相关资源
+=====================================
+
+* [Java Agent规范](http://docs.oracle.com/javase/6/docs/api/java/lang/instrument/package-summary.html)
+* [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+* [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
