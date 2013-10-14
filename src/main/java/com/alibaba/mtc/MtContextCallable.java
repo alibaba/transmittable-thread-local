@@ -19,11 +19,11 @@ import java.util.concurrent.Callable;
  * @since 0.9.0
  */
 public final class MtContextCallable<V> implements Callable<V> {
-    private final Map<String, Object> context;
+    private final Map<String, Object> content;
     private final Callable<V> callable;
 
     private MtContextCallable(Callable<V> callable) {
-        context = MtContext.getContext().get();
+        content = MtContext.getContext().get();
         this.callable = callable;
     }
 
@@ -33,12 +33,12 @@ public final class MtContextCallable<V> implements Callable<V> {
     @Override
     public V call() throws Exception {
         MtContext mtContext = MtContext.getContext();
-        final Map<String, Object> old = mtContext.get();
+        final Map<String, Object> old = mtContext.get0();
         try {
-            mtContext.set(context);
+            mtContext.set0(content);
             return callable.call();
         } finally {
-            mtContext.set(old); // restore MtContext
+            mtContext.set0(old); // restore MtContext
         }
     }
 

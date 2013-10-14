@@ -20,11 +20,11 @@ import java.util.Map;
  * @since 0.9.0
  */
 public final class MtContextRunnable implements Runnable {
-    private final Map<String, Object> context;
+    private final Map<String, Object> content;
     private final Runnable runnable;
 
     private MtContextRunnable(Runnable runnable) {
-        context = MtContext.getContext().get();
+        content = MtContext.getContext().get();
         this.runnable = runnable;
     }
 
@@ -34,12 +34,12 @@ public final class MtContextRunnable implements Runnable {
     @Override
     public void run() {
         MtContext mtContext = MtContext.getContext();
-        final Map<String, Object> old = mtContext.get();
+        final Map<String, Object> old = mtContext.get0();
         try {
-            mtContext.set(context);
+            mtContext.set0(content);
             runnable.run();
         } finally {
-            mtContext.set(old); // restore MtContext
+            mtContext.set0(old); // restore MtContext
         }
     }
 
