@@ -16,5 +16,5 @@ cd target && {
 
     runCmd java -javaagent:multithread-context-0.9.0-SNAPSHOT.jar \
     -Xbootclasspath/a:$classpath:multithread-context-0.9.0-SNAPSHOT.jar:test-classes/   \
-    com.oldratlee.mtc.threadpool.agent.AgentDemo
+    com.alibaba.mtc.threadpool.agent.AgentDemo
 }

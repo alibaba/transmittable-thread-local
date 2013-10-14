@@ -1,7 +1,7 @@
-package com.oldratlee.mtc.threadpool.agent;
+package com.alibaba.mtc.threadpool.agent;
 
-import com.oldratlee.mtc.MtContextCallable;
-import com.oldratlee.mtc.MtContextRunnable;
+import com.alibaba.mtc.MtContextCallable;
+import com.alibaba.mtc.MtContextRunnable;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;

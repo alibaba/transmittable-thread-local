@@ -1,4 +1,4 @@
-package com.oldratlee.mtc;
+package com.alibaba.mtc;
 
 import org.junit.Test;
 

@@ -1,11 +1,10 @@
-package com.oldratlee.mtc;
+package com.alibaba.mtc;
 
 import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertSame;
 /**
  * @author ding.lid
  */
-public class MtContextCallableTest {
+public class MtContextRunnableTest {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     @AfterClass
@@ -23,25 +22,24 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_MtContextCallable() throws Exception {
+    public void test_MtContextRunnable() throws Exception {
         MtContext.getContext().set("parent", "parent");
         MtContext.getContext().set("p", "p0");
 
-        Call call = new Call("1");
-        MtContextCallable mtContextCallable = MtContextCallable.get(call);
-        assertEquals(call, mtContextCallable.getCallable());
-        Future future = executorService.submit(mtContextCallable);
+        Task task = new Task("1");
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
+        assertEquals(task, mtContextRunnable.getRunnable());
+        executorService.execute(mtContextRunnable);
 
         Thread.sleep(100);
-        assertEquals("ok", future.get());
 
         // Child independent & Inheritable
-        assertEquals("1", call.copiedContext.get("key"));
-        assertEquals("p01", call.copiedContext.get("p"));
-        assertEquals("parent", call.copiedContext.get("parent"));
+        assertEquals("1", task.copiedContext.get("key"));
+        assertEquals("p01", task.copiedContext.get("p"));
+        assertEquals("parent", task.copiedContext.get("parent"));
 
         // restored
-        assertEquals(0, call.context.get().size());
+        assertEquals(0, task.context.get().size());
 
         // children do not effect parent
         assertEquals(2, MtContext.getContext().get().size());
@@ -51,7 +49,7 @@ public class MtContextCallableTest {
 
     @Test
     public void test_idempotent() throws Exception {
-        MtContextCallable<String> call = MtContextCallable.get(new Call("1"));
-        assertSame(call, MtContextCallable.get(call));
+        MtContextRunnable task = MtContextRunnable.get(new Task("1"));
+        assertSame(task, MtContextRunnable.get(task));
     }
 }

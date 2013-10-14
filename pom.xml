@@ -108,7 +108,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.oldratlee.mtc.threadpool.agent.AgentDemo</mainClass>
+					<mainClass>com.alibaba.mtc.threadpool.agent.AgentDemo</mainClass>
 					<classpathScope>test</classpathScope>
 					<arguments>
 						<argument>-javaagent:${build.directory}/${artifactId}-${version}.jar</argument>

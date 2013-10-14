@@ -1,7 +1,7 @@
-package com.oldratlee.mtc.threadpool;
+package com.alibaba.mtc.threadpool;
 
-import com.oldratlee.mtc.MtContextCallable;
-import com.oldratlee.mtc.MtContextRunnable;
+import com.alibaba.mtc.MtContextCallable;
+import com.alibaba.mtc.MtContextRunnable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,8 +9,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@link com.oldratlee.mtc.MtContext} Wrapper of {@link java.util.concurrent.ScheduledExecutorService},
- * transmit the {@link com.oldratlee.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
+ * {@link com.alibaba.mtc.MtContext} Wrapper of {@link java.util.concurrent.ScheduledExecutorService},
+ * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
  * to the execution time of {@link Runnable} or {@link Callable}.
  *
  * @author ding.lid
