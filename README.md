@@ -74,7 +74,9 @@ String value = MtContext.get("key");
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 \# 目前Agent中，修饰了`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`两个实现类。
 
-在Java的启动参数加上`-javaagent:path/to/multithread.context-x.y.z.jar`。
+在Java的启动参数加上`-Xbootclasspath/a:multithread.context-0.9.0-SNAPSHOT.jar:javassist-3.18.1-GA.jar -javaagent:path/to/multithread.context-x.y.z.jar`。  
+
+**注意**： 因为Agent修改的是JDK的类，所以Agent的Jar要加到`bootclasspath`上。
 
 Java命令行示例如下：
 
