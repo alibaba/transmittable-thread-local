@@ -42,7 +42,7 @@ public final class MtContext implements Serializable {
         copyIfNeed(ret);
         return ret;
     }
-    
+
     /**
      * Get the value of key in context.
      */
@@ -71,6 +71,10 @@ public final class MtContext implements Serializable {
      */
     public void set(String key, Object value) {
         content.put(key, value);
+    }
+
+    public void remove(String key) {
+        content.remove(key);
     }
 
     private static InheritableThreadLocal<MtContext> contextHolder = new InheritableThreadLocal<MtContext>() {
