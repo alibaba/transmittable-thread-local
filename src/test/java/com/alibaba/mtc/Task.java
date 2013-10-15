@@ -27,6 +27,12 @@ public class Task implements Runnable {
             context.set("p", context.get("p") + value);
             System.out.println("Task " + value + " running2: " + context.get());
 
+            if (null != context.get("foo")) {
+                FooContext foo = context.get("foo");
+                foo.setName("child");
+                foo.setAge(100);
+            }
+
             copiedContent = new HashMap<String, Object>(context.get());
 
             System.out.println("Task " + value + " finished!");

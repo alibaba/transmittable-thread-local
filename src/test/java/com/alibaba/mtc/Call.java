@@ -25,6 +25,12 @@ public class Call implements Callable<String> {
             context.set("key", value);
             context.set("p", context.get("p") + value);
 
+            if (null != context.get("foo")) {
+                FooContext foo = context.get("foo");
+                foo.setName("child");
+                foo.setAge(100);
+            }
+
             copiedContent = new HashMap<String, Object>(context.get());
 
             return "ok";

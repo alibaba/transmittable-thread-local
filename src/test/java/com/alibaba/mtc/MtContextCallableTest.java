@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
 
@@ -66,8 +67,6 @@ public class MtContextCallableTest {
         MtContextCallable mtContextCallable = MtContextCallable.get(call);
         assertEquals(call, mtContextCallable.getCallable());
         Future future = executorService.submit(mtContextCallable);
-
-        Thread.sleep(100);
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
@@ -83,6 +82,26 @@ public class MtContextCallableTest {
         assertEquals(2, MtContext.getContext().get().size());
         assertEquals("parent", MtContext.getContext().get("parent"));
         assertEquals("p0", MtContext.getContext().get("p"));
+    }
+
+    @Test
+    public void test_MtContextCallable_copyObject() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
+        MtContext.getContext().set("parent", "parent");
+        MtContext.getContext().set("p", "p0");
+        MtContext.getContext().set("foo", new FooContext("parent", 0));
+
+        Call call = new Call("1");
+        MtContextCallable mtContextCallable = MtContextCallable.get(call);
+        assertEquals(call, mtContextCallable.getCallable());
+        executorService.submit(mtContextCallable);
+
+        Future future = executorService.submit(mtContextCallable);
+        assertEquals("ok", future.get());
+
+        assertNotSame(call.copiedContent.get("foo"), MtContext.getContext().get("foo"));
+        assertEquals(new FooContext("child", 100), call.copiedContent.get("foo"));
+        assertEquals(new FooContext("parent", 0), MtContext.getContext().get("foo"));
     }
 
     @Test

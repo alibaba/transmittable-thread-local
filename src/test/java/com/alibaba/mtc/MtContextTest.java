@@ -52,4 +52,22 @@ public class MtContextTest {
         assertEquals("parent", MtContext.getContext().get("parent"));
         assertEquals("p0", MtContext.getContext().get("p"));
     }
+
+    @Test
+    public void test_thread_copyObject() throws Exception {
+        MtContext.getContext().set(new HashMap<String, Object>());
+        MtContext.getContext().set("parent", "parent");
+        MtContext.getContext().set("p", "p0");
+        MtContext.getContext().set("foo", new FooContext("parent", 0));
+
+        Task task1 = new Task("1");
+        Thread thread1 = new Thread(task1);
+
+        thread1.start();
+        thread1.join();
+
+        assertNotSame(task1.copiedContent.get("foo"), MtContext.getContext().get("foo"));
+        assertEquals(new FooContext("child", 100), task1.copiedContent.get("foo"));
+        assertEquals(new FooContext("parent", 0), MtContext.getContext().get("foo"));
+    }
 }
