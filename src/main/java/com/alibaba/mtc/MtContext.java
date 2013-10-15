@@ -2,6 +2,7 @@ package com.alibaba.mtc;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -21,7 +22,8 @@ public final class MtContext implements Serializable {
     }
 
     MtContext(MtContext context) {
-        this.content.putAll(context.content); // shallow copied map!!
+        this.content.putAll(context.content);
+        copyIfNeed(this.content);
     }
 
     /**
@@ -35,6 +37,12 @@ public final class MtContext implements Serializable {
         return content;
     }
 
+    Map<String, Object> getWithCopy() {
+        HashMap<String, Object> ret = new HashMap<String, Object>(content);
+        copyIfNeed(ret);
+        return ret;
+    }
+    
     /**
      * Get the value of key in context.
      */
@@ -82,5 +90,16 @@ public final class MtContext implements Serializable {
      */
     public static MtContext getContext() {
         return contextHolder.get();
+    }
+
+    static void copyIfNeed(Map<String, Object> content) {
+        Iterator<Map.Entry<String, Object>> iterator = content.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+            if (entry.getValue() instanceof Copyable) {
+                Copyable copyable = (Copyable) entry.getValue();
+                entry.setValue(copyable.copy());
+            }
+        }
     }
 }

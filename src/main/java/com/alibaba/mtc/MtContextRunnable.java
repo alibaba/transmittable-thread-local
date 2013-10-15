@@ -24,7 +24,7 @@ public final class MtContextRunnable implements Runnable {
     private final Runnable runnable;
 
     private MtContextRunnable(Runnable runnable) {
-        content = MtContext.getContext().get();
+        content = MtContext.getContext().getWithCopy();
         this.runnable = runnable;
     }
 

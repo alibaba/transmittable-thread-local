@@ -23,7 +23,7 @@ public final class MtContextCallable<V> implements Callable<V> {
     private final Callable<V> callable;
 
     private MtContextCallable(Callable<V> callable) {
-        content = MtContext.getContext().get();
+        content = MtContext.getContext().getWithCopy();
         this.callable = callable;
     }
 
