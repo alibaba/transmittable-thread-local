@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * Factory Utils for getting MtContext Wrapper of jdk executors.
+ *
  * @author ding.lid
  * @since 0.9.0
  */
