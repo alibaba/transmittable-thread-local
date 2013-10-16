@@ -31,5 +31,6 @@ cd target && {
     -Xbootclasspath/a:$classpath:multithread.context-$version.jar \
     -javaagent:multithread.context-$version.jar \
     -cp test-classes \
+    -ea \
     com.alibaba.mtc.threadpool.agent.AgentDemo
 }

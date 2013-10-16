@@ -2,63 +2,72 @@ package com.alibaba.mtc.threadpool.agent;
 
 import com.alibaba.mtc.MtContext;
 import com.alibaba.mtc.Task;
+import com.alibaba.mtc.Utils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author ding.lid
  */
 public class AgentDemo {
-    static ExecutorService executorService = Executors.newFixedThreadPool(3, new ThreadFactory() {
-        AtomicInteger counter = new AtomicInteger();
-
-        @Override
-        public Thread newThread(Runnable r) {
-            String name = "thread " + counter.getAndIncrement();
-            System.out.println(name);
-            Thread thread = new Thread(r, name);
-            thread.setDaemon(true);
-            return thread;
-        }
-    });
+    static ExecutorService executorService = Executors.newFixedThreadPool(3);
+    static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(3);
 
     static {
-        for (int i = 0; i < 10; ++i) {
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("Warm task!");
-                }
-            });
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
-
-        System.out.println("Warmed!");
+        Utils.expandThreadPool(executorService);
+        Utils.expandThreadPool(scheduledExecutorService);
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, " + AgentDemo.class.getName());
+        try {
+            System.out.println("Hello, " + AgentDemo.class.getName());
 
-        MtContext.getContext().set("key7", "value7");
+            MtContext.getContext().set("parent", "parent");
+            MtContext.getContext().set("p", "p");
 
+            checkExecutorService();
+            checkScheduledExecutorService();
+
+            System.out.println("OK!");
+        } finally {
+            executorService.shutdown();
+            scheduledExecutorService.shutdown();
+            executorService.awaitTermination(3, TimeUnit.MINUTES);
+            scheduledExecutorService.awaitTermination(3, TimeUnit.MINUTES);
+        }
+    }
+
+    static void checkExecutorService() throws Exception {
         Task task = new Task("1");
         executorService.submit(task);
+        Thread.sleep(1000);
 
-        executorService.shutdown();
-        executorService.awaitTermination(3, TimeUnit.MINUTES);
+        assert task.copiedContent.size() == 3;
+        assert "parent".equals(task.copiedContent.get("parent"));
+        assert "1".equals(task.copiedContent.get("key"));
+        assert "p1".equals(task.copiedContent.get("p"));
 
-        if ("value7".equals(task.copiedContent.get("key7")))
-            System.out.println("OK");
-        else {
-            System.err.println("!!!!Fail!!!!");
-        }
+        assert MtContext.getContext().get().size() == 2;
+        assert "parent".equals(MtContext.getContext().get("parent"));
+        assert "p".equals(MtContext.getContext().get("p"));
+    }
+
+    static void checkScheduledExecutorService() throws Exception {
+        Task task = new Task("2");
+        ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
+        future.get();
+
+        assert task.copiedContent.size() == 3;
+        assert "parent".equals(task.copiedContent.get("parent"));
+        assert "2".equals(task.copiedContent.get("key"));
+        assert "p2".equals(task.copiedContent.get("p"));
+
+        assert MtContext.getContext().get().size() == 2;
+        assert "parent".equals(MtContext.getContext().get("parent"));
+        assert "p".equals(MtContext.getContext().get("p"));
     }
 }
