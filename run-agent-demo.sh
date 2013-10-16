@@ -24,11 +24,12 @@ mvn clean install -Dmaven.test.skip && mvn test-compile &&
 mvn dependency:copy-dependencies -DincludeScope=provided &&
 mvn dependency:copy-dependencies -DincludeScope=runtime &&
 cd target && {
+    version=`grep '<version>.*</version>' ../pom.xml | head -1 | awk -F'</?version>' '{print $2}'`
     classpath=`echo dependency/*.jar | tr ' ' :`
 
     runCmd java \
-    -Xbootclasspath/a:$classpath:multithread.context-0.9.1-SNAPSHOT.jar \
-    -javaagent:multithread.context-0.9.1-SNAPSHOT.jar \
+    -Xbootclasspath/a:$classpath:multithread.context-$version.jar \
+    -javaagent:multithread.context-$version.jar \
     -cp test-classes \
     com.alibaba.mtc.threadpool.agent.AgentDemo
 }
