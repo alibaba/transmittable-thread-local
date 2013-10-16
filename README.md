@@ -99,8 +99,8 @@ String value = MtContext.get("key");
 
 在Java的启动参数加上：
 
-- `-Xbootclasspath/a:/path/to/to/multithread.context-x.y.z.jar:javassist-3.18.1-GA.jar`
-- `-javaagent:multithread.context-x.y.z.jar`
+- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.18.1-GA.jar`
+- `-javaagent:/path/to/multithread.context-x.y.z.jar`
 
 **注意**： 
 
