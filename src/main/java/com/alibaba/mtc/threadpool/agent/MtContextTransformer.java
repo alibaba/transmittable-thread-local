@@ -22,14 +22,13 @@ import java.util.logging.Logger;
  * @since 0.9.0
  */
 public class MtContextTransformer implements ClassFileTransformer {
-
-    private static Logger logger = Logger.getLogger(MtContextTransformer.class.getName());
+    private static final Logger logger = Logger.getLogger(MtContextTransformer.class.getName());
 
     private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
 
-    private static final String MTCONTEXT_RUNNABLE_CLASS_NAME = MtContextRunnable.class.getName();
-    private static final String MTCONTEXT_CALLABLE_CLASS_NAME = MtContextCallable.class.getName();
+    private static final String MT_CONTEXT_RUNNABLE_CLASS_NAME = MtContextRunnable.class.getName();
+    private static final String MT_CONTEXT_CALLABLE_CLASS_NAME = MtContextCallable.class.getName();
 
     private static final String THREAD_POOL_CLASS_FILE = "java.util.concurrent.ThreadPoolExecutor".replace('.', '/');
     private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
@@ -53,16 +52,16 @@ public class MtContextTransformer implements ClassFileTransformer {
                     updateMethod(method);
                 }
                 return clazz.toBytecode();
-            } catch (Exception e) {
-                String msg = "Fail to transform class " + className + ", cause: " + e.getMessage();
+            } catch (Throwable t) {
+                String msg = "Fail to transform class " + className + ", cause: " + t.getMessage();
                 logger.severe(msg);
-                throw new IllegalStateException(msg, e);
+                throw new IllegalStateException(msg, t);
             }
         }
         return null;
     }
 
-    static Set<String> updateMethodNames = new HashSet<String>();
+    static final Set<String> updateMethodNames = new HashSet<String>();
 
     static {
         updateMethodNames.add("execute");
@@ -76,7 +75,7 @@ public class MtContextTransformer implements ClassFileTransformer {
         if (!updateMethodNames.contains(method.getName())) {
             return;
         }
-        int modifiers = method.getModifiers();
+        final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) {
             return;
         }
@@ -86,11 +85,11 @@ public class MtContextTransformer implements ClassFileTransformer {
         for (int i = 0; i < parameterTypes.length; i++) {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_RUNNABLE_CLASS_NAME, i + 1);
+                String code = String.format("$%d = %s.get($%d);", i + 1, MT_CONTEXT_RUNNABLE_CLASS_NAME, i + 1);
                 logger.info("insert code before method " + method + ": " + code);
                 insertCode.append(code);
             } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d);", i + 1, MTCONTEXT_CALLABLE_CLASS_NAME, i + 1);
+                String code = String.format("$%d = %s.get($%d);", i + 1, MT_CONTEXT_CALLABLE_CLASS_NAME, i + 1);
                 logger.info("insert code before method " + method + ": " + code);
                 insertCode.append(code);
             }

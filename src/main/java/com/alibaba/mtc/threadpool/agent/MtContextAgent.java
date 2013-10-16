@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @since 0.9.0
  */
 public class MtContextAgent {
-    private static Logger logger = Logger.getLogger(MtContextAgent.class.getName());
+    private static final Logger logger = Logger.getLogger(MtContextAgent.class.getName());
 
     public static void premain(String agentArgs, Instrumentation inst) {
         logger.warning("[MtContextAgent.premain] begin, agentArgs: " + agentArgs);
