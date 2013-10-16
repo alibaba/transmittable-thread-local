@@ -17,7 +17,8 @@ TODO
 使用说明
 =====================================
 
-### 1. 简单使用MtContext
+1. 简单使用MtContext
+----------------------------
 
 ```java
 // 在父线程中设置
@@ -27,7 +28,12 @@ MtContext.set("key", "value-set-in-parent");
 String value = MtContext.get("key"); 
 ```
 
-### 2. 保证线程池中传递MtContext
+2. 保证线程池中传递MtContext
+----------------------------
+
+使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰。
+
+示例代码：
 
 ```java
 MtContext.set("key", "value-set-in-parent");
@@ -53,10 +59,21 @@ executorService.submit(mtContextCallable);
 String value = MtContext.get("key");
 ```
 
-### 3. 修饰线程池，省去`Runnable`和`Callable`的修饰
+3. 修饰线程池，省去`Runnable`和`Callable`的修饰
+----------------------------
+
+每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
+
+通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
+
+* `getMtcExecutor`：修饰接口`Executor`
+* `getMtcExecutorService`：修饰接口`ExecutorService`
+* `ScheduledExecutorService`：修饰接口`ScheduledExecutorService`
+
+示例代码：
 
 ```java
-
+ExecutorService executorService = ...
 executorService = MtContextExecutors.getMtcExecutorService(executorService); // 额外的处理，生成修饰了的对象executorService
 
 MtContext.set("key", "value-set-in-parent");
@@ -70,16 +87,20 @@ executorService.submit(call);
 String value = MtContext.get("key");
 ```
 
-### 4. 使用Java Agent来修饰线程池实现类
+4. 使用Java Agent来修饰JDK线程池实现类
+----------------------------
 
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 
-目前Agent中，修饰了两个实现类：
+目前Agent中，修饰了两个线程池实现类（实现代码在[MtContextTransformer.java](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
-- `java.util.concurrent.ScheduledThreadPoolExecutor`。
+- `java.util.concurrent.ScheduledThreadPoolExecutor`
 
-在Java的启动参数加上`-Xbootclasspath/a:multithread.context-x.y.z.jar:javassist-3.18.1-GA.jar -javaagent:path/to/multithread.context-x.y.z.jar`。  
+在Java的启动参数加上：
+
+- `-Xbootclasspath/a:/path/to/to/multithread.context-x.y.z.jar:javassist-3.18.1-GA.jar`
+- `-javaagent:multithread.context-x.y.z.jar`
 
 **注意**： 
 
