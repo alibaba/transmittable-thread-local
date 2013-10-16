@@ -24,11 +24,11 @@ public class MtContextAgent {
     }
 
     static void install(String agentArgs, Instrumentation inst) {
-        logger.warning("[MtContextAgent] agentArgs: " + agentArgs + ", Instrumentation: " + inst);
+        logger.warning("[MtContextAgent.install] agentArgs: " + agentArgs + ", Instrumentation: " + inst);
 
         ClassFileTransformer transformer = new MtContextTransformer();
         inst.addTransformer(transformer, true);
 
-        logger.warning("[MtContextAgent] addTransformer success.");
+        logger.warning("[MtContextAgent.install] addTransformer success.");
     }
 }
