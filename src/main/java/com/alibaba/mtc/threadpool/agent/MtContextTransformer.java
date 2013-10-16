@@ -86,11 +86,11 @@ public class MtContextTransformer implements ClassFileTransformer {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d);", i + 1, MT_CONTEXT_RUNNABLE_CLASS_NAME, i + 1);
-                logger.info("insert code before method " + method + ": " + code);
+                logger.info("insert code before method " + method + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d);", i + 1, MT_CONTEXT_CALLABLE_CLASS_NAME, i + 1);
-                logger.info("insert code before method " + method + ": " + code);
+                logger.info("insert code before method " + method + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
         }
