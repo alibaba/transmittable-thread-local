@@ -31,7 +31,7 @@ String value = MtContext.get("key");
 2. 保证线程池中传递MtContext
 ----------------------------
 
-使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰。
+使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
