@@ -104,15 +104,15 @@ String value = MtContext.get("key");
 
 **注意**： 
 
-* 因为Agent修改的是JDK的类，所以Agent的Jar要加到`bootclasspath`上。
-* 使用`javassist`来修改类的实现，所以`bootclasspath`还在加上`javassist`的Jar。
+* Agent修改是JDK的类，类中加入了引用`MTC`的代码，所以`MTC Agent`的Jar要加到`bootclasspath`上。
+* `MTC Agent`使用`javassist`来修改类的实现，所以`bootclasspath`还在加上`javassist`的Jar。
 
 Java命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.9.0-SNAPSHOT.jar
-    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar 
-    -cp classes
+java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.9.0-SNAPSHOT.jar \
+    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
+    -cp classes \
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
