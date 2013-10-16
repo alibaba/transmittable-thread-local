@@ -27,8 +27,8 @@ cd target && {
     classpath=`echo dependency/*.jar | tr ' ' :`
 
     runCmd java \
-    -Xbootclasspath/a:$classpath:multithread.context-0.9.0-SNAPSHOT.jar \
-    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
+    -Xbootclasspath/a:$classpath:multithread.context-0.9.1-SNAPSHOT.jar \
+    -javaagent:multithread.context-0.9.1-SNAPSHOT.jar \
     -cp test-classes \
     com.alibaba.mtc.threadpool.agent.AgentDemo
 }
