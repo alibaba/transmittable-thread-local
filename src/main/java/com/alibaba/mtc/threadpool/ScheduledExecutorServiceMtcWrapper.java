@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@link com.alibaba.mtc.MtContext} Wrapper of {@link java.util.concurrent.ScheduledExecutorService},
+ * {@link com.alibaba.mtc.MtContext} Wrapper of {@link ScheduledExecutorService},
  * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
  * to the execution time of {@link Runnable} or {@link Callable}.
  *

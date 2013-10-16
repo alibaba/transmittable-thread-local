@@ -24,8 +24,8 @@ public class MtContextExecutors {
 
     /**
      * {@link com.alibaba.mtc.MtContext} Wrapper of {@link ExecutorService},
-     * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
-     * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
+     * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
+     * to the execution time of {@link Runnable} or {@link Callable}.
      */
     public static ExecutorService getMtcExecutorService(ExecutorService executorService) {
         if (executorService == null || executorService instanceof ExecutorServiceMtcWrapper) {

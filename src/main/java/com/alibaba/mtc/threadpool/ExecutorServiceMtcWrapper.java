@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * {@link com.alibaba.mtc.MtContext} Wrapper of {@link java.util.concurrent.ExecutorService},
+ * {@link com.alibaba.mtc.MtContext} Wrapper of {@link ExecutorService},
  * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
  * to the execution time of {@link Runnable} or {@link Callable}.
  *
