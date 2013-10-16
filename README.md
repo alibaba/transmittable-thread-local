@@ -121,7 +121,8 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 FAQ
 =====================================
 
-* Mac OS X下，使用javaagent，报JavaLaunchHelper的出错信息  
+* Mac OS X下，使用javaagent，可能会报JavaLaunchHelper的出错信息。  
+可以换一个版本JDK。我的机器上`1.7.0_40`有问题，`1.6.0_51`没有问题。   
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 
 相关资源
