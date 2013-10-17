@@ -118,6 +118,14 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 
 代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/oldratlee/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
+### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
+
+由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，`MtContext`会失效。
+
+- 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
+覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且调用父类的方法。   
+- 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
+
 FAQ
 =====================================
 
