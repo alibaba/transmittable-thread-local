@@ -122,7 +122,7 @@ FAQ
 =====================================
 
 * Mac OS X下，使用javaagent，可能会报JavaLaunchHelper的出错信息。  
-可以换一个版本JDK。我的机器上`1.7.0_40`有问题，`1.6.0_51`没有问题。   
+可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`是OK的。   
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 
 相关资源
