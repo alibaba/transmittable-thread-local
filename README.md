@@ -28,6 +28,11 @@ MtContext.set("key", "value-set-in-parent");
 String value = MtContext.get("key"); 
 ```
 
+对于使用了线程池的情况，线程由线程池创建好，并且会把线程Cache起来，反复使用。
+
+这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
+解决方法参见下面的这几种用法。
+
 2. 保证线程池中传递MtContext
 ----------------------------
 
@@ -138,5 +143,6 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 
 * [Java Agent规范](http://docs.oracle.com/javase/6/docs/api/java/lang/instrument/package-summary.html)
 * [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
+* [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 * [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 * [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
