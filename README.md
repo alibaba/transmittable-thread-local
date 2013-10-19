@@ -28,7 +28,7 @@ MtContext.set("key", "value-set-in-parent");
 String value = MtContext.get("key"); 
 ```
 
-对于使用了线程池的情况，线程由线程池创建好，并且会把线程Cache起来，反复使用。
+对于使用了线程池的情况，线程由线程池创建好，并且Cache起来反复使用。
 
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
@@ -128,7 +128,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，`MtContext`会失效。
 
 - 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
-覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且调用父类的方法。   
+覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。   
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
 
 FAQ
