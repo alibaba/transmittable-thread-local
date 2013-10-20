@@ -4,17 +4,21 @@ import java.util.Map;
 import java.util.TimerTask;
 
 /**
- * {@link MtContextTimerTask} decorate {@link Runnable}, so as to get @{@link MtContext}
+ * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get @{@link MtContext}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p/>
  * Use factory method {@link #get(TimerTask)} to create instance.
  * <p/>
- * Use {@link java.util.concurrent.ScheduledThreadPoolExecutor} instead {@link java.util.Timer}
+ * Use {@link java.util.concurrent.ScheduledThreadPoolExecutor} instead {@link java.util.Timer}.
+ * <p/>
+ * <b>NOTE:</b>
+ * The {@link MtContextTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} of
+ * the origin {@link TimerTask} lose effectiveness!
  *
  * @author ding.lid
  * @see java.util.Timer
  * @see TimerTask
- * @since 0.9.0
+ * @since 0.9.1
  */
 @Deprecated
 public final class MtContextTimerTask extends TimerTask {
@@ -43,12 +47,8 @@ public final class MtContextTimerTask extends TimerTask {
 
     @Override
     public boolean cancel() {
-        return timerTask.cancel();
-    }
-
-    @Override
-    public long scheduledExecutionTime() {
-        return timerTask.scheduledExecutionTime();
+        timerTask.cancel();
+        return super.cancel();
     }
 
     public TimerTask getTimerTask() {
