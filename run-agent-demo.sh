@@ -25,11 +25,12 @@ mvn dependency:copy-dependencies -DincludeScope=provided &&
 mvn dependency:copy-dependencies -DincludeScope=runtime &&
 cd target && {
     version=`grep '<version>.*</version>' ../pom.xml | head -1 | awk -F'</?version>' '{print $2}'`
+    aid=`grep '<artifactId>.*</artifactId>' ../pom.xml | head -1 | awk -F'</?artifactId>' '{print $2}'`
     classpath=`echo dependency/*.jar | tr ' ' :`
 
     runCmd java \
-    -Xbootclasspath/a:$classpath:multithread.context-$version.jar \
-    -javaagent:multithread.context-$version.jar \
+    -Xbootclasspath/a:$classpath:$aid-$version.jar \
+    -javaagent:$aid-$version.jar \
     -cp test-classes \
     -ea \
     com.alibaba.mtc.threadpool.agent.AgentDemo
