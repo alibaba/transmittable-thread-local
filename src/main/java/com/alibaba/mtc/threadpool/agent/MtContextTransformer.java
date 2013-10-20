@@ -48,7 +48,7 @@ public class MtContextTransformer implements ClassFileTransformer {
                 CtClass clazz = ClassPool.getDefault().makeClass(new ByteArrayInputStream(classFileBuffer), false);
                 clazz.defrost();
 
-                for (CtMethod method : clazz.getMethods()) {
+                for (CtMethod method : clazz.getDeclaredMethods()) {
                     updateMethod(method);
                 }
                 return clazz.toBytecode();
