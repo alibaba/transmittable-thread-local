@@ -147,7 +147,9 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。   
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
 
-### 已有Java Agent中嵌入`MtContext Agent`，减少Java命令上Agent的配置
+### 已有Java Agent中嵌入`MtContext Agent`
+
+这样可以减少Java命令上Agent的配置。
 
 在自己的`ClassFileTransformer`中调用`MtContextTransformer`，示例代码如下：
 
