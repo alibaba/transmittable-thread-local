@@ -27,10 +27,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.javassist</groupId>
+			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.18.1-GA</version>
-			<scope>provided</scope>
+			<version>3.9.0.GA</version>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
