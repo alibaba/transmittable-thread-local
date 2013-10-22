@@ -3,11 +3,19 @@
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
 	<version>0.9.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>${project.artifactId}</name>
+	<name>multithread context(MTC)</name>
+	<description>a simple lib for transmitting context between thread even using thread pool</description>
+	<url>https://github.com/alibaba/multi-thread-context</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<licenses>
@@ -18,8 +26,33 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:alibaba/multi-thread-context.git</connection>
+		<developerConnection>scm:git:git@github.com:alibaba/multi-thread-context.git</developerConnection>
+		<url>git@github.com:alibaba/multi-thread-context.git</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/alibaba/multi-thread-context/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<organization>
+		<name>Alibaba</name>
+		<url>http://www.alibaba.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Jerry Lee</name>
+			<id>oldratlee</id>
+			<email>oldratlee(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
 
 	<properties>
+		<updateReleaseInfo>true</updateReleaseInfo>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf_version>1.5.6</slf_version>
 		<log4j_version>1.2.17</log4j_version>
@@ -52,18 +85,6 @@
 		</dependency>
 	</dependencies>
 
-	<developers>
-		<developer>
-			<name>Jerry Lee</name>
-			<id>oldratlee</id>
-			<email>oldratlee(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
-	</developers>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -85,40 +106,66 @@
 					</archive>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>com.alibaba.mtc.threadpool.agent.AgentDemo</mainClass>
-					<classpathScope>test</classpathScope>
-					<arguments>
-						<argument>-javaagent:${build.directory}/${artifactId}-${version}.jar</argument>
-					</arguments>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<url>http://repo.alibaba-inc.com/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<url>http://repo.alibaba-inc.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadoc</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<show>public</show>
+							<charset>UTF-8</charset>
+							<encoding>UTF-8</encoding>
+							<docencoding>UTF-8</docencoding>
+							<links>
+								<link>http://docs.oracle.com/javase/6/docs/api</link>
+							</links>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
