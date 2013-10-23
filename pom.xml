@@ -49,6 +49,15 @@
 			</roles>
 			<timezone>+8</timezone>
 		</developer>
+		<developer>
+			<name>Tony Chen</name>
+			<id>bladehd</id>
+			<email>tony.chenl(AT)taobao(dot)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
 	</developers>
 
 	<properties>

@@ -176,6 +176,21 @@ public class TransformerAdaptor implements ClassFileTransformer {
 
 注意还是要在`bootclasspath`上，加上`MtContext`依赖的2个Jar。
 
+Maven依赖
+=====================================
+
+示例：
+
+```xml
+<dependency>
+	<groupId>com.alibaba</groupId>
+	<artifactId>multithread.context</artifactId>
+	<version>0.9.2</version>
+</dependency>
+```
+
+可以在 http://mvnrepository.com/artifact/com.alibaba/multithread.context 查看可用的版本。
+
 FAQ
 =====================================
 
