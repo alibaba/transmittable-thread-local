@@ -52,7 +52,7 @@ String value = MtContext.get("key");
 2. 保证线程池中传递MtContext
 ----------------------------
 
-使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
+使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
@@ -85,7 +85,7 @@ String value = MtContext.get("key");
 
 每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
+通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
 
 * `getMtcExecutor`：修饰接口`Executor`
 * `getMtcExecutorService`：修饰接口`ExecutorService`
@@ -113,7 +113,7 @@ String value = MtContext.get("key");
 
 这种方式，实现线程池的`MtContext`传递，代码是透明的。  
 
-目前Agent中，修饰了两个线程池实现类（实现代码在[MtContextTransformer.java](https://github.com/oldratlee/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
+目前Agent中，修饰了两个线程池实现类（实现代码在[MtContextTransformer.java](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
@@ -137,7 +137,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
-代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/oldratlee/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
+代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
 ### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
 
@@ -189,7 +189,7 @@ Maven依赖
 </dependency>
 ```
 
-可以在 http://mvnrepository.com/artifact/com.alibaba/multithread.context 查看可用的版本。
+可以在 [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22multithread.context%22%20g%3A%22com.alibaba%22) 查看可用的版本。
 
 FAQ
 =====================================
