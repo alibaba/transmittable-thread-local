@@ -145,7 +145,18 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 
 - 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
 覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。   
+修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
+
+#### 如何权衡这些失效情况
+
+把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：
+
+- 不推荐使用`Timer`类，推荐用`ScheduledThreadPoolExecutor`。
+`ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
+如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。
+- 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：
+业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
 ### 已有Java Agent中嵌入`MtContext Agent`
 
