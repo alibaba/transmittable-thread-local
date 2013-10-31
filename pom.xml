@@ -72,6 +72,7 @@
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.9.0.GA</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
