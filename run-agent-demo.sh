@@ -24,8 +24,8 @@ mvn clean install -Dmaven.test.skip && mvn test-compile &&
 mvn dependency:copy-dependencies -DincludeScope=provided &&
 mvn dependency:copy-dependencies -DincludeScope=runtime &&
 cd target && {
-    version=`grep '<version>.*</version>' ../pom.xml | head -1 | awk -F'</?version>' '{print $2}'`
-    aid=`grep '<artifactId>.*</artifactId>' ../pom.xml | head -1 | awk -F'</?artifactId>' '{print $2}'`
+    version=`grep '<version>.*</version>' ../pom.xml | awk -F'</?version>' 'NR==2{print $2}'`
+    aid=`grep '<artifactId>.*</artifactId>' ../pom.xml | awk -F'</?artifactId>' 'NR==2{print $2}'`
     classpath=`echo dependency/*.jar | tr ' ' :`
 
     runCmd java \
