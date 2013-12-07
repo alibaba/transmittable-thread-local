@@ -6,7 +6,8 @@ multi-thread context(MTC)
 功能
 ----------------------------
 
-1. 父线程创建子线程时，Context传递。
+1. 父线程创建子线程时，Context传递。  
+这个即是`java.lang.InheritableThreadLocal`的功能。
 1. 使用线程池时，执行任务Context能传递。
 
 需求场景
@@ -33,23 +34,26 @@ App Engine的日志（如，SDK会记录日志）要记录系统上下文。由�
 使用说明
 =====================================
 
-1. 简单使用MtContext
+1. 简单使用MtContextThreadLocal
 ----------------------------
 
 ```java
 // 在父线程中设置
-MtContext.set("key", "value-set-in-parent");
+MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+parent.set("value-set-in-parent");
+
+// =====================================================
 
 // 在子线程中可以读取, 值是"value-set-in-parent"
-String value = MtContext.get("key"); 
+String value = parent.get(); 
 ```
 
-对于使用了线程池的情况，线程由线程池创建好，并且Cache起来反复使用。
+但对于使用了线程池的情况，线程由线程池创建好，并且Cache起来反复使用。
 
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
 
-2. 保证线程池中传递MtContext
+2. 保证线程池中传递MtContextThreadLocal
 ----------------------------
 
 使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
@@ -57,27 +61,33 @@ String value = MtContext.get("key");
 示例代码：
 
 ```java
-MtContext.set("key", "value-set-in-parent");
+MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
 Runnable mtContextRunnable = MtContextRunnable.get(task); // 额外的处理，生成修饰了的对象mtContextRunnable
 executorService.submit(mtContextRunnable);
 
+// =====================================================
+
 // Task中可以读取, 值是"value-set-in-parent"
-String value = MtContext.get("key");
+String value = parent.get(); 
 ```
 
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-MtContext.set("key", "value-set-in-parent");
+MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
 Callable mtContextCallable = MtContextCallable.get(call); // 额外的处理，生成修饰了的对象mtContextCallable
 executorService.submit(mtContextCallable);
 
+// =====================================================
+
 // Call中可以读取, 值是"value-set-in-parent"
-String value = MtContext.get("key");
+String value = parent.get(); 
 ```
 
 3. 修饰线程池，省去`Runnable`和`Callable`的修饰
@@ -97,15 +107,18 @@ String value = MtContext.get("key");
 ExecutorService executorService = ...
 executorService = MtContextExecutors.getMtcExecutorService(executorService); // 额外的处理，生成修饰了的对象executorService
 
-MtContext.set("key", "value-set-in-parent");
+MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
 Callable call = new Call("2");
 executorService.submit(task);
 executorService.submit(call);
 
+// =====================================================
+
 // Task或是Call中可以读取, 值是"value-set-in-parent"
-String value = MtContext.get("key");
+String value = parent.get(); 
 ```
 
 4. 使用Java Agent来修饰JDK线程池实现类
