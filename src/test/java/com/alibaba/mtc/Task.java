@@ -1,39 +1,41 @@
 package com.alibaba.mtc;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author ding.lid
  */
 public class Task implements Runnable {
     public final String value;
+    private ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts;
 
-    public Task(String value) {
+    public Task(String value, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
         this.value = value;
+        this.mtContexts = mtContexts;
     }
 
-    public volatile MtContext context;
-
     public volatile Map<String, Object> copiedContent;
-
+    
     @Override
     public void run() {
         try {
-            context = MtContext.getContext();
-            System.out.println("Task " + value + " running1: " + context.get());
+            System.out.println("Before Run:");
+            Utils.print(mtContexts);
+            System.out.println();
 
-            context.set("key", value);
-            context.set("p", context.get("p") + value);
-            System.out.println("Task " + value + " running2: " + context.get());
+            // Add new
+            MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
+            child.set("child");
+            mtContexts.put("child", child);
 
-            if (null != context.get("foo")) {
-                FooContext foo = context.get("foo");
-                foo.setName("child");
-                foo.setAge(100);
-            }
+            // modify the parent key
+            mtContexts.get("p").set(mtContexts.get("p").get() + value);
 
-            copiedContent = new HashMap<String, Object>(context.get());
+
+            System.out.println("After Run:");
+            Utils.print(mtContexts);
+            copiedContent = Utils.copied(mtContexts);
 
             System.out.println("Task " + value + " finished!");
         } catch (Throwable e) {

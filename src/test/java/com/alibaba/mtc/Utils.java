@@ -1,7 +1,10 @@
 package com.alibaba.mtc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -36,5 +39,26 @@ public class Utils {
             e.printStackTrace();
             throw new IllegalStateException(e);
         }
+    }
+
+    public static void print(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
+        for (Map.Entry<String, MtContextThreadLocal<String>> entry : mtContexts.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().get();
+            System.out.printf("Key %s, value: %s\n", key, value);
+        }
+    }
+
+    public static Map<String, Object> copied(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
+        Map<String, Object> copiedContent = new HashMap<String, Object>();
+        for (Map.Entry<String, MtContextThreadLocal<String>> entry : mtContexts.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().get();
+            // store value in task
+            if (null != value) {
+                copiedContent.put(key, value);
+            }
+        }
+        return copiedContent;
     }
 }

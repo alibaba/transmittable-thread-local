@@ -1,14 +1,20 @@
 package com.alibaba.mtc.threadpool.agent;
 
-import com.alibaba.mtc.MtContext;
+import com.alibaba.mtc.MtContextThreadLocal;
 import com.alibaba.mtc.Task;
 import com.alibaba.mtc.Utils;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author ding.lid
@@ -26,11 +32,18 @@ public class AgentDemo {
         try {
             System.out.println("Hello, " + AgentDemo.class.getName());
 
-            MtContext.getContext().set("parent", "parent");
-            MtContext.getContext().set("p", "p");
+            ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
 
-            checkExecutorService();
-            checkScheduledExecutorService();
+            MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+            parent.set("parent");
+            mtContexts.put("parent", parent);
+
+            MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
+            parent.set("p");
+            mtContexts.put("p", p);
+
+            checkExecutorService(mtContexts);
+            checkScheduledExecutorService(mtContexts);
 
             System.out.println("OK!");
         } finally {
@@ -41,33 +54,41 @@ public class AgentDemo {
         }
     }
 
-    static void checkExecutorService() throws Exception {
-        Task task = new Task("1");
+    static void checkExecutorService(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) throws Exception {
+        Task task = new Task("1", mtContexts);
         executorService.submit(task);
         Thread.sleep(1000);
 
-        assert task.copiedContent.size() == 3;
-        assert "parent".equals(task.copiedContent.get("parent"));
-        assert "1".equals(task.copiedContent.get("key"));
-        assert "p1".equals(task.copiedContent.get("p"));
+        // Child independent & Inheritable
+        assertEquals(3, task.copiedContent.size());
+        assertEquals("parent", task.copiedContent.get("parent"));
+        assertEquals("p1", task.copiedContent.get("p"));
+        assertEquals("child", task.copiedContent.get("child"));
 
-        assert MtContext.getContext().get().size() == 2;
-        assert "parent".equals(MtContext.getContext().get("parent"));
-        assert "p".equals(MtContext.getContext().get("p"));
+        // children do not effect parent
+        Map<String, Object> copied = Utils.copied(mtContexts);
+        assertEquals(3, copied.size());
+        assertEquals("parent", copied.get("parent"));
+        assertEquals("p", copied.get("p"));
+        assertEquals("after", copied.get("after"));
     }
 
-    static void checkScheduledExecutorService() throws Exception {
-        Task task = new Task("2");
+    static void checkScheduledExecutorService(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) throws Exception {
+        Task task = new Task("2", mtContexts);
         ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
         future.get();
 
-        assert task.copiedContent.size() == 3;
-        assert "parent".equals(task.copiedContent.get("parent"));
-        assert "2".equals(task.copiedContent.get("key"));
-        assert "p2".equals(task.copiedContent.get("p"));
+        // Child independent & Inheritable
+        assertEquals(3, task.copiedContent.size());
+        assertEquals("parent", task.copiedContent.get("parent"));
+        assertEquals("p1", task.copiedContent.get("p"));
+        assertEquals("child", task.copiedContent.get("child"));
 
-        assert MtContext.getContext().get().size() == 2;
-        assert "parent".equals(MtContext.getContext().get("parent"));
-        assert "p".equals(MtContext.getContext().get("p"));
+        // children do not effect parent
+        Map<String, Object> copied = Utils.copied(mtContexts);
+        assertEquals(3, copied.size());
+        assertEquals("parent", copied.get("parent"));
+        assertEquals("p", copied.get("p"));
+        assertEquals("after", copied.get("after"));
     }
 }

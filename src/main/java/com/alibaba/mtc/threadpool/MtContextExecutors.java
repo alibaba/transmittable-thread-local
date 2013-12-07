@@ -13,8 +13,8 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class MtContextExecutors {
     /**
-     * {@link com.alibaba.mtc.MtContext} Wrapper of {@link Executor},
-     * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable}
+     * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link Executor},
+     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
      */
     public static Executor getMtcExecutor(Executor executor) {
@@ -25,8 +25,8 @@ public class MtContextExecutors {
     }
 
     /**
-     * {@link com.alibaba.mtc.MtContext} Wrapper of {@link ExecutorService},
-     * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
+     * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link ExecutorService},
+     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable} or {@link Callable}
      * to the execution time of {@link Runnable} or {@link Callable}.
      */
     public static ExecutorService getMtcExecutorService(ExecutorService executorService) {
@@ -37,8 +37,8 @@ public class MtContextExecutors {
     }
 
     /**
-     * {@link com.alibaba.mtc.MtContext} Wrapper of {@link ScheduledExecutorService},
-     * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable} or {@link Callable}
+     * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link ScheduledExecutorService},
+     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal } from the task submit time of {@link Runnable} or {@link Callable}
      * to the execution time of {@link Runnable} or {@link Callable}.
      */
     public static ScheduledExecutorService getMtcScheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {

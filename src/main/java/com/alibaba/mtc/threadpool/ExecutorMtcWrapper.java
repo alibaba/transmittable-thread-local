@@ -5,8 +5,8 @@ import com.alibaba.mtc.MtContextRunnable;
 import java.util.concurrent.Executor;
 
 /**
- * {@link com.alibaba.mtc.MtContext} Wrapper of {@link Executor},
- * transmit the {@link com.alibaba.mtc.MtContext} from the task submit time of {@link Runnable}
+ * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link Executor},
+ * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable}
  * to the execution time of {@link Runnable}.
  *
  * @author ding.lid

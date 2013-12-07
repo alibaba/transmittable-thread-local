@@ -3,7 +3,7 @@ package com.alibaba.mtc;
 /**
  * @author ding.lid
  */
-public class FooContext implements Copyable<FooContext> {
+public class FooContext {
     String name;
     int age;
 
@@ -29,11 +29,6 @@ public class FooContext implements Copyable<FooContext> {
     public FooContext(String name, int age) {
         this.name = name;
         this.age = age;
-    }
-
-    @Override
-    public FooContext copy() {
-        return new FooContext(name, age);
     }
 
     @Override

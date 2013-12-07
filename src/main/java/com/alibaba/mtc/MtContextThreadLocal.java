@@ -49,10 +49,11 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
-    static Map<MtContextThreadLocal<?>, Object> holder = new ConcurrentHashMap<MtContextThreadLocal<?>, Object>(); // FIXME Use WeakReference so as to avoid memory leak 
+    private static final Object VALUE = new Object();
+    final static Map<MtContextThreadLocal<?>, Object> holder = new ConcurrentHashMap<MtContextThreadLocal<?>, Object>(); // FIXME Use WeakReference so as to avoid memory leak 
 
     void addMtContextThreadLocal() {
-        holder.put(this, null);
+        holder.put(this, VALUE);
     }
 
     void removeMtContextThreadLocal() {

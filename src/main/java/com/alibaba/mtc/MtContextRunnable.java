@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link MtContextRunnable} decorate {@link Runnable}, so as to get @{@link MtContext}
+ * {@link MtContextRunnable} decorate {@link Runnable}, so as to get @{@link MtContextThreadLocal}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p/>
  * Use factory method {@link #get(Runnable)} to create instance.

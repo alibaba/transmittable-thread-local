@@ -1,10 +1,11 @@
 package com.alibaba.mtc;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
 /**
- * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get @{@link MtContext}
+ * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get @{@link MtContextThreadLocal}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p/>
  * Use factory method {@link #get(TimerTask)} to create instance.
@@ -23,11 +24,16 @@ import java.util.TimerTask;
  */
 @Deprecated
 public final class MtContextTimerTask extends TimerTask {
-    private final Map<String, Object> content;
+    private final Map<MtContextThreadLocal<?>, Object> copied;
     private final TimerTask timerTask;
 
     private MtContextTimerTask(TimerTask timerTask) {
-        content = MtContext.getContext().getWithCopy();
+        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : MtContextThreadLocal.holder.entrySet()) {
+            MtContextThreadLocal<?> threadLocal = entry.getKey();
+            map.put(threadLocal, threadLocal.copiedMtContextValue());
+        }
+        copied = map;
         this.timerTask = timerTask;
     }
 
@@ -36,13 +42,23 @@ public final class MtContextTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        MtContext mtContext = MtContext.getContext();
-        final Map<String, Object> old = mtContext.get0();
+        // backup MtContext
+        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
+            @SuppressWarnings("unchecked")
+            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+            map.put(threadLocal, threadLocal.get());
+            threadLocal.set(entry.getValue());
+        }
         try {
-            mtContext.set0(content);
             timerTask.run();
         } finally {
-            mtContext.set0(old); // restore MtContext
+            // restore MtContext
+            for (Map.Entry<MtContextThreadLocal<?>, Object> entry : map.entrySet()) {
+                @SuppressWarnings("unchecked")
+                MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+                threadLocal.set(entry.getValue());
+            }
         }
     }
 
