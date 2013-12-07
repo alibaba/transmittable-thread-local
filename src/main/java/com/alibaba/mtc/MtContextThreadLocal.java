@@ -1,7 +1,9 @@
 package com.alibaba.mtc;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link MtContextThreadLocal} can transmit context from the thread of submitting task to the thread of executing task.
@@ -65,16 +67,15 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
-    static ThreadLocal<Map<MtContextThreadLocal<?>, Object>> mtContextThreadLocalHolder = new ThreadLocal<Map<MtContextThreadLocal<?>, Object>>() {
+    static ThreadLocal<Set<MtContextThreadLocal<?>>> mtContextThreadLocalHolder = new ThreadLocal<Set<MtContextThreadLocal<?>>>() {
         @Override
-        protected Map<MtContextThreadLocal<?>, Object> initialValue() {
-            return new HashMap<MtContextThreadLocal<?>, Object>();
+        protected Set<MtContextThreadLocal<?>> initialValue() {
+            return new HashSet<MtContextThreadLocal<?>>();
         }
     };
-    private static final Object VALUE = new Object();
 
     void addMtContextThreadLocal() {
-        mtContextThreadLocalHolder.get().put(this, VALUE);
+        mtContextThreadLocalHolder.get().add(this);
     }
 
     void removeMtContextThreadLocal() {
@@ -83,8 +84,8 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     static Map<MtContextThreadLocal<?>, Object> copy() {
         Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>(mtContextThreadLocalHolder.get().size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : mtContextThreadLocalHolder.get().entrySet()) {
-            MtContextThreadLocal<?> threadLocal = entry.getKey();
+        for (MtContextThreadLocal<?> entry : mtContextThreadLocalHolder.get()) {
+            MtContextThreadLocal<?> threadLocal = entry;
             copy.put(threadLocal, threadLocal.copyMtContextValue());
         }
         return copy;
