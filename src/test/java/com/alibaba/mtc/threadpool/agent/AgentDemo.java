@@ -14,7 +14,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author ding.lid
@@ -39,7 +38,7 @@ public class AgentDemo {
             mtContexts.put("parent", parent);
 
             MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-            parent.set("p");
+            p.set("p");
             mtContexts.put("p", p);
 
             checkExecutorService(mtContexts);
@@ -57,6 +56,12 @@ public class AgentDemo {
     static void checkExecutorService(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) throws Exception {
         Task task = new Task("1", mtContexts);
         executorService.submit(task);
+
+        // create after new Task, won't see parent value in in task!
+        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
+        after.set("after");
+        mtContexts.put("after", after);
+
         Thread.sleep(1000);
 
         // Child independent & Inheritable
@@ -76,12 +81,18 @@ public class AgentDemo {
     static void checkScheduledExecutorService(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) throws Exception {
         Task task = new Task("2", mtContexts);
         ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
+
+        // create after new Task, won't see parent value in in task!
+        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
+        after.set("after");
+        mtContexts.put("after", after);
+
         future.get();
 
         // Child independent & Inheritable
         assertEquals(3, task.copiedContent.size());
         assertEquals("parent", task.copiedContent.get("parent"));
-        assertEquals("p1", task.copiedContent.get("p"));
+        assertEquals("p2", task.copiedContent.get("p"));
         assertEquals("child", task.copiedContent.get("child"));
 
         // children do not effect parent

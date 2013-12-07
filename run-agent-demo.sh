@@ -22,7 +22,7 @@ runCmd() {
 
 mvn clean install -Dmaven.test.skip && mvn test-compile &&
 mvn dependency:copy-dependencies -DincludeScope=provided &&
-mvn dependency:copy-dependencies -DincludeScope=runtime &&
+mvn dependency:copy-dependencies -DincludeScope=test &&
 cd target && {
     version=`grep '<version>.*</version>' ../pom.xml | awk -F'</?version>' 'NR==2{print $2}'`
     aid=`grep '<artifactId>.*</artifactId>' ../pom.xml | awk -F'</?artifactId>' 'NR==2{print $2}'`
