@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
  * @author ding.lid
  */
 public class ExecutorServiceMtcWrapperTest {
-    static ExecutorService executorService = new ExecutorServiceMtcWrapper(Executors.newFixedThreadPool(3));
+    static ExecutorService executorService = MtContextExecutors.getMtcExecutorService(Executors.newFixedThreadPool(3));
 
     static {
         Utils.expandThreadPool(executorService);
