@@ -2,6 +2,7 @@ package com.alibaba.mtc;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -19,11 +20,17 @@ import java.util.concurrent.Callable;
  * @since 0.9.0
  */
 public final class MtContextCallable<V> implements Callable<V> {
-    private final Map<String, Object> content;
+    private final Map<MtContextThreadLocal<?>, Object> copied;
     private final Callable<V> callable;
 
     private MtContextCallable(Callable<V> callable) {
-        content = MtContext.getContext().getWithCopy();
+        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : MtContextThreadLocal.holder.entrySet()) {
+            MtContextThreadLocal<?> threadLocal = entry.getKey();
+            map.put(threadLocal, threadLocal.copiedMtContextValue());
+        }
+        copied = map;
+
         this.callable = callable;
     }
 
@@ -32,14 +39,26 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        MtContext mtContext = MtContext.getContext();
-        final Map<String, Object> old = mtContext.get0();
+        // backup MtContext
+        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
+            @SuppressWarnings("unchecked")
+            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+            map.put(threadLocal, threadLocal.get());
+            threadLocal.set(entry.getValue());
+        }
+
         try {
-            mtContext.set0(content);
             return callable.call();
         } finally {
-            mtContext.set0(old); // restore MtContext
+            // restore MtContext
+            for (Map.Entry<MtContextThreadLocal<?>, Object> entry : map.entrySet()) {
+                @SuppressWarnings("unchecked")
+                MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+                threadLocal.set(entry.getValue());
+            }
         }
+        // FIXME add option so as to release copied after call 
     }
 
     public Callable<V> getCallable() {
