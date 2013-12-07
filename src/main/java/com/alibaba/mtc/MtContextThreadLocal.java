@@ -4,10 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * {@link MtContextThreadLocal} can transmit context from the thread of submitting task to the thread of executing task.
+ * <p/>
+ * Note: this class extends {@link java.lang.InheritableThreadLocal},
+ * so {@link com.alibaba.mtc.MtContextThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
+ *
  * @author ding.lid
+ * @see MtContextRunnable
+ * @see MtContextCallable
  * @since 0.10.0
  */
 public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
+    /**
+     * Computes the context value for this multi-thread context variable
+     * as a function of the source thread's value at the time the task
+     * Object is created.  This method is called from {@link com.alibaba.mtc.MtContextRunnable} or
+     * {@link com.alibaba.mtc.MtContextCallable} when it create, before the task is started.
+     * <p/>
+     * This method merely returns reference of its source thread value, and should be overridden
+     * if a different behavior is desired.
+     */
+    protected T copyMtContextValue() {
+        return get();
+    }
+
     /**
      * Override this method to have an initial value other than <tt>null</tt>.
      *
@@ -24,19 +44,6 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     protected T childValue(T parentValue) {
         return super.childValue(parentValue);
-    }
-
-    /**
-     * Computes the context value for this multi-thread thread-local variable
-     * as a function of the source thread's value at the time the task
-     * Object is created.  This method is called from {@link com.alibaba.mtc.MtContextRunnable} or
-     * {@link com.alibaba.mtc.MtContextCallable} when it create, before the task is started.
-     * <p/>
-     * This method merely returns reference of its source thread value, and should be overridden
-     * if a different behavior is desired.
-     */
-    protected T copyMtContextValue() {
-        return get();
     }
 
     @Override
