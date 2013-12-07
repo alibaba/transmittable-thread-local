@@ -1,7 +1,7 @@
 package com.alibaba.mtc;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ding.lid
@@ -35,37 +35,73 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
      * This method merely returns reference of its source thread value, and should be overridden
      * if a different behavior is desired.
      */
-    protected T copiedMtContextValue() {
+    protected T copyMtContextValue() {
         return get();
     }
 
     @Override
-    public T get() {
+    public final T get() {
         T value = super.get();
         addMtContextThreadLocal();
         return value;
     }
 
     @Override
-    public void set(T value) {
+    public final void set(T value) {
         super.set(value);
         addMtContextThreadLocal();
     }
 
     @Override
-    public void remove() {
+    public final void remove() {
         removeMtContextThreadLocal();
         super.remove();
     }
 
+    static ThreadLocal<Map<MtContextThreadLocal<?>, Object>> mtContextThreadLocalHolder = new ThreadLocal<Map<MtContextThreadLocal<?>, Object>>() {
+        @Override
+        protected Map<MtContextThreadLocal<?>, Object> initialValue() {
+            return new HashMap<MtContextThreadLocal<?>, Object>();
+        }
+    };
     private static final Object VALUE = new Object();
-    final static Map<MtContextThreadLocal<?>, Object> holder = new ConcurrentHashMap<MtContextThreadLocal<?>, Object>(); // FIXME Use WeakReference so as to avoid memory leak 
 
     void addMtContextThreadLocal() {
-        holder.put(this, VALUE);
+        mtContextThreadLocalHolder.get().put(this, VALUE);
     }
 
     void removeMtContextThreadLocal() {
-        holder.remove(this);
+        mtContextThreadLocalHolder.get().remove(this);
+    }
+
+    static Map<MtContextThreadLocal<?>, Object> copy() {
+        Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>(mtContextThreadLocalHolder.get().size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : mtContextThreadLocalHolder.get().entrySet()) {
+            MtContextThreadLocal<?> threadLocal = entry.getKey();
+            copy.put(threadLocal, threadLocal.copyMtContextValue());
+        }
+        return copy;
+    }
+
+    static Map<MtContextThreadLocal<?>, Object> backupAndSet(Map<MtContextThreadLocal<?>, Object> set) {
+        // backup MtContext
+        Map<MtContextThreadLocal<?>, Object> backup = new HashMap<MtContextThreadLocal<?>, Object>(mtContextThreadLocalHolder.get().size());
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : set.entrySet()) {
+            @SuppressWarnings("unchecked")
+            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+            backup.put(threadLocal, threadLocal.get());
+
+            threadLocal.set(entry.getValue());
+        }
+        return backup;
+    }
+
+    static void restore(Map<MtContextThreadLocal<?>, Object> backup) {
+        // restore MtContext
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : backup.entrySet()) {
+            @SuppressWarnings("unchecked")
+            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+            threadLocal.set(entry.getValue());
+        }
     }
 }

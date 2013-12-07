@@ -1,6 +1,5 @@
 package com.alibaba.mtc;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
@@ -28,12 +27,7 @@ public final class MtContextTimerTask extends TimerTask {
     private final TimerTask timerTask;
 
     private MtContextTimerTask(TimerTask timerTask) {
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : MtContextThreadLocal.holder.entrySet()) {
-            MtContextThreadLocal<?> threadLocal = entry.getKey();
-            map.put(threadLocal, threadLocal.copiedMtContextValue());
-        }
-        copied = map;
+        copied = MtContextThreadLocal.copy();
         this.timerTask = timerTask;
     }
 
@@ -43,22 +37,11 @@ public final class MtContextTimerTask extends TimerTask {
     @Override
     public void run() {
         // backup MtContext
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
-            @SuppressWarnings("unchecked")
-            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-            map.put(threadLocal, threadLocal.get());
-            threadLocal.set(entry.getValue());
-        }
+        Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
         try {
             timerTask.run();
         } finally {
-            // restore MtContext
-            for (Map.Entry<MtContextThreadLocal<?>, Object> entry : map.entrySet()) {
-                @SuppressWarnings("unchecked")
-                MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-                threadLocal.set(entry.getValue());
-            }
+            MtContextThreadLocal.restore(backup);
         }
     }
 

@@ -2,7 +2,6 @@ package com.alibaba.mtc;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -24,13 +23,7 @@ public final class MtContextCallable<V> implements Callable<V> {
     private final Callable<V> callable;
 
     private MtContextCallable(Callable<V> callable) {
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : MtContextThreadLocal.holder.entrySet()) {
-            MtContextThreadLocal<?> threadLocal = entry.getKey();
-            map.put(threadLocal, threadLocal.copiedMtContextValue());
-        }
-        copied = map;
-
+        copied = MtContextThreadLocal.copy();
         this.callable = callable;
     }
 
@@ -39,24 +32,11 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        // backup MtContext
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
-            @SuppressWarnings("unchecked")
-            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-            map.put(threadLocal, threadLocal.get());
-            threadLocal.set(entry.getValue());
-        }
-
+        Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
         try {
             return callable.call();
         } finally {
-            // restore MtContext
-            for (Map.Entry<MtContextThreadLocal<?>, Object> entry : map.entrySet()) {
-                @SuppressWarnings("unchecked")
-                MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-                threadLocal.set(entry.getValue());
-            }
+            MtContextThreadLocal.restore(backup);
         }
         // FIXME add option so as to release copied after call 
     }

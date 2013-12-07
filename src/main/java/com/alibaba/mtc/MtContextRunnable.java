@@ -2,7 +2,6 @@ package com.alibaba.mtc;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +24,7 @@ public final class MtContextRunnable implements Runnable {
     private final Runnable runnable;
 
     private MtContextRunnable(Runnable runnable) {
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : MtContextThreadLocal.holder.entrySet()) {
-            MtContextThreadLocal<?> threadLocal = entry.getKey();
-            map.put(threadLocal, threadLocal.copiedMtContextValue());
-        }
-        copied = map;
-
+        copied = MtContextThreadLocal.copy();
         this.runnable = runnable;
     }
 
@@ -40,24 +33,11 @@ public final class MtContextRunnable implements Runnable {
      */
     @Override
     public void run() {
-        // backup MtContext
-        Map<MtContextThreadLocal<?>, Object> map = new HashMap<MtContextThreadLocal<?>, Object>(MtContextThreadLocal.holder.size());
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
-            @SuppressWarnings("unchecked")
-            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-            map.put(threadLocal, threadLocal.get());
-            threadLocal.set(entry.getValue());
-        }
-
+        Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
         try {
             runnable.run();
         } finally {
-            // restore MtContext
-            for (Map.Entry<MtContextThreadLocal<?>, Object> entry : map.entrySet()) {
-                @SuppressWarnings("unchecked")
-                MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-                threadLocal.set(entry.getValue());
-            }
+            MtContextThreadLocal.restore(backup);
         }
         // FIXME add option so as to release copied after run 
     }
