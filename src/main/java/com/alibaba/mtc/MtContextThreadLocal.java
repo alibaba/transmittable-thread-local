@@ -26,6 +26,15 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         return super.childValue(parentValue);
     }
 
+    /**
+     * Computes the context value for this multi-thread thread-local variable
+     * as a function of the source thread's value at the time the task
+     * Object is created.  This method is called from {@link com.alibaba.mtc.MtContextRunnable} or
+     * {@link com.alibaba.mtc.MtContextCallable} when it create, before the task is started.
+     * <p/>
+     * This method merely returns reference of its source thread value, and should be overridden
+     * if a different behavior is desired.
+     */
     protected T copiedMtContextValue() {
         return get();
     }
