@@ -53,14 +53,20 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public final T get() {
         T value = super.get();
-        addMtContextThreadLocal();
+        if (null != value) {
+            addMtContextThreadLocal();
+        }
         return value;
     }
 
     @Override
     public final void set(T value) {
         super.set(value);
-        addMtContextThreadLocal();
+        if (null == value) { // may set null to remove value
+            removeMtContextThreadLocal();
+        } else {
+            addMtContextThreadLocal();
+        }
     }
 
     @Override
