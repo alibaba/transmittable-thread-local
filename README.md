@@ -3,6 +3,8 @@ multi-thread context(MTC)
 
 解决多线程传递Context的需求。
 
+有问题可以[提交Issue](https://github.com/alibaba/multi-thread-context/issues) 或 [Mail](mailto:oldratlee@gmail.com)。
+
 功能
 ----------------------------
 
