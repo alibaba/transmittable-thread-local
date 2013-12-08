@@ -218,7 +218,7 @@ Maven依赖
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>0.9.2</version>
+	<version>0.10.1</version>
 </dependency>
 ```
 
