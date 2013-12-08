@@ -3,7 +3,6 @@ package com.alibaba.mtc;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -12,8 +11,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 
@@ -46,7 +43,7 @@ public class MtContextCallableTest {
 
         Call call = new Call("1", mtContexts);
         MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
-        assertEquals(call, mtContextCallable.getCallable());
+        assertSame(call, mtContextCallable.getCallable());
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
@@ -57,11 +54,11 @@ public class MtContextCallableTest {
         assertEquals("ok", ret);
 
         // Child independent & Inheritable
-        assertEquals(4, call.copiedContent.size());
-        assertEquals("parent", call.copiedContent.get("parent"));
-        assertEquals("p1", call.copiedContent.get("p"));
-        assertEquals("after", call.copiedContent.get("after")); // same thread, parent is available from task
-        assertEquals("child", call.copiedContent.get("child"));
+        assertEquals(4, call.copied.size());
+        assertEquals("parent", call.copied.get("parent"));
+        assertEquals("p1", call.copied.get("p"));
+        assertEquals("after", call.copied.get("after")); // same thread, parent is available from task
+        assertEquals("child", call.copied.get("child"));
 
         // children do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -86,7 +83,7 @@ public class MtContextCallableTest {
 
         Call call = new Call("1", mtContexts);
         MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
-        assertEquals(call, mtContextCallable.getCallable());
+        assertSame(call, mtContextCallable.getCallable());
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
@@ -97,10 +94,10 @@ public class MtContextCallableTest {
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
-        assertEquals(3, call.copiedContent.size());
-        assertEquals("parent", call.copiedContent.get("parent"));
-        assertEquals("p1", call.copiedContent.get("p"));
-        assertEquals("child", call.copiedContent.get("child"));
+        assertEquals(3, call.copied.size());
+        assertEquals("parent", call.copied.get("parent"));
+        assertEquals("p1", call.copied.get("p"));
+        assertEquals("child", call.copied.get("child"));
 
         // children do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -108,10 +105,6 @@ public class MtContextCallableTest {
         assertEquals("parent", copied.get("parent"));
         assertEquals("p", copied.get("p"));
         assertEquals("after", copied.get("after"));
-    }
-
-    @Test
-    public void test_MtContextCallable_copyObject() throws Exception {
     }
 
     @Test

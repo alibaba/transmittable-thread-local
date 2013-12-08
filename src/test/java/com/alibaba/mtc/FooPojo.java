@@ -3,7 +3,7 @@ package com.alibaba.mtc;
 /**
  * @author ding.lid
  */
-public class FooContext {
+public class FooPojo {
     String name;
     int age;
 
@@ -23,10 +23,7 @@ public class FooContext {
         this.age = age;
     }
 
-    public FooContext() {
-    }
-
-    public FooContext(String name, int age) {
+    public FooPojo(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -36,7 +33,7 @@ public class FooContext {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FooContext that = (FooContext) o;
+        FooPojo that = (FooPojo) o;
 
         if (age != that.age) return false;
         if (name != null ? !name.equals(that.name) : that.name != null)
@@ -50,5 +47,13 @@ public class FooContext {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + age;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "FooPojo{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

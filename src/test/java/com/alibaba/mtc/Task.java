@@ -15,7 +15,7 @@ public class Task implements Runnable {
         this.mtContexts = mtContexts;
     }
 
-    public volatile Map<String, Object> copiedContent;
+    public volatile Map<String, Object> copied;
     
     @Override
     public void run() {
@@ -35,7 +35,7 @@ public class Task implements Runnable {
 
             System.out.println("After Run:");
             Utils.print(mtContexts);
-            copiedContent = Utils.copied(mtContexts);
+            copied = Utils.copied(mtContexts);
 
             System.out.println("Task " + value + " finished!");
         } catch (Throwable e) {

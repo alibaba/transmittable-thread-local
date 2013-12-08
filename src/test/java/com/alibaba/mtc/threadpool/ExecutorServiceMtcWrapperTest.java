@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author ding.lid
@@ -55,11 +54,11 @@ public class ExecutorServiceMtcWrapperTest {
         Thread.sleep(100);
 
         // Child independent & Inheritable
-        assertEquals(4, task.copiedContent.size());
-        assertEquals("parent", task.copiedContent.get("parent"));
-        assertEquals("p1", task.copiedContent.get("p"));
-        assertEquals("child", task.copiedContent.get("child"));
-        assertEquals("after", task.copiedContent.get("after")); // because create MtContextRunnable in method executorService.execute
+        assertEquals(4, task.copied.size());
+        assertEquals("parent", task.copied.get("parent"));
+        assertEquals("p1", task.copied.get("p"));
+        assertEquals("child", task.copied.get("child"));
+        assertEquals("after", task.copied.get("after")); // because create MtContextRunnable in method executorService.execute
 
         // children do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -92,11 +91,11 @@ public class ExecutorServiceMtcWrapperTest {
         assertEquals("ok", future.get());
 
         // Child independent & Inheritable
-        assertEquals(4, call.copiedContent.size());
-        assertEquals("parent", call.copiedContent.get("parent"));
-        assertEquals("p1", call.copiedContent.get("p"));
-        assertEquals("child", call.copiedContent.get("child"));
-        assertEquals("after", call.copiedContent.get("after")); // because create MtContextCallable in method executorService.execute
+        assertEquals(4, call.copied.size());
+        assertEquals("parent", call.copied.get("parent"));
+        assertEquals("p1", call.copied.get("p"));
+        assertEquals("child", call.copied.get("child"));
+        assertEquals("after", call.copied.get("after")); // because create MtContextCallable in method executorService.execute
 
         // children do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
