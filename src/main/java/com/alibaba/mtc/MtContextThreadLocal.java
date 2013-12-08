@@ -79,7 +79,8 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         return copyValue(get());
     }
 
-    static ThreadLocal<Set<MtContextThreadLocal<?>>> mtContextThreadLocalHolder = new ThreadLocal<Set<MtContextThreadLocal<?>>>() {
+    static ThreadLocal<Set<MtContextThreadLocal<?>>> mtContextThreadLocalHolder = 
+            new ThreadLocal<Set<MtContextThreadLocal<?>>>() {
         @Override
         protected Set<MtContextThreadLocal<?>> initialValue() {
             return new HashSet<MtContextThreadLocal<?>>();
@@ -95,7 +96,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     static Map<MtContextThreadLocal<?>, Object> copy() {
-        Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>(mtContextThreadLocalHolder.get().size());
+        Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>();
         for (MtContextThreadLocal<?> entry : mtContextThreadLocalHolder.get()) {
             MtContextThreadLocal<?> threadLocal = entry;
             copy.put(threadLocal, threadLocal.copyMtContextValue());
@@ -105,7 +106,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     static Map<MtContextThreadLocal<?>, Object> backupAndSet(Map<MtContextThreadLocal<?>, Object> set) {
         // backup MtContext
-        Map<MtContextThreadLocal<?>, Object> backup = new HashMap<MtContextThreadLocal<?>, Object>(mtContextThreadLocalHolder.get().size());
+        Map<MtContextThreadLocal<?>, Object> backup = new HashMap<MtContextThreadLocal<?>, Object>();
         for (Map.Entry<MtContextThreadLocal<?>, Object> entry : set.entrySet()) {
             @SuppressWarnings("unchecked")
             MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
