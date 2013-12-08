@@ -10,12 +10,12 @@ multi-thread context(MTC)
 
 1. 使用线程池、异步执行任务时，Context能传递。 
 1. 父线程创建子线程时，Context传递。  
-这个即是`java.lang.InheritableThreadLocal`的功能。
+这个即是[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)的功能。
 
 需求场景
 ----------------------------
 
-下面列出需求场景，其实就是整理出`MTC`实现的实际需求。
+下面列出需求场景，即是整理出`MTC`的实际需求。
 
 ### 应用容器或上层框架跨应用代码给下层SDK传递信息
 
@@ -52,13 +52,17 @@ parent.set("value-set-in-parent");
 String value = parent.get(); 
 ```
 
-但对于使用了线程池的情况，线程由线程池创建好，并且Cache起来反复使用。
+这是其实是[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+
+但对于使用了异步执行（往往使用线程池完成）的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。
 
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
 
 2. 保证线程池中传递MtContextThreadLocal
 ----------------------------
+
+### 2.1 修饰`Runnable`和`Callable`
 
 使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
@@ -69,7 +73,8 @@ MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
-Runnable mtContextRunnable = MtContextRunnable.get(task); // 额外的处理，生成修饰了的对象mtContextRunnable
+// 额外的处理，生成修饰了的对象mtContextRunnable
+Runnable mtContextRunnable = MtContextRunnable.get(task); 
 executorService.submit(mtContextRunnable);
 
 // =====================================================
@@ -85,7 +90,8 @@ MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
-Callable mtContextCallable = MtContextCallable.get(call); // 额外的处理，生成修饰了的对象mtContextCallable
+// 额外的处理，生成修饰了的对象mtContextCallable
+Callable mtContextCallable = MtContextCallable.get(call); 
 executorService.submit(mtContextCallable);
 
 // =====================================================
@@ -94,10 +100,9 @@ executorService.submit(mtContextCallable);
 String value = parent.get(); 
 ```
 
-3. 修饰线程池，省去`Runnable`和`Callable`的修饰
-----------------------------
+### 2.2 修饰线程池
 
-每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
+省去`Runnable`和`Callable`的修饰，每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
 
 通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
 
@@ -109,7 +114,8 @@ String value = parent.get();
 
 ```java
 ExecutorService executorService = ...
-executorService = MtContextExecutors.getMtcExecutorService(executorService); // 额外的处理，生成修饰了的对象executorService
+// 额外的处理，生成修饰了的对象executorService
+executorService = MtContextExecutors.getMtcExecutorService(executorService); 
 
 MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
 parent.set("value-set-in-parent");
@@ -125,10 +131,9 @@ executorService.submit(call);
 String value = parent.get(); 
 ```
 
-4. 使用Java Agent来修饰JDK线程池实现类
-----------------------------
+### 2.3. 使用Java Agent来修饰JDK线程池实现类
 
-这种方式，实现线程池的`MtContext`传递，代码是透明的。  
+这种方式，实现线程池的`MtContext`传递是透明的（不需要修饰操作）。Demo参见[AgentDemo](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java)。
 
 目前Agent中，修饰了两个线程池实现类（实现代码在[MtContextTransformer.java](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
@@ -156,7 +161,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 
 代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
-### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
+#### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
 
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，`MtContext`会失效。
 
@@ -165,7 +170,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
 
-#### 如何权衡这些失效情况
+##### 如何权衡这些失效情况
 
 把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：
 
@@ -175,7 +180,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
 - 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：
 业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
-### 已有Java Agent中嵌入`MtContext Agent`
+#### 已有Java Agent中嵌入`MtContext Agent`
 
 这样可以减少Java命令上Agent的配置。
 
