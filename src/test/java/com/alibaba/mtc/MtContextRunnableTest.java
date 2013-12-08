@@ -51,14 +51,14 @@ public class MtContextRunnableTest {
 
         mtContextRunnable.run();
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(4, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("after", task.copied.get("after")); // same thread, parent is available from task
         assertEquals("child", task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(4, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -90,14 +90,14 @@ public class MtContextRunnableTest {
         thread1.start();
         thread1.join();
 
-        // Child independent & Inheritable
+        // child Inheritable
         System.out.println(task.copied);
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("child", task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -129,13 +129,13 @@ public class MtContextRunnableTest {
         executorService.execute(mtContextRunnable);
         Thread.sleep(100);
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("child", task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -167,13 +167,13 @@ public class MtContextRunnableTest {
         executorService.execute(mtContextRunnable);
         Thread.sleep(100);
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(3, task.copied.size());
         assertEquals(new FooPojo("parent", 1), task.copied.get("parent"));
         assertEquals(new FooPojo("p1", 2), task.copied.get("p"));
         assertEquals(new FooPojo("child", 3), task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals(new FooPojo("parent", 1), copied.get("parent"));

@@ -53,14 +53,14 @@ public class MtContextCallableTest {
         String ret = mtContextCallable.call();
         assertEquals("ok", ret);
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(4, call.copied.size());
         assertEquals("parent", call.copied.get("parent"));
         assertEquals("p1", call.copied.get("p"));
         assertEquals("after", call.copied.get("after")); // same thread, parent is available from task
         assertEquals("child", call.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(4, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -93,13 +93,13 @@ public class MtContextCallableTest {
         Future future = executorService.submit(mtContextCallable);
         assertEquals("ok", future.get());
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(3, call.copied.size());
         assertEquals("parent", call.copied.get("parent"));
         assertEquals("p1", call.copied.get("p"));
         assertEquals("child", call.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));

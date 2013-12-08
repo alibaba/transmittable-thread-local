@@ -64,13 +64,13 @@ public class AgentDemo {
 
         Thread.sleep(1000);
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("child", task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -89,13 +89,13 @@ public class AgentDemo {
 
         future.get();
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p2", task.copied.get("p"));
         assertEquals("child", task.copied.get("child"));
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));

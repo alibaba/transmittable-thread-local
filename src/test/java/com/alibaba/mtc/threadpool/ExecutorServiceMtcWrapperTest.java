@@ -53,14 +53,14 @@ public class ExecutorServiceMtcWrapperTest {
         executorService.execute(task);
         Thread.sleep(100);
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(4, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("child", task.copied.get("child"));
         assertEquals("after", task.copied.get("after")); // because create MtContextRunnable in method executorService.execute
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));
@@ -90,14 +90,14 @@ public class ExecutorServiceMtcWrapperTest {
         Future future = executorService.submit(call);
         assertEquals("ok", future.get());
 
-        // Child independent & Inheritable
+        // child Inheritable
         assertEquals(4, call.copied.size());
         assertEquals("parent", call.copied.get("parent"));
         assertEquals("p1", call.copied.get("p"));
         assertEquals("child", call.copied.get("child"));
         assertEquals("after", call.copied.get("after")); // because create MtContextCallable in method executorService.execute
 
-        // children do not effect parent
+        // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(3, copied.size());
         assertEquals("parent", copied.get("parent"));
