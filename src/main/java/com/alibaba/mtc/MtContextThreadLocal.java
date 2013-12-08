@@ -25,9 +25,11 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
      * <p/>
      * This method merely returns reference of its source thread value, and should be overridden
      * if a different behavior is desired.
+     *
+     * @since 1.0.0
      */
-    protected T copyMtContextValue() {
-        return get();
+    protected T copyValue(T parentValue) {
+        return parentValue;
     }
 
     /**
@@ -65,6 +67,10 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
     public final void remove() {
         removeMtContextThreadLocal();
         super.remove();
+    }
+
+    T copyMtContextValue() {
+        return copyValue(get());
     }
 
     static ThreadLocal<Set<MtContextThreadLocal<?>>> mtContextThreadLocalHolder = new ThreadLocal<Set<MtContextThreadLocal<?>>>() {

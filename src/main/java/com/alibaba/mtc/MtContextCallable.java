@@ -38,7 +38,7 @@ public final class MtContextCallable<V> implements Callable<V> {
         } finally {
             MtContextThreadLocal.restore(backup);
         }
-        // FIXME add option so as to release copied after call 
+        // FIXME add attribute so as to release copied after call
     }
 
     public Callable<V> getCallable() {

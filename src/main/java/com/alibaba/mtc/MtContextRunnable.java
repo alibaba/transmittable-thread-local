@@ -39,7 +39,7 @@ public final class MtContextRunnable implements Runnable {
         } finally {
             MtContextThreadLocal.restore(backup);
         }
-        // FIXME add option so as to release copied after run 
+        // FIXME add attribute so as to release copied after run
     }
 
     public Runnable getRunnable() {
