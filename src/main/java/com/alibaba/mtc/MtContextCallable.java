@@ -55,7 +55,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     public static <T> MtContextCallable<T> get(Callable<T> callable) {
         if (null == callable) {
-            throw new NullPointerException("callable argument is null!");
+            return null;
         }
 
         if (callable instanceof MtContextCallable) { // avoid redundant decoration, and ensure idempotency
