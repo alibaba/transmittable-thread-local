@@ -3,15 +3,21 @@ package com.alibaba.mtc;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -108,8 +114,65 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_idempotent() throws Exception {
+    public void test_testRemove() throws Exception {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
+
+        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+        parent.set("parent");
+        mtContexts.put("parent", parent);
+
+        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
+        p.set("p");
+        mtContexts.put("p", p);
+
+        parent.remove();
+
+        Call call = new Call("1", mtContexts);
+        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
+        assertSame(call, mtContextCallable.getCallable());
+
+        // create after new Task, won't see parent value in in task!
+        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
+        after.set("after");
+        mtContexts.put("after", after);
+
+        Future future = executorService.submit(mtContextCallable);
+        assertEquals("ok", future.get());
+
+        // child Inheritable
+        assertEquals(2, call.copied.size());
+        assertEquals("p1", call.copied.get("p"));
+        assertEquals("child", call.copied.get("child"));
+
+        // child do not effect parent
+        Map<String, Object> copied = Utils.copied(mtContexts);
+        assertEquals(2, copied.size());
+        assertEquals("p", copied.get("p"));
+        assertEquals("after", copied.get("after"));
+    }
+
+    @Test
+    public void test_get_idempotent() throws Exception {
         MtContextCallable<String> call = MtContextCallable.get(new Call("1", null));
         assertSame(call, MtContextCallable.get(call));
+    }
+
+    @Test
+    public void test_get_nullInput() throws Exception {
+        assertNull(MtContextCallable.get(null));
+    }
+
+    @Test
+    public void test_gets() throws Exception {
+        Call call1 = new Call("1", null);
+        Call call2 = new Call("1", null);
+        Callable<String> call3 = MtContextCallable.get(call1);
+
+        List<MtContextCallable<String>> callList = MtContextCallable.gets(Arrays.<Callable>asList(call1, call2, null, call3));
+
+        assertThat(callList.get(0), instanceOf(MtContextCallable.class));
+        assertThat(callList.get(1), instanceOf(MtContextCallable.class));
+        assertNull(callList.get(2));
+        assertSame(call3, callList.get(3));
     }
 }
