@@ -68,7 +68,7 @@ public final class MtContextRunnable implements Runnable {
     /**
      * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
      */
-    public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks) {
+    public static <C extends Collection<? extends Runnable>> List<MtContextRunnable> gets(C tasks) {
         if (null == tasks) {
             return null;
         }
