@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author ding.lid
  */
-public class ExecutorServiceMtcWrapperTest {
+public class ScheduledExecutorServiceMtcWrapperTest {
     static ExecutorService executorService = MtContextExecutors.getMtcExecutorService(Executors.newFixedThreadPool(3));
 
     static {
