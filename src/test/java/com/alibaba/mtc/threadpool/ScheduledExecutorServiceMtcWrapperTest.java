@@ -11,8 +11,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,9 +21,12 @@ import static org.junit.Assert.assertEquals;
  * @author ding.lid
  */
 public class ScheduledExecutorServiceMtcWrapperTest {
-    static ExecutorService executorService = MtContextExecutors.getMtcExecutorService(Executors.newFixedThreadPool(3));
+    static ExecutorService executorService;
 
     static {
+        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(3);
+        scheduledThreadPoolExecutor.setKeepAliveTime(1024, TimeUnit.DAYS);
+        executorService = MtContextExecutors.getMtcScheduledExecutorService(scheduledThreadPoolExecutor);
         Utils.expandThreadPool(executorService);
     }
 
@@ -32,7 +36,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
     }
 
     @Test
-    public void test_MtContextRunnable() throws Exception {
+    public void test_execute() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
 
         MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
@@ -69,7 +73,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
     }
 
     @Test
-    public void test_MtContextCallable() throws Exception {
+    public void test_submit() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
 
         MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
