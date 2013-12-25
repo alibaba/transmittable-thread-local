@@ -2,6 +2,7 @@ package com.alibaba.mtc;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -21,24 +22,30 @@ public class Call implements Callable<String> {
     @Override
     public String call() {
         try {
-            System.out.println("Before Run:");
+            ConcurrentMap<String, MtContextThreadLocal<String>> myMtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>(mtContexts);
+
+            long tick = System.currentTimeMillis();
+            System.out.println(tick + " Before Run:");
             Utils.print(mtContexts);
             System.out.println();
 
             // Add new
             MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
             child.set("child");
-            mtContexts.put("child", child);
+            mtContexts.putIfAbsent("child", child);
+            myMtContexts.put("child", child);
 
             // modify the parent key
-            mtContexts.get("p").set(mtContexts.get("p").get() + value);
+            String p = mtContexts.get("p").get() + value;
+            mtContexts.get("p").set(p);
+            myMtContexts.put("p", mtContexts.get("p"));
 
             // store value in task
-            System.out.println("After Run:");
+            System.out.println(tick + " After Run:");
             Utils.print(mtContexts);
-            copied = Utils.copied(mtContexts);
+            copied = Utils.copied(myMtContexts);
 
-            System.out.println("Task " + value + " finished!");
+            System.out.println(tick + " Task " + value + " finished!");
 
             return "ok";
         } catch (Throwable e) {
