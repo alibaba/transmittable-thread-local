@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -168,7 +169,7 @@ public class MtContextCallableTest {
         Call call2 = new Call("1", null);
         Callable<String> call3 = MtContextCallable.get(call1);
 
-        List<MtContextCallable<String>> callList = MtContextCallable.gets(Arrays.<Callable>asList(call1, call2, null, call3));
+        List<MtContextCallable<String>> callList = MtContextCallable.gets(Arrays.<Callable<String>>asList(call1, call2, null, call3));
 
         assertThat(callList.get(0), instanceOf(MtContextCallable.class));
         assertThat(callList.get(1), instanceOf(MtContextCallable.class));

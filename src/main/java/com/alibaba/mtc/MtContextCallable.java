@@ -67,7 +67,7 @@ public final class MtContextCallable<V> implements Callable<V> {
     /**
      * wrapper input {@link Callable} Collection to {@link MtContextCallable} Collection.
      */
-    public static <T, C extends Collection<? extends Callable<T>>> List<MtContextCallable<T>> gets(C tasks) {
+    public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks) {
         if (null == tasks) {
             return null;
         }
