@@ -1,18 +1,17 @@
 package com.alibaba.mtc.perf.tps;
 
-import com.alibaba.mtc.MtContextThreadLocal;
 import com.alibaba.mtc.perf.Utils;
 
 /**
  * @author ding.lid
  */
-public class Tps_MtContextThreadLocal {
+public class CreateThreadLocalInstanceTps {
     public static void main(String[] args) throws Exception {
-        TpsCounter tpsCounter = new TpsCounter(3);
+        TpsCounter tpsCounter = new TpsCounter(2);
         tpsCounter.run(new Runnable() {
             @Override
             public void run() {
-                MtContextThreadLocal<String> threadLocal = new MtContextThreadLocal<String>();
+                ThreadLocal<String> threadLocal = new ThreadLocal<String>();
                 threadLocal.set(Utils.getRandomString());
             }
         });
