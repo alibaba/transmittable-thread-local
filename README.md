@@ -224,6 +224,124 @@ Maven依赖
 
 可以在 [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22multithread.context%22%20g%3A%22com.alibaba%22) 查看可用的版本。
 
+性能测试
+=====================================
+
+内存泄漏
+----------------------------
+
+对比测试[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+
+简单一个线程一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
+
+### 验证结果
+
+都可以持续运行，不会出内存溢出`OutOfMemoryError`。
+
+### 执行方式
+
+可以通过执行工程下的脚本来运行Case验证：
+
+* 脚本[`run-memoryleak-ThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
+测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.java)。
+* 脚本[`run-memoryleak-MtContextThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-memoryleak-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
+测试类是[`NoMemoryLeak_MtContextThreadLocal_NoRemove`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_MtContextThreadLocal_NoRemove.java)。
+
+TPS & 压力测试
+----------------------------
+
+对比测试[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+
+2个线程并发一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
+
+### 验证结果
+
+在我的4核开发机上运行了24小时，稳定正常。
+
+TPS结果如下：
+
+`ThreadLocal`的TPS稳定在～29K：
+
+```bash
+......
+tps: 29189
+tps: 29587
+tps: 28261
+tps: 28919
+```
+
+`MtContextThreadLocal`的TPS稳定在～25K：
+
+```bash
+......
+tps: 25200
+tps: 25263
+tps: 24876
+tps: 24926
+tps: 25005
+```
+
+GC情况如下：
+
+`ThreadLocal`：
+
+```bash
+   S0     S1      E      O      P    YGC      YGCT     FGC     FGCT   GCT
+......
+ 97.66   0.00   1.91  31.88  37.58 5550583 15453.930   271    2.798 15456.728
+  0.00  97.66   0.00  50.44  37.58 5553030 15459.746   271    2.798 15462.543
+  0.00  97.66   0.00  69.65  37.58 5555456 15466.223   271    2.798 15469.021
+  0.00  96.88   0.00  89.43  37.58 5557844 15473.175   271    2.798 15475.973
+ 98.44   0.00   0.00  12.64  37.58 5560263 15479.334   272    2.818 15482.152
+ 96.09   0.00  28.21  32.65  37.58 5562739 15484.480   272    2.818 15487.298
+ 97.66   0.00  42.06  53.02  37.58 5565181 15490.219   272    2.818 15493.037
+ 96.88   0.00  61.95  72.61  37.58 5567593 15496.748   272    2.818 15499.566
+  0.00  97.66   0.00  89.94  37.58 5570166 15503.949   272    2.818 15506.767
+ 97.66   0.00   0.00   4.71  37.58 5573247 15511.135   273    2.829 15513.964
+```
+
+`MtContextThreadLocal`：
+
+```bash
+   S0     S1      E      O      P    YGC      YGCT     FGC     FGCT   GCT
+......
+ 97.66   0.00  66.99  34.22  38.76 4306321 14418.315  2840   38.798 14457.113
+ 98.44   0.00  30.83  41.82  38.76 4306423 14418.676  2840   38.798 14457.474
+ 97.66   0.00  91.83  49.23  38.76 4306521 14419.040  2840   38.798 14457.838
+  0.00  99.22  30.41  56.47  38.76 4306618 14419.412  2840   38.798 14458.210
+  0.00  97.66  68.25  63.40  38.76 4306710 14419.812  2840   38.798 14458.610
+ 97.66   0.00   2.01  70.35  38.76 4306801 14420.217  2840   38.798 14459.015
+ 98.44   0.00  46.48  76.98  38.76 4306889 14420.648  2840   38.798 14459.446
+ 98.44   0.00  96.90  83.53  38.81 4306976 14421.029  2840   38.798 14459.827
+ 98.44   0.00  96.39  89.17  51.01 4307049 14421.406  2840   38.798 14460.204
+ 98.44   0.00  96.44  89.17  51.02 4307049 14421.406  2840   38.798 14460.204
+```
+
+#### TPS下降的原因分析
+
+使用`jvisualvm` Profile方法耗时，`MtContextThreadLocal`的Case多了热点方法`MtContextThreadLocal.addMtContextThreadLocal`。
+
+目前在这个方法中，判定是否在`MtContextThreadLocal.holder`已经记录了当前`MtContextThreadLocal`实例的方法是循环遍历`MtContextThreadLocal.holder`。  
+方法`MtContextThreadLocal.addMtContextThreadLocal`是时间复杂度是`O(n)`，`n`是`MtContextThreadLocal.holder`中实例个数。  
+当`MtContextThreadLocal`实例个数比较多时（TPS测试Case符合这个条件，不停在创建实例直到被垃圾回收），该方法成为热点。
+
+实际使用场景中，`MtContextThreadLocal`实例个数非常有限，不会有性能问题。
+
+#### FGC次数增多的原因分析
+
+在`MtContextThreadLocal.holder`中，持有`MtContextThreadLocal`实例的弱引用，减慢实例的回收。
+
+实际使用场景中，`MtContextThreadLocal`实例个数非常有限，不会有性能问题。
+
+### 执行方式
+
+可以通过执行工程下的脚本来运行Case验证：
+
+* 脚本[`run-tps-ThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
+测试类是[`CreateThreadLocalInstanceTps`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/tps/CreateThreadLocalInstanceTps.java)。
+* [`run-tps-MtContextThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-tps-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
+测试类是[`CreateMtContextThreadLocalInstanceTps`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/tps/CreateMtContextThreadLocalInstanceTps.java)。
+
 FAQ
 =====================================
 
