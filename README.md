@@ -1,16 +1,19 @@
 multi-thread context(MTC)
 =====================================
 
-解决多线程传递Context的需求。
+<div align="right">
+<a href="https://github.com/alibaba/multi-thread-context/blob/master/README-EN.md">English Documentation</a>
+</div>
+
+在使用线程池等会Cache线程的组件情况下，完成多线程的Context传递。
+
+`JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程的Context传递。
+
+但对于使用线程池等会Cache线程的组件的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。
+
+这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
 有问题可以[提交Issue](https://github.com/alibaba/multi-thread-context/issues) 或 [Mail](mailto:oldratlee@gmail.com)。
-
-功能
-----------------------------
-
-1. 使用线程池、异步执行任务时，Context能传递。 
-1. 父线程创建子线程时，Context传递。  
-这个即是[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)的功能。
 
 需求场景
 ----------------------------
@@ -38,8 +41,12 @@ App Engine的日志（如，SDK会记录日志）要记录系统上下文。由�
 使用说明
 =====================================
 
-1. 简单使用MtContextThreadLocal
+1. 简单使用
 ----------------------------
+
+父线程给子线程传递Context。
+
+示例代码：
 
 ```java
 // 在父线程中设置
@@ -59,7 +66,7 @@ String value = parent.get();
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
 
-2. 保证线程池中传递MtContextThreadLocal
+2. 保证线程池中传递Context
 ----------------------------
 
 ### 2.1 修饰`Runnable`和`Callable`
@@ -159,7 +166,7 @@ java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
-代码代码中提供了Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
+有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
 #### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
 
