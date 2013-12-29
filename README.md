@@ -107,6 +107,10 @@ executorService.submit(mtContextCallable);
 String value = parent.get(); 
 ```
 
+#### 这种使用方式的时序图
+
+![时序图](https://raw.github.com/wiki/alibaba/multi-thread-context/SequenceDiagram.png "时序图")
+
 ### 2.2 修饰线程池
 
 省去`Runnable`和`Callable`的修饰，每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
