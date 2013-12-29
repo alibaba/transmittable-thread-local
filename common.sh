@@ -16,10 +16,8 @@ runCmd() {
     "$@"
 }
 
-runJava() {
+cleanAndInstall() {
     mvn clean install -Dmaven.test.skip && mvn test-compile &&
     mvn dependency:copy-dependencies -DincludeScope=provided &&
-    mvn dependency:copy-dependencies -DincludeScope=test && {
-        runCmd "$@"
-    }
+    mvn dependency:copy-dependencies -DincludeScope=test
 }
