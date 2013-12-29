@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@link MtContextCallable} decorate {@link Callable}, so as to get @{@link MtContextThreadLocal}
@@ -13,13 +14,17 @@ import java.util.concurrent.Callable;
  * Use factory method {@link #get(Callable)} to get decorated instance.
  *
  * @author ding.lid
+ * @see java.util.concurrent.Executor
+ * @see java.util.concurrent.ExecutorService
+ * @see java.util.concurrent.ThreadPoolExecutor
+ * @see java.util.concurrent.ScheduledThreadPoolExecutor
+ * @see java.util.concurrent.Executors
  * @see java.util.concurrent.CompletionService
  * @see java.util.concurrent.ExecutorCompletionService
- * @see java.util.concurrent.Executors
  * @since 0.9.0
  */
 public final class MtContextCallable<V> implements Callable<V> {
-    private volatile Map<MtContextThreadLocal<?>, Object> copied;
+    private final AtomicReference<Map<MtContextThreadLocal<?>, Object>> copiedRef;
     private final Callable<V> callable;
     private final boolean releaseMtContextAfterCall;
 
@@ -27,7 +32,7 @@ public final class MtContextCallable<V> implements Callable<V> {
     private MtContextCallable(Callable<V> callable, boolean releaseMtContextAfterCall) {
         this.callable = callable;
         this.releaseMtContextAfterCall = releaseMtContextAfterCall;
-        copied = MtContextThreadLocal.copy();
+        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
     }
 
     /**
@@ -35,17 +40,16 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        if (null == copied) {
+        Map<MtContextThreadLocal<?>, Object> copied = copiedRef.get();
+        if (copied == null || releaseMtContextAfterCall && !copiedRef.compareAndSet(copied, null)) {
             throw new IllegalStateException("MtContext is released!");
         }
+
         Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
         try {
             return callable.call();
         } finally {
             MtContextThreadLocal.restore(backup);
-            if (releaseMtContextAfterCall) {
-                copied = null;
-            }
         }
     }
 

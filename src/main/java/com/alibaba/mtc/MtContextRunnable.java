@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@link MtContextRunnable} decorate {@link Runnable}, so as to get @{@link MtContextThreadLocal}
@@ -20,14 +21,14 @@ import java.util.Map;
  * @since 0.9.0
  */
 public final class MtContextRunnable implements Runnable {
-    private volatile Map<MtContextThreadLocal<?>, Object> copied;
+    private final AtomicReference<Map<MtContextThreadLocal<?>, Object>> copiedRef;
     private final Runnable runnable;
     private final boolean releaseMtContextAfterRun;
 
     private MtContextRunnable(Runnable runnable, boolean releaseMtContextAfterRun) {
         this.runnable = runnable;
         this.releaseMtContextAfterRun = releaseMtContextAfterRun;
-        copied = MtContextThreadLocal.copy();
+        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
     }
 
     /**
@@ -35,17 +36,16 @@ public final class MtContextRunnable implements Runnable {
      */
     @Override
     public void run() {
-        if(null == copied) {
+        Map<MtContextThreadLocal<?>, Object> copied = copiedRef.get();
+        if (copied == null || releaseMtContextAfterRun && !copiedRef.compareAndSet(copied, null)) {
             throw new IllegalStateException("MtContext is released!");
         }
+
         Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
         try {
             runnable.run();
         } finally {
             MtContextThreadLocal.restore(backup);
-            if (releaseMtContextAfterRun) {
-                copied = null;
-            }
         }
     }
 
