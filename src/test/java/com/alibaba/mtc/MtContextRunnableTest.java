@@ -8,14 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -146,6 +150,35 @@ public class MtContextRunnableTest {
         assertEquals("parent", copied.get("parent"));
         assertEquals("p", copied.get("p"));
         assertEquals("after", copied.get("after"));
+    }
+
+    @Test
+    public void test_releaseMtContextAfterRun() throws Exception {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
+
+        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+        parent.set("parent");
+        mtContexts.put("parent", parent);
+
+        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
+        p.set("p");
+        mtContexts.put("p", p);
+
+        Task task = new Task("1", mtContexts);
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task, true);
+        assertSame(task, mtContextRunnable.getRunnable());
+
+        Future<?> future = executorService.submit(mtContextRunnable);
+        assertNull(future.get());
+
+        future = executorService.submit(mtContextRunnable);
+        try {
+            future.get();
+            fail();
+        } catch (ExecutionException expected) {
+            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
+            assertThat(expected.getMessage(), containsString("MtContext is released!"));
+        }
     }
 
     @Test

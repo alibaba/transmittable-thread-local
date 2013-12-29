@@ -10,15 +10,18 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -112,6 +115,40 @@ public class MtContextCallableTest {
         assertEquals("parent", copied.get("parent"));
         assertEquals("p", copied.get("p"));
         assertEquals("after", copied.get("after"));
+    }
+
+    @Test
+    public void test_releaseMtContextAfterCall() throws Exception {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
+
+        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+        parent.set("parent");
+        mtContexts.put("parent", parent);
+
+        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
+        p.set("p");
+        mtContexts.put("p", p);
+
+        Call call = new Call("1", mtContexts);
+        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call, true);
+        assertSame(call, mtContextCallable.getCallable());
+
+        // create after new Task, won't see parent value in in task!
+        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
+        after.set("after");
+        mtContexts.put("after", after);
+
+        Future future = executorService.submit(mtContextCallable);
+        assertEquals("ok", future.get());
+
+        future = executorService.submit(mtContextCallable);
+        try {
+            future.get();
+            fail();
+        } catch (ExecutionException expected) {
+            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
+            assertThat(expected.getMessage(), containsString("MtContext is released!"));
+        }
     }
 
     @Test

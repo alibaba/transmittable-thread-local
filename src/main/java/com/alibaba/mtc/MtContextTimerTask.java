@@ -19,7 +19,7 @@ import java.util.TimerTask;
  * @see java.util.Timer
  * @see TimerTask
  * @since 0.9.1
- * @deprecated Use {@link MtContextRunnable} instead
+ * @deprecated Use {@link MtContextRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of timer
  */
 @Deprecated
 public final class MtContextTimerTask extends TimerTask {
