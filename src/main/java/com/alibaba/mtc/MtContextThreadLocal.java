@@ -2,10 +2,9 @@ package com.alibaba.mtc;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * {@link MtContextThreadLocal} can transmit context from the thread of submitting task to the thread of executing task.
@@ -76,59 +75,29 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         return copyValue(get());
     }
 
-    static class Reference<T> extends WeakReference<MtContextThreadLocal<T>> {
-        public Reference(MtContextThreadLocal<T> referent) {
-            super(referent);
-        }
-    }
-
-    static ThreadLocal<Set<Reference<?>>> holder =
-            new ThreadLocal<Set<Reference<?>>>() {
+    static ThreadLocal<Map<MtContextThreadLocal<?>, ?>> holder =
+            new ThreadLocal<Map<MtContextThreadLocal<?>, ?>>() {
                 @Override
-                protected Set<Reference<?>> initialValue() {
-                    return new HashSet<Reference<?>>();
+                protected Map<MtContextThreadLocal<?>, ?> initialValue() {
+                    return new WeakHashMap<MtContextThreadLocal<?>, Object>();
                 }
             };
 
     void addMtContextThreadLocal() {
-        for (Iterator<Reference<?>> iterator = holder.get().iterator(); iterator.hasNext(); ) {
-            Reference<?> reference = iterator.next();
-            MtContextThreadLocal<?> threadLocal = reference.get();
-            if (null == threadLocal) {
-                iterator.remove();
-                continue;
-            }
-            if (threadLocal == this) {
-                return;
-            }
+        if(!holder.get().containsKey(this)) {
+            holder.get().put(this, null);
         }
-        holder.get().add(new Reference<T>(this));
     }
 
     void removeMtContextThreadLocal() {
-        for (Iterator<Reference<?>> iterator = holder.get().iterator(); iterator.hasNext(); ) {
-            Reference<?> reference = iterator.next();
-            MtContextThreadLocal<?> threadLocal = reference.get();
-            if (null == threadLocal) {
-                iterator.remove();
-                continue;
-            }
-            if (threadLocal == this) {
-                iterator.remove();
-            }
-        }
+        holder.get().remove(this);
     }
 
     static Map<MtContextThreadLocal<?>, Object> copy() {
         Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>();
-        for (Iterator<Reference<?>> iterator = holder.get().iterator(); iterator.hasNext(); ) {
-            Reference<?> reference = iterator.next();
-            MtContextThreadLocal<?> threadLocal = reference.get();
-            if (threadLocal == null) {
-                iterator.remove();
-            } else {
-                copy.put(threadLocal, threadLocal.copyMtContextValue());
-            }
+        for (Iterator<MtContextThreadLocal<?>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
+            MtContextThreadLocal<?> threadLocal = iterator.next();
+            copy.put(threadLocal, threadLocal.copyMtContextValue());
         }
         return copy;
     }
