@@ -1,8 +1,6 @@
 package com.alibaba.mtc;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -84,7 +82,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
             };
 
     void addMtContextThreadLocal() {
-        if(!holder.get().containsKey(this)) {
+        if (!holder.get().containsKey(this)) {
             holder.get().put(this, null);
         }
     }
@@ -95,8 +93,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     static Map<MtContextThreadLocal<?>, Object> copy() {
         Map<MtContextThreadLocal<?>, Object> copy = new HashMap<MtContextThreadLocal<?>, Object>();
-        for (Iterator<MtContextThreadLocal<?>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
-            MtContextThreadLocal<?> threadLocal = iterator.next();
+        for (MtContextThreadLocal<?> threadLocal : holder.get().keySet()) {
             copy.put(threadLocal, threadLocal.copyMtContextValue());
         }
         return copy;
