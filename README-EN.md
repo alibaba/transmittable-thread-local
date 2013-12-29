@@ -137,7 +137,7 @@ Agent decorate 2 thread pool implementation classes
 
 Add start argumetns on Java: 
 
-- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.18.1-GA.jar`
+- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.12.1.GA.jar`
 - `-javaagent:/path/to/multithread.context-x.y.z.jar`
 
 **NOTE**： 
@@ -148,7 +148,7 @@ Add start argumetns on Java:
 Java command example:
 
 ```bash
-java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.9.0-SNAPSHOT.jar \
+java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.0.0.jar \
     -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
     -cp classes \
     com.alibaba.mtc.threadpool.agent.AgentDemo
@@ -164,7 +164,7 @@ Maven dependency
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 </dependency>
 ```
 

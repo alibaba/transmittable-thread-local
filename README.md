@@ -153,7 +153,7 @@ String value = parent.get();
 
 在Java的启动参数加上：
 
-- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.18.1-GA.jar`
+- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.12.1.GA.jar`
 - `-javaagent:/path/to/multithread.context-x.y.z.jar`
 
 **注意**： 
@@ -164,7 +164,7 @@ String value = parent.get();
 Java命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:dependency/javassist-3.18.1-GA.jar:multithread.context-0.9.0-SNAPSHOT.jar \
+java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.0.0.jar \
     -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
     -cp classes \
     com.alibaba.mtc.threadpool.agent.AgentDemo
@@ -229,7 +229,7 @@ Maven依赖
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 </dependency>
 ```
 
