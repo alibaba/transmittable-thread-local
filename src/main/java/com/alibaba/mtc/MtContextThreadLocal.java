@@ -83,7 +83,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     void addMtContextThreadLocal() {
         if (!holder.get().containsKey(this)) {
-            holder.get().put(this, null);
+            holder.get().put(this, null); // WeakHashMap supports null value.
         }
     }
 
