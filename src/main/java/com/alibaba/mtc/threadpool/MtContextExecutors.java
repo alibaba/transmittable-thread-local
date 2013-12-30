@@ -1,6 +1,5 @@
 package com.alibaba.mtc.threadpool;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author ding.lid
  * @since 0.9.0
  */
-public class MtContextExecutors {
+public final class MtContextExecutors {
     /**
      * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link Executor},
      * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable}
@@ -26,8 +25,8 @@ public class MtContextExecutors {
 
     /**
      * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link ExecutorService},
-     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable} or {@link Callable}
-     * to the execution time of {@link Runnable} or {@link Callable}.
+     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
+     * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      */
     public static ExecutorService getMtcExecutorService(ExecutorService executorService) {
         if (executorService == null || executorService instanceof ExecutorServiceMtcWrapper) {
@@ -38,8 +37,8 @@ public class MtContextExecutors {
 
     /**
      * {@link com.alibaba.mtc.MtContextThreadLocal} Wrapper of {@link ScheduledExecutorService},
-     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal } from the task submit time of {@link Runnable} or {@link Callable}
-     * to the execution time of {@link Runnable} or {@link Callable}.
+     * transmit the {@link com.alibaba.mtc.MtContextThreadLocal } from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
+     * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      */
     public static ScheduledExecutorService getMtcScheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
         if (scheduledExecutorService == null || scheduledExecutorService instanceof ScheduledExecutorServiceMtcWrapper) {

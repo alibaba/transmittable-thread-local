@@ -31,19 +31,6 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         return parentValue;
     }
 
-    /**
-     * Override this method to have an initial value other than <tt>null</tt>.
-     */
-    @Override
-    protected T initialValue() {
-        return super.initialValue();
-    }
-
-    @Override
-    protected T childValue(T parentValue) {
-        return super.childValue(parentValue);
-    }
-
     @Override
     public final T get() {
         T value = super.get();

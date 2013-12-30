@@ -65,7 +65,7 @@ public final class MtContextTimerTask extends TimerTask {
      */
     public static MtContextTimerTask get(TimerTask timerTask) {
         if (null == timerTask) {
-            throw new NullPointerException("runnable argument is null!");
+            return null;
         }
 
         if (timerTask instanceof MtContextTimerTask) { // avoid redundant decoration, and ensure idempotency
