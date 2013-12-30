@@ -144,9 +144,9 @@ String value = parent.get();
 
 ### 2.3. 使用Java Agent来修饰JDK线程池实现类
 
-这种方式，实现线程池的`MtContext`传递是透明的（不需要修饰操作）。Demo参见[AgentDemo](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java)。
+这种方式，实现线程池的`MtContext`传递是透明的（不需要修饰操作）。Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java)。
 
-目前Agent中，修饰了两个线程池实现类（实现代码在[MtContextTransformer.java](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
+目前Agent中，修饰了两个线程池实现类（实现代码在[`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
