@@ -113,7 +113,7 @@ String value = parent.get();
 
 ### 2.2 修饰线程池
 
-省去`Runnable`和`Callable`的修饰，每次传入线程池时修饰`Runnable`和`Callable`，这个逻辑可以在线程池中完成。
+省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
 通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
 
