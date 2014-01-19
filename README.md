@@ -5,15 +5,16 @@ multi-thread context(MTC)
 <a href="https://github.com/alibaba/multi-thread-context/blob/master/README-EN.md">English Documentation</a>
 </div>
 
+功能
+----------------------------
+
 在使用线程池等会Cache线程的组件情况下，完成多线程的Context传递。
 
 `JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程的Context传递。
 
-但对于使用线程池等会Cache线程的组件的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。
+但对于使用线程池等会Cache线程的组件的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
-这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
-
-有问题可以[提交Issue](https://github.com/alibaba/multi-thread-context/issues) 或 [Mail](mailto:oldratlee@gmail.com)。
+如有问题欢迎 [提交Issue](https://github.com/alibaba/multi-thread-context/issues) 或 [Mail](mailto:oldratlee@gmail.com)。
 
 需求场景
 ----------------------------
@@ -22,15 +23,17 @@ multi-thread context(MTC)
 
 ### 应用容器或上层框架跨应用代码给下层SDK传递信息
 
-举个场景，淘宝的App Engine（如JAE或是TAE，PAAS平台）跑了ISV（这里指卖家的应用提供商）的应用，这些应用给淘宝卖家使用。
+举个场景，淘宝的App Engine（如JAE或是TAE，PAAS平台）跑了ISV（这里指卖家的应用提供商）的应用，多个淘宝卖家会在淘宝平台上购买并使用这个应用。
 
-要防止ISV的应用拿到所有卖家家数据，这是数据安全的问题。解决的问题其中一环是：一个处理过程关联一个卖家的上下文，在这样的上下文中只能处理（读&写）这个卖家的数据。
+数据安全需要防止ISV的应用拿到多个卖家家数据。
+
+解决的问题其中一环是：处理过程关联了一个卖家的上下文，在这个上下文中应用只能处理（读&写）这个卖家的数据。
 
 请求由卖家发起（如从Web请求时进入App Engine），App Engine可以知道是从哪个卖家，在Web请求时在上下文中设置好卖家ID。
 
-应用处理数据（DB、Cache、消息 etc.）是通过App Engine提供的服务SDK。当应用处理数据时，SDK检查数据所属的卖家是否和上下文中的卖家ID一致，不一致则拒绝数据的读写。
+应用处理数据（DB、Cache、消息 etc.）是通过App Engine提供的服务SDK来完成。当应用处理数据时，SDK检查数据所属的卖家是否和上下文中的卖家ID一致，不一致则拒绝数据的读写。
 
-应用代码会使用线程池，并且这样的使用是正常的业务需求，卖家ID的传递从要App Engine传递到下层SDK要支持这样的用法。
+应用代码会使用线程池，并且这样的使用是正常的业务需求。卖家ID的从要App Engine传递到下层SDK，要支持这样的用法。
 
 \# 当然，仅仅通过这样一个手段是不能解决数据安全的，每次处理数据时，应用可能把数据汇聚到内存中，再批量导出或是自动Post出去。这个要通过其它的手段来解决，如代码白盒检查，内存分析，禁止应用自动对外请求。
 
