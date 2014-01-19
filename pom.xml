@@ -11,7 +11,7 @@
 
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 	<name>multithread context(MTC)</name>
 	<description>a simple lib for transmitting context between thread even using thread pool</description>
