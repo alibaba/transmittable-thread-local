@@ -27,7 +27,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
      *
      * @since 1.0.0
      */
-    protected T copyValue(T parentValue) {
+    protected T copy(T parentValue) {
         return parentValue;
     }
 
@@ -57,7 +57,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     T copyMtContextValue() {
-        return copyValue(get());
+        return copy(get());
     }
 
     static ThreadLocal<Map<MtContextThreadLocal<?>, ?>> holder =

@@ -5,7 +5,7 @@ package com.alibaba.mtc;
  */
 public class FooMtContextThreadLocal extends MtContextThreadLocal<FooPojo> {
     @Override
-    protected FooPojo copyValue(FooPojo parentValue) {
+    protected FooPojo copy(FooPojo parentValue) {
         if (parentValue == null) return null;
         return new FooPojo(parentValue.name, parentValue.age);
     }

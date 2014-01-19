@@ -44,9 +44,13 @@ App Engine的日志（如，SDK会记录日志）要记录系统上下文。由�
 使用说明
 =====================================
 
-使用类[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下言，并跨线程池传递。
+使用类[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
 
-[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，并且使用方式也类似。具体使用方式见下面的说明。
+[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+
+比[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，添加了`protected`方法``
+
+具体使用方式见下面的说明。
 
 1. 简单使用
 ----------------------------
