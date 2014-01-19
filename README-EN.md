@@ -164,7 +164,7 @@ Maven dependency
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.3</version>
 </dependency>
 ```
 
