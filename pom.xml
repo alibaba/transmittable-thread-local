@@ -48,6 +48,8 @@
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<organization>Alibaba</organization>
+			<organizationUrl>http://www.alibaba.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>Tony Chen</name>
@@ -57,6 +59,8 @@
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<organization>Taobao</organization>
+			<organizationUrl>http://www.taobao.com</organizationUrl>
 		</developer>
 	</developers>
 
