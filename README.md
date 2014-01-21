@@ -153,7 +153,7 @@ executorService.submit(call);
 String value = parent.get(); 
 ```
 
-### 2.3. 使用Java Agent来修饰JDK线程池实现类
+### 2.3 使用Java Agent来修饰JDK线程池实现类
 
 这种方式，实现线程池的`MtContext`传递是透明的（不需要显式的修饰操作）。Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java)。
 
@@ -402,6 +402,12 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 相关资源
 =====================================
 
+Jdk core classes
+----------------------------
+
+* [WeakHashMap](http://docs.oracle.com/javase/7/docs/api/java/util/WeakHashMap.html)
+* [InheritableThreadLocal](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)
+
 Java Agent
 ----------------------------
 
@@ -414,9 +420,3 @@ Javassist
 ----------------------------
 
 * [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
-
-Jdk core classes
-----------------------------
-
-* [WeakHashMap](http://docs.oracle.com/javase/7/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)
