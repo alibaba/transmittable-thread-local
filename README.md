@@ -231,7 +231,9 @@ public class TransformerAdaptor implements ClassFileTransformer {
 
 注意还是要在`bootclasspath`上，加上`MtContext`依赖的2个Jar：
 
-`-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/your/agent/jar/files`
+```bash
+-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/your/agent/jar/files
+```
 
 Maven依赖
 =====================================
