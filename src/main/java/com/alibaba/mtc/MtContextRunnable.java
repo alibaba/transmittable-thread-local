@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * {@link MtContextRunnable} decorate {@link Runnable}, so as to get @{@link MtContextThreadLocal}
+ * {@link MtContextRunnable} decorate {@link Runnable}, so as to get {@link MtContextThreadLocal}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p/>
  * Use factory method {@link #get(Runnable)} to create instance.

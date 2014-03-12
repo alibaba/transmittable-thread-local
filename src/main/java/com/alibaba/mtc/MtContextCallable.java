@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * {@link MtContextCallable} decorate {@link Callable}, so as to get @{@link MtContextThreadLocal}
+ * {@link MtContextCallable} decorate {@link Callable}, so as to get {@link MtContextThreadLocal}
  * and transmit it to the time of {@link Callable} execution, needed when use {@link Callable} to thread pool.
  * <p/>
  * Use factory method {@link #get(Callable)} to get decorated instance.
