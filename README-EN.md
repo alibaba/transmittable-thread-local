@@ -166,7 +166,7 @@ to start demo of "Use Java Agent to decorate thread pool implementation class".
 Java API Docs
 ======================
 
-The current version Java API documentation: <http://alibaba.github.io/multi-thread-context/>
+The current version Java API documentation: <http://alibaba.github.io/multi-thread-context/apidocs/>
 
 Maven dependency
 =====================================
