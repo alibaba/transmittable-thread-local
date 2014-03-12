@@ -244,7 +244,7 @@ public class TransformerAdaptor implements ClassFileTransformer {
 Java API Docs
 ======================
 
-最新版本的Java API文档地址： <http://alibaba.github.io/multi-thread-context/>
+当前版本的Java API文档地址： <http://alibaba.github.io/multi-thread-context/>
 
 Maven依赖
 =====================================
