@@ -241,6 +241,11 @@ public class TransformerAdaptor implements ClassFileTransformer {
 -Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/your/agent/jar/files
 ```
 
+Java API Docs
+======================
+
+最新版本的Java API文档地址： <http://alibaba.github.io/multi-thread-context/>
+
 Maven依赖
 =====================================
 
