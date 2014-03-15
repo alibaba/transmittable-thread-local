@@ -32,6 +32,7 @@ public class MtContextTransformer implements ClassFileTransformer {
 
     private static final String THREAD_POOL_CLASS_FILE = "java.util.concurrent.ThreadPoolExecutor".replace('.', '/');
     private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
+    private static final String TIMER_TASK_CLASS_FILE = "java.util.TimerTask".replace('.', '/');
 
     private static String toClassName(String classFile) {
         return classFile.replace('/', '.');

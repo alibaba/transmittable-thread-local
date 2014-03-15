@@ -4,22 +4,20 @@ import java.util.Map;
 import java.util.TimerTask;
 
 /**
- * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get @{@link MtContextThreadLocal}
- * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
+ * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get {@link MtContextThreadLocal}
+ * and transmit it to the time of {@link MtContextTimerTask} execution, needed when use {@link MtContextTimerTask} to {@link java.util.TimerTask}.
  * <p/>
  * Use factory method {@link #get(TimerTask)} to create instance.
  * <p/>
- * Use {@link java.util.concurrent.ScheduledThreadPoolExecutor} instead {@link java.util.Timer}.
- * <p/>
  * <b>NOTE:</b>
- * The {@link MtContextTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} of
+ * The {@link MtContextTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} in
  * the origin {@link TimerTask} lose effectiveness!
  *
  * @author ding.lid
  * @see java.util.Timer
  * @see TimerTask
  * @since 0.9.1
- * @deprecated Use {@link MtContextRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of timer
+ * @deprecated Use {@link MtContextRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link java.util.Timer}, {@link java.util.TimerTask}.
  */
 @Deprecated
 public final class MtContextTimerTask extends TimerTask {
