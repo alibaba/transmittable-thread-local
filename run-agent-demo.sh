@@ -6,8 +6,6 @@ BASE=`pwd`
 . ./common.sh
 
 cleanAndInstall && {
-    version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==2{print $2}'`
-    aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==2{print $2}'`
     classpath=`echo target/dependency/*.jar | tr ' ' :`
 
     runCmd java \
