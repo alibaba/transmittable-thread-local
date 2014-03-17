@@ -2,13 +2,9 @@ package com.alibaba.mtc.threadpool.agent;
 
 import com.alibaba.mtc.MtContextCallable;
 import com.alibaba.mtc.MtContextRunnable;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.Modifier;
@@ -16,6 +12,13 @@ import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
+import javassist.NotFoundException;
 
 /**
  * @author ding.lid
@@ -32,6 +35,7 @@ public class MtContextTransformer implements ClassFileTransformer {
 
     private static final String THREAD_POOL_CLASS_FILE = "java.util.concurrent.ThreadPoolExecutor".replace('.', '/');
     private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
+
     private static final String TIMER_TASK_CLASS_FILE = "java.util.TimerTask".replace('.', '/');
 
     private static String toClassName(String classFile) {
@@ -41,25 +45,47 @@ public class MtContextTransformer implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException {
-        if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
+        try {
             final String className = toClassName(classFile);
-
-            try {
-                logger.warning("Transforming class " + className);
-                CtClass clazz = ClassPool.getDefault().makeClass(new ByteArrayInputStream(classFileBuffer), false);
-                clazz.defrost();
+            if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
+                logger.info("Transforming class " + className);
+                CtClass clazz = getCtClass(classFileBuffer, loader);
 
                 for (CtMethod method : clazz.getDeclaredMethods()) {
                     updateMethod(method);
                 }
                 return clazz.toBytecode();
-            } catch (Throwable t) {
-                String msg = "Fail to transform class " + className + ", cause: " + t.getMessage();
-                logger.severe(msg);
-                throw new IllegalStateException(msg, t);
+            } else if (TIMER_TASK_CLASS_FILE.equals(classFile)) {
+                CtClass clazz = getCtClass(classFileBuffer, loader);
+                while (true) {
+                    String name = clazz.getSuperclass().getName();
+                    if (Object.class.getName().equals(name)) {
+                        break;
+                    }
+                    if (TIMER_TASK_CLASS_FILE.equals(name)) {
+                        logger.info("Transforming class " + className);
+                        // FIXME add code here
+                        return null;
+                    }
+                }
             }
+        } catch (Throwable t) {
+            String msg = "Fail to transform class " + classFile + ", cause: " + t.getMessage();
+            logger.severe(msg);
+            throw new IllegalStateException(msg, t);
         }
         return null;
+    }
+
+    private CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
+        ClassPool classPool = new ClassPool(true);
+        if (null != classLoader) {
+            classPool.appendClassPath(new LoaderClassPath(classLoader));
+        }
+
+        CtClass clazz = classPool.makeClass(new ByteArrayInputStream(classFileBuffer), false);
+        clazz.defrost();
+        return clazz;
     }
 
     static final Set<String> updateMethodNames = new HashSet<String>();
