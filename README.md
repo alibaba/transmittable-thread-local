@@ -1,6 +1,8 @@
 multi-thread context(MTC)
 =====================================
 
+[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
+
 <div align="right">
 <a href="https://github.com/alibaba/multi-thread-context/blob/master/README-EN.md">English Documentation</a>
 </div>
