@@ -8,11 +8,11 @@ multi-thread context(MTC)
 功能
 ----------------------------
 
-在使用线程池等会Cache线程的组件情况下，完成多线程的Context传递。
+在使用线程池等会缓存线程的组件情况下，完成多线程的Context传递。
 
 `JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程的Context传递。
 
-但对于使用线程池等会Cache线程的组件的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
+但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
 如有问题欢迎：
 
@@ -37,7 +37,7 @@ multi-thread context(MTC)
 
 请求由卖家发起（如从`Web`请求时进入`App Engine`），`App Engine`可以知道是从哪个卖家，在`Web`请求时在上下文中设置好卖家ID。
 
-应用处理数据（`DB`、`Cache`、消息 etc.）是通过`App Engine`提供的服务`SDK`来完成。当应用处理数据时，`SDK`检查数据所属的卖家是否和上下文中的卖家`ID`一致，不一致则拒绝数据的读写。
+应用处理数据（`DB`、`Web``、消息 etc.）是通过`App Engine`提供的服务`SDK`来完成。当应用处理数据时，`SDK`检查数据所属的卖家是否和上下文中的卖家`ID`一致，不一致则拒绝数据的读写。
 
 应用代码会使用线程池，并且这样的使用是正常的业务需求。卖家`ID`的从要`App Engine`传递到下层`SDK`，要支持这样的用法。
 
@@ -78,7 +78,7 @@ String value = parent.get();
 
 这是其实是[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
-但对于使用了异步执行（往往使用线程池完成）的情况，线程由线程池创建好，并且线程是Cache起来反复使用的。
+但对于使用了异步执行（往往使用线程池完成）的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。
 
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
