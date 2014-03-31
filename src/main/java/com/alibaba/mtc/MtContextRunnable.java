@@ -26,9 +26,9 @@ public final class MtContextRunnable implements Runnable {
     private final boolean releaseMtContextAfterRun;
 
     private MtContextRunnable(Runnable runnable, boolean releaseMtContextAfterRun) {
+        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
         this.runnable = runnable;
         this.releaseMtContextAfterRun = releaseMtContextAfterRun;
-        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
     }
 
     /**
@@ -62,7 +62,7 @@ public final class MtContextRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      */
     public static MtContextRunnable get(Runnable runnable) {
-        return get(runnable, false);
+        return get(runnable, false, false);
     }
 
     /**
@@ -75,12 +75,31 @@ public final class MtContextRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      */
     public static MtContextRunnable get(Runnable runnable, boolean releaseMtContextAfterRun) {
+        return get(runnable, releaseMtContextAfterRun, false);
+    }
+
+    /**
+     * Factory method, wrapper input {@link Runnable} to {@link MtContextRunnable}.
+     * <p/>
+     * This method is idempotent.
+     *
+     * @param runnable                 input {@link Runnable}
+     * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @param idempotent               is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @return Wrapped {@link Runnable}
+     */
+    public static MtContextRunnable get(Runnable runnable, boolean releaseMtContextAfterRun, boolean idempotent) {
         if (null == runnable) {
             return null;
         }
 
-        if (runnable instanceof MtContextRunnable) { // avoid redundant decoration, and ensure idempotency
-            throw new IllegalStateException("Already MtContextRunnable!");
+        if (runnable instanceof MtContextRunnable) {
+            if (idempotent) {
+                // avoid redundant decoration, and ensure idempotency
+                return (MtContextRunnable) runnable;
+            } else {
+                throw new IllegalStateException("Already MtContextRunnable!");
+            }
         }
         return new MtContextRunnable(runnable, releaseMtContextAfterRun);
     }
@@ -92,7 +111,7 @@ public final class MtContextRunnable implements Runnable {
      * @return wrapped tasks
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks) {
-        return gets(tasks, false);
+        return gets(tasks, false, false);
     }
 
     /**
@@ -108,7 +127,26 @@ public final class MtContextRunnable implements Runnable {
         }
         List<MtContextRunnable> copy = new ArrayList<MtContextRunnable>();
         for (Runnable task : tasks) {
-            copy.add(MtContextRunnable.get(task, releaseMtContextAfterRun));
+            copy.add(MtContextRunnable.get(task, releaseMtContextAfterRun, false));
+        }
+        return copy;
+    }
+
+    /**
+     * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
+     *
+     * @param tasks                    task to be wrapped
+     * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @param idempotent                is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @return wrapped tasks
+     */
+    public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun, boolean idempotent) {
+        if (null == tasks) {
+            return null;
+        }
+        List<MtContextRunnable> copy = new ArrayList<MtContextRunnable>();
+        for (Runnable task : tasks) {
+            copy.add(MtContextRunnable.get(task, releaseMtContextAfterRun, idempotent));
         }
         return copy;
     }

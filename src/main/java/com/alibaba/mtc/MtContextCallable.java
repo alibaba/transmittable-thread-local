@@ -30,9 +30,9 @@ public final class MtContextCallable<V> implements Callable<V> {
 
 
     private MtContextCallable(Callable<V> callable, boolean releaseMtContextAfterCall) {
+        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
         this.callable = callable;
         this.releaseMtContextAfterCall = releaseMtContextAfterCall;
-        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
     }
 
     /**
@@ -69,6 +69,7 @@ public final class MtContextCallable<V> implements Callable<V> {
         return get(callable, false);
     }
 
+
     /**
      * Factory method, wrapper input {@link Callable} to {@link MtContextCallable}.
      * <p/>
@@ -79,12 +80,31 @@ public final class MtContextCallable<V> implements Callable<V> {
      * @return Wrapped {@link Callable}
      */
     public static <T> MtContextCallable<T> get(Callable<T> callable, boolean releaseMtContextAfterCall) {
+        return get(callable, releaseMtContextAfterCall, false);
+    }
+
+    /**
+     * Factory method, wrapper input {@link Callable} to {@link MtContextCallable}.
+     * <p/>
+     * This method is idempotent.
+     *
+     * @param callable                  input {@link Callable}
+     * @param releaseMtContextAfterCall release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @param idempotent                is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @return Wrapped {@link Callable}
+     */
+    public static <T> MtContextCallable<T> get(Callable<T> callable, boolean releaseMtContextAfterCall, boolean idempotent) {
         if (null == callable) {
             return null;
         }
 
-        if (callable instanceof MtContextCallable) { // avoid redundant decoration, and ensure idempotency
-            throw new IllegalStateException("Already MtContextCallable!");
+        if (callable instanceof MtContextCallable) {
+            if (idempotent) {
+                // avoid redundant decoration, and ensure idempotency
+                return (MtContextCallable<T>) callable;
+            } else {
+                throw new IllegalStateException("Already MtContextCallable!");
+            }
         }
         return new MtContextCallable<T>(callable, releaseMtContextAfterCall);
     }
@@ -96,7 +116,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      * @return Wrapped {@link Callable}
      */
     public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks) {
-        return gets(tasks, false);
+        return gets(tasks, false, false);
     }
 
     /**
@@ -112,7 +132,26 @@ public final class MtContextCallable<V> implements Callable<V> {
         }
         List<MtContextCallable<T>> copy = new ArrayList<MtContextCallable<T>>();
         for (Callable<T> task : tasks) {
-            copy.add(MtContextCallable.get(task, releaseMtContextAfterCall));
+            copy.add(MtContextCallable.get(task, releaseMtContextAfterCall, false));
+        }
+        return copy;
+    }
+
+    /**
+     * wrapper input {@link Callable} Collection to {@link MtContextCallable} Collection.
+     *
+     * @param tasks                     task to be wrapped
+     * @param releaseMtContextAfterCall release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @param idempotent                is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @return Wrapped {@link Callable}
+     */
+    public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseMtContextAfterCall, boolean idempotent) {
+        if (null == tasks) {
+            return null;
+        }
+        List<MtContextCallable<T>> copy = new ArrayList<MtContextCallable<T>>();
+        for (Callable<T> task : tasks) {
+            copy.add(MtContextCallable.get(task, releaseMtContextAfterCall, idempotent));
         }
         return copy;
     }

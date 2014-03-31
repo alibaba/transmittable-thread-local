@@ -206,12 +206,12 @@ public class MtContextCallableTest {
 
     @Test
     public void test_gets() throws Exception {
-        Call call1 = new Call("1", null);
-        Call call2 = new Call("1", null);
+        Callable<String> call1 = new Call("1", null);
+        Callable<String> call2 = new Call("1", null);
         Callable<String> call3 = new Call("1", null);
 
         List<MtContextCallable<String>> callList = MtContextCallable.gets(
-                Arrays.<Callable<String>>asList(call1, call2, null, call3));
+                Arrays.asList(call1, call2, null, call3));
 
         assertEquals(4, callList.size());
         assertThat(callList.get(0), instanceOf(MtContextCallable.class));

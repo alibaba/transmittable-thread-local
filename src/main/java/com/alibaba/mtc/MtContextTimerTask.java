@@ -2,6 +2,7 @@ package com.alibaba.mtc;
 
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@link MtContextTimerTask} decorate {@link TimerTask}, so as to get {@link MtContextThreadLocal}
@@ -21,12 +22,14 @@ import java.util.TimerTask;
  */
 @Deprecated
 public final class MtContextTimerTask extends TimerTask {
-    private final Map<MtContextThreadLocal<?>, Object> copied;
+    private final AtomicReference<Map<MtContextThreadLocal<?>, Object>> copiedRef;
     private final TimerTask timerTask;
+    private final boolean releaseMtContextAfterRun;
 
-    private MtContextTimerTask(TimerTask timerTask) {
-        copied = MtContextThreadLocal.copy();
+    private MtContextTimerTask(TimerTask timerTask, boolean releaseMtContextAfterRun) {
+        this.copiedRef = new AtomicReference<Map<MtContextThreadLocal<?>, Object>>(MtContextThreadLocal.copy());
         this.timerTask = timerTask;
+        this.releaseMtContextAfterRun = releaseMtContextAfterRun;
     }
 
     /**
@@ -35,7 +38,11 @@ public final class MtContextTimerTask extends TimerTask {
     @Override
     public void run() {
         // backup MtContext
+        Map<MtContextThreadLocal<?>, Object> copied = copiedRef.get();
         Map<MtContextThreadLocal<?>, Object> backup = MtContextThreadLocal.backupAndSet(copied);
+        if (copied == null || releaseMtContextAfterRun && !copiedRef.compareAndSet(copied, null)) {
+            throw new IllegalStateException("MtContext is released!");
+        }
         try {
             timerTask.run();
         } finally {
@@ -62,13 +69,45 @@ public final class MtContextTimerTask extends TimerTask {
      * @return Wrapped {@link TimerTask}
      */
     public static MtContextTimerTask get(TimerTask timerTask) {
+        return get(timerTask, false, false);
+    }
+
+    /**
+     * Factory method, wrapper input {@link Runnable} to {@link MtContextTimerTask}.
+     * <p/>
+     * This method is idempotent.
+     *
+     * @param timerTask                input {@link TimerTask}
+     * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @return Wrapped {@link TimerTask}
+     */
+    public static MtContextTimerTask get(TimerTask timerTask, boolean releaseMtContextAfterRun) {
+        return get(timerTask, releaseMtContextAfterRun, false);
+    }
+
+    /**
+     * Factory method, wrapper input {@link Runnable} to {@link MtContextTimerTask}.
+     * <p/>
+     * This method is idempotent.
+     *
+     * @param timerTask                input {@link TimerTask}
+     * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
+     * @param idempotent               is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @return Wrapped {@link TimerTask}
+     */
+    public static MtContextTimerTask get(TimerTask timerTask, boolean releaseMtContextAfterRun, boolean idempotent) {
         if (null == timerTask) {
             return null;
         }
 
-        if (timerTask instanceof MtContextTimerTask) { // avoid redundant decoration, and ensure idempotency
-            throw new IllegalStateException("Already MtContextTimerTask!");
+        if (timerTask instanceof MtContextTimerTask) {
+            if (idempotent) {
+                // avoid redundant decoration, and ensure idempotency
+                return (MtContextTimerTask) timerTask;
+            } else {
+                throw new IllegalStateException("Already MtContextTimerTask!");
+            }
         }
-        return new MtContextTimerTask(timerTask);
+        return new MtContextTimerTask(timerTask, false);
     }
 }
