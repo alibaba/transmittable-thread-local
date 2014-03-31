@@ -84,7 +84,7 @@ public final class MtContextCallable<V> implements Callable<V> {
         }
 
         if (callable instanceof MtContextCallable) { // avoid redundant decoration, and ensure idempotency
-            return (MtContextCallable<T>) callable;
+            throw new IllegalStateException("Already MtContextCallable!");
         }
         return new MtContextCallable<T>(callable, releaseMtContextAfterCall);
     }

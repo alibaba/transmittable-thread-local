@@ -80,7 +80,7 @@ public final class MtContextRunnable implements Runnable {
         }
 
         if (runnable instanceof MtContextRunnable) { // avoid redundant decoration, and ensure idempotency
-            return (MtContextRunnable) runnable;
+            throw new IllegalStateException("Already MtContextRunnable!");
         }
         return new MtContextRunnable(runnable, releaseMtContextAfterRun);
     }

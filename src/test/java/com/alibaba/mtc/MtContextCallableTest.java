@@ -1,10 +1,6 @@
 package com.alibaba.mtc;
 
-import org.junit.AfterClass;
-import org.junit.Test;
-
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -14,6 +10,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import org.junit.AfterClass;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -192,7 +191,12 @@ public class MtContextCallableTest {
     @Test
     public void test_get_idempotent() throws Exception {
         MtContextCallable<String> call = MtContextCallable.get(new Call("1", null));
-        assertSame(call, MtContextCallable.get(call));
+        try {
+            MtContextCallable.get(call);
+            fail();
+        } catch (IllegalStateException e) {
+            assertThat(e.getMessage(), containsString("Already MtContextCallable"));
+        }
     }
 
     @Test
@@ -204,13 +208,15 @@ public class MtContextCallableTest {
     public void test_gets() throws Exception {
         Call call1 = new Call("1", null);
         Call call2 = new Call("1", null);
-        Callable<String> call3 = MtContextCallable.get(call1);
+        Callable<String> call3 = new Call("1", null);
 
-        List<MtContextCallable<String>> callList = MtContextCallable.gets(Arrays.<Callable<String>>asList(call1, call2, null, call3));
+        List<MtContextCallable<String>> callList = MtContextCallable.gets(
+                Arrays.<Callable<String>>asList(call1, call2, null, call3));
 
+        assertEquals(4, callList.size());
         assertThat(callList.get(0), instanceOf(MtContextCallable.class));
         assertThat(callList.get(1), instanceOf(MtContextCallable.class));
         assertNull(callList.get(2));
-        assertSame(call3, callList.get(3));
+        assertThat(callList.get(3), instanceOf(MtContextCallable.class));
     }
 }

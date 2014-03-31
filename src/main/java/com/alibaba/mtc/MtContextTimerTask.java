@@ -67,7 +67,7 @@ public final class MtContextTimerTask extends TimerTask {
         }
 
         if (timerTask instanceof MtContextTimerTask) { // avoid redundant decoration, and ensure idempotency
-            return (MtContextTimerTask) timerTask;
+            throw new IllegalStateException("Already MtContextTimerTask!");
         }
         return new MtContextTimerTask(timerTask);
     }

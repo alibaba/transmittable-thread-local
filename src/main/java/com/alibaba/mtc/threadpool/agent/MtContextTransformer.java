@@ -52,7 +52,7 @@ public class MtContextTransformer implements ClassFileTransformer {
                 CtClass clazz = getCtClass(classFileBuffer, loader);
 
                 for (CtMethod method : clazz.getDeclaredMethods()) {
-                    updateMethod(method);
+                    updateMethod(clazz, method);
                 }
                 return clazz.toBytecode();
             } else if (TIMER_TASK_CLASS_FILE.equals(classFile)) {
@@ -98,8 +98,11 @@ public class MtContextTransformer implements ClassFileTransformer {
         updateMethodNames.add("scheduleWithFixedDelay");
     }
 
-    static void updateMethod(CtMethod method) throws NotFoundException, CannotCompileException {
+    static void updateMethod(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
         if (!updateMethodNames.contains(method.getName())) {
+            return;
+        }
+        if (method.getDeclaringClass() != clazz) {
             return;
         }
         final int modifiers = method.getModifiers();
