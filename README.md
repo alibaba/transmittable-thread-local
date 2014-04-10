@@ -7,10 +7,10 @@ multi-thread context(MTC)
 <a href="https://github.com/alibaba/multi-thread-context/blob/master/README-EN.md">English Documentation</a>
 </div>
 
-功能
+:wrench: 功能
 ----------------------------
 
-在使用线程池等会缓存线程的组件情况下，完成多线程的Context传递。
+:point_right: 在使用线程池等会缓存线程的组件情况下，完成多线程的Context传递。
 
 `JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程的Context传递。
 
@@ -24,7 +24,7 @@ multi-thread context(MTC)
   - 点击【选项】-【通过邮件订阅】（即[这个页面](http://mtc.59504.x6.nabble.com/template/NamlServlet.jtp?macro=subscribe&node=1)），来订阅这个邮件列表。
   - 可以通过邮件或是[论坛界面](http://mtc.59504.x6.nabble.com/)来发布和查看信息。
 
-需求场景
+:art: 需求场景
 ----------------------------
 
 下面列出需求场景，即是整理出`MTC`的实际需求。
@@ -49,7 +49,7 @@ multi-thread context(MTC)
 
 `App Engine`的日志（如，`SDK`会记录日志）要记录系统上下文。由于不限制用户应用使用线程池，系统的上下文需要能跨线程的传递，且不影响应用代码。
 
-使用说明
+:notebook: 使用说明
 =====================================
 
 使用类[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
@@ -261,12 +261,12 @@ public class TransformerAdaptor implements ClassFileTransformer {
 -Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/your/agent/jar/files
 ```
 
-Java API Docs
+:electric_plug: Java API Docs
 ======================
 
 当前版本的Java API文档地址： <http://alibaba.github.io/multi-thread-context/apidocs/>
 
-Maven依赖
+:cookie: Maven依赖
 =====================================
 
 示例：
@@ -281,7 +281,7 @@ Maven依赖
 
 可以在 [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22multithread.context%22%20g%3A%22com.alibaba%22) 查看可用的版本。
 
-性能测试
+:umbrella: 性能测试
 =====================================
 
 内存泄漏
@@ -424,7 +424,7 @@ GC情况如下（1分钟输出一次）：
 * [`run-tps-MtContextThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-tps-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
 测试类是[`CreateMtContextThreadLocalInstanceTps`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/tps/CreateMtContextThreadLocalInstanceTps.java)。
 
-FAQ
+:question: FAQ
 =====================================
 
 * Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
@@ -432,7 +432,7 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。   
 \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
 
-相关资源
+:books: 相关资料
 =====================================
 
 Jdk core classes
