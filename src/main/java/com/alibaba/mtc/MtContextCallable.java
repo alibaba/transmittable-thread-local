@@ -90,7 +90,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      *
      * @param callable                  input {@link Callable}
      * @param releaseMtContextAfterCall release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent                is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @param idempotent                is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Callable}
      */
     public static <T> MtContextCallable<T> get(Callable<T> callable, boolean releaseMtContextAfterCall, boolean idempotent) {
@@ -142,7 +142,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      *
      * @param tasks                     task to be wrapped
      * @param releaseMtContextAfterCall release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent                is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @param idempotent                is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Callable}
      */
     public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseMtContextAfterCall, boolean idempotent) {

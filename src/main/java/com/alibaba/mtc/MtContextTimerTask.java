@@ -92,7 +92,7 @@ public final class MtContextTimerTask extends TimerTask {
      *
      * @param timerTask                input {@link TimerTask}
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent               is idempotent or not. {@code true} will cover up bug! <b>DO NOT</b> set, only when you why.
+     * @param idempotent               is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link TimerTask}
      */
     public static MtContextTimerTask get(TimerTask timerTask, boolean releaseMtContextAfterRun, boolean idempotent) {
