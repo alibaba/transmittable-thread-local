@@ -181,7 +181,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java)。
+Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/demo/AgentDemo.java)。
 
 目前Agent中，修饰了两个线程池实现类（实现代码在[`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
@@ -204,7 +204,7 @@ Java命令行示例如下：
 java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.0.0.jar \
     -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
     -cp classes \
-    com.alibaba.mtc.threadpool.agent.AgentDemo
+    com.alibaba.mtc.threadpool.agent.demo.AgentDemo
 ```
 
 有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
