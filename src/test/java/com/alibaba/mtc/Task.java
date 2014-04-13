@@ -7,36 +7,20 @@ import java.util.concurrent.ConcurrentMap;
  * @author ding.lid
  */
 public class Task implements Runnable {
-    public final String value;
+    public final String tag;
     private ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts;
 
-    public Task(String value, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
-        this.value = value;
+    public Task(String tag, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
+        this.tag = tag;
         this.mtContexts = mtContexts;
     }
 
     public volatile Map<String, Object> copied;
-    
+
     @Override
     public void run() {
         try {
-            System.out.println("Before Run:");
-            Utils.print(mtContexts);
-            System.out.println();
-
-            // Add new
-            MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
-            child.set("child");
-            mtContexts.put("child", child);
-
-            // modify the parent key
-            mtContexts.get("p").set(mtContexts.get("p").get() + value);
-
-            System.out.println("After Run:");
-            Utils.print(mtContexts);
-            copied = Utils.copied(mtContexts);
-
-            System.out.println("Task " + value + " finished!");
+            copied = Utils.modifyMtContexts(tag, mtContexts);
         } catch (Throwable e) {
             e.printStackTrace();
         }

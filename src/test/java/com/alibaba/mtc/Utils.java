@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -60,5 +61,49 @@ public class Utils {
             }
         }
         return copiedContent;
+    }
+
+    public static ConcurrentMap<String, MtContextThreadLocal<String>> createTestMtContexts() {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
+
+        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+        parent.set("parent");
+        mtContexts.put("parent", parent);
+
+        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
+        p.set("p");
+        mtContexts.put("p", p);
+        return mtContexts;
+    }
+
+    public static Map<String, Object> modifyMtContexts(String tag, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
+        ConcurrentMap<String, MtContextThreadLocal<String>> localMtContexts =
+                new ConcurrentHashMap<String, MtContextThreadLocal<String>>(mtContexts);
+
+        System.out.println(tag + " Before Run:");
+        Utils.print(mtContexts);
+        System.out.println();
+
+        // 1. Add new
+        String newChildKey = "child" + tag;
+        MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
+        child.set(newChildKey);
+
+        MtContextThreadLocal<String> old = mtContexts.putIfAbsent(newChildKey, child);
+        if (old != null) {
+            throw new IllegalStateException("already contains key " + newChildKey);
+        }
+        localMtContexts.put(newChildKey, child);
+
+        // 2. modify the parent key
+        String p = mtContexts.get("p").get() + tag;
+        mtContexts.get("p").set(p);
+        localMtContexts.put("p", mtContexts.get("p"));
+
+        // store value in task
+        System.out.println(tag + " After Run:");
+        Utils.print(mtContexts);
+
+        return Utils.copied(localMtContexts);
     }
 }

@@ -39,21 +39,12 @@ public class MtContextRunnableTest {
 
     @Test
     public void test_MtContextRunnable() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
-        assertSame(task, mtContextRunnable.getRunnable());
 
-        // create after new Task, won't see parent value in in task!
+        // create after new Task
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
         after.set("after");
         mtContexts.put("after", after);
@@ -65,7 +56,7 @@ public class MtContextRunnableTest {
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
         assertEquals("after", task.copied.get("after")); // same thread, parent is available from task
-        assertEquals("child", task.copied.get("child"));
+        assertEquals("child1", task.copied.get("child1"));
 
         // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -73,20 +64,12 @@ public class MtContextRunnableTest {
         assertEquals("parent", copied.get("parent"));
         assertEquals("p", copied.get("p"));
         assertEquals("after", copied.get("after"));
-        assertEquals("child", copied.get("child")); // same thread, task set is available from parent 
+        assertEquals("child1", copied.get("child1")); // same thread, task set is available from parent 
     }
 
     @Test
     public void test_MtContextRunnable_withThread() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         Thread thread1 = new Thread(task);
@@ -104,7 +87,7 @@ public class MtContextRunnableTest {
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
-        assertEquals("child", task.copied.get("child"));
+        assertEquals("child1", task.copied.get("child1"));
 
         // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -116,19 +99,10 @@ public class MtContextRunnableTest {
 
     @Test
     public void test_MtContextRunnable_withExecutorService() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
-        assertSame(task, mtContextRunnable.getRunnable());
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
@@ -142,7 +116,7 @@ public class MtContextRunnableTest {
         assertEquals(3, task.copied.size());
         assertEquals("parent", task.copied.get("parent"));
         assertEquals("p1", task.copied.get("p"));
-        assertEquals("child", task.copied.get("child"));
+        assertEquals("child1", task.copied.get("child1"));
 
         // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
@@ -154,19 +128,10 @@ public class MtContextRunnableTest {
 
     @Test
     public void test_releaseMtContextAfterRun() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task, true);
-        assertSame(task, mtContextRunnable.getRunnable());
 
         Future<?> future = executorService.submit(mtContextRunnable);
         assertNull(future.get());
@@ -183,7 +148,8 @@ public class MtContextRunnableTest {
 
     @Test
     public void test_MtContextRunnable_copyObject() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<FooPojo>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<FooPojo>>();
+        ConcurrentMap<String, MtContextThreadLocal<FooPojo>> mtContexts =
+                new ConcurrentHashMap<String, MtContextThreadLocal<FooPojo>>();
 
         MtContextThreadLocal<FooPojo> parent = new FooMtContextThreadLocal();
         parent.set(new FooPojo("parent", 1));
@@ -195,7 +161,6 @@ public class MtContextRunnableTest {
 
         FooTask task = new FooTask("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
-        assertSame(task, mtContextRunnable.getRunnable());
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<FooPojo> after = new FooMtContextThreadLocal();
@@ -236,7 +201,6 @@ public class MtContextRunnableTest {
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
-        assertSame(task, mtContextRunnable.getRunnable());
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
@@ -249,13 +213,20 @@ public class MtContextRunnableTest {
         // child Inheritable
         assertEquals(2, task.copied.size());
         assertEquals("p1", task.copied.get("p"));
-        assertEquals("child", task.copied.get("child"));
+        assertEquals("child1", task.copied.get("child1"));
 
         // child do not effect parent
         Map<String, Object> copied = Utils.copied(mtContexts);
         assertEquals(2, copied.size());
         assertEquals("p", copied.get("p"));
         assertEquals("after", copied.get("after"));
+    }
+
+    @Test
+    public void test_sameTask() throws Exception {
+        Task task = new Task("1", null);
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
+        assertSame(task, mtContextRunnable.getRunnable());
     }
 
     @Test

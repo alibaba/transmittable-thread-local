@@ -4,20 +4,20 @@ import com.alibaba.mtc.Call;
 import com.alibaba.mtc.MtContextThreadLocal;
 import com.alibaba.mtc.Task;
 import com.alibaba.mtc.Utils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -44,28 +44,30 @@ public class ScheduledExecutorServiceMtcWrapperTest {
 
     @Before
     public void setUp() throws Exception {
-        mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
+        mtContexts = Utils.createTestMtContexts();
     }
 
-    protected Map<String, Object> copied;
-
-    @After
-    public void tearDown() throws Exception {
+    static void assertTask1(Map<String, Object> copied) {
         // child Inheritable
         assertEquals(4, copied.size());
         assertEquals("parent", copied.get("parent"));
         assertEquals("p1", copied.get("p"));
-        assertEquals("child", copied.get("child"));
+        assertEquals("child1", copied.get("child1"));
         assertEquals("after", copied.get("after")); // because create MtContextRunnable in method executorService
+    }
 
+    static void assertTask2(Map<String, Object> copied) {
+        // child Inheritable
+        assertEquals(4, copied.size());
+        assertEquals("parent", copied.get("parent"));
+        assertEquals("p2", copied.get("p"));
+        assertEquals("child2", copied.get("child2"));
+        assertEquals("after", copied.get("after")); // because create MtContextRunnable in method executorService
+    }
+
+
+    @After
+    public void tearDown() throws Exception {
         // child do not effect parent
         Map<String, Object> thisThreadCopied = Utils.copied(mtContexts);
         assertEquals(3, thisThreadCopied.size());
@@ -90,7 +92,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         executorService.execute(task);
         Thread.sleep(100);
 
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 
     @Test
@@ -103,7 +105,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         Future future = executorService.submit(call);
         assertEquals("ok", future.get());
 
-        copied = call.copied;
+        assertTask1(call.copied);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         Future future = executorService.submit(task, "ok");
         assertEquals("ok", future.get());
 
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 
     @Test
@@ -128,13 +130,13 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         assertNull(future.get());
 
         // child Inheritable
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 
     @Test
     public void test_invokeAll() throws Exception {
         Call call1 = new Call("1", mtContexts);
-        Call call2 = new Call("1", mtContexts);
+        Call call2 = new Call("2", mtContexts);
 
         setLocalAfter();
 
@@ -143,14 +145,14 @@ public class ScheduledExecutorServiceMtcWrapperTest {
             assertEquals("ok", future.get());
         }
 
-        assertEquals(call1.copied, call2.copied);
-        copied = call1.copied;
+        assertTask1(call1.copied);
+        assertTask2(call2.copied);
     }
 
     @Test
     public void test_invokeAll_timeout() throws Exception {
         Call call1 = new Call("1", mtContexts);
-        Call call2 = new Call("1", mtContexts);
+        Call call2 = new Call("2", mtContexts);
 
         setLocalAfter();
 
@@ -159,14 +161,14 @@ public class ScheduledExecutorServiceMtcWrapperTest {
             assertEquals("ok", future.get());
         }
 
-        assertEquals(call1.copied, call2.copied);
-        copied = call1.copied;
+        assertTask1(call1.copied);
+        assertTask2(call2.copied);
     }
 
     @Test
     public void test_invokeAny() throws Exception {
         Call call1 = new Call("1", mtContexts);
-        Call call2 = new Call("1", mtContexts);
+        Call call2 = new Call("2", mtContexts);
 
         setLocalAfter();
 
@@ -174,14 +176,14 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         assertEquals("ok", s);
 
         Thread.sleep(1000);
-        assertEquals(call1.copied, call2.copied);
-        copied = call1.copied;
+        assertTask1(call1.copied);
+        assertTask2(call2.copied);
     }
 
     @Test
     public void test_invokeAny_timeout() throws Exception {
         Call call1 = new Call("1", mtContexts);
-        Call call2 = new Call("1", mtContexts);
+        Call call2 = new Call("2", mtContexts);
 
         setLocalAfter();
 
@@ -189,8 +191,8 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         assertEquals("ok", s);
 
         Thread.sleep(1000);
-        assertEquals(call1.copied, call2.copied);
-        copied = call1.copied;
+        assertTask1(call1.copied);
+        assertTask2(call2.copied);
     }
 
     @Test
@@ -203,7 +205,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         assertNull(future.get());
 
         // child Inheritable
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 
     @Test
@@ -216,7 +218,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         Future future = executorService.schedule(call, 1, TimeUnit.SECONDS);
         assertEquals("ok", future.get());
 
-        copied = call.copied;
+        assertTask1(call.copied);
     }
 
     @Test
@@ -230,8 +232,7 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         Thread.sleep(1000);
         future.cancel(true);
 
-        // child Inheritable
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 
     @Test
@@ -245,7 +246,6 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         Thread.sleep(1000);
         future.cancel(true);
 
-        // child Inheritable
-        copied = task.copied;
+        assertTask1(task.copied);
     }
 }
