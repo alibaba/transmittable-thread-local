@@ -26,11 +26,11 @@ public class FooTask implements Runnable {
 
             // Add new
             MtContextThreadLocal<FooPojo> child = new FooMtContextThreadLocal();
-            child.set(new FooPojo("child", 3));
-            mtContexts.put("child", child);
+            child.set(new FooPojo(Utils.CHILD  + value, 3));
+            mtContexts.put(Utils.CHILD + value, child);
 
             // modify the parent key
-            mtContexts.get("p").get().setName(mtContexts.get("p").get().getName() + value);
+            mtContexts.get(Utils.PARENT_MODIFIED_IN_CHILD).get().setName(mtContexts.get(Utils.PARENT_MODIFIED_IN_CHILD).get().getName() + value);
 
             System.out.println("After Run:");
             Utils.print(mtContexts);

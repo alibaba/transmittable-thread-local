@@ -13,33 +13,53 @@ import java.util.concurrent.Future;
  * @author ding.lid
  */
 public class Utils {
-    private static class SleepTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public static final String PARENT_UNMODIFIED_IN_CHILD = "parent-created-unmodified-in-child";
+    public static final String PARENT_MODIFIED_IN_CHILD = "parent-created-modified-in-child";
+    public static final String PARENT_AFTER_CREATE_MTC_TASK = "parent-created-after-create-MtcTask";
+    public static final String CHILD = "child-created";
+
+    public static ConcurrentMap<String, MtContextThreadLocal<String>> createTestMtContexts() {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
+
+        MtContextThreadLocal<String> p1 = new MtContextThreadLocal<String>();
+        p1.set(PARENT_UNMODIFIED_IN_CHILD);
+        mtContexts.put(PARENT_UNMODIFIED_IN_CHILD, p1);
+
+        MtContextThreadLocal<String> p2 = new MtContextThreadLocal<String>();
+        p2.set(PARENT_MODIFIED_IN_CHILD);
+        mtContexts.put(PARENT_MODIFIED_IN_CHILD, p2);
+
+        return mtContexts;
     }
 
+    public static Map<String, Object> modifyMtContexts(String tag, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
+        ConcurrentMap<String, MtContextThreadLocal<String>> localMtContexts =
+                new ConcurrentHashMap<String, MtContextThreadLocal<String>>(mtContexts);
 
-    public static void expandThreadPool(ExecutorService executor) {
-        try {
-            List<Future<?>> ret = new ArrayList<Future<?>>();
-            for (int i = 0; i < 5; ++i) {
-                Future<?> submit = executor.submit(new SleepTask());
-                ret.add(submit);
-            }
+        System.out.println(tag + " Before Run:");
+        Utils.print(mtContexts);
+        System.out.println();
 
-            for (Future<?> future : ret) {
-                future.get();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
+        // 1. Add new
+        String newChildKey = CHILD + tag;
+        MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
+        child.set(newChildKey);
+
+        MtContextThreadLocal<String> old = mtContexts.putIfAbsent(newChildKey, child);
+        if (old != null) {
+            throw new IllegalStateException("already contains key " + newChildKey);
         }
+        localMtContexts.put(newChildKey, child);
+
+        // 2. modify the parent key
+        String p = mtContexts.get(PARENT_MODIFIED_IN_CHILD).get() + tag;
+        mtContexts.get(PARENT_MODIFIED_IN_CHILD).set(p);
+
+        // store value in task
+        System.out.println(tag + " After Run:");
+        Utils.print(mtContexts);
+
+        return Utils.copied(localMtContexts);
     }
 
     public static <T> void print(ConcurrentMap<String, MtContextThreadLocal<T>> mtContexts) {
@@ -63,47 +83,31 @@ public class Utils {
         return copiedContent;
     }
 
-    public static ConcurrentMap<String, MtContextThreadLocal<String>> createTestMtContexts() {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-        MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-        parent.set("parent");
-        mtContexts.put("parent", parent);
-
-        MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-        p.set("p");
-        mtContexts.put("p", p);
-        return mtContexts;
+    private static class SleepTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public static Map<String, Object> modifyMtContexts(String tag, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
-        ConcurrentMap<String, MtContextThreadLocal<String>> localMtContexts =
-                new ConcurrentHashMap<String, MtContextThreadLocal<String>>(mtContexts);
+    public static void expandThreadPool(ExecutorService executor) {
+        try {
+            List<Future<?>> ret = new ArrayList<Future<?>>();
+            for (int i = 0; i < 5; ++i) {
+                Future<?> submit = executor.submit(new SleepTask());
+                ret.add(submit);
+            }
 
-        System.out.println(tag + " Before Run:");
-        Utils.print(mtContexts);
-        System.out.println();
-
-        // 1. Add new
-        String newChildKey = "child" + tag;
-        MtContextThreadLocal<String> child = new MtContextThreadLocal<String>();
-        child.set(newChildKey);
-
-        MtContextThreadLocal<String> old = mtContexts.putIfAbsent(newChildKey, child);
-        if (old != null) {
-            throw new IllegalStateException("already contains key " + newChildKey);
+            for (Future<?> future : ret) {
+                future.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-        localMtContexts.put(newChildKey, child);
-
-        // 2. modify the parent key
-        String p = mtContexts.get("p").get() + tag;
-        mtContexts.get("p").set(p);
-        localMtContexts.put("p", mtContexts.get("p"));
-
-        // store value in task
-        System.out.println(tag + " After Run:");
-        Utils.print(mtContexts);
-
-        return Utils.copied(localMtContexts);
     }
 }
