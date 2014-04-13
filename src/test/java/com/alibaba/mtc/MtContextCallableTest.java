@@ -1,5 +1,7 @@
 package com.alibaba.mtc;
 
+import com.alibaba.mtc.testmodel.Call;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -63,7 +65,7 @@ public class MtContextCallableTest {
         assertMtContext(call.copied,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + 1, PARENT_MODIFIED_IN_CHILD,
-                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK,// same thread, parent is available from task
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK, // same thread, parent is available from task!
                 CHILD + 1, CHILD + 1
         );
 
@@ -107,27 +109,6 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_releaseMtContextAfterCall() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
-
-        Call call = new Call("1", mtContexts);
-        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call, true);
-        assertSame(call, mtContextCallable.getCallable());
-
-        Future future = executorService.submit(mtContextCallable);
-        assertEquals("ok", future.get());
-
-        future = executorService.submit(mtContextCallable);
-        try {
-            future.get();
-            fail();
-        } catch (ExecutionException expected) {
-            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
-            assertThat(expected.getMessage(), containsString("MtContext is released!"));
-        }
-    }
-
-    @Test
     public void test_testRemove() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
         mtContexts.get(PARENT_UNMODIFIED_IN_CHILD).remove();
@@ -154,6 +135,27 @@ public class MtContextCallableTest {
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
                 PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
         );
+    }
+
+    @Test
+    public void test_releaseMtContextAfterCall() throws Exception {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
+
+        Call call = new Call("1", mtContexts);
+        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call, true);
+        assertSame(call, mtContextCallable.getCallable());
+
+        Future future = executorService.submit(mtContextCallable);
+        assertEquals("ok", future.get());
+
+        future = executorService.submit(mtContextCallable);
+        try {
+            future.get();
+            fail();
+        } catch (ExecutionException expected) {
+            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
+            assertThat(expected.getMessage(), containsString("MtContext is released!"));
+        }
     }
 
     @Test

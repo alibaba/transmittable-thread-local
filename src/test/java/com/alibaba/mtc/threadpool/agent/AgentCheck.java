@@ -1,11 +1,9 @@
 package com.alibaba.mtc.threadpool.agent;
 
 import com.alibaba.mtc.MtContextThreadLocal;
-import com.alibaba.mtc.Task;
 import com.alibaba.mtc.Utils;
+import com.alibaba.mtc.testmodel.Task;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,38 +11,38 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
+import static com.alibaba.mtc.Utils.CHILD;
+import static com.alibaba.mtc.Utils.PARENT_AFTER_CREATE_MTC_TASK;
+import static com.alibaba.mtc.Utils.PARENT_MODIFIED_IN_CHILD;
+import static com.alibaba.mtc.Utils.PARENT_UNMODIFIED_IN_CHILD;
+import static com.alibaba.mtc.Utils.assertMtContext;
+import static com.alibaba.mtc.Utils.copied;
+import static com.alibaba.mtc.Utils.createTestMtContexts;
+import static com.alibaba.mtc.Utils.expandThreadPool;
 
 /**
  * @author ding.lid
  */
-public class AgentDemo {
+public class AgentCheck {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
     static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(3);
 
     static {
-        Utils.expandThreadPool(executorService);
-        Utils.expandThreadPool(scheduledExecutorService);
+        expandThreadPool(executorService);
+        expandThreadPool(scheduledExecutorService);
     }
 
     public static void main(String[] args) throws Exception {
         try {
-            System.out.println("Hello, " + AgentDemo.class.getName());
-
-            ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = new ConcurrentHashMap<String, MtContextThreadLocal<String>>();
-
-            MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
-            parent.set("parent");
-            mtContexts.put("parent", parent);
-
-            MtContextThreadLocal<String> p = new MtContextThreadLocal<String>();
-            p.set("p");
-            mtContexts.put("p", p);
+            ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
             checkExecutorService(mtContexts);
             checkScheduledExecutorService(mtContexts);
 
+            System.out.println();
+            System.out.println("====================================");
             System.out.println("OK!");
+            System.out.println("====================================");
         } finally {
             executorService.shutdown();
             scheduledExecutorService.shutdown();
@@ -59,26 +57,26 @@ public class AgentDemo {
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set("after");
-        mtContexts.put("after", after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         Thread.sleep(1000);
 
         System.out.println(task.copied);
 
         // child Inheritable
-        assertEquals(3, task.copied.size());
-        assertEquals("parent", task.copied.get("parent"));
-        assertEquals("p1", task.copied.get("p"));
-        assertEquals("child", task.copied.get("child"));
+        Utils.assertMtContext(task.copied,
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                CHILD + "1", CHILD + "1"
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        System.out.println(copied);
-        assertEquals(3, copied.size());
-        assertEquals("parent", copied.get("parent"));
-        assertEquals("p", copied.get("p"));
-        assertEquals("after", copied.get("after"));
+        assertMtContext(copied(mtContexts),
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 
     static void checkScheduledExecutorService(ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) throws Exception {
@@ -87,22 +85,23 @@ public class AgentDemo {
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set("after");
-        mtContexts.put("after", after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         future.get();
 
         // child Inheritable
-        assertEquals(3, task.copied.size());
-        assertEquals("parent", task.copied.get("parent"));
-        assertEquals("p2", task.copied.get("p"));
-        assertEquals("child", task.copied.get("child"));
+        assertMtContext(task.copied,
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD + "2", PARENT_MODIFIED_IN_CHILD,
+                CHILD + "2", CHILD + "2"
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        assertEquals(3, copied.size());
-        assertEquals("parent", copied.get("parent"));
-        assertEquals("p", copied.get("p"));
-        assertEquals("after", copied.get("after"));
+        assertMtContext(copied(mtContexts),
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 }

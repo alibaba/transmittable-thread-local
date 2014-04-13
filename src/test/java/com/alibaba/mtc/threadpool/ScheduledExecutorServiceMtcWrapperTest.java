@@ -1,8 +1,8 @@
 package com.alibaba.mtc.threadpool;
 
-import com.alibaba.mtc.Call;
+import com.alibaba.mtc.testmodel.Call;
 import com.alibaba.mtc.MtContextThreadLocal;
-import com.alibaba.mtc.Task;
+import com.alibaba.mtc.testmodel.Task;
 
 import java.util.Arrays;
 import java.util.List;

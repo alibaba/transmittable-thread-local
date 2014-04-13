@@ -1,4 +1,4 @@
-package com.alibaba.mtc;
+package com.alibaba.mtc.testmodel;
 
 /**
  * @author ding.lid

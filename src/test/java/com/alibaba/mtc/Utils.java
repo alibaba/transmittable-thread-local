@@ -35,9 +35,6 @@ public class Utils {
     }
 
     public static Map<String, Object> modifyMtContexts(String tag, ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts) {
-        ConcurrentMap<String, MtContextThreadLocal<String>> localMtContexts =
-                new ConcurrentHashMap<String, MtContextThreadLocal<String>>(mtContexts);
-
         System.out.println(tag + " Before Run:");
         Utils.print(mtContexts);
         System.out.println();
@@ -51,7 +48,7 @@ public class Utils {
         if (old != null) {
             throw new IllegalStateException("already contains key " + newChildKey);
         }
-        localMtContexts.put(newChildKey, child);
+        mtContexts.put(newChildKey, child);
 
         // 2. modify the parent key
         String p = mtContexts.get(PARENT_MODIFIED_IN_CHILD).get() + tag;
@@ -61,7 +58,7 @@ public class Utils {
         System.out.println(tag + " After Run:");
         Utils.print(mtContexts);
 
-        return Utils.copied(localMtContexts);
+        return Utils.copied(mtContexts);
     }
 
     public static <T> void print(ConcurrentMap<String, MtContextThreadLocal<T>> mtContexts) {
@@ -85,8 +82,7 @@ public class Utils {
         return copiedContent;
     }
 
-
-    static void assertMtContext(Map<String, Object> copied, String... asserts) {
+    public static void assertMtContext(Map<String, Object> copied, String... asserts) {
         if (asserts.length % 2 != 0) {
             throw new IllegalStateException("should even count!");
         }

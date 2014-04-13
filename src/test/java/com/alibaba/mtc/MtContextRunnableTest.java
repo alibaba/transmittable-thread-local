@@ -1,5 +1,10 @@
 package com.alibaba.mtc;
 
+import com.alibaba.mtc.testmodel.FooMtContextThreadLocal;
+import com.alibaba.mtc.testmodel.FooPojo;
+import com.alibaba.mtc.testmodel.FooTask;
+import com.alibaba.mtc.testmodel.Task;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +100,7 @@ public class MtContextRunnableTest {
         assertMtContext(task.copied,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
-                CHILD + 1, CHILD + 1
+                CHILD + "1", CHILD + "1"
         );
 
         // child do not effect parent
@@ -137,23 +142,34 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_releaseMtContextAfterRun() throws Exception {
+    public void test_testRemove() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
+        // remove MtContextThreadLocal
+        mtContexts.get(PARENT_UNMODIFIED_IN_CHILD).remove();
+
         Task task = new Task("1", mtContexts);
-        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task, true);
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
-        Future<?> future = executorService.submit(mtContextRunnable);
-        assertNull(future.get());
+        // create after new Task, won't see parent value in in task!
+        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
-        future = executorService.submit(mtContextRunnable);
-        try {
-            future.get();
-            fail();
-        } catch (ExecutionException expected) {
-            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
-            assertThat(expected.getMessage(), containsString("MtContext is released!"));
-        }
+        executorService.execute(mtContextRunnable);
+        Thread.sleep(100);
+
+        // child Inheritable
+        assertMtContext(task.copied,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                CHILD + 1, CHILD + 1
+        );
+
+        // child do not effect parent
+        assertMtContext(copied(mtContexts),
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 
     @Test
@@ -195,34 +211,23 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_testRemove() throws Exception {
+    public void test_releaseMtContextAfterRun() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
-        // remove MtContextThreadLocal
-        mtContexts.get(PARENT_UNMODIFIED_IN_CHILD).remove();
-
         Task task = new Task("1", mtContexts);
-        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
+        MtContextRunnable mtContextRunnable = MtContextRunnable.get(task, true);
 
-        // create after new Task, won't see parent value in in task!
-        MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set(PARENT_AFTER_CREATE_MTC_TASK);
-        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
+        Future<?> future = executorService.submit(mtContextRunnable);
+        assertNull(future.get());
 
-        executorService.execute(mtContextRunnable);
-        Thread.sleep(100);
-
-        // child Inheritable
-        assertMtContext(task.copied,
-                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
-                CHILD + 1, CHILD + 1
-        );
-
-        // child do not effect parent
-        assertMtContext(copied(mtContexts),
-                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
-                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
-        );
+        future = executorService.submit(mtContextRunnable);
+        try {
+            future.get();
+            fail();
+        } catch (ExecutionException expected) {
+            assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
+            assertThat(expected.getMessage(), containsString("MtContext is released!"));
+        }
     }
 
     @Test
@@ -233,7 +238,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_idempotent() throws Exception {
+    public void test_get_idempotent() throws Exception {
         MtContextRunnable task = MtContextRunnable.get(new Task("1", null));
         try {
             MtContextRunnable.get(task);
@@ -244,7 +249,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_nullInput() throws Exception {
+    public void test_get_nullInput() throws Exception {
         assertNull(MtContextRunnable.get(null));
     }
 

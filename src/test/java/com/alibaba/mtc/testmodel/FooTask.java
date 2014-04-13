@@ -1,4 +1,7 @@
-package com.alibaba.mtc;
+package com.alibaba.mtc.testmodel;
+
+import com.alibaba.mtc.MtContextThreadLocal;
+import com.alibaba.mtc.Utils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
