@@ -13,6 +13,14 @@ import java.util.concurrent.Future;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import static com.alibaba.mtc.Utils.CHILD;
+import static com.alibaba.mtc.Utils.PARENT_AFTER_CREATE_MTC_TASK;
+import static com.alibaba.mtc.Utils.PARENT_MODIFIED_IN_CHILD;
+import static com.alibaba.mtc.Utils.PARENT_UNMODIFIED_IN_CHILD;
+import static com.alibaba.mtc.Utils.assertMtContext;
+import static com.alibaba.mtc.Utils.copied;
+import static com.alibaba.mtc.Utils.createTestMtContexts;
+import static com.alibaba.mtc.Utils.expandThreadPool;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +37,7 @@ public class MtContextRunnableTest {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     static {
-        Utils.expandThreadPool(executorService);
+        expandThreadPool(executorService);
     }
 
     @AfterClass
@@ -38,98 +46,99 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_MtContextRunnable() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
+    public void test_MtContextRunnable_inSameThread() throws Exception {
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
         // create after new Task
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set(Utils.PARENT_AFTER_CREATE_MTC_TASK);
-        mtContexts.put(Utils.PARENT_AFTER_CREATE_MTC_TASK, after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         mtContextRunnable.run();
 
         // child Inheritable
-        assertEquals(4, task.copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, task.copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD + "1", task.copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_AFTER_CREATE_MTC_TASK, task.copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK)); // same thread, parent is available from task
-        assertEquals(Utils.CHILD + "1", task.copied.get(Utils.CHILD + "1"));
+        assertMtContext(task.copied,
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK, // same thread, parent is available from task
+                CHILD + "1", CHILD + "1"
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        assertEquals(4, copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD, copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_AFTER_CREATE_MTC_TASK, copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK)); // same thread, parent is available from task
-        assertEquals(Utils.CHILD + "1", copied.get(Utils.CHILD + "1")); // same thread, task set is available from parent 
+        assertMtContext(copied(mtContexts),
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD, // restored after call!
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK,
+                CHILD + "1", CHILD + "1" // same thread, task set is available from parent
+        );
     }
 
     @Test
     public void test_MtContextRunnable_withThread() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         Thread thread1 = new Thread(task);
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set(Utils.PARENT_AFTER_CREATE_MTC_TASK);
-        mtContexts.put(Utils.PARENT_AFTER_CREATE_MTC_TASK, after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         thread1.start();
         thread1.join();
 
         // child Inheritable
-        System.out.println(task.copied);
-        assertEquals(3, task.copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, task.copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD + "1", task.copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.CHILD + 1, task.copied.get(Utils.CHILD + 1));
+        assertMtContext(task.copied,
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                CHILD + 1, CHILD + 1
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        assertEquals(3, copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD, copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_AFTER_CREATE_MTC_TASK, copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK));
+        assertMtContext(copied(mtContexts),
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 
     @Test
     public void test_MtContextRunnable_withExecutorService() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set(Utils.PARENT_AFTER_CREATE_MTC_TASK);
-        mtContexts.put(Utils.PARENT_AFTER_CREATE_MTC_TASK, after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         executorService.execute(mtContextRunnable);
         Thread.sleep(100);
 
         // child Inheritable
-        System.out.println(task.copied);
-        assertEquals(3, task.copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, task.copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD + "1", task.copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.CHILD + "1", task.copied.get(Utils.CHILD + 1));
+        assertMtContext(task.copied,
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                CHILD + "1", CHILD + "1"
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        assertEquals(3, copied.size());
-        assertEquals(Utils.PARENT_UNMODIFIED_IN_CHILD, copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD, copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_AFTER_CREATE_MTC_TASK, copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK));
+        assertMtContext(copied(mtContexts),
+                PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 
     @Test
     public void test_releaseMtContextAfterRun() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task, true);
@@ -153,66 +162,67 @@ public class MtContextRunnableTest {
                 new ConcurrentHashMap<String, MtContextThreadLocal<FooPojo>>();
 
         MtContextThreadLocal<FooPojo> parent = new FooMtContextThreadLocal();
-        parent.set(new FooPojo(Utils.PARENT_UNMODIFIED_IN_CHILD, 1));
-        mtContexts.put(Utils.PARENT_UNMODIFIED_IN_CHILD, parent);
+        parent.set(new FooPojo(PARENT_UNMODIFIED_IN_CHILD, 1));
+        mtContexts.put(PARENT_UNMODIFIED_IN_CHILD, parent);
 
         MtContextThreadLocal<FooPojo> p = new FooMtContextThreadLocal();
-        p.set(new FooPojo(Utils.PARENT_MODIFIED_IN_CHILD, 2));
-        mtContexts.put(Utils.PARENT_MODIFIED_IN_CHILD, p);
+        p.set(new FooPojo(PARENT_MODIFIED_IN_CHILD, 2));
+        mtContexts.put(PARENT_MODIFIED_IN_CHILD, p);
 
         FooTask task = new FooTask("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<FooPojo> after = new FooMtContextThreadLocal();
-        after.set(new FooPojo(Utils.PARENT_AFTER_CREATE_MTC_TASK, 4));
-        mtContexts.put(Utils.PARENT_AFTER_CREATE_MTC_TASK, after);
+        after.set(new FooPojo(PARENT_AFTER_CREATE_MTC_TASK, 4));
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         executorService.execute(mtContextRunnable);
         Thread.sleep(100);
 
         // child Inheritable
         assertEquals(3, task.copied.size());
-        assertEquals(new FooPojo(Utils.PARENT_UNMODIFIED_IN_CHILD, 1), task.copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(new FooPojo(Utils.PARENT_MODIFIED_IN_CHILD + "1", 2), task.copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(new FooPojo(Utils.CHILD + 1, 3), task.copied.get(Utils.CHILD + 1));
+        assertEquals(new FooPojo(PARENT_UNMODIFIED_IN_CHILD, 1), task.copied.get(PARENT_UNMODIFIED_IN_CHILD));
+        assertEquals(new FooPojo(PARENT_MODIFIED_IN_CHILD + "1", 2), task.copied.get(PARENT_MODIFIED_IN_CHILD));
+        assertEquals(new FooPojo(CHILD + 1, 3), task.copied.get(CHILD + 1));
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
+        Map<String, Object> copied = copied(mtContexts);
         assertEquals(3, copied.size());
-        assertEquals(new FooPojo(Utils.PARENT_UNMODIFIED_IN_CHILD, 1), copied.get(Utils.PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(new FooPojo(Utils.PARENT_MODIFIED_IN_CHILD, 2), copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(new FooPojo(Utils.PARENT_AFTER_CREATE_MTC_TASK, 4), copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK));
+        assertEquals(new FooPojo(PARENT_UNMODIFIED_IN_CHILD, 1), copied.get(PARENT_UNMODIFIED_IN_CHILD));
+        assertEquals(new FooPojo(PARENT_MODIFIED_IN_CHILD, 2), copied.get(PARENT_MODIFIED_IN_CHILD));
+        assertEquals(new FooPojo(PARENT_AFTER_CREATE_MTC_TASK, 4), copied.get(PARENT_AFTER_CREATE_MTC_TASK));
     }
 
     @Test
     public void test_testRemove() throws Exception {
-        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = Utils.createTestMtContexts();
+        ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         // remove MtContextThreadLocal
-        mtContexts.get(Utils.PARENT_UNMODIFIED_IN_CHILD).remove();
+        mtContexts.get(PARENT_UNMODIFIED_IN_CHILD).remove();
 
         Task task = new Task("1", mtContexts);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
-        after.set(Utils.PARENT_AFTER_CREATE_MTC_TASK);
-        mtContexts.put(Utils.PARENT_AFTER_CREATE_MTC_TASK, after);
+        after.set(PARENT_AFTER_CREATE_MTC_TASK);
+        mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
         executorService.execute(mtContextRunnable);
         Thread.sleep(100);
 
         // child Inheritable
-        assertEquals(2, task.copied.size());
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD + "1", task.copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.CHILD + 1, task.copied.get(Utils.CHILD + 1));
+        assertMtContext(task.copied,
+                PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
+                CHILD + 1, CHILD + 1
+        );
 
         // child do not effect parent
-        Map<String, Object> copied = Utils.copied(mtContexts);
-        assertEquals(2, copied.size());
-        assertEquals(Utils.PARENT_MODIFIED_IN_CHILD, copied.get(Utils.PARENT_MODIFIED_IN_CHILD));
-        assertEquals(Utils.PARENT_AFTER_CREATE_MTC_TASK, copied.get(Utils.PARENT_AFTER_CREATE_MTC_TASK));
+        assertMtContext(copied(mtContexts),
+                PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
+        );
     }
 
     @Test

@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author ding.lid
  */
@@ -81,6 +83,17 @@ public class Utils {
             }
         }
         return copiedContent;
+    }
+
+
+    static void assertMtContext(Map<String, Object> copied, String... asserts) {
+        if (asserts.length % 2 != 0) {
+            throw new IllegalStateException("should even count!");
+        }
+        assertEquals(asserts.length / 2, copied.size());
+        for (int i = 0; i < asserts.length; i += 2) {
+            assertEquals(asserts[i], copied.get(asserts[i + 1]));
+        }
     }
 
     private static class SleepTask implements Runnable {
