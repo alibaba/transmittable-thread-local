@@ -65,7 +65,6 @@ public class MtContextCallableTest {
         assertMtContext(call.copied,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + 1, PARENT_MODIFIED_IN_CHILD,
-                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK, // same thread, parent is available from task!
                 CHILD + 1, CHILD + 1
         );
 
@@ -73,8 +72,7 @@ public class MtContextCallableTest {
         assertMtContext(copied(mtContexts),
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD, // restored after call!
-                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK,
-                CHILD + 1, CHILD + 1 // same thread, task set is available from parent
+                PARENT_AFTER_CREATE_MTC_TASK, PARENT_AFTER_CREATE_MTC_TASK
         );
     }
 
