@@ -3,3 +3,5 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
+after_success: 
+  - ./run-agent-test.sh skip

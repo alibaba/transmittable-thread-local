@@ -5,7 +5,7 @@ BASE=`pwd`
 
 . ./common.sh
 
-cleanAndInstall && {
+cleanInstall $1 && copyDeps && {
     classpath=`echo target/dependency/*.jar | tr ' ' :`
 
     runCmd java \

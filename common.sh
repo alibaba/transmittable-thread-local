@@ -16,8 +16,13 @@ runCmd() {
     "$@"
 }
 
-cleanAndInstall() {
-    mvn clean install -Dmaven.test.skip && mvn test-compile &&
+cleanInstall() {
+    [ "$1" = 'skip'  ] || {
+        mvn clean install -Dmaven.test.skip && mvn test-compile
+    }
+}
+
+copyDeps() {
     mvn dependency:copy-dependencies -DincludeScope=provided &&
     mvn dependency:copy-dependencies -DincludeScope=test
 }
