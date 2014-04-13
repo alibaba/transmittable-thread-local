@@ -57,6 +57,10 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
+    private void superRemove() {
+        super.remove();
+    }
+
     T copyMtContextValue() {
         return copy(get());
     }
@@ -98,7 +102,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
             // clean extra MtContext in destination thread
             if (!copied.containsKey(threadLocal)) {
                 iterator.remove();
-                threadLocal.remove();
+                threadLocal.superRemove();
             }
         }
         setMtContexts(copied);
@@ -113,7 +117,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
             // clean extra MtContext
             if (!backup.containsKey(threadLocal)) {
                 iterator.remove();
-                threadLocal.remove();
+                threadLocal.superRemove();
             }
         }
         setMtContexts(backup);
