@@ -10,12 +10,14 @@ BASE=`pwd`
 cleanInstall $1 && copyDeps $1 && {
     classpath=`echo target/dependency/*.jar | tr ' ' :` &&
 
-    ./mtc-repackage-javassist.sh target/dependency/javassist* target/$aid-$version.jar && {
-        # check whether repackage operation result is expected.
-        jar -tf target/dependency/javassist* | grep '^javassist/' && {
+    ./mtc-repackage-javassist.sh target/dependency/javassist* target/$aid-$version.jar &&
+
+    # check whether repackage operation result is expected.
+    {
+        ! jar -tf target/dependency/javassist* | grep '^javassist/' || {
             redEcho "Fail to repackage javassist jar!"
             exit 2
-        } || true
+        }
     } &&
 
     runCmd java \

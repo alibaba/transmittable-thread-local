@@ -1,8 +1,9 @@
 language: java
 jdk:
+  - openjdk6
   - oraclejdk7
   - openjdk7
-  - openjdk6
+  - oraclejdk8
 after_script: 
   - ./run-agent-test.sh skip
   - ./run-repackaged-agent-test.sh skip
