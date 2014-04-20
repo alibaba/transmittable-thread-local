@@ -11,9 +11,11 @@ cleanInstall $1 && copyDeps $1 && {
     classpath=`echo target/dependency/*.jar | tr ' ' :` &&
 
     ./mtc-repackage-javassist.sh target/dependency/javassist* target/$aid-$version.jar && {
-        jar -tf target/dependency/javassist* | grep 'com/alibaba/mtc' -Fq -m1 || {
+        # check whether repackage operation result is expected.
+        jar -tf target/dependency/javassist* | grep '^javassist/' && {
             redEcho "Fail to repackage javassist jar!"
-        }
+            exit 2
+        } || true
     } &&
 
     runCmd java \
