@@ -339,7 +339,7 @@ java -jar jarjar.jar process \
 
 可以通过脚本[run-repackaged-agent-test.sh](https://github.com/alibaba/multi-thread-context/blob/master/run-repackaged-agent-test.sh)运行包含`repackage`操作`Agent`测试（这个测试已经添加到`CI`中）。
 
-更多`jarjar`文档[参见工程wiki](https://code.google.com/p/jarjar/wiki/CommandLineDocs)。
+更多`jarjar`文档[参见其项目wiki](https://code.google.com/p/jarjar/wiki/CommandLineDocs)。
 
 :electric_plug: Java API Docs
 ======================
