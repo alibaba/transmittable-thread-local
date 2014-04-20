@@ -180,7 +180,7 @@ String value = parent.get();
 ### 2.3 使用Java Agent来修饰JDK线程池实现类
 
 这种方式，实现线程池的`MtContext`传递过程中，代码中没有修饰`Runnble`或是线程池的代码。    
-\# 后面结合实际场景的架构，来说明这种方式可以做到应用代码 **无感知**（或说是 **无侵入**）`MtContext`的质的飞跃。
+\# 即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
 
 示例代码：
 
@@ -309,6 +309,37 @@ public class TransformerAdaptor implements ClassFileTransformer {
 ```bash
 -Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/path/to/your/agent/jar/files
 ```
+
+Bootstrap上添加通用库的`Jar`的问题及解决方法
+----------------------------
+
+通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
+
+`MTC`在`Bootstrap` `ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist`和`MTC`的`Javassist`有兼容性的风险。
+
+可以通过`repackage`（重新命名包名）来解决这个问题。
+
+[`jarjar`](https://code.google.com/p/jarjar/)这个工具可以直接`repackage` `Jar`文件。这样省去了改源码的麻烦。
+
+```bash
+# 命令选项
+java -jar jarjar.jar process <rulesFile> <inJar> <outJar>
+
+# 命令示例
+java -jar jarjar.jar process \
+    <(echo 'rule javassist.** com.alibaba.mtc.javassist.@1') \
+    /path/to/javassist.jar /path/to/javassist.repackaged.jar
+java -jar jarjar.jar process \
+    <(echo 'rule javassist.** com.alibaba.mtc.javassist.@1') \
+    /path/to/multithread.context.jar /path/to/multithread.context.repackaged.jar
+# 上面命令把javassist包名，批量重命名成com.alibaba.mtc.javassist
+```
+
+完整`MTC`中`repackage`操作的命令见[mtc-repackage-javassist.sh](https://github.com/alibaba/multi-thread-context/blob/master/mtc-repackage-javassist.sh)
+
+可以通过脚本[run-repackaged-agent-test.sh](https://github.com/alibaba/multi-thread-context/blob/master/run-repackaged-agent-test.sh)运行包含`repackage`操作`Agent`测试（这个测试已经添加到`CI`中）。
+
+更多`jarjar`文档[参见工程wiki](https://code.google.com/p/jarjar/wiki/CommandLineDocs)。
 
 :electric_plug: Java API Docs
 ======================
@@ -502,3 +533,10 @@ Javassist
 ----------------------------
 
 * [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
+
+jarjar
+----------------------------
+
+* [Jar Jar Links is a utility that makes it easy to repackage Java libraries and embed them into your own distribution](https://code.google.com/p/jarjar/)
+    * [JarJar命令行使用文档](https://code.google.com/p/jarjar/wiki/CommandLineDocs)
+
