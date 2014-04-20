@@ -22,7 +22,7 @@ runCmd \
 javadoc -J-Duser.language=en -J-Duser.country=US \
 -locale en_US \
 -encoding utf8 -charset utf8 \
--windowtitle "MTC $version"\
+-windowtitle "MTC $version" \
 -protected -use -author -version \
 -link http://docs.oracle.com/javase/6/docs/api \
 -d target/apidocs \
