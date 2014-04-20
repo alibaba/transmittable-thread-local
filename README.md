@@ -35,11 +35,11 @@ multi-thread context(MTC)
 
 数据安全需要防止`ISV`的应用拿到多个卖家家数据。
 
-解决的问题其中一环是：处理过程关联了一个卖家的上下文，在这个上下文中应用只能处理（读&写）这个卖家的数据。
+解决这个问题的其中一环是：处理过程关联一个卖家的上下文，在上下文中应用只能处理（读&写）这个卖家的数据。
 
-请求由卖家发起（如从`Web`请求时进入`App Engine`），`App Engine`可以知道是从哪个卖家，在`Web`请求时在上下文中设置好卖家ID。
+请求由卖家发起（如从`Web`请求进入`App Engine`），`App Engine`可以知道是从哪个卖家，在`Web`请求时在上下文中设置好卖家ID。
 
-应用处理数据（`DB`、`Web`、消息 etc.）是通过`App Engine`提供的服务`SDK`来完成。当应用处理数据时，`SDK`检查数据所属的卖家是否和上下文中的卖家`ID`一致，不一致则拒绝数据的读写。
+应用处理数据（`DB`、`Web`、消息 etc.）是通过`App Engine`提供的服务`SDK`来完成。当应用处理数据时，`SDK`检查数据所属的卖家是否和上下文中的卖家`ID`一致，如果不一致则拒绝数据的读写。
 
 应用代码会使用线程池，并且这样的使用是正常的业务需求。卖家`ID`的从要`App Engine`传递到下层`SDK`，要支持这样的用法。
 
@@ -163,11 +163,17 @@ String value = parent.get();
 
 ### 2.3 使用Java Agent来修饰JDK线程池实现类
 
-这种方式，实现线程池的`MtContext`传递是透明，即用户代码中没有`MtContext`相关的代码。
+这种方式，实现线程池的`MtContext`传递过程中，代码中没有修饰`Runnble`或是线程池的代码。    
+\# 后面结合实际场景的架构，来说明这种方式可以做到应用代码 **无感知**（或说是 **无侵入**）`MtContext`的质的飞跃。
 
 示例代码：
 
 ```java
+// 框架代码
+MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+parent.set("value-set-in-parent");
+
+// 应用代码
 ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 Runnable task = new Task("1");
@@ -183,19 +189,19 @@ String value = parent.get();
 
 Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/demo/AgentDemo.java)。
 
-目前Agent中，修饰了两个线程池实现类（实现代码在[`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
+目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
 
-在Java的启动参数加上：
+在`Java`的启动参数加上：
 
 - `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar`
 - `-javaagent:/path/to/multithread.context-x.y.z.jar`
 
 **注意**： 
 
-* Agent修改是JDK的类，类中加入了引用`MTC`的代码，所以`MTC Agent`的Jar要加到`bootclasspath`上。
+* Agent修改是JDK的类，类中加入了引用`MTC`的代码，所以`MTC Agent`的`Jar`要加到`bootclasspath`上。
 * `MTC Agent`使用`javassist`来修改类的实现，所以`bootclasspath`还在加上`javassist`的Jar。
 
 Java命令行示例如下：
@@ -209,7 +215,7 @@ java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.
 
 有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
 
-#### 什么情况下，`Java Agent`的使用方式`MtContext`会失效
+#### 什么情况下，`Java Agent`的使用方式`MtContext`会失效？
 
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，`MtContext`会失效。
 
@@ -258,7 +264,7 @@ public class TransformerAdaptor implements ClassFileTransformer {
 注意还是要在`bootclasspath`上，加上`MtContext`依赖的2个Jar：
 
 ```bash
--Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/your/agent/jar/files
+-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/path/to/your/agent/jar/files
 ```
 
 :electric_plug: Java API Docs
