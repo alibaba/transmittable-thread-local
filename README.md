@@ -49,6 +49,22 @@ multi-thread context(MTC)
 
 `App Engine`的日志（如，`SDK`会记录日志）要记录系统上下文。由于不限制用户应用使用线程池，系统的上下文需要能跨线程的传递，且不影响应用代码。
 
+### 上面场景使用`MTC`的整体构架
+
+<img src="https://raw.github.com/wiki/alibaba/multi-thread-context/mtc-arch.png" alt="构架图" width="260" />
+
+构架涉及3个角色：容器、用户应用、`SDK`。
+
+整体流程：
+
+1. 请求进入`PAAS`容器，提取上下文信息并设置好上下文。
+2. 进入用户应用处理业务，业务调用`SDK`（如`DB`、消息、etc）。    
+用户应用会使用线程池，所以调用`SDK`的线程可能不是请求的线程。
+3. 进入`SDK`处理。    
+提取上下文的信息，决定是否符合拒绝处理。
+
+整个过程中，上下文的传递 对于 **用户应用代码** 期望是透明的。
+
 :notebook: 使用说明
 =====================================
 
@@ -128,7 +144,7 @@ String value = parent.get();
 
 #### 这种使用方式的时序图
 
-![时序图](https://raw.github.com/wiki/alibaba/multi-thread-context/SequenceDiagram.png "时序图")
+<img src="https://raw.github.com/wiki/alibaba/multi-thread-context/SequenceDiagram.png" alt="时序图" width="600" />
 
 ### 2.2 修饰线程池
 
