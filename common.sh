@@ -23,8 +23,10 @@ cleanInstall() {
 }
 
 copyDeps() {
-    mvn dependency:copy-dependencies -DincludeScope=provided &&
-    mvn dependency:copy-dependencies -DincludeScope=test
+    [ "$1" = 'skip'  ] || {
+        mvn dependency:copy-dependencies -DincludeScope=provided &&
+        mvn dependency:copy-dependencies -DincludeScope=test
+    }
 }
 
 version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==2{print $2}'`
