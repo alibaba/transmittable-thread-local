@@ -65,7 +65,7 @@ multi-thread context(MTC)
 
 整个过程中，上下文的传递 对于 **用户应用代码** 期望是透明的。
 
-:notebook: 使用说明
+:notebook: User Guide
 =====================================
 
 使用类[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
@@ -240,7 +240,33 @@ java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.
 修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
 
-##### 如何权衡这些失效情况
+:mortar_board: Developer Guide
+=====================================
+
+`Java Agent`方式对应用代码无侵入
+----------------------------
+
+相对修饰`Runnble`或是线程池的方式，`Java Agent`方式为什么是应用代码无侵入的？
+
+<img src="https://raw.github.com/wiki/alibaba/multi-thread-context/mtc-arch.png" alt="构架图" width="260" />
+
+按框架图，把前面示例代码操作可以分成下面几部分：
+
+1. 读取信息设置到`MtContext`。    
+这部分在容器中完成，无需应用参与。
+2. 提交`Runnable`到线程池。要有修饰操作`Runnable`（无论是直接修饰`Runnble`还是修饰线程池）。    
+这部分操作一定是在用户应用中触发。
+3. 读取`MtContext`，做业务检查。    
+在`SDK`中完成，无需应用参与。
+
+只有第2部分的操作和应用代码相关。
+
+如果不通过`Java Agent`修饰线程池，则修饰操作需要应用代码来完成。
+
+使用`Java Agent`方式，应用无需修改代码，即做到 相对应用代码 透明地完成跨线程池的上下文传递。
+
+如何权衡`Java Agent`方式的失效情况
+----------------------------
 
 把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：
 
@@ -250,7 +276,8 @@ java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.
 - 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：
 业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
-#### 已有Java Agent中嵌入`MtContext Agent`
+已有Java Agent中嵌入`MtContext Agent`
+----------------------------
 
 这样可以减少Java命令上Agent的配置。
 
