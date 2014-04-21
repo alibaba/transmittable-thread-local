@@ -24,7 +24,6 @@ cleanInstall() {
 
 copyDeps() {
     [ "$1" = 'skip'  ] || {
-        mvn dependency:copy-dependencies -DincludeScope=provided &&
         mvn dependency:copy-dependencies -DincludeScope=test
     }
 }

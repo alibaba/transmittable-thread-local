@@ -6,4 +6,3 @@ jdk:
   - oraclejdk8
 after_script: 
   - ./run-agent-test.sh skip
-  - ./run-repackaged-agent-test.sh skip
