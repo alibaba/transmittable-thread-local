@@ -100,8 +100,11 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
 						<manifestEntries>
+							<Premain-Class>com.alibaba.mtc.threadpool.agent.MtContextAgent</Premain-Class>
+							<Can-Redefine-Classes>true</Can-Redefine-Classes>
+							<Can-Retransform-Classes>true</Can-Retransform-Classes>
+							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
 						</manifestEntries>
 					</archive>
 				</configuration>
