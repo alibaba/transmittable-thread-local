@@ -121,8 +121,8 @@ public class MtContextRunnableTest {
         after.set(PARENT_AFTER_CREATE_MTC_TASK);
         mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
-        executorService.execute(mtContextRunnable);
-        Thread.sleep(100);
+        Future<?> submit = executorService.submit(mtContextRunnable);
+        submit.get();
 
         // child Inheritable
         assertMtContext(task.copied,
@@ -154,8 +154,8 @@ public class MtContextRunnableTest {
         after.set(PARENT_AFTER_CREATE_MTC_TASK);
         mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
-        executorService.execute(mtContextRunnable);
-        Thread.sleep(100);
+        Future<?> submit = executorService.submit(mtContextRunnable);
+        submit.get();
 
         // child Inheritable
         assertMtContext(task.copied,
@@ -191,8 +191,8 @@ public class MtContextRunnableTest {
         after.set(new FooPojo(PARENT_AFTER_CREATE_MTC_TASK, 4));
         mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 
-        executorService.execute(mtContextRunnable);
-        Thread.sleep(100);
+        Future<?> submit = executorService.submit(mtContextRunnable);
+        submit.get();
 
         // child Inheritable
         assertEquals(3, task.copied.size());

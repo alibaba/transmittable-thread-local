@@ -1,8 +1,12 @@
 package com.alibaba.mtc.threadpool;
 
-import com.alibaba.mtc.testmodel.Call;
 import com.alibaba.mtc.MtContextThreadLocal;
+import com.alibaba.mtc.testmodel.Call;
 import com.alibaba.mtc.testmodel.Task;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-
 import static com.alibaba.mtc.Utils.CHILD;
 import static com.alibaba.mtc.Utils.PARENT_AFTER_CREATE_MTC_TASK;
 import static com.alibaba.mtc.Utils.PARENT_MODIFIED_IN_CHILD;
@@ -27,6 +26,7 @@ import static com.alibaba.mtc.Utils.createTestMtContexts;
 import static com.alibaba.mtc.Utils.expandThreadPool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author ding.lid
@@ -181,9 +181,11 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         String s = executorService.invokeAny(Arrays.asList(call1, call2));
         assertEquals("ok", s);
 
-        Thread.sleep(1000);
-        assertTask1(call1.copied);
-        assertTask2(call2.copied);
+        assertTrue(call1.copied != null || call2.copied != null);
+        if (call1.copied != null)
+            assertTask1(call1.copied);
+        if (call2.copied != null)
+            assertTask2(call2.copied);
     }
 
     @Test
@@ -196,9 +198,11 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         String s = executorService.invokeAny(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS);
         assertEquals("ok", s);
 
-        Thread.sleep(1000);
-        assertTask1(call1.copied);
-        assertTask2(call2.copied);
+        assertTrue(call1.copied != null || call2.copied != null);
+        if (call1.copied != null)
+            assertTask1(call1.copied);
+        if (call2.copied != null)
+            assertTask2(call2.copied);
     }
 
     @Test
@@ -234,7 +238,6 @@ public class ScheduledExecutorServiceMtcWrapperTest {
         setLocalAfter();
 
         Future future = executorService.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS);
-
         Thread.sleep(1000);
         future.cancel(true);
 
