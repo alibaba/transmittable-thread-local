@@ -1,6 +1,8 @@
 package com.alibaba.mtc;
 
 import com.alibaba.mtc.testmodel.Call;
+import org.junit.AfterClass;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,9 +12,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import org.junit.AfterClass;
-import org.junit.Test;
 
 import static com.alibaba.mtc.Utils.CHILD;
 import static com.alibaba.mtc.Utils.PARENT_AFTER_CREATE_MTC_TASK;
@@ -51,7 +50,7 @@ public class MtContextCallableTest {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Call call = new Call("1", mtContexts);
-        MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
+        MtContextCallable<String> mtContextCallable = MtContextCallable.<String>get(call);
 
         // create after new Task, won't see parent value in in task!
         MtContextThreadLocal<String> after = new MtContextThreadLocal<String>();
@@ -185,6 +184,7 @@ public class MtContextCallableTest {
         Callable<String> call2 = new Call("1", null);
         Callable<String> call3 = new Call("1", null);
 
+        @SuppressWarnings("unchecked")
         List<MtContextCallable<String>> callList = MtContextCallable.gets(
                 Arrays.asList(call1, call2, null, call3));
 
