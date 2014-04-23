@@ -319,27 +319,7 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 
 可以通过`repackage`（重新命名包名）来解决这个问题。
 
-[`jarjar`](https://code.google.com/p/jarjar/)这个工具可以直接`repackage` `Jar`文件。这样省去了改源码的麻烦。
-
-```bash
-# 命令选项
-java -jar jarjar.jar process <rulesFile> <inJar> <outJar>
-
-# 命令示例
-java -jar jarjar.jar process \
-    <(echo 'rule javassist.** com.alibaba.mtc.javassist.@1') \
-    /path/to/javassist.jar /path/to/javassist.repackaged.jar
-java -jar jarjar.jar process \
-    <(echo 'rule javassist.** com.alibaba.mtc.javassist.@1') \
-    /path/to/multithread.context.jar /path/to/multithread.context.repackaged.jar
-# 上面命令把javassist包名，批量重命名成com.alibaba.mtc.javassist
-```
-
-完整`MTC`中`repackage`操作的命令见[mtc-repackage-javassist.sh](https://github.com/alibaba/multi-thread-context/blob/master/mtc-repackage-javassist.sh)
-
-可以通过脚本[run-repackaged-agent-test.sh](https://github.com/alibaba/multi-thread-context/blob/master/run-repackaged-agent-test.sh)运行包含`repackage`操作`Agent`测试（这个测试已经添加到`CI`中）。
-
-更多`jarjar`文档[参见其项目wiki](https://code.google.com/p/jarjar/wiki/CommandLineDocs)。
+`Maven`提供了[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件，可以完成`repackage`操作。
 
 :electric_plug: Java API Docs
 ======================
@@ -534,9 +514,7 @@ Javassist
 
 * [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
 
-jarjar
+Shade插件
 ----------------------------
 
-* [Jar Jar Links is a utility that makes it easy to repackage Java libraries and embed them into your own distribution](https://code.google.com/p/jarjar/)
-    * [JarJar命令行使用文档](https://code.google.com/p/jarjar/wiki/CommandLineDocs)
-
+* `Maven`的[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件
