@@ -212,19 +212,18 @@ Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blo
 
 在`Java`的启动参数加上：
 
-- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar`
-- `-javaagent:/path/to/multithread.context-x.y.z.jar`
+- `-Xbootclasspath/a:/path/to/multithread.context-1.1.0.jar`
+- `-javaagent:/path/to/multithread.context-1.1.0.jar`
 
 **注意**： 
 
 * Agent修改是JDK的类，类中加入了引用`MTC`的代码，所以`MTC Agent`的`Jar`要加到`bootclasspath`上。
-* `MTC Agent`使用`javassist`来修改类的实现，所以`bootclasspath`还在加上`javassist`的Jar。
 
 Java命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.0.0.jar \
-    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
+java -Xbootclasspath/a:multithread.context-1.1.0.jar \
+    -javaagent:multithread.context-1.1.0-SNAPSHOT.jar \
     -cp classes \
     com.alibaba.mtc.threadpool.agent.demo.AgentDemo
 ```
@@ -307,7 +306,7 @@ public class TransformerAdaptor implements ClassFileTransformer {
 注意还是要在`bootclasspath`上，加上`MtContext`依赖的2个Jar：
 
 ```bash
--Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-x.y.z.GA.jar:/path/to/your/agent/jar/files
+-Xbootclasspath/a:/path/to/multithread.context-1.1.0.jar:/path/to/your/agent/jar/files
 ```
 
 Bootstrap上添加通用库的`Jar`的问题及解决方法
@@ -319,7 +318,9 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 
 可以通过`repackage`（重新命名包名）来解决这个问题。
 
-`Maven`提供了[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件，可以完成`repackage`操作。
+`Maven`提供了[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件，可以完成`repackage`操作，并把`Javassist`的类加到`MTC`的`Jar`中。
+
+这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
 
 :electric_plug: Java API Docs
 ======================
@@ -335,7 +336,7 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.0.4</version>
+	<version>1.1.0</version>
 </dependency>
 ```
 
