@@ -54,7 +54,7 @@
 		<developer>
 			<name>Tony Chen</name>
 			<id>bladehd</id>
-			<email>tony.chenl(AT)taobao(dot)com</email>
+			<email>cltoby@gmail.com</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
@@ -198,6 +198,33 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>travis</id>
+			<activation>
+				<property>
+					<name>env.TRAVIS</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.6</version>
+						<configuration>
+							<format>xml</format>
+							<maxmem>256m</maxmem>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.eluder.coveralls</groupId>
+						<artifactId>coveralls-maven-plugin</artifactId>
+						<version>2.2.0</version>
 					</plugin>
 				</plugins>
 			</build>

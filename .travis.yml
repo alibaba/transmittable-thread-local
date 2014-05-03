@@ -4,5 +4,6 @@ jdk:
   - oraclejdk7
   - openjdk7
   - oraclejdk8
-after_script: 
+after_success:
   - ./run-agent-test.sh skip
+  - mvn clean cobertura:cobertura coveralls:cobertura
