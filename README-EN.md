@@ -201,7 +201,7 @@ The current version Java API documentation: <http://alibaba.github.io/multi-thre
 </dependency>
 ```
 
-Check available version at [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22multithread.context%22%20g%3A%22com.alibaba%22).
+Check available version at [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22multithread.context%22).
 
 :books: Related resources
 =====================================

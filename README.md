@@ -337,7 +337,7 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 </dependency>
 ```
 
-可以在 [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22multithread.context%22%20g%3A%22com.alibaba%22) 查看可用的版本。
+可以在 [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22multithread.context%22) 查看可用的版本。
 
 :umbrella: 性能测试
 =====================================
