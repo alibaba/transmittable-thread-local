@@ -4,7 +4,7 @@ multi-thread context(MTC)
 [![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context) [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.png?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
 
 <div align="right">
-<a href="https://github.com/alibaba/multi-thread-context/blob/master/README-EN.md">English Documentation</a>
+<a href="README-EN.md">English Documentation</a>
 </div>
 
 :wrench: 功能
@@ -65,9 +65,9 @@ multi-thread context(MTC)
 :notebook: User Guide
 =====================================
 
-使用类[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
+使用类[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
 
-[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
 比[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，添加了`protected`方法`copy`，用于定制 **任务提交给线程池时**的上下文传递到 **任务执行时**时的拷贝行为，缺省是传递的是引用。
 
@@ -103,7 +103,7 @@ String value = parent.get();
 
 ### 2.1 修饰`Runnable`和`Callable`
 
-使用[`com.alibaba.mtc.MtContextRunnable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
+使用[`com.alibaba.mtc.MtContextRunnable`](src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
@@ -147,7 +147,7 @@ String value = parent.get();
 
 省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
+通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
 
 * `getMtcExecutor`：修饰接口`Executor`
 * `getMtcExecutorService`：修饰接口`ExecutorService`
@@ -200,9 +200,9 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-Demo参见[`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/demo/AgentDemo.java)。
+Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/mtc/threadpool/agent/demo/AgentDemo.java)。
 
-目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
+目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`MtContextTransformer.java`](src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
@@ -225,7 +225,7 @@ java -Xbootclasspath/a:multithread.context-1.1.0.jar \
     com.alibaba.mtc.threadpool.agent.demo.AgentDemo
 ```
 
-有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)即可运行Demo。
+有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
 
 #### 什么情况下，`Java Agent`的使用方式`MtContext`会失效？
 
@@ -345,7 +345,7 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 内存泄漏
 ----------------------------
 
-对比测试[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
 简单一个线程一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
@@ -357,15 +357,15 @@ Bootstrap上添加通用库的`Jar`的问题及解决方法
 
 可以通过执行工程下的脚本来运行Case验证：
 
-* 脚本[`run-memoryleak-ThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.java)。
-* 脚本[`run-memoryleak-MtContextThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-memoryleak-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
-测试类是[`NoMemoryLeak_MtContextThreadLocal_NoRemove`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_MtContextThreadLocal_NoRemove.java)。
+* 脚本[`run-memoryleak-ThreadLocal.sh`](run-memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
+测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.java)。
+* 脚本[`run-memoryleak-MtContextThreadLocal.sh`](run-memoryleak-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
+测试类是[`NoMemoryLeak_MtContextThreadLocal_NoRemove`](src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_MtContextThreadLocal_NoRemove.java)。
 
 TPS & 压力测试
 ----------------------------
 
-对比测试[`MtContextThreadLocal`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
 2个线程并发一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
@@ -477,10 +477,10 @@ GC情况如下（1分钟输出一次）：
 
 可以通过执行工程下的脚本来运行Case验证：
 
-* 脚本[`run-tps-ThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`CreateThreadLocalInstanceTps`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/tps/CreateThreadLocalInstanceTps.java)。
-* [`run-tps-MtContextThreadLocal.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-tps-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
-测试类是[`CreateMtContextThreadLocalInstanceTps`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/perf/tps/CreateMtContextThreadLocalInstanceTps.java)。
+* 脚本[`run-tps-ThreadLocal.sh`](run-tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
+测试类是[`CreateThreadLocalInstanceTps`](src/test/java/com/alibaba/mtc/perf/tps/CreateThreadLocalInstanceTps.java)。
+* [`run-tps-MtContextThreadLocal.sh`](run-tps-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
+测试类是[`CreateMtContextThreadLocalInstanceTps`](src/test/java/com/alibaba/mtc/perf/tps/CreateMtContextThreadLocalInstanceTps.java)。
 
 :question: FAQ
 =====================================

@@ -4,7 +4,7 @@ multi-thread context(MTC)
 [![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context) [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.png?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
 
 <div align="right">
-<a href="https://github.com/alibaba/multi-thread-context/blob/master/README.md">中文文档</a>
+<a href="README.md">中文文档</a>
 </div>
 
 :wrench: Functions
@@ -63,8 +63,8 @@ The solution is below usage.
 
 ### 2.1 Decorate `Runnable` and `Callable`
 
-Decorate input `Runnable` and `Callable` by [`com.alibaba.mtc.MtContextRunnable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextRunnable.java)
-and [`com.alibaba.mtc.MtContextCallable`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/MtContextCallable.java).
+Decorate input `Runnable` and `Callable` by [`com.alibaba.mtc.MtContextRunnable`](src/main/java/com/alibaba/mtc/MtContextRunnable.java)
+and [`com.alibaba.mtc.MtContextCallable`](src/main/java/com/alibaba/mtc/MtContextCallable.java).
 
 Sample code:
 
@@ -105,7 +105,7 @@ String value = parent.get();
 Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can completed in the thread pool.
 
 Use util class
-[`com.alibaba.mtc.threadpool.MtContextExecutors`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)
+[`com.alibaba.mtc.threadpool.MtContextExecutors`](src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)
 to decorate thread pool.
 
 Util class `com.alibaba.mtc.threadpool.MtContextExecutors` has below methods:
@@ -155,10 +155,10 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-See demo [`AgentDemo.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java).
+See demo [`AgentDemo.java`](src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java).
 
 Agent decorate 2 thread pool implementation classes
-\(implementation code [`MtContextTransformer.java`](https://github.com/alibaba/multi-thread-context/blob/master/src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)\):
+\(implementation code [`MtContextTransformer.java`](src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)\):
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
@@ -182,7 +182,7 @@ java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.
     com.alibaba.mtc.threadpool.agent.AgentDemo
 ```
 
-Run the script [`run-agent-demo.sh`](https://github.com/alibaba/multi-thread-context/blob/master/run-agent-demo.sh)
+Run the script [`run-agent-demo.sh`](run-agent-demo.sh)
 to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 :electric_plug: Java API Docs
