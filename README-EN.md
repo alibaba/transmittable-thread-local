@@ -1,7 +1,7 @@
 multi-thread context(MTC)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context) [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.png?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
+[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context) [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.png?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
 
 <div align="right">
 <a href="README.md">中文文档</a>
