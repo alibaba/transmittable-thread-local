@@ -1,7 +1,12 @@
 multi-thread context(MTC)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context) [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.png?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
+[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
+[![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.svg?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
+[![GitHub release](https://img.shields.io/github/release/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/releases)
+[![GitHub issues](https://img.shields.io/github/issues/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/issues)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 <div align="right">
 <a href="README.md">中文文档</a>
