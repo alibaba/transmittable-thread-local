@@ -13,8 +13,8 @@
 	<artifactId>multithread.context</artifactId>
 	<version>1.2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>multithread context(MTC)</name>
-	<description>a simple lib for transmitting context between thread even using thread pool</description>
+	<name>multi-thread context(MTC)</name>
+	<description>a simple lib for transmitting context between thread even using thread pool.</description>
 	<url>https://github.com/alibaba/multi-thread-context</url>
 	<inceptionYear>2013</inceptionYear>
 
@@ -54,7 +54,7 @@
 		<developer>
 			<name>Tony Chen</name>
 			<id>bladehd</id>
-			<email>cltoby@gmail.com</email>
+			<email>cltoby(AT)gmail(DOT)com</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
@@ -73,14 +73,14 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.18.1-GA</version>
+			<version>3.19.0-GA</version>
 			<optional>true</optional>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -89,7 +89,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -99,7 +99,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.6</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -113,11 +113,11 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
+				<version>2.18.1</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.3</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -138,7 +138,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.1</version>
+				<version>2.8.2</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -155,7 +155,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>2.4</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -167,7 +167,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>2.10.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadoc</id>
@@ -188,7 +188,7 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -215,7 +215,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>
-						<version>2.6</version>
+						<version>2.7</version>
 						<configuration>
 							<format>xml</format>
 							<maxmem>256m</maxmem>
@@ -224,7 +224,7 @@
 					<plugin>
 						<groupId>org.eluder.coveralls</groupId>
 						<artifactId>coveralls-maven-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.1.0</version>
 					</plugin>
 				</plugins>
 			</build>
