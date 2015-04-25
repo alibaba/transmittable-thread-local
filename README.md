@@ -22,13 +22,7 @@ multi-thread context(MTC)
 
 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
-如有问题欢迎：
-
-- [提交Issue](https://github.com/alibaba/multi-thread-context/issues) 
-- [发到邮件列表](http://mtc.59504.x6.nabble.com/) （[nabble](http://www.nabble.com/)提供）
-  - 点击【选项】-【通过电子邮箱发布】（即[这个页面](http://mtc.59504.x6.nabble.com/template/NamlServlet.jtp?macro=subscribe&node=1)），来获得这个邮件列表的地址来发布信息。
-  - 点击【选项】-【通过邮件订阅】（即[这个页面](http://mtc.59504.x6.nabble.com/template/NamlServlet.jtp?macro=subscribe&node=1)），来订阅这个邮件列表。
-  - 可以通过邮件或是[论坛界面](http://mtc.59504.x6.nabble.com/)来发布和查看信息。
+欢迎提建议或问题（[提交Issue](https://github.com/alibaba/multi-thread-context/issues)）和[Fork后提交代码](https://github.com/alibaba/multi-thread-context/fork)！
 
 :art: 需求场景
 ----------------------------

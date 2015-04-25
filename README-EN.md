@@ -24,13 +24,7 @@ can transmit context to child thread from parent thread.
 But when use thread pool, thread is cached up and used repeatedly. Transmitting context from parent thread to child thread has no meaning.
 Application need transmit context from the time task is created to the time task is executed.
 
-If you have problem or question, 
-
-- [submit Issue](https://github.com/alibaba/multi-thread-context/issues) 
-- [mail list](http://mtc.59504.x6.nabble.com/) (Powered by [nabble](http://www.nabble.com/))
-	- Click "Options > Subscribe via email" to subscribe to this mailing list; 
-	- Click "Options > Post by email..." to get the email address of this mailing list; 
-	- You can post messages via email or through the forum interface.
+If you have problem or question, please [submit Issue](https://github.com/alibaba/multi-thread-context/issues) or play [fork](https://github.com/alibaba/multi-thread-context/fork) and pull request dance.
 
 :art: Requirements
 ----------------------------
