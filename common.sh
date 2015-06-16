@@ -28,5 +28,5 @@ copyDeps() {
     }
 }
 
-version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==2{print $2}'`
-aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==2{print $2}'`
+version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
+aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
