@@ -19,11 +19,6 @@ public class MtContextAgent {
         install(agentArgs, inst);
     }
 
-    public static void agentmain(String agentArgs, Instrumentation inst) {
-        logger.info("[MtContextAgent.agentmain] begin, agentArgs: " + agentArgs);
-        install(agentArgs, inst);
-    }
-
     static void install(String agentArgs, Instrumentation inst) {
         logger.info("[MtContextAgent.install] agentArgs: " + agentArgs + ", Instrumentation: " + inst);
 
