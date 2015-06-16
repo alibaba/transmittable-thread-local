@@ -137,7 +137,7 @@ public final class MtContextRunnable implements Runnable {
      *
      * @param tasks                    task to be wrapped
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent                is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
+     * @param idempotent               is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return wrapped tasks
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun, boolean idempotent) {

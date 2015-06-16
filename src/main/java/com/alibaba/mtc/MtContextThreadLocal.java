@@ -32,6 +32,32 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
         return parentValue;
     }
 
+    /**
+     * Callback method before task object({@link MtContextRunnable}/{@link MtContextCallable}) execute.
+     * <p/>
+     * Default behavior is do nothing, and should be overridden
+     * if a different behavior is desired.
+     * <p/>
+     * Do not throw any exception, just ignored.
+     *
+     * @since 1.2.0
+     */
+    protected void beforeExecute() {
+    }
+
+    /**
+     * Callback method after task object({@link MtContextRunnable}/{@link MtContextCallable}) execute.
+     * <p/>
+     * Default behavior is do nothing, and should be overridden
+     * if a different behavior is desired.
+     * <p/>
+     * Do not throw any exception, just ignored.
+     *
+     * @since 1.2.0
+     */
+    protected void afterExecute() {
+    }
+
     @Override
     public final T get() {
         T value = super.get();
@@ -105,7 +131,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
                 threadLocal.superRemove();
             }
         }
-        setMtContexts(copied);
+        setMtContexts(copied, true);
         return backup;
     }
 
@@ -120,14 +146,29 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
                 threadLocal.superRemove();
             }
         }
-        setMtContexts(backup);
+        setMtContexts(backup, false);
     }
 
-    static void setMtContexts(Map<MtContextThreadLocal<?>, Object> set) {
+    static void setMtContexts(Map<MtContextThreadLocal<?>, Object> set, boolean isStore) {
         for (Map.Entry<MtContextThreadLocal<?>, Object> entry : set.entrySet()) {
             @SuppressWarnings("unchecked")
             MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+
+            if (!isStore) {
+                try {
+                    threadLocal.afterExecute();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
             threadLocal.set(entry.getValue());
+            if (isStore) {
+                try {
+                    threadLocal.beforeExecute();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
         }
     }
 }
