@@ -21,7 +21,7 @@ import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
 public class MtContextTransformer implements ClassFileTransformer {

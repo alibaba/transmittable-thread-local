@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 /**
  * Factory Utils for getting MtContext Wrapper of jdk executors.
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
 public final class MtContextExecutors {

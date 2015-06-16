@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class MtContextCallableTest {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);

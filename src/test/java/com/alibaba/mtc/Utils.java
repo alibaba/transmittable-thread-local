@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class Utils {
     public static final String PARENT_UNMODIFIED_IN_CHILD = "parent-created-unmodified-in-child";

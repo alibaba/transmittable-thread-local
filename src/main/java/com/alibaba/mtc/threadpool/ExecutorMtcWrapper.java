@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
  * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable}
  * to the execution time of {@link Runnable}.
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
 class ExecutorMtcWrapper implements Executor {

@@ -21,7 +21,7 @@ import static com.alibaba.mtc.Utils.createTestMtContexts;
 import static com.alibaba.mtc.Utils.expandThreadPool;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class AgentCheck {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);

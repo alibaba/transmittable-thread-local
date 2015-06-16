@@ -3,7 +3,7 @@ package com.alibaba.mtc.perf;
 import java.util.Random;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class Utils {
     static Random random = new Random();

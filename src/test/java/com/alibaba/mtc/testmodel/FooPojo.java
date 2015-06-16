@@ -1,7 +1,7 @@
 package com.alibaba.mtc.testmodel;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class FooPojo {
     String name;

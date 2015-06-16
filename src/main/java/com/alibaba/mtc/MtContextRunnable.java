@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * <p/>
  * Use factory method {@link #get(Runnable)} to create instance.
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor

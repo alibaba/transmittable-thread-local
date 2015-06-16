@@ -3,7 +3,7 @@ package com.alibaba.mtc.perf.memoryleak;
 import com.alibaba.mtc.perf.Utils;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class NoMemoryLeak_ThreadLocal_NoRemove {
     public static void main(String[] args) throws Exception {

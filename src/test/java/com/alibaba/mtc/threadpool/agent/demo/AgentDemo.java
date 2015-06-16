@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class AgentDemo {
     static MtContextThreadLocal<String> stringMtContextThreadLocal = new MtContextThreadLocal<String>();

@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class Call implements Callable<String> {
     public final String tag;

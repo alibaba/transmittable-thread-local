@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * The {@link MtContextTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} in
  * the origin {@link TimerTask} lose effectiveness!
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.Timer
  * @see TimerTask
  * @since 0.9.1

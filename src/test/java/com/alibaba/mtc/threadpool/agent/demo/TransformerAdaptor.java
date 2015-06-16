@@ -7,7 +7,7 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class TransformerAdaptor implements ClassFileTransformer {
     final MtContextTransformer mtContextTransformer = new MtContextTransformer();

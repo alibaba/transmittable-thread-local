@@ -11,7 +11,7 @@ import java.util.WeakHashMap;
  * Note: this class extends {@link java.lang.InheritableThreadLocal},
  * so {@link com.alibaba.mtc.MtContextThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @see MtContextRunnable
  * @see MtContextCallable
  * @since 0.10.0

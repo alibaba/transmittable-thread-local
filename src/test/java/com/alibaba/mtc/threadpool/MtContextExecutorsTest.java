@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNull;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class MtContextExecutorsTest {
     @Test

@@ -3,7 +3,7 @@ package com.alibaba.mtc.testmodel;
 import com.alibaba.mtc.MtContextThreadLocal;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class FooMtContextThreadLocal extends MtContextThreadLocal<FooPojo> {
     @Override

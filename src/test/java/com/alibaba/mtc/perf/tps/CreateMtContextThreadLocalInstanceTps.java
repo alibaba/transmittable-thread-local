@@ -4,7 +4,7 @@ import com.alibaba.mtc.MtContextThreadLocal;
 import com.alibaba.mtc.perf.Utils;
 
 /**
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class CreateMtContextThreadLocalInstanceTps {
     public static void main(String[] args) throws Exception {

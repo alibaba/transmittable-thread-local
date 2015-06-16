@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
  * transmit the {@link com.alibaba.mtc.MtContextThreadLocal} from the task submit time of {@link Runnable} or {@link Callable}
  * to the execution time of {@link Runnable} or {@link Callable}.
  *
- * @author ding.lid
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
 class ExecutorServiceMtcWrapper extends ExecutorMtcWrapper implements ExecutorService {
