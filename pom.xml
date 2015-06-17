@@ -247,6 +247,12 @@
 						<configuration>
 							<format>xml</format>
 							<maxmem>256m</maxmem>
+							<instrumentation>
+								<excludes>
+									<exclude>com/alibaba/mtc/threadpool/agent/**/*.class</exclude>
+									<exclude>com/alibaba/mtc/MtContextTimerTask.class</exclude>
+								</excludes>
+							</instrumentation>
 						</configuration>
 					</plugin>
 					<plugin>
