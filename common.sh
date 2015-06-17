@@ -25,6 +25,8 @@ cleanInstall() {
 copyDeps() {
     [ "$1" = 'skip'  ] || {
         mvn dependency:copy-dependencies -DincludeScope=test
+        # remove repackaged and shaded javassist lib
+        rm target/dependency/javassist*
     }
 }
 

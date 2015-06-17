@@ -10,7 +10,7 @@ cleanInstall && copyDeps && {
 
     runCmd java \
         -Xmx128m -Xms128m \
-        -Xbootclasspath/a:target/$aid-$version.jar:`ls target/dependency/javassist*` \
+        -Xbootclasspath/a:target/$aid-$version.jar \
         -javaagent:target/$aid-$version.jar \
         -cp target/test-classes:$classpath \
         -ea \
