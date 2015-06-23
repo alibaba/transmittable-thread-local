@@ -250,7 +250,7 @@ java -Xbootclasspath/a:multithread.context-1.1.0.jar \
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 </dependency>
 ```
 
