@@ -5,7 +5,7 @@ multi-thread context(MTC)
 [![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.svg?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/releases)  
-[![Dependency Status](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073/badge.svg?style=flat)](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073)
+[![Dependency Status](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073/badge.svg)](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073)
 [![GitHub issues](https://img.shields.io/github/issues/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/issues)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
