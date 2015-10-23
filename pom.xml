@@ -112,10 +112,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18.1</version>
-			</plugin>
-			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>2.4.2</version>
 				<executions>
