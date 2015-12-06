@@ -76,7 +76,7 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_MtContextCallable_withExecutorService() throws Exception {
+    public void test_MtContextCallable_asyncWithExecutorService() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Call call = new Call("1", mtContexts);
@@ -156,7 +156,7 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_sameCall() throws Exception {
+    public void test_get_same() throws Exception {
         Call call = new Call("1", null);
         MtContextCallable<String> mtContextCallable = MtContextCallable.get(call);
         assertSame(call, mtContextCallable.getCallable());

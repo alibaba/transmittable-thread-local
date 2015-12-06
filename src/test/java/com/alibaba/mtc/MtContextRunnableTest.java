@@ -77,7 +77,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_MtContextRunnable_withThread() throws Exception {
+    public void test_MtContextRunnable_asyncWithNewThread() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
@@ -107,7 +107,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_MtContextRunnable_withExecutorService() throws Exception {
+    public void test_MtContextRunnable_asyncWithExecutorService() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         Task task = new Task("1", mtContexts);
@@ -270,7 +270,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_sameTask() throws Exception {
+    public void test_get_same() throws Exception {
         Task task = new Task("1", null);
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
         assertSame(task, mtContextRunnable.getRunnable());
