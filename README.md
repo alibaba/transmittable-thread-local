@@ -2,7 +2,7 @@ multi-thread context(MTC)
 =====================================
 
 [![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
-[![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.svg?branch=master)](https://coveralls.io/r/alibaba/multi-thread-context?branch=master)
+[![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.svg?branch=master&service=github)](https://coveralls.io/github/alibaba/multi-thread-context?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/releases)  
 [![Dependency Status](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073/badge.svg)](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073)
@@ -250,7 +250,7 @@ java -Xbootclasspath/a:multithread.context-1.1.0.jar \
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>multithread.context</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 </dependency>
 ```
 
