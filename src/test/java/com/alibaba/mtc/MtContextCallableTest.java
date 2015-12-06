@@ -106,7 +106,7 @@ public class MtContextCallableTest {
     }
 
     @Test
-    public void test_testRemove() throws Exception {
+    public void test_removeSameAsNotSet() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
         mtContexts.get(PARENT_UNMODIFIED_IN_CHILD).remove();
 

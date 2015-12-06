@@ -28,7 +28,7 @@ public class FooTask implements Runnable {
             System.out.println();
 
             // Add new
-            MtContextThreadLocal<FooPojo> child = new FooMtContextThreadLocal();
+            MtContextThreadLocal<FooPojo> child = new DeepCopyFooMtContextThreadLocal();
             child.set(new FooPojo(Utils.CHILD  + value, 3));
             mtContexts.put(Utils.CHILD + value, child);
 

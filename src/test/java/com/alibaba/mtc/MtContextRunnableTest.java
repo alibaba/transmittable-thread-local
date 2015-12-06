@@ -1,9 +1,6 @@
 package com.alibaba.mtc;
 
-import com.alibaba.mtc.testmodel.FooMtContextThreadLocal;
-import com.alibaba.mtc.testmodel.FooPojo;
-import com.alibaba.mtc.testmodel.FooTask;
-import com.alibaba.mtc.testmodel.Task;
+import com.alibaba.mtc.testmodel.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -140,7 +137,7 @@ public class MtContextRunnableTest {
     }
 
     @Test
-    public void test_testRemove() throws Exception {
+    public void test_removeSameAsNotSet() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<String>> mtContexts = createTestMtContexts();
 
         // remove MtContextThreadLocal
@@ -171,15 +168,59 @@ public class MtContextRunnableTest {
     }
 
     @Test
+    public void test_callback_copy_beforeExecute_afterExecute() throws Exception {
+        CallbackTestMtContextThreadLocal mtContextThreadLocal = new CallbackTestMtContextThreadLocal();
+
+        mtContextThreadLocal.set(new FooPojo("jerry", 42));
+
+        Runnable task1 = new Runnable() {
+            @Override
+            public void run() {
+            }
+        };
+        // do copy when decorate runnable
+        MtContextRunnable mtContextRunnable1 = MtContextRunnable.get(task1);
+
+        executorService.submit(mtContextRunnable1).get();
+
+        assertEquals(1, mtContextThreadLocal.copyCounter.get());
+        assertEquals(1, mtContextThreadLocal.beforeExecuteCounter.get());
+        assertEquals(1, mtContextThreadLocal.afterExecuteCounter.get());
+
+
+        executorService.submit(mtContextRunnable1).get();
+
+        assertEquals(1, mtContextThreadLocal.copyCounter.get());
+        assertEquals(2, mtContextThreadLocal.beforeExecuteCounter.get());
+        assertEquals(2, mtContextThreadLocal.afterExecuteCounter.get());
+
+
+        Runnable task2 = new Runnable() {
+            @Override
+            public void run() {
+            }
+        };
+        // do copy when decorate runnable
+        MtContextRunnable mtContextRunnable2 = MtContextRunnable.get(task2);
+
+
+        executorService.submit(mtContextRunnable2).get();
+
+        assertEquals(2, mtContextThreadLocal.copyCounter.get());
+        assertEquals(3, mtContextThreadLocal.beforeExecuteCounter.get());
+        assertEquals(3, mtContextThreadLocal.afterExecuteCounter.get());
+    }
+
+    @Test
     public void test_MtContextRunnable_copyObject() throws Exception {
         ConcurrentMap<String, MtContextThreadLocal<FooPojo>> mtContexts =
                 new ConcurrentHashMap<String, MtContextThreadLocal<FooPojo>>();
 
-        MtContextThreadLocal<FooPojo> parent = new FooMtContextThreadLocal();
+        MtContextThreadLocal<FooPojo> parent = new DeepCopyFooMtContextThreadLocal();
         parent.set(new FooPojo(PARENT_UNMODIFIED_IN_CHILD, 1));
         mtContexts.put(PARENT_UNMODIFIED_IN_CHILD, parent);
 
-        MtContextThreadLocal<FooPojo> p = new FooMtContextThreadLocal();
+        MtContextThreadLocal<FooPojo> p = new DeepCopyFooMtContextThreadLocal();
         p.set(new FooPojo(PARENT_MODIFIED_IN_CHILD, 2));
         mtContexts.put(PARENT_MODIFIED_IN_CHILD, p);
 
@@ -187,7 +228,7 @@ public class MtContextRunnableTest {
         MtContextRunnable mtContextRunnable = MtContextRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
-        MtContextThreadLocal<FooPojo> after = new FooMtContextThreadLocal();
+        MtContextThreadLocal<FooPojo> after = new DeepCopyFooMtContextThreadLocal();
         after.set(new FooPojo(PARENT_AFTER_CREATE_MTC_TASK, 4));
         mtContexts.put(PARENT_AFTER_CREATE_MTC_TASK, after);
 

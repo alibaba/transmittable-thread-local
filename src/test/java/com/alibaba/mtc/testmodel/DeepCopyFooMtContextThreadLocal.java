@@ -5,7 +5,7 @@ import com.alibaba.mtc.MtContextThreadLocal;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class FooMtContextThreadLocal extends MtContextThreadLocal<FooPojo> {
+public class DeepCopyFooMtContextThreadLocal extends MtContextThreadLocal<FooPojo> {
     @Override
     protected FooPojo copy(FooPojo parentValue) {
         if (parentValue == null) return null;
