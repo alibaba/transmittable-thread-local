@@ -7,7 +7,7 @@ import java.util.WeakHashMap;
 
 /**
  * {@link MtContextThreadLocal} can transmit context from the thread of submitting task to the thread of executing task.
- * <p/>
+ * <p>
  * Note: this class extends {@link java.lang.InheritableThreadLocal},
  * so {@link com.alibaba.mtc.MtContextThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
  *
@@ -22,7 +22,7 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
      * as a function of the source thread's value at the time the task
      * Object is created.  This method is called from {@link com.alibaba.mtc.MtContextRunnable} or
      * {@link com.alibaba.mtc.MtContextCallable} when it create, before the task is started.
-     * <p/>
+     * <p>
      * This method merely returns reference of its source thread value, and should be overridden
      * if a different behavior is desired.
      *
@@ -34,10 +34,10 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     /**
      * Callback method before task object({@link MtContextRunnable}/{@link MtContextCallable}) execute.
-     * <p/>
+     * <p>
      * Default behavior is do nothing, and should be overridden
      * if a different behavior is desired.
-     * <p/>
+     * <p>
      * Do not throw any exception, just ignored.
      *
      * @since 1.2.0
@@ -47,10 +47,10 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     /**
      * Callback method after task object({@link MtContextRunnable}/{@link MtContextCallable}) execute.
-     * <p/>
+     * <p>
      * Default behavior is do nothing, and should be overridden
      * if a different behavior is desired.
-     * <p/>
+     * <p>
      * Do not throw any exception, just ignored.
      *
      * @since 1.2.0
@@ -119,55 +119,71 @@ public class MtContextThreadLocal<T> extends InheritableThreadLocal<T> {
 
     static Map<MtContextThreadLocal<?>, Object> backupAndSet(Map<MtContextThreadLocal<?>, Object> copied) {
         Map<MtContextThreadLocal<?>, Object> backup = new HashMap<MtContextThreadLocal<?>, Object>();
+
         for (Iterator<? extends Map.Entry<MtContextThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
              iterator.hasNext(); ) {
             Map.Entry<MtContextThreadLocal<?>, ?> next = iterator.next();
             MtContextThreadLocal<?> threadLocal = next.getKey();
-            // backup 
+
+            // backup
             backup.put(threadLocal, threadLocal.get());
+
             // clean extra MtContext in destination thread
             if (!copied.containsKey(threadLocal)) {
                 iterator.remove();
                 threadLocal.superRemove();
             }
         }
-        setMtContexts(copied, true);
+
+        // set new context
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : copied.entrySet()) {
+            @SuppressWarnings("unchecked")
+            MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
+            threadLocal.set(entry.getValue());
+        }
+
+        // call beforeExecute callback
+        doExecuteCallback(true);
+
         return backup;
     }
 
     static void restore(Map<MtContextThreadLocal<?>, Object> backup) {
+        // call afterExecute callback
+        doExecuteCallback(false);
+
         for (Iterator<? extends Map.Entry<MtContextThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
              iterator.hasNext(); ) {
             Map.Entry<MtContextThreadLocal<?>, ?> next = iterator.next();
             MtContextThreadLocal<?> threadLocal = next.getKey();
+
             // clean extra MtContext
             if (!backup.containsKey(threadLocal)) {
                 iterator.remove();
                 threadLocal.superRemove();
             }
         }
-        setMtContexts(backup, false);
-    }
 
-    static void setMtContexts(Map<MtContextThreadLocal<?>, Object> set, boolean isStore) {
-        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : set.entrySet()) {
+        // restore context
+        for (Map.Entry<MtContextThreadLocal<?>, Object> entry : backup.entrySet()) {
             @SuppressWarnings("unchecked")
             MtContextThreadLocal<Object> threadLocal = (MtContextThreadLocal<Object>) entry.getKey();
-
-            if (!isStore) {
-                try {
-                    threadLocal.afterExecute();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            }
             threadLocal.set(entry.getValue());
-            if (isStore) {
-                try {
+        }
+    }
+
+    private static void doExecuteCallback(boolean isBefore) {
+        for (Map.Entry<MtContextThreadLocal<?>, ?> entry : holder.get().entrySet()) {
+            MtContextThreadLocal<?> threadLocal = entry.getKey();
+
+            try {
+                if (isBefore) {
                     threadLocal.beforeExecute();
-                } catch (Throwable t) {
-                    t.printStackTrace();
+                } else {
+                    threadLocal.afterExecute();
                 }
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
         }
     }
