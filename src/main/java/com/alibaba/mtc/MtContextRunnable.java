@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * {@link MtContextRunnable} decorate {@link Runnable}, so as to get {@link MtContextThreadLocal}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
- * <p/>
+ * <p>
  * Use factory method {@link #get(Runnable)} to create instance.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -49,17 +49,21 @@ public final class MtContextRunnable implements Runnable {
         }
     }
 
+    /**
+     * return original/unwrapped {@link Runnable}.
+     */
     public Runnable getRunnable() {
         return runnable;
     }
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link MtContextRunnable}.
-     * <p/>
+     * <p>
      * This method is idempotent.
      *
-     * @param runnable input {@link Runnable}
+     * @param runnable input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @return Wrapped {@link Runnable}
+     * @throws IllegalStateException when input is {@link MtContextRunnable} already.
      */
     public static MtContextRunnable get(Runnable runnable) {
         return get(runnable, false, false);
@@ -67,12 +71,13 @@ public final class MtContextRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link MtContextRunnable}.
-     * <p/>
+     * <p>
      * This method is idempotent.
      *
-     * @param runnable                 input {@link Runnable}
+     * @param runnable                 input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
      * @return Wrapped {@link Runnable}
+     * @throws IllegalStateException when input is {@link MtContextRunnable} already.
      */
     public static MtContextRunnable get(Runnable runnable, boolean releaseMtContextAfterRun) {
         return get(runnable, releaseMtContextAfterRun, false);
@@ -80,13 +85,15 @@ public final class MtContextRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link MtContextRunnable}.
-     * <p/>
+     * <p>
      * This method is idempotent.
      *
-     * @param runnable                 input {@link Runnable}
+     * @param runnable                 input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent               is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
+     * @param idempotent               is idempotent or not. if {@code }, return input object when it's {@link MtContextRunnable}, or throw {@link IllegalStateException}.
+     *                                 {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Runnable}
+     * @throws IllegalStateException
      */
     public static MtContextRunnable get(Runnable runnable, boolean releaseMtContextAfterRun, boolean idempotent) {
         if (null == runnable) {
@@ -107,8 +114,9 @@ public final class MtContextRunnable implements Runnable {
     /**
      * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
      *
-     * @param tasks task to be wrapped
+     * @param tasks task to be wrapped. if input is {@code null}, return {@code null}.
      * @return wrapped tasks
+     * @throws IllegalStateException when input is {@link MtContextRunnable} already.
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks) {
         return gets(tasks, false, false);
@@ -117,9 +125,10 @@ public final class MtContextRunnable implements Runnable {
     /**
      * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
      *
-     * @param tasks                    task to be wrapped
+     * @param tasks                    task to be wrapped. if input is {@code null}, return {@code null}.
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
      * @return wrapped tasks
+     * @throws IllegalStateException when input is {@link MtContextRunnable} already.
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun) {
         if (null == tasks) {
@@ -135,10 +144,12 @@ public final class MtContextRunnable implements Runnable {
     /**
      * wrapper input {@link Runnable} Collection to {@link MtContextRunnable} Collection.
      *
-     * @param tasks                    task to be wrapped
+     * @param tasks                    task to be wrapped. if input is {@code null}, return {@code null}.
      * @param releaseMtContextAfterRun release MtContext after run, avoid memory leak even if {@link MtContextRunnable} is referred.
-     * @param idempotent               is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
+     * @param idempotent               is idempotent or not. if {@code }, return input object when it's {@link MtContextRunnable}, or throw {@link IllegalStateException}.
+     *                                 {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return wrapped tasks
+     * @throws IllegalStateException
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun, boolean idempotent) {
         if (null == tasks) {
