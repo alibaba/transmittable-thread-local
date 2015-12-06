@@ -42,6 +42,20 @@ public class DistributedTracerUseDemo {
     }
 
     private static MtContextThreadLocal<DtTransferInfo> transferInfo = new MtContextThreadLocal<DtTransferInfo>() {
+        /*
+        @Override
+        protected DtTransferInfo childValue(DtTransferInfo parentValue) {
+            // **注意**：
+            // 新建线程时，从父线程继承值时，计数加1
+            // 对应线程结束时，没有回调以清理ThreadLocal中的Context！，Bug！！
+            // InheritableThreadLocal 没有提供 对应的拦截方法。。。 计数不配对了。。。
+            // 但是一个线程就一个Context没清，线程数有限，Context占用内存一般很小，可以接受。
+            increaseSpanIdRefCounter();
+
+            return super.childValue(parentValue);
+        }
+        */
+
         @Override
         protected DtTransferInfo copy(DtTransferInfo parentValue) {
             increaseSpanIdRefCounter();
