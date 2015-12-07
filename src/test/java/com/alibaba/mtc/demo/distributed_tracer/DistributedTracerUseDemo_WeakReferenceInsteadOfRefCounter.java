@@ -39,10 +39,21 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
     static class DtTransferInfo {
         public String traceId;
         public String baseSpanId;
+        public LeafSpanIdInfo leafSpanIdInfo;
 
-        public DtTransferInfo(String traceId, String baseSpanId) {
+        public DtTransferInfo(String traceId, String baseSpanId, LeafSpanIdInfo leafSpanIdInfo) {
             this.traceId = traceId;
             this.baseSpanId = baseSpanId;
+            this.leafSpanIdInfo = leafSpanIdInfo;
+        }
+
+        @Override
+        public String toString() {
+            return "DtTransferInfo{" +
+                    "traceId='" + traceId + '\'' +
+                    ", baseSpanId='" + baseSpanId + '\'' +
+                    ", leafSpanIdInfo=" + leafSpanIdInfo +
+                    '}';
         }
     }
 
@@ -63,7 +74,7 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
                 @Override
                 public void onRemoval(RemovalNotification<String, LeafSpanIdInfo> notification) {
                     if (notification.getCause() != RemovalCause.COLLECTED) {
-                        System.err.println("Bug!! Should COLLECTED");
+                        System.err.println("ERROR: Bug!! Should COLLECTED");
                     }
                     System.out.printf("DEBUG: Remove traceId %s in thread %s by cause %s: %s\n",
                             notification.getKey(), Thread.currentThread().getName(), notification.getCause(), notification.getValue());
@@ -102,9 +113,9 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         String traceId = "traceId_XXXYYY" + traceIdCounter.getAndIncrement();
         String baseSpanId = "1.1";
 
-        transferInfo.set(new DtTransferInfo(traceId, baseSpanId));
         LeafSpanIdInfo leafSpanIdInfo = new LeafSpanIdInfo();
         traceId2LeafSpanIdInfo.put(traceId, leafSpanIdInfo);
+        transferInfo.set(new DtTransferInfo(traceId, baseSpanId, leafSpanIdInfo));
 
 
         ////////////////////////////////////////////////
