@@ -3,7 +3,6 @@ package com.alibaba.mtc.demo.distributed_tracer;
 import com.alibaba.mtc.MtContextThreadLocal;
 import com.alibaba.mtc.Utils;
 import com.alibaba.mtc.threadpool.MtContextExecutors;
-import com.google.common.cache.*;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,27 +67,9 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         }
     }
 
-
-    private static Cache<String, LeafSpanIdInfo> traceId2LeafSpanIdInfo = CacheBuilder.newBuilder().weakValues()
-            .removalListener(new RemovalListener<String, LeafSpanIdInfo>() {
-                @Override
-                public void onRemoval(RemovalNotification<String, LeafSpanIdInfo> notification) {
-                    if (notification.getCause() != RemovalCause.COLLECTED) {
-                        System.err.println("ERROR: Bug!! Should COLLECTED");
-                    }
-                    System.out.printf("DEBUG: Remove traceId %s in thread %s by cause %s: %s\n",
-                            notification.getKey(), Thread.currentThread().getName(), notification.getCause(), notification.getValue());
-                }
-            }).build();
-
     static int increaseLeafSpanCurrentAndReturn() {
         DtTransferInfo dtTransferInfo = transferInfo.get();
-        String traceId = dtTransferInfo.traceId;
-        LeafSpanIdInfo leafSpanIdInfo = traceId2LeafSpanIdInfo.getIfPresent(traceId);
-        if (leafSpanIdInfo == null) {
-            throw new IllegalStateException("LeafSpanIdInfo is NOT present, Bug!!");
-        }
-        return leafSpanIdInfo.current.getAndIncrement();
+        return dtTransferInfo.leafSpanIdInfo.current.getAndIncrement();
     }
 
     public static void main(String[] args) throws Exception {
@@ -114,7 +95,6 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         String baseSpanId = "1.1";
 
         LeafSpanIdInfo leafSpanIdInfo = new LeafSpanIdInfo();
-        traceId2LeafSpanIdInfo.put(traceId, leafSpanIdInfo);
         transferInfo.set(new DtTransferInfo(traceId, baseSpanId, leafSpanIdInfo));
 
 
