@@ -54,6 +54,14 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
                     ", leafSpanIdInfo=" + leafSpanIdInfo +
                     '}';
         }
+
+        // Output GC operation
+        @Override
+        protected void finalize() throws Throwable {
+            System.out.printf("DEBUG: gc DtTransferInfo traceId %s in thread %s: %s\n",
+                    traceId, Thread.currentThread().getName(), this);
+            super.finalize();
+        }
     }
 
     private static MtContextThreadLocal<DtTransferInfo> transferInfo = new MtContextThreadLocal<DtTransferInfo>();
@@ -78,8 +86,12 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         }
 
         Thread.sleep(1000);
+        System.out.println("Call System.gc");
+        // help to check GC status
         System.gc();
+        System.out.println("Called System.gc");
         Thread.sleep(1000);
+        System.out.println("Exit Main.");
     }
 
 
@@ -108,6 +120,9 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
         System.out.printf("Finished Rpc call %s with span %s.\n", traceId, leafSpanIdInfo);
+
+        // release context in ThreadLocal, avoid to be hold by thread, GC friendly.
+        transferInfo.remove();
     }
 
     static void syncMethod() {
