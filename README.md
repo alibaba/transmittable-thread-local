@@ -141,7 +141,7 @@ String value = parent.get();
 
 #### 这种使用方式的时序图
 
-<img src="docs/SequenceDiagram.png" alt="时序图" width="600" />
+<img src="docs/mtc-sequence-diagram.png" alt="时序图" width="600" />
 
 ### 2.2 修饰线程池
 
