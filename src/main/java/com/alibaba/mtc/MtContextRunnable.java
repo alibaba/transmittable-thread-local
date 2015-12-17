@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.Collections;
 
 /**
  * {@link MtContextRunnable} decorate {@link Runnable}, so as to get {@link MtContextThreadLocal}
@@ -132,7 +133,7 @@ public final class MtContextRunnable implements Runnable {
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun) {
         if (null == tasks) {
-            return null;
+            return Collections.emptyList();
         }
         List<MtContextRunnable> copy = new ArrayList<MtContextRunnable>();
         for (Runnable task : tasks) {
@@ -153,7 +154,7 @@ public final class MtContextRunnable implements Runnable {
      */
     public static List<MtContextRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseMtContextAfterRun, boolean idempotent) {
         if (null == tasks) {
-            return null;
+            return Collections.emptyList();
         }
         List<MtContextRunnable> copy = new ArrayList<MtContextRunnable>();
         for (Runnable task : tasks) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.Collections;
 
 /**
  * {@link MtContextCallable} decorate {@link Callable}, so as to get {@link MtContextThreadLocal}
@@ -128,7 +129,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseMtContextAfterCall) {
         if (null == tasks) {
-            return null;
+            return Collections.emptyList();
         }
         List<MtContextCallable<T>> copy = new ArrayList<MtContextCallable<T>>();
         for (Callable<T> task : tasks) {
@@ -147,7 +148,7 @@ public final class MtContextCallable<V> implements Callable<V> {
      */
     public static <T> List<MtContextCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseMtContextAfterCall, boolean idempotent) {
         if (null == tasks) {
-            return null;
+            return Collections.emptyList();
         }
         List<MtContextCallable<T>> copy = new ArrayList<MtContextCallable<T>>();
         for (Callable<T> task : tasks) {

@@ -37,6 +37,7 @@ public class MtContextTransformer implements ClassFileTransformer {
     private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
 
     private static final String TIMER_TASK_CLASS_FILE = "java.util.TimerTask".replace('.', '/');
+    private static final byte[] EMPTY_BYTE_ARRAY = {};
 
     private static String toClassName(String classFile) {
         return classFile.replace('/', '.');
@@ -65,7 +66,7 @@ public class MtContextTransformer implements ClassFileTransformer {
                     if (TIMER_TASK_CLASS_FILE.equals(name)) {
                         logger.info("Transforming class " + className);
                         // FIXME add code here
-                        return null;
+                        return EMPTY_BYTE_ARRAY;
                     }
                 }
             }
@@ -74,7 +75,7 @@ public class MtContextTransformer implements ClassFileTransformer {
             logger.severe(msg);
             throw new IllegalStateException(msg, t);
         }
-        return null;
+        return EMPTY_BYTE_ARRAY;
     }
 
     private CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
