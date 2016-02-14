@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>a simple lib for transmitting ThreadLocal value between thread even using thread pool.</description>
-	<url>https://github.com/alibaba/multi-thread-context</url>
+	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
 
 	<licenses>
@@ -21,12 +21,12 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:alibaba/multi-thread-context.git</connection>
-		<developerConnection>scm:git:git@github.com:alibaba/multi-thread-context.git</developerConnection>
-		<url>git@github.com:alibaba/multi-thread-context.git</url>
+		<connection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</connection>
+		<developerConnection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</developerConnection>
+		<url>git@github.com:alibaba/transmittable-thread-local.git</url>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/alibaba/multi-thread-context/issues</url>
+		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<organization>
@@ -89,7 +89,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -113,7 +113,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.2</version>
+				<version>2.4.3</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

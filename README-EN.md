@@ -1,12 +1,12 @@
 Transmittable ThreadLocal(TTL)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
-[![Coverage Status](https://coveralls.io/repos/alibaba/multi-thread-context/badge.svg?branch=master&service=github)](https://coveralls.io/github/alibaba/multi-thread-context?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/multithread.context/)
-[![GitHub release](https://img.shields.io/github/release/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/releases)  
-[![Dependency Status](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073/badge.svg)](https://www.versioneye.com/user/projects/553a308b1d2989bdd5000073)
-[![GitHub issues](https://img.shields.io/github/issues/alibaba/multi-thread-context.svg)](https://github.com/alibaba/multi-thread-context/issues)
+[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/github/alibaba/transmittable-thread-local?branch=master&view=all#sort=coverage&dir=asc)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
+[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
+[![Dependency Status](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca/badge.svg)](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca)
+[![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/issues)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 <div align="right">
@@ -24,7 +24,7 @@ can transmit value to child thread from parent thread.
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
 Application need transmit value from the time task is created to the time task is executed.
 
-If you have problem or question, please [submit Issue](https://github.com/alibaba/multi-thread-context/issues) or play [fork](https://github.com/alibaba/multi-thread-context/fork) and pull request dance.
+If you have problem or question, please [submit Issue](https://github.com/alibaba/transmittable-thread-local/issues) or play [fork](https://github.com/alibaba/transmittable-thread-local/fork) and pull request dance.
 
 :art: Requirements
 ----------------------------
@@ -188,7 +188,7 @@ to start demo of "Use Java Agent to decorate thread pool implementation class".
 :electric_plug: Java API Docs
 ======================
 
-The current version Java API documentation: <http://alibaba.github.io/multi-thread-context/apidocs/>
+The current version Java API documentation: <http://alibaba.github.io/transmittable-thread-local/apidocs/>
 
 :cookie: Maven dependency
 =====================================

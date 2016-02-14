@@ -8,10 +8,10 @@
         - 更新badge的引用，由master分支名改成Tag名
         - 更新README中示例Maven依赖的版本
 1. 新建并Push Tag，如`v1.2.3`
-1. 等待Tag的CI通过 <https://travis-ci.org/alibaba/multi-thread-context/builds>
+1. 等待Tag的CI通过 <https://travis-ci.org/alibaba/transmittable-thread-local/builds>
 1. 发布版本到Maven中央库
 1. 更新JavaDoc
     1. 生成JavaDoc，更新到分支gh-pages
-    1. 修改<http://alibaba.github.io/multi-thread-context/apidocs>的重定向到新版本的JavaDoc
-1. 编写Release Note： <https://github.com/alibaba/multi-thread-context/releases>
+    1. 修改<http://alibaba.github.io/transmittable-thread-local/apidocs>的重定向到新版本的JavaDoc
+1. 编写Release Note： <https://github.com/alibaba/transmittable-thread-local/releases>
 1. 升级Master分支的开发版本号
