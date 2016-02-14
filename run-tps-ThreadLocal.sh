@@ -12,5 +12,5 @@ cleanInstall && copyDeps && {
         -Xmx384m -Xms384m \
         -cp target/test-classes:target/classes:${classpath} \
         -ea \
-        com.alibaba.mtc.perf.tps.CreateThreadLocalInstanceTps
+        com.alibaba.ttl.perf.tps.CreateThreadLocalInstanceTps
 }

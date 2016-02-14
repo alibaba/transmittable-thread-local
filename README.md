@@ -1,4 +1,4 @@
-multi-thread context(MTC)
+Transmittable ThreadLocal(TTL)
 =====================================
 
 [![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
@@ -16,9 +16,9 @@ multi-thread context(MTC)
 :wrench: 功能
 ----------------------------
 
-:point_right: 在使用线程池等会缓存线程的组件情况下，完成多线程的Context传递。
+:point_right: 在使用线程池等会缓存线程的组件情况下，完成`ThreadLocal`值的传递。
 
-`JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程的Context传递。
+`JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程值的传递。
 
 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
@@ -46,9 +46,9 @@ multi-thread context(MTC)
 
 `App Engine`的日志（如，`SDK`会记录日志）要记录系统上下文。由于不限制用户应用使用线程池，系统的上下文需要能跨线程的传递，且不影响应用代码。
 
-### 上面场景使用`MTC`的整体构架
+### 上面场景使用`TTL`的整体构架
 
-<img src="docs/mtc-arch.png" alt="构架图" width="260" />
+<img src="docs/TransmittableThreadLocal-arch.png" alt="构架图" width="260" />
 
 构架涉及3个角色：容器、用户应用、`SDK`。
 
@@ -65,9 +65,9 @@ multi-thread context(MTC)
 :notebook: User Guide
 =====================================
 
-使用类[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)来保存上下文，并跨线程池传递。
+使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存上下文，并跨线程池传递。
 
-[`MtContextThreadLocal`](src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
 比[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html)，添加了`protected`方法`copy`，用于定制 **任务提交给线程池时**的上下文传递到 **任务执行时**时的拷贝行为，缺省是传递的是引用。
 
@@ -76,13 +76,13 @@ multi-thread context(MTC)
 1. 简单使用
 ----------------------------
 
-父线程给子线程传递Context。
+父线程给子线程传递值。
 
 示例代码：
 
 ```java
 // 在父线程中设置
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 // =====================================================
@@ -98,23 +98,23 @@ String value = parent.get();
 这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
 
-2. 保证线程池中传递Context
+2. 保证线程池中传递值
 ----------------------------
 
 ### 2.1 修饰`Runnable`和`Callable`
 
-使用[`com.alibaba.mtc.MtContextRunnable`](src/main/java/com/alibaba/mtc/MtContextRunnable.java)和[`com.alibaba.mtc.MtContextCallable`](src/main/java/com/alibaba/mtc/MtContextCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
+使用[`com.alibaba.ttl.TtlRunnable`](src/main/java/com/alibaba/ttl/TtlRunnable.java)和[`com.alibaba.ttl.TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
 ```java
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
-// 额外的处理，生成修饰了的对象mtContextRunnable
-Runnable mtContextRunnable = MtContextRunnable.get(task); 
-executorService.submit(mtContextRunnable);
+// 额外的处理，生成修饰了的对象ttlRunnable
+Runnable ttlRunnable = TtlRunnable.get(task); 
+executorService.submit(ttlRunnable);
 
 // =====================================================
 
@@ -125,13 +125,13 @@ String value = parent.get();
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
-// 额外的处理，生成修饰了的对象mtContextCallable
-Callable mtContextCallable = MtContextCallable.get(call); 
-executorService.submit(mtContextCallable);
+// 额外的处理，生成修饰了的对象ttlCallable
+Callable ttlCallable = TtlCallable.get(call); 
+executorService.submit(ttlCallable);
 
 // =====================================================
 
@@ -141,16 +141,16 @@ String value = parent.get();
 
 #### 这种使用方式的时序图
 
-<img src="docs/mtc-sequence-diagram.png" alt="时序图" width="600" />
+<img src="docs/TransmittableThreadLocal-sequence-diagram.png" alt="时序图" width="600" />
 
 ### 2.2 修饰线程池
 
 省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.mtc.threadpool.MtContextExecutors`](src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)完成，有下面的方法：
+通过工具类[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
 
-* `getMtcExecutor`：修饰接口`Executor`
-* `getMtcExecutorService`：修饰接口`ExecutorService`
+* `getTtlExecutor`：修饰接口`Executor`
+* `getTtlExecutorService`：修饰接口`ExecutorService`
 * `ScheduledExecutorService`：修饰接口`ScheduledExecutorService`
 
 示例代码：
@@ -158,9 +158,9 @@ String value = parent.get();
 ```java
 ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
-executorService = MtContextExecutors.getMtcExecutorService(executorService); 
+executorService = TtlExecutors.getTtlExecutorService(executorService); 
 
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
@@ -176,14 +176,14 @@ String value = parent.get();
 
 ### 2.3 使用Java Agent来修饰JDK线程池实现类
 
-这种方式，实现线程池的`MtContext`传递过程中，代码中没有修饰`Runnble`或是线程池的代码。    
+这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。    
 \# 即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
 
 示例代码：
 
 ```java
 // 框架代码
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 // 应用代码
@@ -200,41 +200,41 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/mtc/threadpool/agent/demo/AgentDemo.java)。
+Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo/AgentDemo.java)。
 
-目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`MtContextTransformer.java`](src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)）：
+目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
 
 在`Java`的启动参数加上：
 
-- `-Xbootclasspath/a:/path/to/multithread.context-1.1.0.jar`
-- `-javaagent:/path/to/multithread.context-1.1.0.jar`
+- `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
+- `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
 
 **注意**： 
 
-* Agent修改是JDK的类，类中加入了引用`MTC`的代码，所以`MTC Agent`的`Jar`要加到`bootclasspath`上。
+* Agent修改是JDK的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
 
 Java命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:multithread.context-1.1.0.jar \
-    -javaagent:multithread.context-1.1.0-SNAPSHOT.jar \
+java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
+    -javaagent:transmittable-thread-local-2.0.0.jar \
     -cp classes \
-    com.alibaba.mtc.threadpool.agent.demo.AgentDemo
+    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
 有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
 
-#### 什么情况下，`Java Agent`的使用方式`MtContext`会失效？
+#### 什么情况下，`Java Agent`的使用方式`TTL Context`会失效？
 
-由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，`MtContext`会失效。
+由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，传递会失效。
 
 - 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
 覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。   
 修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
-- 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`MtContext`会有问题。
+- 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。
 
 :electric_plug: Java API Docs
 ======================
@@ -249,12 +249,12 @@ java -Xbootclasspath/a:multithread.context-1.1.0.jar \
 ```xml
 <dependency>
 	<groupId>com.alibaba</groupId>
-	<artifactId>multithread.context</artifactId>
-	<version>1.2.1</version>
+	<artifactId>transmittable-thread-local</artifactId>
+	<version>2.0.0</version>
 </dependency>
 ```
 
-可以在 [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22multithread.context%22) 查看可用的版本。
+可以在 [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22transmittable-thread-local%22) 查看可用的版本。
 
 :question: FAQ
 =====================================

@@ -7,8 +7,8 @@
 	<artifactId>transmittable-thread-local</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>multi-thread context(MTC)</name>
-	<description>a simple lib for transmitting context between thread even using thread pool.</description>
+	<name>TransmittableThreadLocal(TTL)</name>
+	<description>a simple lib for transmitting ThreadLocal value between thread even using thread pool.</description>
 	<url>https://github.com/alibaba/multi-thread-context</url>
 	<inceptionYear>2013</inceptionYear>
 
@@ -103,7 +103,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Premain-Class>com.alibaba.mtc.threadpool.agent.MtContextAgent</Premain-Class>
+							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
 							<Can-Redefine-Classes>true</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
@@ -125,7 +125,7 @@
 							<relocations>
 								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.mtc.javassist</shadedPattern>
+									<shadedPattern>com.alibaba.ttl.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
@@ -242,11 +242,11 @@
 						<version>2.7</version>
 						<configuration>
 							<format>xml</format>
-							<maxmem>256m</maxmem>
+							<maxmem>512m</maxmem>
 							<instrumentation>
 								<excludes>
-									<exclude>com/alibaba/mtc/threadpool/agent/**/*.class</exclude>
-									<exclude>com/alibaba/mtc/MtContextTimerTask.class</exclude>
+									<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
+									<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
 								</excludes>
 							</instrumentation>
 						</configuration>

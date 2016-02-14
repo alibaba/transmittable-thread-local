@@ -4,9 +4,9 @@
 内存泄漏
 ----------------------------
 
-对比测试[`MtContextThreadLocal`](../src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
-简单一个线程一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
+简单一个线程一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
 ### 验证结果
 
@@ -17,16 +17,16 @@
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`run-memoryleak-ThreadLocal.sh`](../run-memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.java)。
-* 脚本[`run-memoryleak-MtContextThreadLocal.sh`](../run-memoryleak-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
-测试类是[`NoMemoryLeak_MtContextThreadLocal_NoRemove`](../src/test/java/com/alibaba/mtc/perf/memoryleak/NoMemoryLeak_MtContextThreadLocal_NoRemove.java)。
+测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../src/test/java/com/alibaba/ttl/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.java)。
+* 脚本[`run-memoryleak-TransmittableThreadLocal.sh`](../run-memoryleak-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
+测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../src/test/java/com/alibaba/ttl/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.java)。
 
 TPS & 压力测试
 ----------------------------
 
-对比测试[`MtContextThreadLocal`](../src/main/java/com/alibaba/mtc/MtContextThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
-2个线程并发一直循环`new` `MtContextThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
+2个线程并发一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
 ### 验证结果
 
@@ -45,7 +45,7 @@ tps: 40408
 tps: 40610
 ```
 
-`MtContextThreadLocal`的TPS稳定在～40K：
+`TransmittableThreadLocal`的TPS稳定在～40K：
 
 ```bash
 ......
@@ -88,7 +88,7 @@ GC情况如下（1分钟输出一次）：
  97.66   0.00   0.00   4.75  12.70 1537062 2756.196    43    0.239 2756.435
 ```
 
-`MtContextThreadLocal`的每分钟GC时间是`5.29s`，FGC次数是`3.27`：
+`TransmittableThreadLocal`的每分钟GC时间是`5.29s`，FGC次数是`3.27`：
 
 ```bash
    S0     S1      E      O      P    YGC      YGCT     FGC     FGCT   GCT
@@ -120,23 +120,23 @@ GC情况如下（1分钟输出一次）：
 
 #### TPS略有下降的原因分析
 
-使用`jvisualvm` Profile方法耗时，`MtContextThreadLocal`Case的热点方法和`ThreadLocal`Case一样。
+使用`jvisualvm` Profile方法耗时，`TransmittableThreadLocal`Case的热点方法和`ThreadLocal`Case一样。
 
 略有下降可以认为是Full GC更多引起。
 
-实际使用场景中，`MtContextThreadLocal`实例个数非常有限，不会有性能问题。
+实际使用场景中，`TransmittableThreadLocal`实例个数非常有限，不会有性能问题。
 
 #### FGC次数增多的原因分析
 
-在`MtContextThreadLocal.holder`中，持有`MtContextThreadLocal`实例的弱引用，减慢实例的回收，导致Full GC增加。
+在`TransmittableThreadLocal.holder`中，持有`TransmittableThreadLocal`实例的弱引用，减慢实例的回收，导致Full GC增加。
 
-实际使用场景中，`MtContextThreadLocal`实例个数非常有限，不会有性能问题。
+实际使用场景中，`TransmittableThreadLocal`实例个数非常有限，不会有性能问题。
 
 ### 执行方式
 
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`run-tps-ThreadLocal.sh`](../run-tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`CreateThreadLocalInstanceTps`](../src/test/java/com/alibaba/mtc/perf/tps/CreateThreadLocalInstanceTps.java)。
-* [`run-tps-MtContextThreadLocal.sh`](../run-tps-MtContextThreadLocal.sh)运行`MtContextThreadLocal`的测试。
-测试类是[`CreateMtContextThreadLocalInstanceTps`](../src/test/java/com/alibaba/mtc/perf/tps/CreateMtContextThreadLocalInstanceTps.java)。
+测试类是[`CreateThreadLocalInstanceTps`](../src/test/java/com/alibaba/ttl/perf/tps/CreateThreadLocalInstanceTps.java)。
+* [`run-tps-TransmittableThreadLocal.sh`](../run-tps-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
+测试类是[`CreateTransmittableThreadLocalInstanceTps`](../src/test/java/com/alibaba/ttl/perf/tps/CreateTransmittableThreadLocalInstanceTps.java)。

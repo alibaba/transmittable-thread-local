@@ -1,4 +1,4 @@
-multi-thread context(MTC)
+Transmittable ThreadLocal(TTL)
 =====================================
 
 [![Build Status](https://travis-ci.org/alibaba/multi-thread-context.svg?branch=master)](https://travis-ci.org/alibaba/multi-thread-context)
@@ -16,20 +16,20 @@ multi-thread context(MTC)
 :wrench: Functions
 ----------------------------
 
-:point_right: Transmit multi-thread context, even using thread cached components like thread pool.
+:point_right: Transmit `ThreadLocal` value between threads, even using thread cached components like thread pool.
 
 Class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
-can transmit context to child thread from parent thread.
+can transmit value to child thread from parent thread.
 
-But when use thread pool, thread is cached up and used repeatedly. Transmitting context from parent thread to child thread has no meaning.
-Application need transmit context from the time task is created to the time task is executed.
+But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
+Application need transmit value from the time task is created to the time task is executed.
 
 If you have problem or question, please [submit Issue](https://github.com/alibaba/multi-thread-context/issues) or play [fork](https://github.com/alibaba/multi-thread-context/fork) and pull request dance.
 
 :art: Requirements
 ----------------------------
 
-The Requirements listed below is also why I sort out `MTC` in my work. 
+The Requirements listed below is also why I sort out `TTL` in my work. 
 
 * Application container or high layer framework transmit information to low layer sdk.
 * Transmit context to logging without application code aware.
@@ -42,7 +42,7 @@ The Requirements listed below is also why I sort out `MTC` in my work.
 
 ```java
 // set in parent thread
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 // =====================================================
@@ -53,29 +53,29 @@ String value = parent.get();
 
 This is the function of class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html), should use class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/6/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
-But when use thread pool, thread is cached up and used repeatedly. Transmitting context from parent thread to child thread has no meaning.
-Application need transmit context from the time task is created to the point task is executed.
+But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
+Application need transmit value from the time task is created to the point task is executed.
 
 The solution is below usage.
 
-2. Transmit context even using thread pool
+2. Transmit value even using thread pool
 ----------------------------
 
 ### 2.1 Decorate `Runnable` and `Callable`
 
-Decorate input `Runnable` and `Callable` by [`com.alibaba.mtc.MtContextRunnable`](src/main/java/com/alibaba/mtc/MtContextRunnable.java)
-and [`com.alibaba.mtc.MtContextCallable`](src/main/java/com/alibaba/mtc/MtContextCallable.java).
+Decorate input `Runnable` and `Callable` by [`com.alibaba.ttl.TtlRunnable`](/src/main/java/com/alibaba/ttl/TtlRunnable.java)
+and [`com.alibaba.ttl.TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java).
 
 Sample code:
 
 ```java
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
-// extra work, create decorated mtContextRunnable object
-Runnable mtContextRunnable = MtContextRunnable.get(task); 
-executorService.submit(mtContextRunnable);
+// extra work, create decorated ttlRunnable object
+Runnable ttlRunnable = TtlRunnable.get(task); 
+executorService.submit(ttlRunnable);
 
 // =====================================================
 
@@ -86,13 +86,13 @@ String value = parent.get();
 above code show how to dealing with `Runnable`, `Callable` is similar:
 
 ```java
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
-// extra work, create decorated mtContextCallable object
-Callable mtContextCallable = MtContextCallable.get(call); 
-executorService.submit(mtContextCallable);
+// extra work, create decorated ttlCallable object
+Callable ttlCallable = TtlCallable.get(call); 
+executorService.submit(ttlCallable);
 
 // =====================================================
 
@@ -105,13 +105,13 @@ String value = parent.get();
 Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can completed in the thread pool.
 
 Use util class
-[`com.alibaba.mtc.threadpool.MtContextExecutors`](src/main/java/com/alibaba/mtc/threadpool/MtContextExecutors.java)
+[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
 to decorate thread pool.
 
-Util class `com.alibaba.mtc.threadpool.MtContextExecutors` has below methods:
+Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
 
-* `getMtcExecutor`: decorate interface `Executor`
-* `getMtcExecutorService`: decorate interface `ExecutorService`
+* `getTtlExecutor`: decorate interface `Executor`
+* `getTtlExecutorService`: decorate interface `ExecutorService`
 * `ScheduledExecutorService`: decorate interface `ScheduledExecutorService`
 
 Sample code:
@@ -119,9 +119,9 @@ Sample code:
 ```java
 ExecutorService executorService = ...
 // extra work, create decorated executorService object
-executorService = MtContextExecutors.getMtcExecutorService(executorService); 
+executorService = TtlExecutors.getTtlExecutorService(executorService); 
 
-MtContextThreadLocal<String> parent = new MtContextThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
@@ -137,7 +137,7 @@ String value = parent.get();
 
 ### 2.3. Use Java Agent to decorate thread pool implementation class
 
-In this usage, `MtContext` transmission is transparent\(no decoration operation\).
+In this usage, transmission is transparent\(no decoration operation\).
 
 Sample code:
 
@@ -155,31 +155,31 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-See demo [`AgentDemo.java`](src/test/java/com/alibaba/mtc/threadpool/agent/AgentDemo.java).
+See demo [`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/AgentDemo.java).
 
 Agent decorate 2 thread pool implementation classes
-\(implementation code [`MtContextTransformer.java`](src/main/java/com/alibaba/mtc/threadpool/agent/MtContextTransformer.java)\):
+\(implementation code [`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)\):
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
 
 Add start options on Java command: 
 
-- `-Xbootclasspath/a:/path/to/multithread.context-x.y.z.jar:/path/to/javassist-3.12.1.GA.jar`
-- `-javaagent:/path/to/multithread.context-x.y.z.jar`
+- `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
+- `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
 
 **NOTE**： 
 
-* Agent modify the jdk classes, add code refer to the class of `MTC`, so the jar of `MTC Agent` should add to `bootclasspath`.
-* `MTC Agent` modify the class by `javassist`, so the Jar of `javassist` should add to `bootclasspath` too.
+* Agent modify the jdk classes, add code refer to the class of `TTL`, so the jar of `TTL Agent` should add to `bootclasspath`.
+* `TTL Agent` modify the class by `javassist`, so the Jar of `javassist` should add to `bootclasspath` too.
 
 Java command example:
 
 ```bash
-java -Xbootclasspath/a:dependency/javassist-3.12.1.GA.jar:multithread.context-1.0.0.jar \
-    -javaagent:multithread.context-0.9.0-SNAPSHOT.jar \
+java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
+    -javaagent:transmittable-thread-local-2.0.0.jar \
     -cp classes \
-    com.alibaba.mtc.threadpool.agent.AgentDemo
+    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
 Run the script [`run-agent-demo.sh`](run-agent-demo.sh)
@@ -196,12 +196,12 @@ The current version Java API documentation: <http://alibaba.github.io/multi-thre
 ```xml
 <dependency>
 	<groupId>com.alibaba</groupId>
-	<artifactId>multithread.context</artifactId>
-	<version>1.2.1</version>
+	<artifactId>transmittable-thread-local</artifactId>
+	<version>2.0.0</version>
 </dependency>
 ```
 
-Check available version at [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22multithread.context%22).
+Check available version at [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22transmittable-thread-local%22).
 
 :books: Related resources
 =====================================

@@ -14,5 +14,5 @@ cleanInstall && copyDeps && {
         -javaagent:target/$aid-$version.jar \
         -cp target/test-classes:$classpath \
         -ea \
-        com.alibaba.mtc.threadpool.agent.demo.AgentDemo
+        com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 }
