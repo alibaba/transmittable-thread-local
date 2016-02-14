@@ -237,24 +237,32 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>cobertura-maven-plugin</artifactId>
-						<version>2.7</version>
-						<configuration>
-							<format>xml</format>
-							<maxmem>512m</maxmem>
-							<instrumentation>
-								<excludes>
-									<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
-									<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
-								</excludes>
-							</instrumentation>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.eluder.coveralls</groupId>
-						<artifactId>coveralls-maven-plugin</artifactId>
-						<version>4.1.0</version>
+						<!-- for codecov.io -->
+						<!-- config example: https://github.com/codecov/example-java -->
+						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.7.5.201505241946</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<phase>test</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<excludes>
+										<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
+										<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
