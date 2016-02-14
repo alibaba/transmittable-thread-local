@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.alibaba</groupId>
-	<artifactId>multithread.context</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
+	<artifactId>transmittable-thread-local</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>multi-thread context(MTC)</name>
 	<description>a simple lib for transmitting context between thread even using thread pool.</description>
