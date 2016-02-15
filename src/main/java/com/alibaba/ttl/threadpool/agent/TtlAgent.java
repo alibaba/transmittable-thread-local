@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+ * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @since 0.9.0
  */
 public class TtlAgent {
