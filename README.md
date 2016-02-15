@@ -23,7 +23,7 @@ Transmittable ThreadLocal(TTL)
   - [1. 简单使用](#1-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8)
   - [2. 保证线程池中传递值](#2-%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E4%BC%A0%E9%80%92%E5%80%BC)
     - [2.1 修饰`Runnable`和`Callable`](#21-%E4%BF%AE%E9%A5%B0runnable%E5%92%8Ccallable)
-      - [这种使用方式的时序图](#%E8%BF%99%E7%A7%8D%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E7%9A%84%E6%97%B6%E5%BA%8F%E5%9B%BE)
+      - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
     - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
     - [2.3 使用Java Agent来修饰JDK线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
       - [`Java Agent`的使用方式在什么情况下`TTL`会失效](#java-agent%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8Bttl%E4%BC%9A%E5%A4%B1%E6%95%88)
@@ -141,9 +141,9 @@ executorService.submit(ttlCallable);
 String value = parent.get();
 ```
 
-#### 这种使用方式的时序图
+#### 整个过程的完整时序图
 
-<img src="docs/TransmittableThreadLocal-sequence-diagram.png" alt="时序图" width="600" />
+![时序图](docs/TransmittableThreadLocal-sequence-diagram.png)
 
 ### 2.2 修饰线程池
 
