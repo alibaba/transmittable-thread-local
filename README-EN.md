@@ -1,8 +1,8 @@
 Transmittable ThreadLocal(TTL)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/github/alibaba/transmittable-thread-local?branch=master&view=all#sort=coverage&dir=asc)
+[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=v2.0.0)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.0.0.svg)](https://codecov.io/github/alibaba/transmittable-thread-local?branch=v2.0.0&view=all#sort=coverage&dir=asc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
 [![Dependency Status](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca/badge.svg)](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca)
