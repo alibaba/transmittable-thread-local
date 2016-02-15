@@ -19,9 +19,6 @@ Transmittable ThreadLocal(TTL)
 
 - [:wrench: 功能](#wrench-%E5%8A%9F%E8%83%BD)
 - [:art: 需求场景](#art-%E9%9C%80%E6%B1%82%E5%9C%BA%E6%99%AF)
-  - [应用容器或上层框架跨应用代码给下层SDK传递信息](#%E5%BA%94%E7%94%A8%E5%AE%B9%E5%99%A8%E6%88%96%E4%B8%8A%E5%B1%82%E6%A1%86%E6%9E%B6%E8%B7%A8%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E7%BB%99%E4%B8%8B%E5%B1%82sdk%E4%BC%A0%E9%80%92%E4%BF%A1%E6%81%AF)
-    - [上面场景使用`TTL`的整体构架](#%E4%B8%8A%E9%9D%A2%E5%9C%BA%E6%99%AF%E4%BD%BF%E7%94%A8ttl%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%84%E6%9E%B6)
-  - [日志记录系统上下文](#%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%8B%E6%96%87)
 - [:busts_in_silhouette: User Guide](#busts_in_silhouette-user-guide)
   - [1. 简单使用](#1-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8)
   - [2. 保证线程池中传递值](#2-%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E4%BC%A0%E9%80%92%E5%80%BC)
@@ -29,7 +26,7 @@ Transmittable ThreadLocal(TTL)
       - [这种使用方式的时序图](#%E8%BF%99%E7%A7%8D%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E7%9A%84%E6%97%B6%E5%BA%8F%E5%9B%BE)
     - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
     - [2.3 使用Java Agent来修饰JDK线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
-      - [`Java Agent`的使用方式在什么情况下`TTL`会失效](#java-agent%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%08%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8Bttl%E4%BC%9A%E5%A4%B1%E6%95%88)
+      - [`Java Agent`的使用方式在什么情况下`TTL`会失效](#java-agent%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8Bttl%E4%BC%9A%E5%A4%B1%E6%95%88)
 - [:electric_plug: Java API Docs](#electric_plug-java-api-docs)
 - [:cookie: Maven依赖](#cookie-maven%E4%BE%9D%E8%B5%96)
 - [:question: FAQ](#question-faq)
@@ -57,42 +54,15 @@ Transmittable ThreadLocal(TTL)
 :art: 需求场景
 ============================
 
-应用容器或上层框架跨应用代码给下层SDK传递信息
-----------------------------
+在`ThreadLocal`的需求场景即是`TTL`的潜在需求场景，如果你的业务需要『在使用线程池等会缓存线程的组件情况下传递`ThreadLocal`』则是`TTL`目标场景。
 
-举个场景，`App Engine`（`PAAS`）上会运行由应用提供商提供的应用（`SAAS`模式）。多个`SAAS`用户购买并使用这个应用（即`SAAS`应用）。`SAAS`应用往往是一个实例为多个`SAAS`用户提供服务。    
-\# 另一种模式是：`SAAS`用户使用完全独立一个`SAAS`应用，包含独立应用实例及其后的数据源（如`DB`、缓存，etc）。
+下面是几个典型场景例子。
 
-需要避免的`SAAS`应用拿到多个`SAAS`用户的数据。
+1. 分布式跟踪系统
+2. 应用容器或上层框架跨应用代码给下层`SDK`传递信息
+3. 日志收集记录系统上下文
 
-一个解决方法是处理过程关联一个`SAAS`用户的上下文，在上下文中应用只能处理（读&写）这个`SAAS`用户的数据。
-
-请求由`SAAS`用户发起（如从`Web`请求进入`App Engine`），`App Engine`可以知道是从哪个`SAAS`用户，在`Web`请求时在上下文中设置好`SAAS`用户`ID`。
-
-应用处理数据（`DB`、`Web`、消息 etc.）是通过`App Engine`提供的服务`SDK`来完成。当应用处理数据时，`SDK`检查数据所属的`SAAS`用户是否和上下文中的`SAAS`用户`ID`一致，如果不一致则拒绝数据的读写。
-
-应用代码会使用线程池，并且这样的使用是正常的业务需求。`SAAS`用户`ID`的从要`App Engine`传递到下层`SDK`，要支持这样的用法。
-
-### 上面场景使用`TTL`的整体构架
-
-<img src="docs/TransmittableThreadLocal-arch.png" alt="构架图" width="260" />
-
-构架涉及3个角色：容器、用户应用、`SDK`。
-
-整体流程：
-
-1. 请求进入`PAAS`容器，提取上下文信息并设置好上下文。
-2. 进入用户应用处理业务，业务调用`SDK`（如`DB`、消息、etc）。    
-用户应用会使用线程池，所以调用`SDK`的线程可能不是请求的线程。
-3. 进入`SDK`处理。    
-提取上下文的信息，决定是否符合拒绝处理。
-
-整个过程中，上下文的传递 对于 **用户应用代码** 期望是透明的。
-
-日志记录系统上下文
-----------------------------
-
-`App Engine`的日志（如，`SDK`会记录日志）要记录系统上下文。由于不限制用户应用使用线程池，系统的上下文需要能跨线程的传递，且不影响应用代码。
+各个场景的展开说明参见子文档 [需求场景](docs/requirement-scenario.md)。
 
 :busts_in_silhouette: User Guide
 =====================================
@@ -162,13 +132,13 @@ parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
 // 额外的处理，生成修饰了的对象ttlCallable
-Callable ttlCallable = TtlCallable.get(call); 
+Callable ttlCallable = TtlCallable.get(call);
 executorService.submit(ttlCallable);
 
 // =====================================================
 
 // Call中可以读取, 值是"value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 #### 这种使用方式的时序图
@@ -190,7 +160,7 @@ String value = parent.get();
 ```java
 ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
-executorService = TtlExecutors.getTtlExecutorService(executorService); 
+executorService = TtlExecutors.getTtlExecutorService(executorService);
 
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
@@ -259,7 +229,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 
 有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
 
-#### `Java Agent`的使用方式在什么情况下`TTL`会失效
+#### `Java Agent`的使用方式在什么情况下`TTL`会失效
 
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，传递会失效。
 
