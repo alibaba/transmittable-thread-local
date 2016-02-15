@@ -6,7 +6,7 @@
 
 相对修饰`Runnable`或是线程池的方式，`Java Agent`方式为什么是应用代码无侵入的？
 
-<img src="docs/TransmittableThreadLocal-arch.png" alt="构架图" width="260" />
+<img src="scenario-framework-sdk-arch.png" alt="构架图" width="260" />
 
 按框架图，把前面示例代码操作可以分成下面几部分：
 

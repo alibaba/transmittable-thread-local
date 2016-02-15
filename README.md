@@ -269,6 +269,7 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 :moyai: 更多文档
 =====================================
 
+- [需求场景说明](docs/requirement-scenario.md)
 - [Developer Guide](docs/developer-guide.md)
 - [性能测试](docs/performance-test.md)
 
