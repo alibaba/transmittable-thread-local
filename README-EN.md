@@ -18,7 +18,7 @@ Transmittable ThreadLocal(TTL)
 
 :point_right: Transmit `ThreadLocal` value between threads, even using thread cached components like thread pool.
 
-Class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
+Class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
@@ -51,7 +51,7 @@ parent.set("value-set-in-parent");
 String value = parent.get(); 
 ```
 
-This is the function of class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html), should use class [`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) instead.
+This is the function of class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
 Application need transmit value from the time task is created to the point task is executed.

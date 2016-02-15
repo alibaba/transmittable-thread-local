@@ -42,9 +42,9 @@ Transmittable ThreadLocal(TTL)
 
 :point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能。
 
-`JDK`的[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程值的传递。 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
+`JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程值的传递。 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#notebook-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#notebook-user-guide)。
 
 欢迎 :clap:
 
@@ -69,9 +69,9 @@ Transmittable ThreadLocal(TTL)
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存上下文，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
-比[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，添加了`protected`方法`copy`，用于定制 **任务提交给线程池时**的上下文传递到 **任务执行时**时的拷贝行为，缺省是传递的是引用。
+比[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，添加了`protected`方法`copy`，用于定制 **任务提交给线程池时**的上下文传递到 **任务执行时**时的拷贝行为，缺省是传递的是引用。
 
 具体使用方式见下面的说明。
 
@@ -93,7 +93,7 @@ parent.set("value-set-in-parent");
 String value = parent.get(); 
 ```
 
-这是其实是[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`java.lang.InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+这是其实是[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
 但对于使用了异步执行（往往使用线程池完成）的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。
 
