@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
+public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
     static ThreadFactory threadFactory = new ThreadFactory() {
         @Override
         public Thread newThread(Runnable r) {
@@ -30,6 +30,10 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
 
     static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
 
+    private DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter() {
+    	throw new InstantiationError( "Must not instantiate this class" );
+    }
+    
     static {
         // 挤满线程, 保证线程不是用的时候new的, 确保验证TTL的传递功能
         Utils.expandThreadPool(executorService);

@@ -13,7 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class DistributedTracerUseDemo {
+public final class DistributedTracerUseDemo {
+	
+	private DistributedTracerUseDemo() {
+	    	throw new InstantiationError( "Must not instantiate this class" );
+	}
     static ThreadFactory threadFactory = new ThreadFactory() {
         @Override
         public Thread newThread(Runnable r) {

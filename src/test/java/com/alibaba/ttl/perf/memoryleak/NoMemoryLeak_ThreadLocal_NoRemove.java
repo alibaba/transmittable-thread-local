@@ -5,7 +5,12 @@ import com.alibaba.ttl.perf.Utils;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class NoMemoryLeak_ThreadLocal_NoRemove {
+public final class NoMemoryLeak_ThreadLocal_NoRemove {
+	
+	private NoMemoryLeak_ThreadLocal_NoRemove() {
+	   	throw new InstantiationError( "Must not instantiate this class" );
+	}
+	
     public static void main(String[] args) throws Exception {
         long counter = 0;
         while (true) {

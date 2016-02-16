@@ -23,10 +23,13 @@ import static com.alibaba.ttl.Utils.expandThreadPool;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class AgentCheck {
+public final class AgentCheck {
     static ExecutorService executorService = Executors.newFixedThreadPool(3);
     static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(3);
 
+    private AgentCheck() {
+    	throw new InstantiationError( "Must not instantiate this class" );
+    }
     static {
         expandThreadPool(executorService);
         expandThreadPool(scheduledExecutorService);
