@@ -65,7 +65,7 @@ public class Utils {
         for (Map.Entry<String, TransmittableThreadLocal<T>> entry : ttlInstances.entrySet()) {
             String key = entry.getKey();
             T value = entry.getValue().get();
-            System.out.printf("Key %s, value: %s\n", key, value);
+            System.out.printf("Key %s, value: %s%n", key, value);
         }
     }
 

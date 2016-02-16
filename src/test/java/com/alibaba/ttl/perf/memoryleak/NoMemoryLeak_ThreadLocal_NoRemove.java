@@ -13,7 +13,7 @@ public class NoMemoryLeak_ThreadLocal_NoRemove {
             threadLocal.set(Utils.getRandomString());
 
             if (counter % 1000 == 0)
-                System.out.printf("%05dK\n", counter / 1000);
+                System.out.printf("%05dK%n", counter / 1000);
             counter++;
         }
     }
