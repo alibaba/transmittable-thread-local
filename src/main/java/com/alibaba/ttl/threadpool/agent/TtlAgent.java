@@ -11,9 +11,13 @@ import java.util.logging.Logger;
  * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @since 0.9.0
  */
-public class TtlAgent {
+public final class TtlAgent {
     private static final Logger logger = Logger.getLogger(TtlAgent.class.getName());
-
+    
+    private TtlAgent() {
+    	throw new InstantiationError( "Must not instantiate this class" );
+    }
+    
     public static void premain(String agentArgs, Instrumentation inst) {
         logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs);
         install(agentArgs, inst);

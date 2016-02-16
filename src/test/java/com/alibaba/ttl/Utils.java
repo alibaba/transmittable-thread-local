@@ -14,11 +14,15 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class Utils {
+public final class Utils {
     public static final String PARENT_UNMODIFIED_IN_CHILD = "parent-created-unmodified-in-child";
     public static final String PARENT_MODIFIED_IN_CHILD = "parent-created-modified-in-child";
     public static final String PARENT_AFTER_CREATE_TTL_TASK = "parent-created-after-create-TtlTask";
     public static final String CHILD = "child-created";
+    
+    private Utils() {
+    	throw new InstantiationError( "Must not instantiate this class" );
+    }
 
     public static ConcurrentMap<String, TransmittableThreadLocal<String>> createTestTtlValue() {
         ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = new ConcurrentHashMap<String, TransmittableThreadLocal<String>>();

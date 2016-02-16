@@ -11,7 +11,8 @@ import java.util.concurrent.Future;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class AgentDemo {
+public final class AgentDemo {
+	
     static TransmittableThreadLocal<String> stringTransmittableThreadLocal = new TransmittableThreadLocal<String>();
 
     static TransmittableThreadLocal<Person> personReferenceTransmittableThreadLocal = new TransmittableThreadLocal<Person>() {
@@ -33,6 +34,10 @@ public class AgentDemo {
             return new Person("unnamed", -1);
         }
     };
+    
+    private AgentDemo() {
+    	throw new InstantiationError( "Must not instantiate this class" );
+    }
 
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
