@@ -58,7 +58,7 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         // Output GC operation
         @Override
         protected void finalize() throws Throwable {
-            System.out.printf("DEBUG: gc DtTransferInfo traceId %s in thread %s: %s\n",
+            System.out.printf("DEBUG: gc DtTransferInfo traceId %s in thread %s: %s%n",
                     traceId, Thread.currentThread().getName(), this);
             super.finalize();
         }
@@ -119,7 +119,7 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         ////////////////////////////////////////////////
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
-        System.out.printf("Finished Rpc call %s with span %s.\n", traceId, leafSpanIdInfo);
+        System.out.printf("Finished Rpc call %s with span %s.%n", traceId, leafSpanIdInfo);
 
         // release context in ThreadLocal, avoid to be hold by thread, GC friendly.
         transferInfo.remove();
@@ -171,6 +171,6 @@ public class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
 
         // Do Rpc
         // ...
-        System.out.printf("Do Rpc invocation to server %s with %s\n", server, rpcContext);
+        System.out.printf("Do Rpc invocation to server %s with %s%n", server, rpcContext);
     }
 }

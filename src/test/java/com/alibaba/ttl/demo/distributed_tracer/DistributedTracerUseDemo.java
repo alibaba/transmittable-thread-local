@@ -81,7 +81,7 @@ public class DistributedTracerUseDemo {
         String traceId = dtTransferInfo.traceId;
         int refCounter = traceId2LeafSpanIdInfo.get(traceId).refCounter.incrementAndGet();
 
-        System.out.printf("DEBUG: Increase reference counter(%s) for traceId %s in thread %s\n", refCounter, traceId, Thread.currentThread().getName());
+        System.out.printf("DEBUG: Increase reference counter(%s) for traceId %s in thread %s%n", refCounter, traceId, Thread.currentThread().getName());
     }
 
     static void decreaseSpanIdRefCounter() {
@@ -90,12 +90,12 @@ public class DistributedTracerUseDemo {
         LeafSpanIdInfo leafSpanIdInfo = traceId2LeafSpanIdInfo.get(traceId);
 
         int refCounter = leafSpanIdInfo.refCounter.decrementAndGet();
-        System.out.printf("DEBUG: Decrease reference counter(%s) for traceId %s in thread %s\n", refCounter, traceId, Thread.currentThread().getName());
+        System.out.printf("DEBUG: Decrease reference counter(%s) for traceId %s in thread %s%n", refCounter, traceId, Thread.currentThread().getName());
 
         if (refCounter == 0) {
             traceId2LeafSpanIdInfo.remove(traceId);
 
-            System.out.printf("DEBUG: Clear traceId2LeafSpanIdInfo for traceId %s in thread %s\n", traceId, Thread.currentThread().getName());
+            System.out.printf("DEBUG: Clear traceId2LeafSpanIdInfo for traceId %s in thread %s%n", traceId, Thread.currentThread().getName());
         } else if (refCounter < 0) {
             throw new IllegalStateException("Leaf Span Id Info Reference counter has Bug!!");
         }
@@ -188,6 +188,6 @@ public class DistributedTracerUseDemo {
 
         // Do Rpc
         // ...
-        System.out.printf("Do Rpc invocation to server %s with %s\n", server, rpcContext);
+        System.out.printf("Do Rpc invocation to server %s with %s%n", server, rpcContext);
     }
 }
