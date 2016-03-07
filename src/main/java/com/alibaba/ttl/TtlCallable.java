@@ -128,14 +128,7 @@ public final class TtlCallable<V> implements Callable<V> {
      * @return Wrapped {@link Callable}
      */
     public static <T> List<TtlCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall) {
-        if (null == tasks) {
-            return Collections.emptyList();
-        }
-        List<TtlCallable<T>> copy = new ArrayList<TtlCallable<T>>();
-        for (Callable<T> task : tasks) {
-            copy.add(TtlCallable.get(task, releaseTtlValueReferenceAfterCall, false));
-        }
-        return copy;
+        return gets(tasks, releaseTtlValueReferenceAfterCall, false);
     }
 
     /**

@@ -132,14 +132,7 @@ public final class TtlRunnable implements Runnable {
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
     public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun) {
-        if (null == tasks) {
-            return Collections.emptyList();
-        }
-        List<TtlRunnable> copy = new ArrayList<TtlRunnable>();
-        for (Runnable task : tasks) {
-            copy.add(TtlRunnable.get(task, releaseTtlValueReferenceAfterRun, false));
-        }
-        return copy;
+        return gets(tasks, releaseTtlValueReferenceAfterRun, false);
     }
 
     /**
