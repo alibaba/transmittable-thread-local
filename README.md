@@ -45,7 +45,7 @@ Transmittable ThreadLocal(TTL)
 
 `JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程值的传递。 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的上下文传递已经没有意义，应用中要做上下文传递，实际上是在把 **任务提交给线程池时**的上下文传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#notebook-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
 
 欢迎 :clap:
 

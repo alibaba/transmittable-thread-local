@@ -21,7 +21,7 @@
 
 关于『分布式跟踪系统』可以了解一下`Google`的`Dapper`（介绍的论文：[中文](http://bigbully.github.io/Dapper-translation/)| [英文](http://research.google.com/pubs/pub36356.html)）。分布式跟踪系统作为基础设施，不会限制『使用线程池等会缓存线程的组件』，并期望对业务逻辑尽可能的透明。
 
-分布式跟踪系统的实现的示意Demo参见[`DistributedTracerUseDemo.java`](https://github.com/alibaba/transmittable-thread-local/blob/master/src/test/java/com/alibaba/ttl/demo/distributed_tracer/DistributedTracerUseDemo.java)
+分布式跟踪系统的实现的示意Demo参见[`DistributedTracerUseDemo.java`](../src/test/java/com/alibaba/ttl/demo/distributed_tracer/DistributedTracerUseDemo.java)
 
 PS： 多谢 [@wyzssw](https://github.com/https://github.com/wyzssw) 对分布式追踪系统场景说明交流和实现上讨论建议：
 

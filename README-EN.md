@@ -35,7 +35,7 @@ The Requirements listed below is also why I sort out `TTL` in my work.
 * Application container or high layer framework transmit information to low layer sdk.
 * Transmit context to logging without application code aware.
 
-:notebook: User Guide
+:busts_in_silhouette: User Guide
 =====================================
 
 1. simple usage
