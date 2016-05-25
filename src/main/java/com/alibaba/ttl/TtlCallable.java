@@ -46,11 +46,11 @@ public final class TtlCallable<V> implements Callable<V> {
             throw new IllegalStateException("TTL value reference is released after call!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSet(copied);
+        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
         try {
             return callable.call();
         } finally {
-            TransmittableThreadLocal.restore(backup);
+            TransmittableThreadLocal.restoreBackup(backup);
         }
     }
 

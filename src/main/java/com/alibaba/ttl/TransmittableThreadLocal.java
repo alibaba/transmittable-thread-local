@@ -117,7 +117,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return copy;
     }
 
-    static Map<TransmittableThreadLocal<?>, Object> backupAndSet(Map<TransmittableThreadLocal<?>, Object> copied) {
+    static Map<TransmittableThreadLocal<?>, Object> backupAndSetToCopied(Map<TransmittableThreadLocal<?>, Object> copied) {
         Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
 
         for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
@@ -128,14 +128,15 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             // backup
             backup.put(threadLocal, threadLocal.get());
 
-            // clean extra TTL value in destination thread
+            // clear the TTL value only in copied
+            // avoid extra TTL value in copied, when run task.
             if (!copied.containsKey(threadLocal)) {
                 iterator.remove();
                 threadLocal.superRemove();
             }
         }
 
-        // set new TTL value
+        // set value to copied TTL
         for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : copied.entrySet()) {
             @SuppressWarnings("unchecked")
             TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
@@ -148,7 +149,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return backup;
     }
 
-    static void restore(Map<TransmittableThreadLocal<?>, Object> backup) {
+    static void restoreBackup(Map<TransmittableThreadLocal<?>, Object> backup) {
         // call afterExecute callback
         doExecuteCallback(false);
 
@@ -157,7 +158,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
             TransmittableThreadLocal<?> threadLocal = next.getKey();
 
-            // clean extra TTL value
+            // clear the TTL value only in backup
+            // avoid the extra value of backup after restore
             if (!backup.containsKey(threadLocal)) {
                 iterator.remove();
                 threadLocal.superRemove();

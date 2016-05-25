@@ -42,11 +42,11 @@ public final class TtlRunnable implements Runnable {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSet(copied);
+        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
         try {
             runnable.run();
         } finally {
-            TransmittableThreadLocal.restore(backup);
+            TransmittableThreadLocal.restoreBackup(backup);
         }
     }
 

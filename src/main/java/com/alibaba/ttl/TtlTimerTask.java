@@ -42,11 +42,11 @@ public final class TtlTimerTask extends TimerTask {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSet(copied);
+        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
         try {
             timerTask.run();
         } finally {
-            TransmittableThreadLocal.restore(backup);
+            TransmittableThreadLocal.restoreBackup(backup);
         }
     }
 
