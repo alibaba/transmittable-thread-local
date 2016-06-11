@@ -9,7 +9,7 @@ deploy_maven=false
 create_tag=false
 deploy_java_doc=false
 
-while getopts "dotv" arg; do
+while getopts "djotv" arg; do
     case $arg in
         v)
             update_version=true
@@ -19,6 +19,9 @@ while getopts "dotv" arg; do
             ;;
         d)
             deploy_maven=true
+            ;;
+        j)
+            deploy_java_doc=true
             ;;
         ?) # UNKNOWN option!
             echo "UNKNOWN option: $arg!"
@@ -70,7 +73,7 @@ $deploy_java_doc && {
 
     git checkout gh-pages
     mv target/apidocs "apidocs/$new_version"
-    sed "s#\"2.0.0/index.html\"#\"$new_version/index.html\"#" -i apidocs/index.html
+    sed "s#\".*/index.html\"#\"$new_version/index.html\"#" -i apidocs/index.html
     
     git add -A
     git commit -m "add javadoc for $new_version"
