@@ -47,26 +47,28 @@ public class TtlTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException {
         try {
-            final String className = toClassName(classFile);
-            if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
-                logger.info("Transforming class " + className);
-                CtClass clazz = getCtClass(classFileBuffer, loader);
+            if (classFile != null) {
+                final String className = toClassName(classFile);
+                if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
+                    logger.info("Transforming class " + className);
+                    CtClass clazz = getCtClass(classFileBuffer, loader);
 
-                for (CtMethod method : clazz.getDeclaredMethods()) {
-                    updateMethod(clazz, method);
-                }
-                return clazz.toBytecode();
-            } else if (TIMER_TASK_CLASS_FILE.equals(classFile)) {
-                CtClass clazz = getCtClass(classFileBuffer, loader);
-                while (true) {
-                    String name = clazz.getSuperclass().getName();
-                    if (Object.class.getName().equals(name)) {
-                        break;
+                    for (CtMethod method : clazz.getDeclaredMethods()) {
+                        updateMethod(clazz, method);
                     }
-                    if (TIMER_TASK_CLASS_FILE.equals(name)) {
-                        logger.info("Transforming class " + className);
-                        // FIXME add code here
-                        return EMPTY_BYTE_ARRAY;
+                    return clazz.toBytecode();
+                } else if (TIMER_TASK_CLASS_FILE.equals(classFile)) {
+                    CtClass clazz = getCtClass(classFileBuffer, loader);
+                    while (true) {
+                        String name = clazz.getSuperclass().getName();
+                        if (Object.class.getName().equals(name)) {
+                            break;
+                        }
+                        if (TIMER_TASK_CLASS_FILE.equals(name)) {
+                            logger.info("Transforming class " + className);
+                            // FIXME add code here
+                            return EMPTY_BYTE_ARRAY;
+                        }
                     }
                 }
             }
