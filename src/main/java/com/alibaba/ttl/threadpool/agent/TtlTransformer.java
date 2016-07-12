@@ -5,6 +5,8 @@ import com.alibaba.ttl.TtlRunnable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.Modifier;
@@ -47,6 +49,11 @@ public class TtlTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException {
         try {
+            // Lambda has no class file, no need to transform, just return.
+            if(classFile == null) {
+                return EMPTY_BYTE_ARRAY;
+            }
+
             final String className = toClassName(classFile);
             if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
                 logger.info("Transforming class " + className);
@@ -71,7 +78,10 @@ public class TtlTransformer implements ClassFileTransformer {
                 }
             }
         } catch (Throwable t) {
-            String msg = "Fail to transform class " + classFile + ", cause: " + t.getMessage();
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            t.printStackTrace(printWriter);
+            String msg = "Fail to transform class " + classFile + ", cause: " + stringWriter.toString();
             logger.severe(msg);
             throw new IllegalStateException(msg, t);
         }
