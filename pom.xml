@@ -99,7 +99,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.2</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -162,7 +162,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.0</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
