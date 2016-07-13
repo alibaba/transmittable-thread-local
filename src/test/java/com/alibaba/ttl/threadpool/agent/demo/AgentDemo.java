@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -63,7 +64,10 @@ public final class AgentDemo {
 
         printTtlInstancesInfo("Main - After execution of thread pool");
 
-        System.exit(0);
+        executorService.shutdown();
+        if (!executorService.awaitTermination(3, TimeUnit.SECONDS)) {
+            System.exit(1);
+        }
     }
 
     public static void expandThreadPool(ExecutorService executor) throws Exception {
