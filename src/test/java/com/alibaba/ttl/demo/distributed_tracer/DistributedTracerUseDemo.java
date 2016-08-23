@@ -61,9 +61,9 @@ public final class DistributedTracerUseDemo {
         */
 
         @Override
-        protected DtTransferInfo copy(DtTransferInfo parentValue) {
+        protected void beforeExecute() {
+            super.beforeExecute();
             increaseSpanIdRefCounter();
-            return super.childValue(parentValue);
         }
 
         @Override

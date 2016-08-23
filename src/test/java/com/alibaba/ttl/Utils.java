@@ -86,7 +86,7 @@ public final class Utils {
         return copiedContent;
     }
 
-    public static void assertttlInstances(Map<String, Object> copied, String... asserts) {
+    public static void assertTtlInstances(Map<String, Object> copied, String... asserts) {
         if (asserts.length % 2 != 0) {
             throw new IllegalStateException("should even count!");
         }
