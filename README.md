@@ -41,9 +41,9 @@ Transmittable ThreadLocal(TTL)
 :wrench: 功能
 ============================
 
-:point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能。
+:point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。
 
-`JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父子线程值的传递。 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用中要做`ThreadLocal`值传递，实际上是在把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
+`JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
 本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
 
@@ -94,14 +94,13 @@ parent.set("value-set-in-parent");
 // =====================================================
 
 // 在子线程中可以读取, 值是"value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 这是其实是[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
-但对于使用了异步执行（往往使用线程池完成）的情况，线程由线程池创建好，并且线程是缓存起来反复使用的。
+但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用中要做`ThreadLocal`值传递，实际上是在把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 解决方法参见下面的这几种用法。
 
 2. 保证线程池中传递值
@@ -119,13 +118,13 @@ parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
 // 额外的处理，生成修饰了的对象ttlRunnable
-Runnable ttlRunnable = TtlRunnable.get(task); 
+Runnable ttlRunnable = TtlRunnable.get(task);
 executorService.submit(ttlRunnable);
 
 // =====================================================
 
 // Task中可以读取, 值是"value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 上面演示了`Runnable`，`Callable`的处理类似
@@ -177,13 +176,12 @@ executorService.submit(call);
 // =====================================================
 
 // Task或是Call中可以读取, 值是"value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 ### 2.3 使用Java Agent来修饰JDK线程池实现类
 
-这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。    
-\# 即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
+这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
 
 示例代码：
 
@@ -218,7 +216,7 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo
 - `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
 - `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
 
-**注意**： 
+**注意**：
 
 * Agent修改是JDK的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
 
