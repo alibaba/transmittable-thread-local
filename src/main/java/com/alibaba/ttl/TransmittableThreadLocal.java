@@ -97,6 +97,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
                     return new WeakHashMap<TransmittableThreadLocal<?>, Object>();
                 }
+
+                @Override
+                protected Map<TransmittableThreadLocal<?>, ?> childValue(Map<TransmittableThreadLocal<?>, ?> parentValue) {
+                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue);
+                }
             };
 
     void addValue() {
