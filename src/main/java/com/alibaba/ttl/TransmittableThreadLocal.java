@@ -83,7 +83,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
-    private void superRemove() {
+    void superRemove() {
         super.remove();
     }
 
