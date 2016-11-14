@@ -189,4 +189,28 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             }
         }
     }
+
+    /**
+     * Debug only method!
+     */
+    static void dump(String title) {
+        if (title != null && title.length() > 0) {
+            System.out.printf("Start TransmittableThreadLocal[%s] Dump...\n", title);
+        } else {
+            System.out.println("Start TransmittableThreadLocal Dump...");
+        }
+
+        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
+            final TransmittableThreadLocal<?> key = entry.getKey();
+            System.out.println(key.get());
+        }
+        System.out.println("TransmittableThreadLocal Dump end!");
+    }
+
+    /**
+     * Debug only method!
+     */
+    static void dump() {
+        dump(null);
+    }
 }
