@@ -91,8 +91,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return copy(get());
     }
 
-    static ThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
-            new ThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
+    static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
+            new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
                 @Override
                 protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
                     return new WeakHashMap<TransmittableThreadLocal<?>, Object>();
