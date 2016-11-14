@@ -252,7 +252,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.0.2</version>
+	<version>2.1.0</version>
 </dependency>
 ```
 
