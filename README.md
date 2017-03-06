@@ -76,8 +76,10 @@ Transmittable ThreadLocal(TTL)
 
 相比[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
-- `protected`方法`copy`，用于定制 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**时的拷贝行为，缺省传递的是引用。
-- `protected`方法`beforeExecute`/`afterExecute`方法，执行任务(`Runnable`/`Callable`)的前/后的回调。
+1. `protected`方法`copy`  
+    用于定制 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**时的拷贝行为，缺省传递的是引用。
+1. `protected`方法`beforeExecute`/`afterExecute`  
+    执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
 
 具体使用方式见下面的说明。
 
