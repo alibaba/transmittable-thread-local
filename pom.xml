@@ -89,7 +89,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.6.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -113,7 +113,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -139,7 +139,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>1.6.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -242,7 +242,7 @@
 						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.7.7.201606060606</version>
+						<version>0.7.9</version>
 						<executions>
 							<execution>
 								<goals>
