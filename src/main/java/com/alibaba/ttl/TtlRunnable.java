@@ -11,7 +11,7 @@ import java.util.Collections;
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p>
- * Use factory method {@link #get(Runnable)} to create instance.
+ * Use factory methods {@link #get} / {@link #gets} to create instance.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.concurrent.Executor
@@ -59,8 +59,6 @@ public final class TtlRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
-     * <p>
-     * This method is idempotent.
      *
      * @param runnable input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @return Wrapped {@link Runnable}
@@ -72,8 +70,6 @@ public final class TtlRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
-     * <p>
-     * This method is idempotent.
      *
      * @param runnable                         input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
@@ -86,15 +82,14 @@ public final class TtlRunnable implements Runnable {
 
     /**
      * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
-     * <p>
-     * This method is idempotent.
      *
      * @param runnable                         input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
-     * @param idempotent                       is idempotent or not. if {@code }, return input object when it's {@link TtlRunnable}, or throw {@link IllegalStateException}.
-     *                                         {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
+     * @param idempotent                       is idempotent mode or not. if {@code true}, just return input {@link Runnable} when it's {@link TtlRunnable},
+     *                                         otherwise throw {@link IllegalStateException}.
+     *                                         <B><I>Caution</I></B>: {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Runnable}
-     * @throws IllegalStateException
+     * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
     public static TtlRunnable get(Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == runnable) {
@@ -140,10 +135,11 @@ public final class TtlRunnable implements Runnable {
      *
      * @param tasks                            task to be wrapped. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
-     * @param idempotent                       is idempotent or not. if {@code }, return input object when it's {@link TtlRunnable}, or throw {@link IllegalStateException}.
-     *                                         {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
+     * @param idempotent                       is idempotent mode or not. if {@code true}, just return input {@link Runnable} when it's {@link TtlRunnable},
+     *                                         otherwise throw {@link IllegalStateException}.
+     *                                         <B><I>Caution</I></B>: {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return wrapped tasks
-     * @throws IllegalStateException
+     * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
     public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == tasks) {
