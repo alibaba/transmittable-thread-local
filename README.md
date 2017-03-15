@@ -96,7 +96,7 @@ parent.set("value-set-in-parent");
 
 // =====================================================
 
-// 在子线程中可以读取, 值是"value-set-in-parent"
+// 在子线程中可以读取，值是"value-set-in-parent"
 String value = parent.get();
 ```
 
@@ -125,7 +125,7 @@ executorService.submit(ttlRunnable);
 
 // =====================================================
 
-// Task中可以读取, 值是"value-set-in-parent"
+// Task中可以读取，值是"value-set-in-parent"
 String value = parent.get();
 ```
 
@@ -142,7 +142,7 @@ executorService.submit(ttlCallable);
 
 // =====================================================
 
-// Call中可以读取, 值是"value-set-in-parent"
+// Call中可以读取，值是"value-set-in-parent"
 String value = parent.get();
 ```
 
@@ -156,9 +156,9 @@ String value = parent.get();
 
 通过工具类[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
 
-* `getTtlExecutor`：修饰接口`Executor`
-* `getTtlExecutorService`：修饰接口`ExecutorService`
-* `ScheduledExecutorService`：修饰接口`ScheduledExecutorService`
+- `getTtlExecutor`：修饰接口`Executor`
+- `getTtlExecutorService`：修饰接口`ExecutorService`
+- `ScheduledExecutorService`：修饰接口`ScheduledExecutorService`
 
 示例代码：
 
@@ -177,7 +177,7 @@ executorService.submit(call);
 
 // =====================================================
 
-// Task或是Call中可以读取, 值是"value-set-in-parent"
+// Task或是Call中可以读取，值是"value-set-in-parent"
 String value = parent.get();
 ```
 
@@ -202,7 +202,7 @@ executorService.submit(call);
 
 // =====================================================
 
-// Task或是Call中可以读取, 值是"value-set-in-parent"
+// Task或是Call中可以读取，值是"value-set-in-parent"
 String value = parent.get();
 ```
 
@@ -220,7 +220,7 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo
 
 **注意**：
 
-* Agent修改是JDK的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
+- Agent修改是JDK的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
 
 Java命令行示例如下：
 
@@ -265,7 +265,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 :question: FAQ
 =====================================
 
-* Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
+- Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205  
 可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。   
 \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
