@@ -49,6 +49,8 @@ Transmittable ThreadLocal(TTL)
 
 本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
 
+整个库包含`TTL`核心功能、线程池修饰及`Agent`支持，只有不到 **_610 `SLOC`代码行_**，非常精小。
+
 欢迎 :clap:
 
 - 建议和提问，[提交`Issue`](https://github.com/oldratlee/translations/issues/new)
