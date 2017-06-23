@@ -7,8 +7,11 @@ import com.alibaba.ttl.testmodel.Task;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static com.alibaba.ttl.Utils.CHILD;
@@ -24,37 +27,49 @@ import static com.alibaba.ttl.Utils.expandThreadPool;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public final class AgentCheck {
-    static ExecutorService executorService = Executors.newFixedThreadPool(3);
-    static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(3);
 
     private AgentCheck() {
-    	throw new InstantiationError( "Must not instantiate this class" );
-    }
-    static {
-        expandThreadPool(executorService);
-        expandThreadPool(scheduledExecutorService);
+        throw new InstantiationError("Must not instantiate this class");
     }
 
     public static void main(String[] args) throws Exception {
         try {
+            ThreadPoolExecutor executorService = new ThreadPoolExecutor(3, 3,
+                    3L, TimeUnit.SECONDS,
+                    new LinkedBlockingQueue<Runnable>());
+            ScheduledThreadPoolExecutor scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
+
+            expandThreadPool(executorService);
+            expandThreadPool(scheduledExecutorService);
+
             ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
 
-            checkExecutorService(ttlInstances);
-            checkScheduledExecutorService(ttlInstances);
+            checkExecutorService(executorService, ttlInstances);
+            checkScheduledExecutorService(scheduledExecutorService, ttlInstances);
 
             System.out.println();
             System.out.println("====================================");
-            System.out.println("OK!");
+            System.out.println("Check OK!");
             System.out.println("====================================");
-        } finally {
+
             executorService.shutdown();
             scheduledExecutorService.shutdown();
-            executorService.awaitTermination(3, TimeUnit.MINUTES);
-            scheduledExecutorService.awaitTermination(3, TimeUnit.MINUTES);
+
+            if (!executorService.awaitTermination(3, TimeUnit.SECONDS)) {
+                System.out.println("Fail to close ThreadPoolExecutor");
+                System.exit(1);
+            }
+            if (!scheduledExecutorService.awaitTermination(3, TimeUnit.SECONDS)) {
+                System.out.println("Fail to close scheduledExecutorService");
+                System.exit(1);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            System.exit(2);
         }
     }
 
-    static void checkExecutorService(ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {
+    private static void checkExecutorService(ExecutorService executorService, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {
         Task task = new Task("1", ttlInstances);
         executorService.submit(task);
 
@@ -82,7 +97,7 @@ public final class AgentCheck {
         );
     }
 
-    static void checkScheduledExecutorService(ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {
+    private static void checkScheduledExecutorService(ScheduledExecutorService scheduledExecutorService, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {
         Task task = new Task("2", ttlInstances);
         ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
 
