@@ -8,10 +8,10 @@ import java.util.Random;
 public class Utils {
     static Random random = new Random();
 
-    public static String bytes2Hex(byte[] b) {
+    public static String bytes2Hex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(1024);
-        for (int n = 0; n < b.length; n++) {
-            String s = Integer.toHexString(b[n] & 0xFF);
+        for (byte b : bytes) {
+            String s = Integer.toHexString(b & 0xFF);
             sb.append((s.length() == 1) ? "0" + s : s);
         }
         return sb.toString();

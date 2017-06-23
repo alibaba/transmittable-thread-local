@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class ScheduledExecutorServiceTtlWrapperTest {
-    static ScheduledExecutorService executorService;
+    private static ScheduledExecutorService executorService;
 
     static {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(3);
@@ -46,14 +46,14 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         executorService.shutdown();
     }
 
-    ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
+    private ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
 
     @Before
     public void setUp() throws Exception {
         ttlInstances = createTestTtlValue();
     }
 
-    static void assertTask1(Map<String, Object> copied) {
+    private static void assertTask1(Map<String, Object> copied) {
         // child Inheritable
         assertEquals(4, copied.size());
         assertEquals(PARENT_UNMODIFIED_IN_CHILD, copied.get(PARENT_UNMODIFIED_IN_CHILD));
@@ -62,7 +62,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         assertEquals(PARENT_AFTER_CREATE_TTL_TASK, copied.get(PARENT_AFTER_CREATE_TTL_TASK)); // because create TtlRunnable in method executorService
     }
 
-    static void assertTask2(Map<String, Object> copied) {
+    private static void assertTask2(Map<String, Object> copied) {
         // child Inheritable
         assertEquals(4, copied.size());
         assertEquals(PARENT_UNMODIFIED_IN_CHILD, copied.get(PARENT_UNMODIFIED_IN_CHILD));
@@ -108,7 +108,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         setLocalAfter();
 
-        Future future = executorService.submit(call);
+        Future<String> future = executorService.submit(call);
         assertEquals("ok", future.get());
 
         assertTask1(call.copied);
@@ -120,7 +120,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
         setLocalAfter();
 
-        Future future = executorService.submit(task, "ok");
+        Future<String> future = executorService.submit(task, "ok");
         assertEquals("ok", future.get());
 
         assertTask1(task.copied);
@@ -132,7 +132,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
         setLocalAfter();
 
-        Future future = executorService.submit(task);
+        Future<?> future = executorService.submit(task);
         assertNull(future.get());
 
         // child Inheritable
@@ -211,7 +211,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
         setLocalAfter();
 
-        Future future = executorService.schedule(task, 1, TimeUnit.SECONDS);
+        Future<?> future = executorService.schedule(task, 1, TimeUnit.SECONDS);
         assertNull(future.get());
 
         // child Inheritable
@@ -225,7 +225,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         setLocalAfter();
 
-        Future future = executorService.schedule(call, 1, TimeUnit.SECONDS);
+        Future<?> future = executorService.schedule(call, 1, TimeUnit.SECONDS);
         assertEquals("ok", future.get());
 
         assertTask1(call.copied);
@@ -237,8 +237,8 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
         setLocalAfter();
 
-        Future future = executorService.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS);
-        Thread.sleep(1000);
+        Future<?> future = executorService.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS);
+        Thread.sleep(100);
         future.cancel(true);
 
         assertTask1(task.copied);
@@ -250,9 +250,9 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
         setLocalAfter();
 
-        Future future = executorService.scheduleWithFixedDelay(task, 0, 100, TimeUnit.SECONDS);
+        Future<?> future = executorService.scheduleWithFixedDelay(task, 0, 50, TimeUnit.SECONDS);
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
         future.cancel(true);
 
         assertTask1(task.copied);

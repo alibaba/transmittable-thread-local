@@ -14,9 +14,9 @@ import java.util.concurrent.Executor;
  * @since 0.9.0
  */
 class ExecutorTtlWrapper implements Executor {
-    final Executor executor;
+    private final Executor executor;
 
-    public ExecutorTtlWrapper(Executor executor) {
+    ExecutorTtlWrapper(Executor executor) {
         this.executor = executor;
     }
 

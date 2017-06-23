@@ -22,9 +22,9 @@ import java.util.concurrent.TimeoutException;
  * @since 0.9.0
  */
 class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService {
-    final ExecutorService executorService;
+    private final ExecutorService executorService;
 
-    public ExecutorServiceTtlWrapper(ExecutorService executorService) {
+    ExecutorServiceTtlWrapper(ExecutorService executorService) {
         super(executorService);
         this.executorService = executorService;
     }

@@ -7,7 +7,6 @@ import com.alibaba.ttl.testmodel.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,7 +15,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.alibaba.ttl.Utils.CHILD;
 import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
@@ -86,7 +84,7 @@ public final class AgentCheck {
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
 
         System.out.println(task.copied);
 
@@ -114,7 +112,7 @@ public final class AgentCheck {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                         System.out.println("Run sleep task!");
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -143,7 +141,7 @@ public final class AgentCheck {
         }
 
         /////////////////////////////////////////////////////////////
-        // Is ThreadPoolExecutor#remove method take effect?
+        // Does ThreadPoolExecutor#remove method take effect?
         /////////////////////////////////////////////////////////////
         assertEquals(0, executor.getActiveCount());
         assertFalse(taskToRemove.isDone());

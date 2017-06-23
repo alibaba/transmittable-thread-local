@@ -34,7 +34,7 @@ import static org.junit.Assert.fail;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class TtlCallableTest {
-    static ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     static {
         expandThreadPool(executorService);
@@ -50,7 +50,7 @@ public class TtlCallableTest {
         ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
 
         Call call = new Call("1", ttlInstances);
-        TtlCallable<String> ttlCallable = TtlCallable.<String>get(call);
+        TtlCallable<String> ttlCallable = TtlCallable.get(call);
 
         // create after new Task, won't see parent value in in task!
         TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
@@ -87,7 +87,7 @@ public class TtlCallableTest {
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
-        Future future = executorService.submit(ttlCallable);
+        Future<String> future = executorService.submit(ttlCallable);
         assertEquals("ok", future.get());
 
         // child Inheritable
@@ -118,7 +118,7 @@ public class TtlCallableTest {
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
-        Future future = executorService.submit(ttlCallable);
+        Future<String> future = executorService.submit(ttlCallable);
         assertEquals("ok", future.get());
 
         // child Inheritable
@@ -142,7 +142,7 @@ public class TtlCallableTest {
         TtlCallable<String> ttlCallable = TtlCallable.get(call, true);
         assertSame(call, ttlCallable.getCallable());
 
-        Future future = executorService.submit(ttlCallable);
+        Future<String> future = executorService.submit(ttlCallable);
         assertEquals("ok", future.get());
 
         future = executorService.submit(ttlCallable);

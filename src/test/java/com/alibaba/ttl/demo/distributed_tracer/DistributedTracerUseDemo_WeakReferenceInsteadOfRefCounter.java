@@ -31,9 +31,9 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
     static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
 
     private DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter() {
-    	throw new InstantiationError( "Must not instantiate this class" );
+        throw new InstantiationError("Must not instantiate this class");
     }
-    
+
     static {
         // 挤满线程, 保证线程不是用的时候new的, 确保验证TTL的传递功能
         Utils.expandThreadPool(executorService);
@@ -89,12 +89,14 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
             rpcInvokeIn();
         }
 
-        Thread.sleep(1000);
-        System.out.println("Call System.gc");
+
         // help to check GC status
+        Thread.sleep(100);
+        System.out.println("Call System.gc");
         System.gc();
         System.out.println("Called System.gc");
-        Thread.sleep(1000);
+        Thread.sleep(100);
+
         System.out.println("Exit Main.");
     }
 

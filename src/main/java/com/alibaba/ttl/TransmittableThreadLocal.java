@@ -91,7 +91,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return copy(get());
     }
 
-    static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
+    private static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
             new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
                 @Override
                 protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
@@ -104,13 +104,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 }
             };
 
-    void addValue() {
+    private void addValue() {
         if (!holder.get().containsKey(this)) {
             holder.get().put(this, null); // WeakHashMap supports null value.
         }
     }
 
-    void removeValue() {
+    private void removeValue() {
         holder.get().remove(this);
     }
 

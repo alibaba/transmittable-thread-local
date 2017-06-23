@@ -36,7 +36,7 @@ import static org.junit.Assert.fail;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class TtlRunnableTest {
-    static ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     static {
         expandThreadPool(executorService);
