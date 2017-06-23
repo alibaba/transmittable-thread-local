@@ -29,7 +29,6 @@ public final class TtlCallable<V> implements Callable<V> {
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
 
-
     private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
         this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
         this.callable = callable;
@@ -56,6 +55,26 @@ public final class TtlCallable<V> implements Callable<V> {
 
     public Callable<V> getCallable() {
         return callable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TtlCallable<?> that = (TtlCallable<?>) o;
+
+        return callable.equals(that.callable);
+    }
+
+    @Override
+    public int hashCode() {
+        return callable.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + " - " + callable.toString();
     }
 
     /**

@@ -35,27 +35,29 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final String TTL_RUNNABLE_CLASS_NAME = TtlRunnable.class.getName();
     private static final String TTL_CALLABLE_CLASS_NAME = TtlCallable.class.getName();
 
-    private static final String THREAD_POOL_CLASS_FILE = "java.util.concurrent.ThreadPoolExecutor".replace('.', '/');
-    private static final String SCHEDULER_CLASS_FILE = "java.util.concurrent.ScheduledThreadPoolExecutor".replace('.', '/');
 
-    private static final String TIMER_TASK_CLASS_FILE = "java.util.TimerTask".replace('.', '/');
-    private static final byte[] EMPTY_BYTE_ARRAY = {};
+    private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
-    private static String toClassName(String classFile) {
-        return classFile.replace('/', '.');
+    static {
+        EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");
+        EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ScheduledThreadPoolExecutor");
     }
+
+    private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
+
+    private static final byte[] EMPTY_BYTE_ARRAY = {};
 
     @Override
     public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException {
         try {
             // Lambda has no class file, no need to transform, just return.
-            if(classFile == null) {
+            if (classFile == null) {
                 return EMPTY_BYTE_ARRAY;
             }
 
             final String className = toClassName(classFile);
-            if (THREAD_POOL_CLASS_FILE.equals(classFile) || SCHEDULER_CLASS_FILE.equals(classFile)) {
+            if (EXECUTOR_CLASS_NAMES.contains(className)) {
                 logger.info("Transforming class " + className);
                 CtClass clazz = getCtClass(classFileBuffer, loader);
 
@@ -63,14 +65,14 @@ public class TtlTransformer implements ClassFileTransformer {
                     updateMethod(clazz, method);
                 }
                 return clazz.toBytecode();
-            } else if (TIMER_TASK_CLASS_FILE.equals(classFile)) {
+            } else if (TIMER_TASK_CLASS_NAME.equals(className)) {
                 CtClass clazz = getCtClass(classFileBuffer, loader);
                 while (true) {
                     String name = clazz.getSuperclass().getName();
                     if (Object.class.getName().equals(name)) {
                         break;
                     }
-                    if (TIMER_TASK_CLASS_FILE.equals(name)) {
+                    if (TIMER_TASK_CLASS_NAME.equals(name)) {
                         logger.info("Transforming class " + className);
                         // FIXME add code here
                         return EMPTY_BYTE_ARRAY;
@@ -88,7 +90,11 @@ public class TtlTransformer implements ClassFileTransformer {
         return EMPTY_BYTE_ARRAY;
     }
 
-    private CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
+    private static String toClassName(String classFile) {
+        return classFile.replace('/', '.');
+    }
+
+    private static CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
         ClassPool classPool = new ClassPool(true);
         if (null != classLoader) {
             classPool.appendClassPath(new LoaderClassPath(classLoader));
@@ -99,20 +105,7 @@ public class TtlTransformer implements ClassFileTransformer {
         return clazz;
     }
 
-    static final Set<String> updateMethodNames = new HashSet<String>();
-
-    static {
-        updateMethodNames.add("execute");
-        updateMethodNames.add("submit");
-        updateMethodNames.add("schedule");
-        updateMethodNames.add("scheduleAtFixedRate");
-        updateMethodNames.add("scheduleWithFixedDelay");
-    }
-
-    static void updateMethod(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
-        if (!updateMethodNames.contains(method.getName())) {
-            return;
-        }
+    private static void updateMethod(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
         if (method.getDeclaringClass() != clazz) {
             return;
         }
