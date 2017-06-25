@@ -1,8 +1,8 @@
 Transmittable ThreadLocal(TTL)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
+[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=v2.1.1)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.1.1.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.1.1)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)
 [![Dependency Status](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca/badge.svg)](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca)  
@@ -216,7 +216,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 </dependency>
 ```
 
