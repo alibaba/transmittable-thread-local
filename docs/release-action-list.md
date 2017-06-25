@@ -5,9 +5,11 @@
     1. 从master分支新建发布分支
     1. 在发布分支上，更新版本号及相关信息
         - 更新POM的版本号
-        - 更新badge的引用，由master分支名改成Tag名
+        - 更新badge的引用，由master分支名改成Tag名  
+            `sed 's/master/v2.x.x/g' -i README*`
         - 更新README中示例Maven依赖的版本
-1. 新建并Push Tag，如`v1.2.3`
+1. 新建并Push Tag，如`v1.2.3`  
+    `git tag -m 'release v2.x.x' v2.x.x`
 1. 等待Tag的CI通过 <https://travis-ci.org/alibaba/transmittable-thread-local/builds>
 1. 发布版本到Maven中央库
 1. 更新JavaDoc
