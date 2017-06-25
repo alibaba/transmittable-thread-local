@@ -12,9 +12,9 @@ Transmittable ThreadLocal(TTL)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/alibaba/transmittable-thread-local.svg)](http://isitmaintained.com/project/alibaba/transmittable-thread-local "Average time to resolve an issue")
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-<div align="right">
-<a href="README-EN.md">English Documentation</a>
-</div>
+[:book: English Documentation](README-EN.md) | :book: 中文文档
+
+----------------------------------------
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -39,6 +39,8 @@ Transmittable ThreadLocal(TTL)
     - [Java Agent](#java-agent)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+----------------------------------------
 
 :wrench: 功能
 ============================

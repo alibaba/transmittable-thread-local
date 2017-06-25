@@ -12,12 +12,34 @@ Transmittable ThreadLocal(TTL)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/alibaba/transmittable-thread-local.svg)](http://isitmaintained.com/project/alibaba/transmittable-thread-local "Average time to resolve an issue")
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-<div align="right">
-<a href="README.md">中文文档</a>
-</div>
+:book: English Documentation | [:book: 中文文档](README.md)
 
-:wrench: Functions
-----------------------------
+----------------------------------------
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [:wrench: Functions](#wrench-functions)
+- [:art: Requirements](#art-requirements)
+- [:busts_in_silhouette: User Guide](#busts_in_silhouette-user-guide)
+    - [1. simple usage](#1-simple-usage)
+    - [2. Transmit value even using thread pool](#2-transmit-value-even-using-thread-pool)
+        - [2.1 Decorate `Runnable` and `Callable`](#21-decorate-runnable-and-callable)
+        - [2.2 Decorate thread pool](#22-decorate-thread-pool)
+        - [2.3. Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
+- [:electric_plug: Java API Docs](#electric_plug-java-api-docs)
+- [:cookie: Maven dependency](#cookie-maven-dependency)
+- [:books: Related resources](#books-related-resources)
+    - [Jdk core classes](#jdk-core-classes)
+    - [Java Agent](#java-agent)
+    - [Javassist](#javassist)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+----------------------------------------
+
+# :wrench: Functions
 
 :point_right: Transmit `ThreadLocal` value between threads, even using thread cached components like thread pool.
 
@@ -29,19 +51,16 @@ Application need transmit value from the time task is created to the time task i
 
 If you have problem or question, please [submit Issue](https://github.com/alibaba/transmittable-thread-local/issues) or play [fork](https://github.com/alibaba/transmittable-thread-local/fork) and pull request dance.
 
-:art: Requirements
-----------------------------
+# :art: Requirements
 
 The Requirements listed below is also why I sort out `TTL` in my work. 
 
 * Application container or high layer framework transmit information to low layer sdk.
 * Transmit context to logging without application code aware.
 
-:busts_in_silhouette: User Guide
-=====================================
+# :busts_in_silhouette: User Guide
 
-1. simple usage
-----------------------------
+## 1. simple usage
 
 ```java
 // set in parent thread
@@ -61,8 +80,7 @@ Application need transmit value from the time task is created to the point task 
 
 The solution is below usage.
 
-2. Transmit value even using thread pool
-----------------------------
+## 2. Transmit value even using thread pool
 
 ### 2.1 Decorate `Runnable` and `Callable`
 
@@ -188,13 +206,11 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 Run the script [`run-agent-demo.sh`](run-agent-demo.sh)
 to start demo of "Use Java Agent to decorate thread pool implementation class".
 
-:electric_plug: Java API Docs
-======================
+# :electric_plug: Java API Docs
 
 The current version Java API documentation: <http://alibaba.github.io/transmittable-thread-local/apidocs/>
 
-:cookie: Maven dependency
-=====================================
+# :cookie: Maven dependency
 
 ```xml
 <dependency>
@@ -206,24 +222,20 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 
 Check available version at [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22transmittable-thread-local%22).
 
-:books: Related resources
-=====================================
+# :books: Related resources
 
-Jdk core classes
-----------------------------
+## Jdk core classes
 
 * [WeakHashMap](http://docs.oracle.com/javase/7/docs/api/java/util/WeakHashMap.html)
 * [InheritableThreadLocal](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)
 
-Java Agent
-----------------------------
+## Java Agent
 
 * [Java Agent规范](http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html)
 * [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 * [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 * [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 
-Javassist
-----------------------------
+## Javassist
 
 * [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
