@@ -172,7 +172,7 @@ executorService.submit(call);
 
 // =====================================================
 
-// Task或是Call中可以读取, 值是"value-set-in-parent"
+// read in Task or Callable, value is "value-set-in-parent"
 String value = parent.get();
 ```
 
