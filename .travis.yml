@@ -4,6 +4,7 @@ jdk:
   - oraclejdk7
   - openjdk7
   - oraclejdk8
+
 before_install:
   # workaroud for "buffer overflow detected" problem of openjdk:
   #     https://github.com/travis-ci/travis-ci/issues/5227
@@ -14,9 +15,17 @@ before_install:
   - sudo mv /tmp/hosts /etc/hosts
   - cat /etc/hosts # optionally check the content *after*
 
+  # output env info
+  - ls -l /usr/lib/jvm
+  - echo "JAVA_HOME=$JAVA_HOME"
+  - echo "PATH=$PATH"
+  - mvn --version
+
   - pip install --user codecov
+
 script:
   - mvn test -B
   - ./run-agent-test.sh skip
+
 after_success:
   - codecov
