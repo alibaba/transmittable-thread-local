@@ -1,0 +1,54 @@
+version: '{build}'
+os: Windows Server 2012
+build: off
+clone_depth: 5
+branches:
+  except:
+    - travis-ci
+
+environment:
+  matrix:
+    - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.6.0"
+    - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.6.0"
+    - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.7.0"
+    - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.7.0"
+    - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.8.0"
+    - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.8.0"
+
+init:
+  - ps: "ls 'C:/Program Files/Java/jdk*'"
+  - ps: "ls 'C:/Program Files (x86)/Java/jdk*'"
+
+install:
+  - ps: |
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+      if (!(Test-Path -Path "C:\maven\apache-maven-3.2.5")) {
+        (new-object System.Net.WebClient).DownloadFile(
+          'http://www.us.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip',
+          'C:\maven-bin.zip'
+        )
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
+      }
+  - cmd: SET PATH=C:\maven\apache-maven-3.2.5\bin;%JAVA_HOME%\bin;%PATH%
+  - cmd: SET M2_HOME=C:\maven\apache-maven-3.2.5
+  - cmd: SET MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=128m
+  - cmd: SET JAVA_OPTS=-Xmx768m -XX:MaxPermSize=128m
+  - "ECHO JAVA_HOME=%JAVA_HOME%, HOMEPATH=%HOMEPATH%, PATH=%PATH%"
+  - cmd: mvn --version
+
+test_script:
+  - mvn clean install --batch-mode
+  - mvn dependency:copy-dependencies -DincludeScope=test
+  - rm target/dependency/javassist*
+  - ps: |
+      $ttl_jar=Get-ChildItem target\transmittable-thread-local-*.jar -Exclude *-sources.jar | Select-Object -ExpandProperty FullName
+      $cp=Get-ChildItem target\dependency\*.jar | Select-Object -ExpandProperty FullName
+      $cp=$cp + 'target\test-classes'
+      $cp=$cp -join ';'
+      echo "java -Xmx256m -Xms256m -Xbootclasspath/a:$ttl_jar -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck"
+      $output = java -Xmx256m -Xms256m -Xbootclasspath/a:$ttl_jar -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck 2>&1
+      $output.CategoryInfo.TargetName | Out-Default
+
+cache:
+  - C:\maven\
+  - C:\Users\appveyor\.m2\
