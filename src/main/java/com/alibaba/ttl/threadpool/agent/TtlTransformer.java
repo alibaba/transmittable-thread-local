@@ -96,7 +96,9 @@ public class TtlTransformer implements ClassFileTransformer {
 
     private static CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
         ClassPool classPool = new ClassPool(true);
-        if (null != classLoader) {
+        if (classLoader == null) {
+            classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
+        } else {
             classPool.appendClassPath(new LoaderClassPath(classLoader));
         }
 
