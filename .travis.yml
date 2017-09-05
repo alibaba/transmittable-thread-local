@@ -4,6 +4,7 @@ jdk:
 #  - oraclejdk7
   - openjdk7
   - oraclejdk8
+  - oraclejdk9
 
 before_install:
   # workaroud for "buffer overflow detected" problem of openjdk:
