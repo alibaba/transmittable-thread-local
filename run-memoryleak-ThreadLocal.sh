@@ -8,7 +8,7 @@ BASE=`pwd`
 cleanInstall && copyDeps && {
     classpath=`echo target/dependency/*.jar | tr ' ' :`
     
-    runCmd java \
+    runCmd $JAVA_HOME/bin/java \
         -Xmx384m -Xms384m \
         -cp target/test-classes:target/classes:${classpath} \
         -ea \

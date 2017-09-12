@@ -10,7 +10,7 @@ BASE=`pwd`
 cleanInstall $1 && copyDeps && {
     classpath=`echo target/dependency/*.jar | tr ' ' :`
 
-    runCmd java \
+    runCmd $JAVA_HOME/bin/java \
         -Xmx128m -Xms128m \
         -Xbootclasspath/a:target/$aid-$version.jar \
         -javaagent:target/$aid-$version.jar \
