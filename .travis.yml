@@ -30,3 +30,9 @@ script:
 
 after_success:
   - codecov
+
+# cache between builds
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.cache/pip
