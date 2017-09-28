@@ -42,7 +42,7 @@ Transmittable ThreadLocal(TTL)
 
 # :wrench: Functions
 
-:point_right: Transmit `ThreadLocal` value between threads, even using thread cached components like thread pool.
+:point_right: Transmit `ThreadLocal` value between threads, even using thread cached components like thread pool. Support `JDK` 9/8/7/6.
 
 Class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
