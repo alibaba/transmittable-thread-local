@@ -2,10 +2,9 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.Collections;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
@@ -29,14 +28,13 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
  * @since 0.9.0
  */
 public final class TtlCallable<V> implements Callable<V> {
-    private final AtomicReference<Object> capturedRef;
+
     private final Callable<V> callable;
-    private final boolean releaseTtlValueReferenceAfterCall;
+    private final TransmittableThreadLocal.Capture capture;
 
     private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
-        this.capturedRef = new AtomicReference<>(capture());
         this.callable = callable;
-        this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
+        capture = TransmittableThreadLocal.capture(releaseTtlValueReferenceAfterCall);
     }
 
     /**
@@ -44,17 +42,7 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        Object captured = capturedRef.get();
-        if (captured == null || releaseTtlValueReferenceAfterCall && !capturedRef.compareAndSet(captured, null)) {
-            throw new IllegalStateException("TTL value reference is released after call!");
-        }
-
-        Object backup = replay(captured);
-        try {
-            return callable.call();
-        } finally {
-            restore(backup);
-        }
+        return TransmittableThreadLocal.restoreAndRun(capture, callable);
     }
 
     public Callable<V> getCallable() {

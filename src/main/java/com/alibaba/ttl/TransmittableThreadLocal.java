@@ -8,6 +8,11 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
@@ -135,6 +140,60 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                     logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t.toString(), t);
                 }
             }
+        }
+    }
+
+    public static class Capture {
+        private final AtomicReference<Object> capturedRef;
+        private final boolean releaseTtlValueReferenceAfterRun;
+
+        private Capture(boolean releaseTtlValueReferenceAfterRun) {
+            this.capturedRef = new AtomicReference<>(Transmitter.capture());
+            this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
+        }
+
+        public AtomicReference<Object> getCapturedRef() {
+            return capturedRef;
+        }
+
+        public boolean isReleaseTtlValueReferenceAfterRun() {
+            return releaseTtlValueReferenceAfterRun;
+        }
+    }
+
+    public static Capture capture() {
+        return new Capture(false);
+    }
+
+    public static Capture capture(boolean releaseTtlValueReferenceAfterRun) {
+        return new Capture(releaseTtlValueReferenceAfterRun);
+    }
+
+    public static <V> V restoreAndRun(Capture capture, Callable<V> callable) throws Exception {
+        Object captured = capture.getCapturedRef().get();
+        if (captured == null || capture.releaseTtlValueReferenceAfterRun && !capture.getCapturedRef().compareAndSet(captured, null)) {
+            throw new IllegalStateException("TTL value reference is released after call!");
+        }
+
+        Object backup = replay(captured);
+        try {
+            return callable.call();
+        } finally {
+            restore(backup);
+        }
+    }
+
+    public static void restoreAndRun(Capture capture, Runnable runnable) {
+        Object captured = capture.getCapturedRef().get();
+        if (captured == null || capture.releaseTtlValueReferenceAfterRun && !capture.getCapturedRef().compareAndSet(captured, null)) {
+            throw new IllegalStateException("TTL value reference is released after run!");
+        }
+
+        Object backup = replay(captured);
+        try {
+            runnable.run();
+        } finally {
+            restore(backup);
         }
     }
 
