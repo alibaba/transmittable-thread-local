@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class Task implements Runnable {
     public final String tag;
-    private ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
+    private final ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
 
     public Task(String tag, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) {
         this.tag = tag;
@@ -22,10 +22,6 @@ public class Task implements Runnable {
 
     @Override
     public void run() {
-        try {
-            copied = Utils.modifyTtlInstances(tag, ttlInstances);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        copied = Utils.modifyTtlInstances(tag, ttlInstances);
     }
 }

@@ -33,7 +33,13 @@ public final class TtlRunnable implements Runnable {
      */
     @Override
     public void run() {
-        TransmittableThreadLocal.restoreAndRun(capture, runnable);
+        TransmittableThreadLocal.restoreAndRun(capture, new TransmittableThreadLocal.Action<Void, RuntimeException>() {
+            @Override
+            public Void act() throws RuntimeException {
+                runnable.run();
+                return null;
+            }
+        });
     }
 
     /**

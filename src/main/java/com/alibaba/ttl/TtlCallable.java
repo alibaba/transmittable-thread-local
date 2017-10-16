@@ -36,7 +36,12 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        return TransmittableThreadLocal.restoreAndRun(capture, callable);
+        return TransmittableThreadLocal.restoreAndRun(capture, new TransmittableThreadLocal.Action<V, Exception>() {
+            @Override
+            public V act() throws Exception {
+                return callable.call();
+            }
+        });
     }
 
     public Callable<V> getCallable() {
