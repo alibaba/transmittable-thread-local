@@ -2,10 +2,8 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
@@ -22,14 +20,12 @@ import java.util.Collections;
  * @since 0.9.0
  */
 public final class TtlRunnable implements Runnable {
-    private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
     private final Runnable runnable;
-    private final boolean releaseTtlValueReferenceAfterRun;
+    private final TransmittableThreadLocal.Capture capture;
 
     private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
         this.runnable = runnable;
-        this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
+        this.capture = TransmittableThreadLocal.capture(releaseTtlValueReferenceAfterRun);
     }
 
     /**
@@ -37,17 +33,7 @@ public final class TtlRunnable implements Runnable {
      */
     @Override
     public void run() {
-        Map<TransmittableThreadLocal<?>, Object> copied = copiedRef.get();
-        if (copied == null || releaseTtlValueReferenceAfterRun && !copiedRef.compareAndSet(copied, null)) {
-            throw new IllegalStateException("TTL value reference is released after run!");
-        }
-
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
-        try {
-            runnable.run();
-        } finally {
-            TransmittableThreadLocal.restoreBackup(backup);
-        }
+        TransmittableThreadLocal.restoreAndRun(capture, runnable);
     }
 
     /**

@@ -2,11 +2,9 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * {@link TtlCallable} decorate {@link Callable}, so as to get {@link TransmittableThreadLocal}
@@ -25,14 +23,12 @@ import java.util.Collections;
  * @since 0.9.0
  */
 public final class TtlCallable<V> implements Callable<V> {
-    private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
     private final Callable<V> callable;
-    private final boolean releaseTtlValueReferenceAfterCall;
+    private final TransmittableThreadLocal.Capture capture;
 
     private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
         this.callable = callable;
-        this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
+        capture = TransmittableThreadLocal.capture(releaseTtlValueReferenceAfterCall);
     }
 
     /**
@@ -40,17 +36,7 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        Map<TransmittableThreadLocal<?>, Object> copied = copiedRef.get();
-        if (copied == null || releaseTtlValueReferenceAfterCall && !copiedRef.compareAndSet(copied, null)) {
-            throw new IllegalStateException("TTL value reference is released after call!");
-        }
-
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
-        try {
-            return callable.call();
-        } finally {
-            TransmittableThreadLocal.restoreBackup(backup);
-        }
+        return TransmittableThreadLocal.restoreAndRun(capture, callable);
     }
 
     public Callable<V> getCallable() {

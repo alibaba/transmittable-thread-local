@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
@@ -192,6 +194,60 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+        }
+    }
+
+    public static class Capture {
+        private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
+        private final boolean releaseTtlValueReferenceAfterRun;
+
+        private Capture(boolean releaseTtlValueReferenceAfterRun) {
+            this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
+            this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
+        }
+
+        public AtomicReference<Map<TransmittableThreadLocal<?>, Object>> getCopiedRef() {
+            return copiedRef;
+        }
+
+        public boolean isReleaseTtlValueReferenceAfterRun() {
+            return releaseTtlValueReferenceAfterRun;
+        }
+    }
+
+    public static Capture capture() {
+        return new Capture(false);
+    }
+
+    public static Capture capture(boolean releaseTtlValueReferenceAfterRun) {
+        return new Capture(releaseTtlValueReferenceAfterRun);
+    }
+
+    public static <V> V restoreAndRun(Capture capture, Callable<V> callable) throws Exception {
+        Map<TransmittableThreadLocal<?>, Object> copied = capture.copiedRef.get();
+        if (copied == null || capture.releaseTtlValueReferenceAfterRun && !capture.copiedRef.compareAndSet(copied, null)) {
+            throw new IllegalStateException("TTL value reference is released after call!");
+        }
+
+        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
+        try {
+            return callable.call();
+        } finally {
+            TransmittableThreadLocal.restoreBackup(backup);
+        }
+    }
+
+    public static void restoreAndRun(Capture capture, Runnable runnable) {
+        Map<TransmittableThreadLocal<?>, Object> copied = capture.copiedRef.get();
+        if (copied == null || capture.releaseTtlValueReferenceAfterRun && !capture.copiedRef.compareAndSet(copied, null)) {
+            throw new IllegalStateException("TTL value reference is released after run!");
+        }
+
+        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
+        try {
+            runnable.run();
+        } finally {
+            TransmittableThreadLocal.restoreBackup(backup);
         }
     }
 
