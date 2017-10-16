@@ -29,12 +29,12 @@ import javassist.NotFoundException;
 public class TtlTransformer implements ClassFileTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class.getName());
 
-    private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
-    private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
-
     private static final String TTL_RUNNABLE_CLASS_NAME = TtlRunnable.class.getName();
     private static final String TTL_CALLABLE_CLASS_NAME = TtlCallable.class.getName();
 
+    private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
+    private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
+    private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
 
     private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
@@ -42,8 +42,6 @@ public class TtlTransformer implements ClassFileTransformer {
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ScheduledThreadPoolExecutor");
     }
-
-    private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
 
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
