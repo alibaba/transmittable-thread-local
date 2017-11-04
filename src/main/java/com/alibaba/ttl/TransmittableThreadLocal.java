@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -124,7 +123,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return copy;
     }
 
-    static Map<TransmittableThreadLocal<?>, Object> backupAndSetToCopied(Map<TransmittableThreadLocal<?>, Object> copied) {
+    public static Map<TransmittableThreadLocal<?>, Object> backupAndSetToCopied(Map<TransmittableThreadLocal<?>, Object> copied) {
         Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
 
         for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
@@ -156,7 +155,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return backup;
     }
 
-    static void restoreBackup(Map<TransmittableThreadLocal<?>, Object> backup) {
+    public static void restoreBackup(Map<TransmittableThreadLocal<?>, Object> backup) {
         // call afterExecute callback
         doExecuteCallback(false);
 
