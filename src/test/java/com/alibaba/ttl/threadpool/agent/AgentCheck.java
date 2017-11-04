@@ -29,6 +29,7 @@ import static org.junit.Assert.assertFalse;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @author wuwen5 (wuwen.55 at aliyun dot com)
  */
 public final class AgentCheck {
 
@@ -68,6 +69,11 @@ public final class AgentCheck {
                 System.out.println("Fail to close scheduledExecutorService");
                 System.exit(1);
             }
+
+            ////////////////////////////////////////////////////
+            // do ForkJointAgentTest
+            ////////////////////////////////////////////////////
+            ForkJointAgentTest.main(args);
         } catch (Throwable e) {
             System.out.println("Exception when run AgentCheck: ");
             e.printStackTrace(System.out);

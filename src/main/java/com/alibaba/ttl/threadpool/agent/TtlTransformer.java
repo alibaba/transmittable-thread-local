@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
+import javassist.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,21 +14,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-import javassist.NotFoundException;
-
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 0.9.0
+ * @author wuwen5 (wuwen.55 at aliyun dot com)
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.Executors
+ * @since 0.9.0
  */
 public class TtlTransformer implements ClassFileTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class.getName());
@@ -46,6 +41,8 @@ public class TtlTransformer implements ClassFileTransformer {
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ScheduledThreadPoolExecutor");
     }
 
+    private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
+
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
     @Override
@@ -60,14 +57,45 @@ public class TtlTransformer implements ClassFileTransformer {
             final String className = toClassName(classFile);
             if (EXECUTOR_CLASS_NAMES.contains(className)) {
                 logger.info("Transforming class " + className);
-                CtClass clazz = getCtClass(classFileBuffer, loader);
+                final CtClass clazz = getCtClass(classFileBuffer, loader);
 
                 for (CtMethod method : clazz.getDeclaredMethods()) {
-                    updateMethod(clazz, method);
+                    updateMethodOfExecutorClass(clazz, method);
                 }
                 return clazz.toBytecode();
+
+            } else if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
+                logger.info("Transforming class " + className);
+                final CtClass clazz = getCtClass(classFileBuffer, loader);
+
+                // add new field
+                final String capturedFieldName = "captured$field$add$by$ttl";
+                final CtField capturedField = CtField.make("private final java.lang.Object " + capturedFieldName + ";", clazz);
+                clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
+
+                // rename original doExec method
+                final String doExec_methodName = "doExec";
+                final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName);
+                final String original_doExec_method_rename = "original$doExec$method$renamed$by$ttl";
+                doExecMethod.setName(original_doExec_method_rename);
+
+                // new doExec method implementation
+                CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
+                final String code = "{\n" +
+                        "java.lang.Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
+                        "try {\n" +
+                        "    return " + original_doExec_method_rename + "($$);\n" +
+                        "} finally {\n" +
+                        "    com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);\n" +
+                        "}\n" + "}";
+                new_doExecMethod.setBody(code);
+                clazz.addMethod(new_doExecMethod);
+                logger.info("insert code around method " + doExecMethod + " of class " + className + ": " + code);
+
+                return clazz.toBytecode();
+
             } else if (TIMER_TASK_CLASS_NAME.equals(className)) {
-                CtClass clazz = getCtClass(classFileBuffer, loader);
+                final CtClass clazz = getCtClass(classFileBuffer, loader);
                 while (true) {
                     String name = clazz.getSuperclass().getName();
                     if (Object.class.getName().equals(name)) {
@@ -107,7 +135,7 @@ public class TtlTransformer implements ClassFileTransformer {
         return clazz;
     }
 
-    private static void updateMethod(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
+    private static void updateMethodOfExecutorClass(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
         if (method.getDeclaringClass() != clazz) {
             return;
         }
