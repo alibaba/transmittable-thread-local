@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
-
 /**
  * {@link TtlCallable} decorate {@link Callable}, so as to get {@link TransmittableThreadLocal}
  * and transmit it to the time of {@link Callable} execution, needed when use {@link Callable} to thread pool.
@@ -42,12 +38,7 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        return TransmittableThreadLocal.restoreAndRun(capture, new TransmittableThreadLocal.Action<V, Exception>() {
-            @Override
-            public V act() throws Exception {
-                return callable.call();
-            }
-        });
+        return TransmittableThreadLocal.restoreAndRun(capture, callable::call);
     }
 
     public Callable<V> getCallable() {
@@ -56,8 +47,12 @@ public final class TtlCallable<V> implements Callable<V> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TtlCallable<?> that = (TtlCallable<?>) o;
 

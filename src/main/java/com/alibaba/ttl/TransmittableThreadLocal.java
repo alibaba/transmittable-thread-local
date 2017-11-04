@@ -80,7 +80,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public final void set(T value) {
         super.set(value);
-        if (null == value) { // may set null to remove value
+        // may set null to remove value
+        if (null == value) {
             removeValue();
         } else {
             addValue();

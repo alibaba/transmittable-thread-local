@@ -1,8 +1,7 @@
-package com.alibaba.ttl;
+package com.alibaba.ttl.threadpool.agent;
 
-import org.junit.AfterClass;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -13,20 +12,13 @@ import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.LongStream;
 
-import static com.alibaba.ttl.Utils.CHILD;
-import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
-import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.assertTtlInstances;
-import static com.alibaba.ttl.Utils.captured;
-import static com.alibaba.ttl.Utils.createTestTtlValue;
-import static com.alibaba.ttl.Utils.expandThreadPool;
+import static com.alibaba.ttl.Utils.*;
 import static org.junit.Assert.assertEquals;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public class ForkJoinTest {
+public class ForkJointAgentTest {
     private static final ForkJoinPool pool = new ForkJoinPool();
 
     static final Map<String, Map<String, Object>> tag2copied = Collections.synchronizedMap(new LinkedHashMap<>());
@@ -38,13 +30,15 @@ public class ForkJoinTest {
         expandThreadPool(pool);
     }
 
-    @AfterClass
     public static void afterClass() {
         pool.shutdown();
     }
 
-    @Test
-    public void task() {
+    public static void main(String[] args) {
+        task();
+    }
+
+    public static void task() {
         final ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
 
         long[] numbers = LongStream.rangeClosed(1, 100).toArray();
@@ -92,7 +86,6 @@ class SumTask extends RecursiveTask<Long> {
 
     private final String tag;
     private final ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
-    private final TransmittableThreadLocal.Capture capture;
 
     SumTask(long[] numbers, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) {
         this(numbers, 0, numbers.length - 1, ttlInstances);
@@ -104,51 +97,48 @@ class SumTask extends RecursiveTask<Long> {
         this.to = to;
 
         this.ttlInstances = ttlInstances;
-        tag = ForkJoinTest.tagCounter.getAndIncrement() + "";
-        this.capture = TransmittableThreadLocal.capture();
+        tag = ForkJointAgentTest.tagCounter.getAndIncrement() + "";
     }
 
     @Override
     protected Long compute() {
-        return TransmittableThreadLocal.restoreAndRun(capture, () -> {
-            // 1. Add new
-            String newChildKey = CHILD + tag;
-            TransmittableThreadLocal<String> child = new TransmittableThreadLocal<>();
-            child.set(newChildKey);
+        // 1. Add new
+        String newChildKey = CHILD + tag;
+        TransmittableThreadLocal<String> child = new TransmittableThreadLocal<>();
+        child.set(newChildKey);
 
-            TransmittableThreadLocal<String> old = ttlInstances.putIfAbsent(newChildKey, child);
-            if (old != null) {
-                throw new IllegalStateException("already contains key " + newChildKey);
+        TransmittableThreadLocal<String> old = ttlInstances.putIfAbsent(newChildKey, child);
+        if (old != null) {
+            throw new IllegalStateException("already contains key " + newChildKey);
+        }
+        ttlInstances.put(newChildKey, child);
+
+        // 2. modify the parent key
+        String p = PARENT_MODIFIED_IN_CHILD + tag;
+        ttlInstances.get(PARENT_MODIFIED_IN_CHILD).set(p);
+
+        ForkJointAgentTest.tag2copied.put(tag, captured(ttlInstances));
+
+        // ========================================================================
+
+        final int delta = to - from;
+        if (delta < 16) {
+            // compute directly
+            long total = 0;
+            for (int i = from; i <= to; i++) {
+                total += numbers[i];
             }
-            ttlInstances.put(newChildKey, child);
+            return total;
+        } else {
+            // split task
+            final int middle = from + delta / 2;
 
-            // 2. modify the parent key
-            String p = PARENT_MODIFIED_IN_CHILD + tag;
-            ttlInstances.get(PARENT_MODIFIED_IN_CHILD).set(p);
+            SumTask taskLeft = new SumTask(numbers, from, middle, ttlInstances);
+            SumTask taskRight = new SumTask(numbers, middle + 1, to, ttlInstances);
 
-            ForkJoinTest.tag2copied.put(tag, captured(ttlInstances));
-
-            // ========================================================================
-
-            final int delta = to - from;
-            if (delta < 16) {
-                // compute directly
-                long total = 0;
-                for (int i = from; i <= to; i++) {
-                    total += numbers[i];
-                }
-                return total;
-            } else {
-                // split task
-                final int middle = from + delta / 2;
-
-                SumTask taskLeft = new SumTask(numbers, from, middle, ttlInstances);
-                SumTask taskRight = new SumTask(numbers, middle + 1, to, ttlInstances);
-
-                taskLeft.fork();
-                taskRight.fork();
-                return taskLeft.join() + taskRight.join();
-            }
-        });
+            taskLeft.fork();
+            taskRight.fork();
+            return taskLeft.join() + taskRight.join();
+        }
     }
 }

@@ -2,14 +2,8 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
 import java.util.List;
-
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
@@ -40,12 +34,9 @@ public final class TtlRunnable implements Runnable {
      */
     @Override
     public void run() {
-        TransmittableThreadLocal.restoreAndRun(capture, new TransmittableThreadLocal.Action<Void, RuntimeException>() {
-            @Override
-            public Void act() throws RuntimeException {
-                runnable.run();
-                return null;
-            }
+        TransmittableThreadLocal.restoreAndRun(capture, (TransmittableThreadLocal.Action<Void, RuntimeException>) () -> {
+            runnable.run();
+            return null;
         });
     }
 
@@ -58,8 +49,12 @@ public final class TtlRunnable implements Runnable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TtlRunnable that = (TtlRunnable) o;
 
