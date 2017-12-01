@@ -15,12 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-import javassist.NotFoundException;
+import javassist.*;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -35,6 +30,8 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
     private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
+
+    private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
 
     private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
@@ -76,6 +73,35 @@ public class TtlTransformer implements ClassFileTransformer {
                         return EMPTY_BYTE_ARRAY;
                     }
                 }
+            } else if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
+                CtClass clazz = getCtClass(classFileBuffer, loader);
+
+                logger.info("Transforming class " + className);
+
+                CtField captureField = CtField.make("private final com.alibaba.ttl.TransmittableThreadLocal.Capture capture;", clazz);
+
+                clazz.addField(captureField, "com.alibaba.ttl.TransmittableThreadLocal.capture();");
+
+                CtMethod doExecMethod = clazz.getDeclaredMethod("doExec");
+
+                doExecMethod.setName("doExec$0");
+
+                CtMethod mnew = CtNewMethod.copy(doExecMethod, "doExec", clazz, null);
+
+                final String code = "{java.util.Map copied = capture.getCopiedRef().get(); " +
+                        "if (copied == null || capture.isReleaseTtlValueReferenceAfterRun() && !capture.getCopiedRef().compareAndSet(copied, null)) { " +
+                        " throw new IllegalStateException(\"TTL value reference is released after call!\");} " +
+                        "java.util.Map backup = com.alibaba.ttl.TransmittableThreadLocal.backupAndSetToCopied(copied); " +
+                        "try { return doExec$0($$); } finally { " +
+                        "com.alibaba.ttl.TransmittableThreadLocal.restoreBackup(backup);}}";
+
+                mnew.setBody(code);
+
+                clazz.addMethod(mnew);
+
+                logger.info("insert code around method " + doExecMethod + " of class " + doExecMethod.getDeclaringClass().getName() + ": " + code);
+
+                return clazz.toBytecode();
             }
         } catch (Throwable t) {
             StringWriter stringWriter = new StringWriter();
