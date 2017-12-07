@@ -265,7 +265,7 @@ public class TtlRunnableTest {
             fail();
         } catch (ExecutionException expected) {
             assertThat(expected.getCause(), instanceOf(IllegalStateException.class));
-            assertThat(expected.getMessage(), containsString("TTL value reference is released after run!"));
+            assertThat(expected.getMessage(), containsString("TTL value reference is released after call!"));
         }
     }
 
