@@ -1,4 +1,4 @@
-package com.alibaba.ttl.demo.ttl_forkjoin;
+package com.alibaba.ttl.demo.usesjava8.ttl_forkjoin;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 

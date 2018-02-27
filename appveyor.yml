@@ -9,11 +9,17 @@ branches:
 environment:
   matrix:
     - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.6.0"
+      java: 1.6
     - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.6.0"
+      java: 1.6
     - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.7.0"
+      java: 1.7
     - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.7.0"
+      java: 1.7
     - JAVA_HOME: "C:\\Program Files (x86)\\Java\\jdk1.8.0"
+      java: 1.8
     - JAVA_HOME: "C:\\Program Files\\Java\\jdk1.8.0"
+      java: 1.8
 
 init:
   - ps: "ls 'C:/Program Files/Java/jdk*'"
@@ -37,7 +43,9 @@ install:
   - cmd: mvn --version
 
 test_script:
-  - mvn clean install --batch-mode
+  - 'if [%java%] == [1.6] mvn -P java6 clean install --batch-mode '
+  - 'if [%java%] == [1.7] mvn -P java7 clean install --batch-mode '
+  - 'if [%java%] == [1.8] mvn clean install --batch-mode '
   - mvn dependency:copy-dependencies -DincludeScope=test
   - rm target/dependency/javassist*
   - ps: |

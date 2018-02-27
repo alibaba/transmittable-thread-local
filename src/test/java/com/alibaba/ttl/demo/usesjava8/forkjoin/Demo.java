@@ -1,4 +1,4 @@
-package com.alibaba.ttl.demo.forkjoin;
+package com.alibaba.ttl.demo.usesjava8.forkjoin;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;

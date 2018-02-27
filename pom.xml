@@ -60,6 +60,10 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+		<maven.compiler.testSource>1.8</maven.compiler.testSource>
+		<maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
 	</properties>
 
 	<dependencies>
@@ -93,8 +97,8 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<testSource>1.8</testSource>
-					<testTarget>1.8</testTarget>
+					<testSource>${maven.compiler.testSource}</testSource>
+					<testTarget>${maven.compiler.testTarget}</testTarget>
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<compilerArgument>-Xlint:unchecked</compilerArgument>
 				</configuration>
@@ -267,6 +271,59 @@
 						</executions>
 					</plugin>
 				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>java6</id>
+			<activation>
+				<jdk>1.6</jdk>
+			</activation>
+			<properties>
+				<maven.compiler.testTarget>1.6</maven.compiler.testTarget>
+				<maven.compiler.testSource>1.6</maven.compiler.testSource>
+				<maven.compiler.testCompilerArgument />
+			</properties>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-compiler-plugin</artifactId>
+							<configuration>
+								<testExcludes>
+									<testExclude>**/usesjava7/**/*.java</testExclude>
+									<testExclude>**/usesjava8/**/*.java</testExclude>
+								</testExcludes>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<profile>
+			<id>java7</id>
+			<activation>
+				<jdk>1.7</jdk>
+			</activation>
+			<properties>
+				<maven.compiler.testTarget>1.7</maven.compiler.testTarget>
+				<maven.compiler.testSource>1.7</maven.compiler.testSource>
+				<maven.compiler.testCompilerArgument />
+			</properties>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-compiler-plugin</artifactId>
+							<configuration>
+								<testExcludes>
+									<testExclude>**/usesjava8/**/*.java</testExclude>
+								</testExcludes>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 			</build>
 		</profile>
 	</profiles>
