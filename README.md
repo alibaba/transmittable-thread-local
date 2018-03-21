@@ -48,6 +48,8 @@ Transmittable ThreadLocal(TTL)
 
 :point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。支持`JDK` 9/8/7/6。
 
+一个`Java`标准库 本应为 中间件设施开发提供的标配能力；本库功能聚焦简单 & 0依赖。
+
 `JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
 本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
