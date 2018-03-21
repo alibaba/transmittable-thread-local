@@ -18,17 +18,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
-    static ThreadFactory threadFactory = new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r, "Executors");
-            thread.setDaemon(true);
-            return thread;
-        }
+    private static ThreadFactory threadFactory = r -> {
+        Thread thread = new Thread(r, "Executors");
+        thread.setDaemon(true);
+        return thread;
     };
 
 
-    static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
+    private static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
 
     private DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter() {
         throw new InstantiationError("Must not instantiate this class");
@@ -40,11 +37,11 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
     }
 
     static class DtTransferInfo {
-        public String traceId;
-        public String baseSpanId;
-        public LeafSpanIdInfo leafSpanIdInfo;
+        String traceId;
+        String baseSpanId;
+        LeafSpanIdInfo leafSpanIdInfo;
 
-        public DtTransferInfo(String traceId, String baseSpanId, LeafSpanIdInfo leafSpanIdInfo) {
+        DtTransferInfo(String traceId, String baseSpanId, LeafSpanIdInfo leafSpanIdInfo) {
             this.traceId = traceId;
             this.baseSpanId = baseSpanId;
             this.leafSpanIdInfo = leafSpanIdInfo;
@@ -68,7 +65,7 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         }
     }
 
-    private static TransmittableThreadLocal<DtTransferInfo> transferInfo = new TransmittableThreadLocal<DtTransferInfo>();
+    private static TransmittableThreadLocal<DtTransferInfo> transferInfo = new TransmittableThreadLocal<>();
 
     static class LeafSpanIdInfo {
         AtomicInteger current = new AtomicInteger(1);
@@ -79,7 +76,7 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         }
     }
 
-    static int increaseLeafSpanCurrentAndReturn() {
+    private static int increaseLeafSpanCurrentAndReturn() {
         DtTransferInfo dtTransferInfo = transferInfo.get();
         return dtTransferInfo.leafSpanIdInfo.current.getAndIncrement();
     }
@@ -101,9 +98,9 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
     }
 
 
-    static AtomicLong traceIdCounter = new AtomicLong();
+    private static AtomicLong traceIdCounter = new AtomicLong();
 
-    static void rpcInvokeIn() {
+    private static void rpcInvokeIn() {
         ////////////////////////////////////////////////
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
@@ -131,37 +128,27 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
         transferInfo.remove();
     }
 
-    static void syncMethod() {
+    private static void syncMethod() {
         // async call by TTL Executor, Test OK!
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                asyncMethod();
-            }
-        });
+        executorService.submit(DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter::asyncMethod);
 
         // async call by new Thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                syncMethod_ByNewThread();
-            }
-        }, "Thread-by-new").start();
+        new Thread(DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter::syncMethod_ByNewThread, "Thread-by-new").start();
 
         invokeServerWithRpc("server 1");
     }
 
-    static void asyncMethod() {
+    private static void asyncMethod() {
         invokeServerWithRpc("server 2");
     }
 
-    static void syncMethod_ByNewThread() {
+    private static void syncMethod_ByNewThread() {
         invokeServerWithRpc("server 3");
     }
 
 
     // RPC invoke
-    static void invokeServerWithRpc(String server) {
+    private static void invokeServerWithRpc(String server) {
         ////////////////////////////////////////////////
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
@@ -170,7 +157,7 @@ public final class DistributedTracerUseDemo_WeakReferenceInsteadOfRefCounter {
 
         // Set RpcContext
         // Mocked, should use RPC util to get Rpc Context instead
-        Map<String, String> rpcContext = new ConcurrentHashMap<String, String>();
+        Map<String, String> rpcContext = new ConcurrentHashMap<>();
 
         rpcContext.put("traceId", transferInfo.get().traceId);
         rpcContext.put("spanId", transferInfo.get().baseSpanId + "." + leafSpanCurrent);

@@ -84,7 +84,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
     private void setLocalAfter() {
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
     }

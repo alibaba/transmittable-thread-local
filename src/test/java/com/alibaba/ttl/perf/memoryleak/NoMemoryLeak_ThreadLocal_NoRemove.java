@@ -11,10 +11,10 @@ public final class NoMemoryLeak_ThreadLocal_NoRemove {
         throw new InstantiationError("Must not instantiate this class");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         long counter = 0;
         while (true) {
-            ThreadLocal<String> threadLocal = new ThreadLocal<String>();
+            ThreadLocal<String> threadLocal = new ThreadLocal<>();
             threadLocal.set(Utils.getRandomString());
 
             if (counter % 1000 == 0)

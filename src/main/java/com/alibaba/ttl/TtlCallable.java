@@ -30,7 +30,7 @@ public final class TtlCallable<V> implements Callable<V> {
     private final boolean releaseTtlValueReferenceAfterCall;
 
     private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
+        this.copiedRef = new AtomicReference<>(TransmittableThreadLocal.copy());
         this.callable = callable;
         this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
     }
@@ -126,7 +126,7 @@ public final class TtlCallable<V> implements Callable<V> {
                 throw new IllegalStateException("Already TtlCallable!");
             }
         }
-        return new TtlCallable<T>(callable, releaseTtlValueReferenceAfterCall);
+        return new TtlCallable<>(callable, releaseTtlValueReferenceAfterCall);
     }
 
     /**
@@ -162,7 +162,7 @@ public final class TtlCallable<V> implements Callable<V> {
         if (null == tasks) {
             return Collections.emptyList();
         }
-        List<TtlCallable<T>> copy = new ArrayList<TtlCallable<T>>();
+        List<TtlCallable<T>> copy = new ArrayList<>();
         for (Callable<T> task : tasks) {
             copy.add(TtlCallable.get(task, releaseTtlValueReferenceAfterCall, idempotent));
         }

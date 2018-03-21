@@ -10,7 +10,7 @@ import java.security.ProtectionDomain;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class TransformerAdaptor implements ClassFileTransformer {
-    final TtlTransformer ttlTransformer = new TtlTransformer();
+    private final TtlTransformer ttlTransformer = new TtlTransformer();
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {

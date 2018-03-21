@@ -25,13 +25,13 @@ public final class Utils {
     }
 
     public static ConcurrentMap<String, TransmittableThreadLocal<String>> createTestTtlValue() {
-        ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = new ConcurrentHashMap<String, TransmittableThreadLocal<String>>();
+        ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = new ConcurrentHashMap<>();
 
-        TransmittableThreadLocal<String> p1 = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> p1 = new TransmittableThreadLocal<>();
         p1.set(PARENT_UNMODIFIED_IN_CHILD);
         ttlInstances.put(PARENT_UNMODIFIED_IN_CHILD, p1);
 
-        TransmittableThreadLocal<String> p2 = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> p2 = new TransmittableThreadLocal<>();
         p2.set(PARENT_MODIFIED_IN_CHILD);
         ttlInstances.put(PARENT_MODIFIED_IN_CHILD, p2);
 
@@ -45,7 +45,7 @@ public final class Utils {
 
         // 1. Add new
         String newChildKey = CHILD + tag;
-        TransmittableThreadLocal<String> child = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> child = new TransmittableThreadLocal<>();
         child.set(newChildKey);
 
         TransmittableThreadLocal<String> old = ttlInstances.putIfAbsent(newChildKey, child);
@@ -74,7 +74,7 @@ public final class Utils {
     }
 
     public static <T> Map<String, Object> copied(ConcurrentMap<String, TransmittableThreadLocal<T>> ttlInstances) {
-        Map<String, Object> copiedContent = new HashMap<String, Object>();
+        Map<String, Object> copiedContent = new HashMap<>();
         for (Map.Entry<String, TransmittableThreadLocal<T>> entry : ttlInstances.entrySet()) {
             String key = entry.getKey();
             T value = entry.getValue().get();
@@ -109,7 +109,7 @@ public final class Utils {
 
     public static void expandThreadPool(ExecutorService executor) {
         try {
-            List<Future<?>> ret = new ArrayList<Future<?>>();
+            List<Future<?>> ret = new ArrayList<>();
             for (int i = 0; i < 5; ++i) {
                 Future<?> submit = executor.submit(new SleepTask());
                 ret.add(submit);

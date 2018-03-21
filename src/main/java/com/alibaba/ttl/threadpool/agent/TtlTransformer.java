@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.Modifier;
 import java.security.ProtectionDomain;
 import java.util.HashSet;
@@ -36,7 +35,7 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
     private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
 
-    private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
+    private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<>();
 
     static {
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");
@@ -47,7 +46,7 @@ public class TtlTransformer implements ClassFileTransformer {
 
     @Override
     public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
-                            ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException {
+                            ProtectionDomain protectionDomain, byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
             if (classFile == null) {

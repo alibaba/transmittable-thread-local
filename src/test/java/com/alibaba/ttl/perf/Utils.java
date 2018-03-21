@@ -6,9 +6,9 @@ import java.util.Random;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class Utils {
-    static Random random = new Random();
+    private static Random random = new Random();
 
-    public static String bytes2Hex(byte[] bytes) {
+    private static String bytes2Hex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(1024);
         for (byte b : bytes) {
             String s = Integer.toHexString(b & 0xFF);
@@ -17,7 +17,7 @@ public class Utils {
         return sb.toString();
     }
 
-    public static byte[] getRandomBytes() {
+    private static byte[] getRandomBytes() {
         byte[] bytes = new byte[1024];
         random.nextBytes(bytes);
         return bytes;

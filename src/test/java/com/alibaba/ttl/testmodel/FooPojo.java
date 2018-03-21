@@ -4,8 +4,8 @@ package com.alibaba.ttl.testmodel;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class FooPojo {
-    String name;
-    int age;
+    private String name;
+    private int age;
 
     public String getName() {
         return name;

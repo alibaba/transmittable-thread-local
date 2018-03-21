@@ -27,7 +27,7 @@ public final class TtlTimerTask extends TimerTask {
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlTimerTask(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
+        this.copiedRef = new AtomicReference<>(TransmittableThreadLocal.copy());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }

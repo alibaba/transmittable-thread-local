@@ -19,17 +19,14 @@ public final class DistributedTracerUseDemo {
         throw new InstantiationError("Must not instantiate this class");
     }
 
-    static ThreadFactory threadFactory = new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r, "Executors");
-            thread.setDaemon(true);
-            return thread;
-        }
+    private static ThreadFactory threadFactory = r -> {
+        Thread thread = new Thread(r, "Executors");
+        thread.setDaemon(true);
+        return thread;
     };
 
 
-    static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
+    private static ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(1, threadFactory));
 
     static {
         // 挤满线程, 保证线程不是用的时候new的, 确保验证TTL的传递功能
@@ -37,10 +34,10 @@ public final class DistributedTracerUseDemo {
     }
 
     static class DtTransferInfo {
-        public String traceId;
-        public String baseSpanId;
+        String traceId;
+        String baseSpanId;
 
-        public DtTransferInfo(String traceId, String baseSpanId) {
+        DtTransferInfo(String traceId, String baseSpanId) {
             this.traceId = traceId;
             this.baseSpanId = baseSpanId;
         }
@@ -79,9 +76,9 @@ public final class DistributedTracerUseDemo {
     }
 
 
-    private static Map<String, LeafSpanIdInfo> traceId2LeafSpanIdInfo = new ConcurrentHashMap<String, LeafSpanIdInfo>();
+    private static Map<String, LeafSpanIdInfo> traceId2LeafSpanIdInfo = new ConcurrentHashMap<>();
 
-    static void increaseSpanIdRefCounter() {
+    private static void increaseSpanIdRefCounter() {
         DtTransferInfo dtTransferInfo = transferInfo.get();
         String traceId = dtTransferInfo.traceId;
         int refCounter = traceId2LeafSpanIdInfo.get(traceId).refCounter.incrementAndGet();
@@ -89,7 +86,7 @@ public final class DistributedTracerUseDemo {
         System.out.printf("DEBUG: Increase reference counter(%s) for traceId %s in thread %s%n", refCounter, traceId, Thread.currentThread().getName());
     }
 
-    static void decreaseSpanIdRefCounter() {
+    private static void decreaseSpanIdRefCounter() {
         DtTransferInfo dtTransferInfo = transferInfo.get();
         String traceId = dtTransferInfo.traceId;
         LeafSpanIdInfo leafSpanIdInfo = traceId2LeafSpanIdInfo.get(traceId);
@@ -106,7 +103,7 @@ public final class DistributedTracerUseDemo {
         }
     }
 
-    static int increaseLeafSpanCurrentAndReturn() {
+    private static int increaseLeafSpanCurrentAndReturn() {
         DtTransferInfo dtTransferInfo = transferInfo.get();
         String traceId = dtTransferInfo.traceId;
         LeafSpanIdInfo leafSpanIdInfo = traceId2LeafSpanIdInfo.get(traceId);
@@ -120,7 +117,7 @@ public final class DistributedTracerUseDemo {
         Thread.sleep(100);
     }
 
-    static void rpcInvokeIn() {
+    private static void rpcInvokeIn() {
         ////////////////////////////////////////////////
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
@@ -145,39 +142,28 @@ public final class DistributedTracerUseDemo {
         decreaseSpanIdRefCounter();
     }
 
-    static void syncMethod() {
+    private static void syncMethod() {
         // async call by TTL Executor, Test OK!
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                asyncMethod();
-
-            }
-        });
+        executorService.submit(DistributedTracerUseDemo::asyncMethod);
 
         // async call by new Thread
         // FIXME Bug!! 没有 Increase/Decrease reference counter操作!
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                syncMethod_ByNewThread();
-            }
-        }, "Thread-by-new").start();
+        new Thread(DistributedTracerUseDemo::syncMethod_ByNewThread, "Thread-by-new").start();
 
         invokeServerWithRpc("server 1");
     }
 
-    static void asyncMethod() {
+    private static void asyncMethod() {
         invokeServerWithRpc("server 2");
     }
 
-    static void syncMethod_ByNewThread() {
+    private static void syncMethod_ByNewThread() {
         invokeServerWithRpc("server 3");
     }
 
 
     // RPC invoke
-    static void invokeServerWithRpc(String server) {
+    private static void invokeServerWithRpc(String server) {
         ////////////////////////////////////////////////
         // DistributedTracer Framework Code
         ////////////////////////////////////////////////
@@ -186,7 +172,7 @@ public final class DistributedTracerUseDemo {
 
         // Set RpcContext
         // Mocked, should use RPC util to get Rpc Context instead
-        Map<String, String> rpcContext = new ConcurrentHashMap<String, String>();
+        Map<String, String> rpcContext = new ConcurrentHashMap<>();
 
         rpcContext.put("traceId", transferInfo.get().traceId);
         rpcContext.put("spanId", transferInfo.get().baseSpanId + "." + leafSpanCurrent);

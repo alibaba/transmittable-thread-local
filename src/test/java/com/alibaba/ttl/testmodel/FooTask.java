@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class FooTask implements Runnable {
-    public final String value;
+    private final String value;
     private ConcurrentMap<String, TransmittableThreadLocal<FooPojo>> ttlInstances;
 
     public FooTask(String value, ConcurrentMap<String, TransmittableThreadLocal<FooPojo>> ttlInstances) {

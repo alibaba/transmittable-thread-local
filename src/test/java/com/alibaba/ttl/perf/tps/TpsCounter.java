@@ -9,25 +9,22 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class TpsCounter {
     private final int threadCount;
-    final ExecutorService executorService;
+    private final ExecutorService executorService;
 
     private final AtomicLong counter = new AtomicLong();
-    volatile boolean stopped = false;
+    private volatile boolean stopped = false;
 
 
-    public TpsCounter(int threadCount) {
+    TpsCounter(int threadCount) {
         this.threadCount = threadCount;
         executorService = Executors.newFixedThreadPool(threadCount);
     }
 
     void run(final Runnable runnable) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                while (!stopped) {
-                    runnable.run();
-                    counter.incrementAndGet();
-                }
+        Runnable r = () -> {
+            while (!stopped) {
+                runnable.run();
+                counter.incrementAndGet();
             }
         };
         for (int i = 0; i < threadCount; ++i) {

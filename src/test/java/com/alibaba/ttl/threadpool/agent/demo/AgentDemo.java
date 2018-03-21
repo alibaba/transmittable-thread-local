@@ -14,16 +14,16 @@ import java.util.concurrent.TimeUnit;
  */
 public final class AgentDemo {
 	
-    static TransmittableThreadLocal<String> stringTransmittableThreadLocal = new TransmittableThreadLocal<String>();
+    private static TransmittableThreadLocal<String> stringTransmittableThreadLocal = new TransmittableThreadLocal<>();
 
-    static TransmittableThreadLocal<Person> personReferenceTransmittableThreadLocal = new TransmittableThreadLocal<Person>() {
+    private static TransmittableThreadLocal<Person> personReferenceTransmittableThreadLocal = new TransmittableThreadLocal<Person>() {
         @Override
         protected Person initialValue() {
             return new Person("unnamed", -1);
         }
     };
 
-    static TransmittableThreadLocal<Person> personCopyTransmittableThreadLocal = new TransmittableThreadLocal<Person>() {
+    private static TransmittableThreadLocal<Person> personCopyTransmittableThreadLocal = new TransmittableThreadLocal<Person>() {
         @Override
         protected Person copy(Person parentValue) {
             // copy value to child thread
@@ -50,15 +50,12 @@ public final class AgentDemo {
 
         printTtlInstancesInfo("Main - Before execution of thread pool");
 
-        Future<?> submit = executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                printTtlInstancesInfo("Thread Pool - enter");
-                stringTransmittableThreadLocal.set("foo - modified in thread pool");
-                personReferenceTransmittableThreadLocal.get().setName("jerry - reference - modified in thread pool");
-                personCopyTransmittableThreadLocal.get().setName("Tom - value - modified in thread pool");
-                printTtlInstancesInfo("Thread Pool - leave");
-            }
+        Future<?> submit = executorService.submit(() -> {
+            printTtlInstancesInfo("Thread Pool - enter");
+            stringTransmittableThreadLocal.set("foo - modified in thread pool");
+            personReferenceTransmittableThreadLocal.get().setName("jerry - reference - modified in thread pool");
+            personCopyTransmittableThreadLocal.get().setName("Tom - value - modified in thread pool");
+            printTtlInstancesInfo("Thread Pool - leave");
         });
         submit.get();
 
@@ -70,17 +67,14 @@ public final class AgentDemo {
         }
     }
 
-    public static void expandThreadPool(ExecutorService executor) throws Exception {
-        List<Future<?>> ret = new ArrayList<Future<?>>();
+    private static void expandThreadPool(ExecutorService executor) throws Exception {
+        List<Future<?>> ret = new ArrayList<>();
         for (int i = 0; i < 3; ++i) {
-            Future<?> submit = executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+            Future<?> submit = executor.submit(() -> {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             });
             ret.add(submit);
@@ -90,7 +84,7 @@ public final class AgentDemo {
         }
     }
 
-    static void printTtlInstancesInfo(String msg) {
+    private static void printTtlInstancesInfo(String msg) {
         System.out.println("====================================================");
         System.out.println(msg);
         System.out.println("====================================================");
@@ -107,7 +101,7 @@ public final class AgentDemo {
             return name;
         }
 
-        public void setName(String name) {
+        void setName(String name) {
             this.name = name;
         }
 
@@ -119,7 +113,7 @@ public final class AgentDemo {
             this.age = age;
         }
 
-        public Person(String name, int age) {
+        Person(String name, int age) {
             this.name = name;
             this.age = age;
         }

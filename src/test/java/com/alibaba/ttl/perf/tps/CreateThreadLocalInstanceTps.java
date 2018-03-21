@@ -13,12 +13,9 @@ public final class CreateThreadLocalInstanceTps {
 
     public static void main(String[] args) throws Exception {
         TpsCounter tpsCounter = new TpsCounter(2);
-        tpsCounter.run(new Runnable() {
-            @Override
-            public void run() {
-                ThreadLocal<String> threadLocal = new ThreadLocal<String>();
-                threadLocal.set(Utils.getRandomString());
-            }
+        tpsCounter.run(() -> {
+            ThreadLocal<String> threadLocal = new ThreadLocal<>();
+            threadLocal.set(Utils.getRandomString());
         });
 
         while (true) {

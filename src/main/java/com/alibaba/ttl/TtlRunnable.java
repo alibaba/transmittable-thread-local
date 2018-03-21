@@ -27,7 +27,7 @@ public final class TtlRunnable implements Runnable {
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
+        this.copiedRef = new AtomicReference<>(TransmittableThreadLocal.copy());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -165,7 +165,7 @@ public final class TtlRunnable implements Runnable {
         if (null == tasks) {
             return Collections.emptyList();
         }
-        List<TtlRunnable> copy = new ArrayList<TtlRunnable>();
+        List<TtlRunnable> copy = new ArrayList<>();
         for (Runnable task : tasks) {
             copy.add(TtlRunnable.get(task, releaseTtlValueReferenceAfterRun, idempotent));
         }

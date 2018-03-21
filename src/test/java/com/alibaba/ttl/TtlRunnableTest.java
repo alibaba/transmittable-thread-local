@@ -55,7 +55,7 @@ public class TtlRunnableTest {
         TtlRunnable ttlRunnable = TtlRunnable.get(task);
 
         // create after new Task
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -84,7 +84,7 @@ public class TtlRunnableTest {
         Thread thread1 = new Thread(task);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -114,7 +114,7 @@ public class TtlRunnableTest {
         TtlRunnable ttlRunnable = TtlRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -147,7 +147,7 @@ public class TtlRunnableTest {
         TtlRunnable ttlRunnable = TtlRunnable.get(task);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -173,10 +173,7 @@ public class TtlRunnableTest {
 
         callbackTestTransmittableThreadLocal.set(new FooPojo("jerry", 42));
 
-        Runnable task1 = new Runnable() {
-            @Override
-            public void run() {
-            }
+        Runnable task1 = () -> {
         };
         // do copy when decorate runnable
         TtlRunnable ttlRunnable1 = TtlRunnable.get(task1);
@@ -195,11 +192,7 @@ public class TtlRunnableTest {
         assertEquals(2, callbackTestTransmittableThreadLocal.afterExecuteCounter.get());
 
 
-        Runnable task2 = new Runnable() {
-            @Override
-            public void run() {
-            }
-        };
+        Runnable task2 = () -> { };
         // do copy when decorate runnable
         TtlRunnable ttlRunnable2 = TtlRunnable.get(task2);
 
@@ -214,7 +207,7 @@ public class TtlRunnableTest {
     @Test
     public void test_TtlRunnable_copyObject() throws Exception {
         ConcurrentMap<String, TransmittableThreadLocal<FooPojo>> ttlInstances =
-                new ConcurrentHashMap<String, TransmittableThreadLocal<FooPojo>>();
+                new ConcurrentHashMap<>();
 
         TransmittableThreadLocal<FooPojo> parent = new DeepCopyFooTransmittableThreadLocal();
         parent.set(new FooPojo(PARENT_UNMODIFIED_IN_CHILD, 1));

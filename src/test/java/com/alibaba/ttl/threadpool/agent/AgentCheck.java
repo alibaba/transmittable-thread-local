@@ -36,11 +36,11 @@ public final class AgentCheck {
         throw new InstantiationError("Must not instantiate this class");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             ThreadPoolExecutor executorService = new ThreadPoolExecutor(3, 3,
                     10L, TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<Runnable>());
+                    new LinkedBlockingQueue<>());
             ScheduledThreadPoolExecutor scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
 
             expandThreadPool(executorService);
@@ -80,7 +80,7 @@ public final class AgentCheck {
         executorService.submit(task);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -104,19 +104,16 @@ public final class AgentCheck {
     }
 
     private static void checkThreadPoolExecutorForRemoveMethod(ThreadPoolExecutor executor) throws Exception {
-        List<FutureTask<?>> sleepTasks = new ArrayList<FutureTask<?>>();
+        List<FutureTask<?>> sleepTasks = new ArrayList<>();
 
         final int COUNT = 4;
         for (int i = 0; i < COUNT; i++) {
-            FutureTask<?> futureTask = new FutureTask<Object>(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(100);
-                        System.out.println("Run sleep task!");
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+            FutureTask<?> futureTask = new FutureTask<>(() -> {
+                try {
+                    Thread.sleep(100);
+                    System.out.println("Run sleep task!");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }, null);
 
@@ -125,12 +122,7 @@ public final class AgentCheck {
         }
 
         final FutureTask<?> taskToRemove =
-                new FutureTask<Object>(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Run taskToRemove!");
-                    }
-                }, null);
+                new FutureTask<>(() -> System.out.println("Run taskToRemove!"), null);
 
         executor.execute(taskToRemove);
         executor.remove(taskToRemove);
@@ -154,7 +146,7 @@ public final class AgentCheck {
         ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
