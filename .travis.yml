@@ -20,12 +20,13 @@ before_install:
   - ls -l /usr/lib/jvm
   - echo "JAVA_HOME=$JAVA_HOME"
   - echo "PATH=$PATH"
-  - mvn --version
+  - ./mvnw --version
 
   - pip install --user codecov
 
 script:
-  - mvn test -B
+  - ./mvnw clean install --batch-mode
+  - echo "Run Agent test"
   - ./run-agent-test.sh skip
 
 after_success:
