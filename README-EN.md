@@ -1,9 +1,9 @@
 Transmittable ThreadLocal(TTL)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
+[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=dev-v2.2.x-jdk6-support)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/dev-v2.2.x-jdk6-support.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/dev-v2.2.x-jdk6-support.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/dev-v2.2.x-jdk6-support)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)
 [![Dependency Status](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca/badge.svg)](https://www.versioneye.com/user/projects/56c0a36218b271002c699dca)  
