@@ -2,7 +2,7 @@ Transmittable ThreadLocal(TTL)
 =====================================
 
 [![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=windows%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
 [![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)
@@ -46,13 +46,14 @@ Transmittable ThreadLocal(TTL)
 :wrench: 功能
 ============================
 
-:point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。支持`JDK` 9/8/7/6。
+:point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。支持`Java` 9/8。  
+\# 需要`Java` 6/7的支持使用`2.2.x`版本。
 
 一个`Java`标准库 本应为 中间件设施开发提供的标配能力；本库功能聚焦简单 & 0依赖。
 
-`JDK`的[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
+`JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
 
 整个库包含`TTL`核心功能、线程池修饰及`Agent`支持，只有不到 **_610 `SLOC`代码行_**，非常精小。
 
@@ -79,9 +80,9 @@ Transmittable ThreadLocal(TTL)
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
-相比[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)，添加了
+相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
 1. `protected`方法`copy`  
     用于定制 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**时的拷贝行为，缺省传递的是引用。
@@ -107,7 +108,7 @@ parent.set("value-set-in-parent");
 String value = parent.get();
 ```
 
-这是其实是[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
 但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -290,13 +291,13 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 Jdk core classes
 ----------------------------
 
-* [WeakHashMap](http://docs.oracle.com/javase/7/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)
+* [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
+* [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
 Java Agent
 ----------------------------
 
-* [Java Agent规范](http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html)
+* [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
 * [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 * [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 * [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)

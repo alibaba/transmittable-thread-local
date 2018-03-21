@@ -2,7 +2,7 @@ Transmittable ThreadLocal(TTL)
 =====================================
 
 [![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=windows%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
 [![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.alibaba/transmittable-thread-local/)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)
@@ -44,9 +44,10 @@ Transmittable ThreadLocal(TTL)
 
 :point_right: The missing std Java™ lib(simple &amp; 0-dependency) for middleware,
 transmitting ThreadLocal value between threads even using thread pool like components.
-Support `JDK` 9/8/7/6.
+Support `Java` 9/8.  
+\# if you need `Java` 6/7 support, please use version `2.2.x`.  
 
-Class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
+Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
@@ -76,7 +77,7 @@ parent.set("value-set-in-parent");
 String value = parent.get(); 
 ```
 
-This is the function of class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html) instead.
+This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
 Application need transmit value from the time task is created to the point task is executed.
@@ -229,12 +230,12 @@ Check available version at [search.maven.org](http://search.maven.org/#search%7C
 
 ## Jdk core classes
 
-* [WeakHashMap](http://docs.oracle.com/javase/7/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](http://docs.oracle.com/javase/7/docs/api/java/lang/InheritableThreadLocal.html)
+* [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
+* [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
-* [Java Agent规范](http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html)
+* [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
 * [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 * [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 * [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
