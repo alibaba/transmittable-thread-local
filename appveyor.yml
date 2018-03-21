@@ -20,8 +20,7 @@ init:
   - ps: "ls 'C:/Program Files (x86)/Java/jdk*'"
 
 install:
-  - cmd: SET PATH=C:\maven\apache-maven-3.2.5\bin;%JAVA_HOME%\bin;%PATH%
-  - cmd: SET M2_HOME=C:\maven\apache-maven-3.2.5
+  - cmd: SET PATH=%JAVA_HOME%\bin;%PATH%
   - cmd: SET MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=128m
   - cmd: SET JAVA_OPTS=-Xmx768m -XX:MaxPermSize=128m
   - "ECHO JAVA_HOME=%JAVA_HOME%, HOMEPATH=%HOMEPATH%, PATH=%PATH%"
