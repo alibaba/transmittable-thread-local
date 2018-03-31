@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
@@ -17,6 +19,8 @@ import java.util.WeakHashMap;
  * @since 0.10.0
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
+    private static final Logger logger = Logger.getLogger(TransmittableThreadLocal.class.getName());
+
     /**
      * Computes the value for this transmittable thread-local variable
      * as a function of the source thread's value at the time the task
@@ -192,7 +196,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                     threadLocal.afterExecute();
                 }
             } catch (Throwable t) {
-                t.printStackTrace();
+                if (logger.isLoggable(Level.WARNING)) {
+                    logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t.toString(), t);
+                }
             }
         }
     }

@@ -5,13 +5,12 @@ import com.alibaba.ttl.TtlRunnable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.reflect.Modifier;
 import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javassist.CannotCompileException;
@@ -77,11 +76,10 @@ public class TtlTransformer implements ClassFileTransformer {
                 }
             }
         } catch (Throwable t) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            t.printStackTrace(printWriter);
-            String msg = "Fail to transform class " + classFile + ", cause: " + stringWriter.toString();
-            logger.severe(msg);
+            String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
+            if (logger.isLoggable(Level.SEVERE)) {
+                logger.log(Level.SEVERE, msg, t);
+            }
             throw new IllegalStateException(msg, t);
         }
         return EMPTY_BYTE_ARRAY;
