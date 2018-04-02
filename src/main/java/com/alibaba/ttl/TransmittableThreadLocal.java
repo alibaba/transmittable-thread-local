@@ -116,7 +116,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     static Map<TransmittableThreadLocal<?>, Object> copy() {
         Map<TransmittableThreadLocal<?>, Object> copy = new HashMap<>();
-        for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
+        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
+            TransmittableThreadLocal<?> threadLocal = entry.getKey();
+
             copy.put(threadLocal, threadLocal.copyValue());
         }
         return copy;
