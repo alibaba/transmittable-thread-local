@@ -59,8 +59,8 @@ Transmittable ThreadLocal(TTL)
 
 欢迎 :clap:
 
-- 建议和提问，[提交`Issue`](https://github.com/oldratlee/translations/issues/new)
-- 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/oldratlee/translations/fork)
+- 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
+- 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
 :art: 需求场景
 ============================
