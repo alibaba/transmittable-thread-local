@@ -19,11 +19,11 @@ public class Call implements Callable<String> {
         this.ttlInstances = ttlInstances;
     }
 
-    public volatile Map<String, Object> copied;
+    public volatile Map<String, Object> captured;
 
     @Override
     public String call() {
-        copied = Utils.modifyTtlInstances(tag, ttlInstances);
+        captured = Utils.modifyTtlInstances(tag, ttlInstances);
         return "ok";
     }
 }

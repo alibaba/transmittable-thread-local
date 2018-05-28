@@ -18,7 +18,7 @@ import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
 import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.assertTtlInstances;
-import static com.alibaba.ttl.Utils.copied;
+import static com.alibaba.ttl.Utils.captured;
 import static com.alibaba.ttl.Utils.createTestTtlValue;
 import static com.alibaba.ttl.Utils.expandThreadPool;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -61,14 +61,14 @@ public class TtlCallableTest {
         assertEquals("ok", ret);
 
         // child Inheritable
-        assertTtlInstances(call.copied,
+        assertTtlInstances(call.captured,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + 1, PARENT_MODIFIED_IN_CHILD,
                 CHILD + 1, CHILD + 1
         );
 
         // child do not effect parent
-        assertTtlInstances(copied(ttlInstances),
+        assertTtlInstances(captured(ttlInstances),
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD, // restored after call!
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
@@ -91,14 +91,14 @@ public class TtlCallableTest {
         assertEquals("ok", future.get());
 
         // child Inheritable
-        assertTtlInstances(call.copied,
+        assertTtlInstances(call.captured,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + 1, PARENT_MODIFIED_IN_CHILD,
                 CHILD + 1, CHILD + 1
         );
 
         // child do not effect parent
-        assertTtlInstances(copied(ttlInstances),
+        assertTtlInstances(captured(ttlInstances),
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
@@ -122,13 +122,13 @@ public class TtlCallableTest {
         assertEquals("ok", future.get());
 
         // child Inheritable
-        assertTtlInstances(call.copied,
+        assertTtlInstances(call.captured,
                 PARENT_MODIFIED_IN_CHILD + 1, PARENT_MODIFIED_IN_CHILD,
                 CHILD + 1, CHILD + 1
         );
 
         // child do not effect parent
-        assertTtlInstances(copied(ttlInstances),
+        assertTtlInstances(captured(ttlInstances),
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
         );

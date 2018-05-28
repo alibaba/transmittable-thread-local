@@ -21,7 +21,7 @@ import static com.alibaba.ttl.Utils.CHILD;
 import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
 import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.copied;
+import static com.alibaba.ttl.Utils.captured;
 import static com.alibaba.ttl.Utils.createTestTtlValue;
 import static com.alibaba.ttl.Utils.expandThreadPool;
 import static org.junit.Assert.assertEquals;
@@ -53,33 +53,33 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         ttlInstances = createTestTtlValue();
     }
 
-    private static void assertTask1(Map<String, Object> copied) {
+    private static void assertTask1(Map<String, Object> captured) {
         // child Inheritable
-        assertEquals(4, copied.size());
-        assertEquals(PARENT_UNMODIFIED_IN_CHILD, copied.get(PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(PARENT_MODIFIED_IN_CHILD + "1", copied.get(PARENT_MODIFIED_IN_CHILD));
-        assertEquals(CHILD + "1", copied.get(CHILD + "1"));
-        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, copied.get(PARENT_AFTER_CREATE_TTL_TASK)); // because create TtlRunnable in method executorService
+        assertEquals(4, captured.size());
+        assertEquals(PARENT_UNMODIFIED_IN_CHILD, captured.get(PARENT_UNMODIFIED_IN_CHILD));
+        assertEquals(PARENT_MODIFIED_IN_CHILD + "1", captured.get(PARENT_MODIFIED_IN_CHILD));
+        assertEquals(CHILD + "1", captured.get(CHILD + "1"));
+        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, captured.get(PARENT_AFTER_CREATE_TTL_TASK)); // because create TtlRunnable in method executorService
     }
 
-    private static void assertTask2(Map<String, Object> copied) {
+    private static void assertTask2(Map<String, Object> captured) {
         // child Inheritable
-        assertEquals(4, copied.size());
-        assertEquals(PARENT_UNMODIFIED_IN_CHILD, copied.get(PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(PARENT_MODIFIED_IN_CHILD + "2", copied.get(PARENT_MODIFIED_IN_CHILD));
-        assertEquals(CHILD + "2", copied.get(CHILD + "2"));
-        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, copied.get(PARENT_AFTER_CREATE_TTL_TASK)); // because create TtlRunnable in method executorService
+        assertEquals(4, captured.size());
+        assertEquals(PARENT_UNMODIFIED_IN_CHILD, captured.get(PARENT_UNMODIFIED_IN_CHILD));
+        assertEquals(PARENT_MODIFIED_IN_CHILD + "2", captured.get(PARENT_MODIFIED_IN_CHILD));
+        assertEquals(CHILD + "2", captured.get(CHILD + "2"));
+        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, captured.get(PARENT_AFTER_CREATE_TTL_TASK)); // because create TtlRunnable in method executorService
     }
 
 
     @After
     public void tearDown() throws Exception {
         // child do not effect parent
-        Map<String, Object> thisThreadCopied = copied(ttlInstances);
-        assertEquals(3, thisThreadCopied.size());
-        assertEquals(PARENT_UNMODIFIED_IN_CHILD, thisThreadCopied.get(PARENT_UNMODIFIED_IN_CHILD));
-        assertEquals(PARENT_MODIFIED_IN_CHILD, thisThreadCopied.get(PARENT_MODIFIED_IN_CHILD));
-        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, thisThreadCopied.get(PARENT_AFTER_CREATE_TTL_TASK));
+        Map<String, Object> thisThreadCaptured = captured(ttlInstances);
+        assertEquals(3, thisThreadCaptured.size());
+        assertEquals(PARENT_UNMODIFIED_IN_CHILD, thisThreadCaptured.get(PARENT_UNMODIFIED_IN_CHILD));
+        assertEquals(PARENT_MODIFIED_IN_CHILD, thisThreadCaptured.get(PARENT_MODIFIED_IN_CHILD));
+        assertEquals(PARENT_AFTER_CREATE_TTL_TASK, thisThreadCaptured.get(PARENT_AFTER_CREATE_TTL_TASK));
     }
 
     private void setLocalAfter() {
@@ -98,7 +98,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         executorService.execute(task);
         Thread.sleep(100);
 
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         Future<String> future = executorService.submit(call);
         assertEquals("ok", future.get());
 
-        assertTask1(call.copied);
+        assertTask1(call.captured);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         Future<String> future = executorService.submit(task, "ok");
         assertEquals("ok", future.get());
 
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         assertNull(future.get());
 
         // child Inheritable
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 
     @Test
@@ -151,8 +151,8 @@ public class ScheduledExecutorServiceTtlWrapperTest {
             assertEquals("ok", future.get());
         }
 
-        assertTask1(call1.copied);
-        assertTask2(call2.copied);
+        assertTask1(call1.captured);
+        assertTask2(call2.captured);
     }
 
     @Test
@@ -167,8 +167,8 @@ public class ScheduledExecutorServiceTtlWrapperTest {
             assertEquals("ok", future.get());
         }
 
-        assertTask1(call1.copied);
-        assertTask2(call2.copied);
+        assertTask1(call1.captured);
+        assertTask2(call2.captured);
     }
 
     @Test
@@ -181,11 +181,11 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         String s = executorService.invokeAny(Arrays.asList(call1, call2));
         assertEquals("ok", s);
 
-        assertTrue(call1.copied != null || call2.copied != null);
-        if (call1.copied != null)
-            assertTask1(call1.copied);
-        if (call2.copied != null)
-            assertTask2(call2.copied);
+        assertTrue(call1.captured != null || call2.captured != null);
+        if (call1.captured != null)
+            assertTask1(call1.captured);
+        if (call2.captured != null)
+            assertTask2(call2.captured);
     }
 
     @Test
@@ -198,11 +198,11 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         String s = executorService.invokeAny(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS);
         assertEquals("ok", s);
 
-        assertTrue(call1.copied != null || call2.copied != null);
-        if (call1.copied != null)
-            assertTask1(call1.copied);
-        if (call2.copied != null)
-            assertTask2(call2.copied);
+        assertTrue(call1.captured != null || call2.captured != null);
+        if (call1.captured != null)
+            assertTask1(call1.captured);
+        if (call2.captured != null)
+            assertTask2(call2.captured);
     }
 
     @Test
@@ -215,7 +215,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         assertNull(future.get());
 
         // child Inheritable
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         Future<?> future = executorService.schedule(call, 1, TimeUnit.SECONDS);
         assertEquals("ok", future.get());
 
-        assertTask1(call.copied);
+        assertTask1(call.captured);
     }
 
     @Test
@@ -241,7 +241,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         Thread.sleep(100);
         future.cancel(true);
 
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 
     @Test
@@ -255,6 +255,6 @@ public class ScheduledExecutorServiceTtlWrapperTest {
         Thread.sleep(100);
         future.cancel(true);
 
-        assertTask1(task.copied);
+        assertTask1(task.captured);
     }
 }

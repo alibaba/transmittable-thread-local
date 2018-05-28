@@ -21,7 +21,7 @@ import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
 import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.assertTtlInstances;
-import static com.alibaba.ttl.Utils.copied;
+import static com.alibaba.ttl.Utils.captured;
 import static com.alibaba.ttl.Utils.createTestTtlValue;
 import static com.alibaba.ttl.Utils.expandThreadPool;
 import static org.junit.Assert.assertEquals;
@@ -86,17 +86,17 @@ public final class AgentCheck {
 
         Thread.sleep(100);
 
-        System.out.println(task.copied);
+        System.out.println(task.captured);
 
         // child Inheritable
-        Utils.assertTtlInstances(task.copied,
+        Utils.assertTtlInstances(task.captured,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + "1", PARENT_MODIFIED_IN_CHILD,
                 CHILD + "1", CHILD + "1"
         );
 
         // child do not effect parent
-        assertTtlInstances(copied(ttlInstances),
+        assertTtlInstances(captured(ttlInstances),
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
@@ -153,14 +153,14 @@ public final class AgentCheck {
         future.get();
 
         // child Inheritable
-        assertTtlInstances(task.copied,
+        assertTtlInstances(task.captured,
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD + "2", PARENT_MODIFIED_IN_CHILD,
                 CHILD + "2", CHILD + "2"
         );
 
         // child do not effect parent
-        assertTtlInstances(copied(ttlInstances),
+        assertTtlInstances(captured(ttlInstances),
                 PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
                 PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK

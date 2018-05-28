@@ -3,10 +3,13 @@ package com.alibaba.ttl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * {@link TtlCallable} decorate {@link Callable}, so as to get {@link TransmittableThreadLocal}
@@ -25,12 +28,12 @@ import java.util.Collections;
  * @since 0.9.0
  */
 public final class TtlCallable<V> implements Callable<V> {
-    private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
+    private final AtomicReference<Object> capturedRef;
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
 
     private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
-        this.copiedRef = new AtomicReference<>(TransmittableThreadLocal.copy());
+        this.capturedRef = new AtomicReference<>(capture());
         this.callable = callable;
         this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
     }
@@ -40,16 +43,16 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Override
     public V call() throws Exception {
-        Map<TransmittableThreadLocal<?>, Object> copied = copiedRef.get();
-        if (copied == null || releaseTtlValueReferenceAfterCall && !copiedRef.compareAndSet(copied, null)) {
+        Object captured = capturedRef.get();
+        if (captured == null || releaseTtlValueReferenceAfterCall && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after call!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
+        Object backup = replay(captured);
         try {
             return callable.call();
         } finally {
-            TransmittableThreadLocal.restoreBackup(backup);
+            restore(backup);
         }
     }
 
