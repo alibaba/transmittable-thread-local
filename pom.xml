@@ -56,6 +56,17 @@
 			<organization>Taobao</organization>
 			<organizationUrl>http://www.taobao.com</organizationUrl>
 		</developer>
+		<developer>
+			<name>Yang Fang</name>
+			<id>driventokill</id>
+			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<organization>Alibaba</organization>
+			<organizationUrl>http://www.alibaba.com</organizationUrl>
+		</developer>
 	</developers>
 
 	<properties>

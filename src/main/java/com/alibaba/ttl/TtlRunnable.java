@@ -3,9 +3,12 @@ package com.alibaba.ttl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
@@ -22,12 +25,12 @@ import java.util.Collections;
  * @since 0.9.0
  */
 public final class TtlRunnable implements Runnable {
-    private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
+    private final AtomicReference<Object> capturedRef;
     private final Runnable runnable;
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.copiedRef = new AtomicReference<>(TransmittableThreadLocal.copy());
+        this.capturedRef = new AtomicReference<>(capture());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -37,16 +40,16 @@ public final class TtlRunnable implements Runnable {
      */
     @Override
     public void run() {
-        Map<TransmittableThreadLocal<?>, Object> copied = copiedRef.get();
-        if (copied == null || releaseTtlValueReferenceAfterRun && !copiedRef.compareAndSet(copied, null)) {
+        Object captured = capturedRef.get();
+        if (captured == null || releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
+        Object backup = replay(captured);
         try {
             runnable.run();
         } finally {
-            TransmittableThreadLocal.restoreBackup(backup);
+            restore(backup);
         }
     }
 

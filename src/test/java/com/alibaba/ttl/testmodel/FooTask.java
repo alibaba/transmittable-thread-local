@@ -18,7 +18,7 @@ public class FooTask implements Runnable {
         this.ttlInstances = ttlInstances;
     }
 
-    public volatile Map<String, Object> copied;
+    public volatile Map<String, Object> captured;
 
     @Override
     public void run() {
@@ -37,7 +37,7 @@ public class FooTask implements Runnable {
 
             System.out.println("After Run:");
             Utils.print(ttlInstances);
-            copied = Utils.copied(ttlInstances);
+            captured = Utils.captured(ttlInstances);
 
             System.out.println("Task " + value + " finished!");
         } catch (Throwable e) {

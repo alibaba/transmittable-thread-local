@@ -28,7 +28,7 @@ Transmittable ThreadLocal(TTL)
     - [2. Transmit value even using thread pool](#2-transmit-value-even-using-thread-pool)
         - [2.1 Decorate `Runnable` and `Callable`](#21-decorate-runnable-and-callable)
         - [2.2 Decorate thread pool](#22-decorate-thread-pool)
-        - [2.3. Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
+        - [2.3 Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
 - [:electric_plug: Java API Docs](#electric_plug-java-api-docs)
 - [:cookie: Maven dependency](#cookie-maven-dependency)
 - [:books: Related resources](#books-related-resources)
@@ -137,7 +137,7 @@ Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
 
 * `getTtlExecutor`: decorate interface `Executor`
 * `getTtlExecutorService`: decorate interface `ExecutorService`
-* `ScheduledExecutorService`: decorate interface `ScheduledExecutorService`
+* `getTtlScheduledExecutorService`: decorate interface `ScheduledExecutorService`
 
 Sample code:
 
@@ -160,7 +160,7 @@ executorService.submit(call);
 String value = parent.get(); 
 ```
 
-### 2.3. Use Java Agent to decorate thread pool implementation class
+### 2.3 Use Java Agent to decorate thread pool implementation class
 
 In this usage, transmission is transparent\(no decoration operation\).
 

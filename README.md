@@ -166,7 +166,7 @@ String value = parent.get();
 
 - `getTtlExecutor`：修饰接口`Executor`
 - `getTtlExecutorService`：修饰接口`ExecutorService`
-- `ScheduledExecutorService`：修饰接口`ScheduledExecutorService`
+- `getTtlScheduledExecutorService`：修饰接口`ScheduledExecutorService`
 
 示例代码：
 

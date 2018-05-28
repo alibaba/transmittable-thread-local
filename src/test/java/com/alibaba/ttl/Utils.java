@@ -62,7 +62,7 @@ public final class Utils {
         System.out.println(tag + " After Run:");
         Utils.print(ttlInstances);
 
-        return Utils.copied(ttlInstances);
+        return Utils.captured(ttlInstances);
     }
 
     public static <T> void print(ConcurrentMap<String, TransmittableThreadLocal<T>> ttlInstances) {
@@ -73,26 +73,26 @@ public final class Utils {
         }
     }
 
-    public static <T> Map<String, Object> copied(ConcurrentMap<String, TransmittableThreadLocal<T>> ttlInstances) {
-        Map<String, Object> copiedContent = new HashMap<>();
+    public static <T> Map<String, Object> captured(ConcurrentMap<String, TransmittableThreadLocal<T>> ttlInstances) {
+        Map<String, Object> capturedContent = new HashMap<>();
         for (Map.Entry<String, TransmittableThreadLocal<T>> entry : ttlInstances.entrySet()) {
             String key = entry.getKey();
             T value = entry.getValue().get();
             // store value in task
             if (null != value) {
-                copiedContent.put(key, value);
+                capturedContent.put(key, value);
             }
         }
-        return copiedContent;
+        return capturedContent;
     }
 
-    public static void assertTtlInstances(Map<String, Object> copied, String... asserts) {
+    public static void assertTtlInstances(Map<String, Object> captured, String... asserts) {
         if (asserts.length % 2 != 0) {
             throw new IllegalStateException("should even count!");
         }
-        assertEquals(asserts.length / 2, copied.size());
+        assertEquals(asserts.length / 2, captured.size());
         for (int i = 0; i < asserts.length; i += 2) {
-            assertEquals(asserts[i], copied.get(asserts[i + 1]));
+            assertEquals(asserts[i], captured.get(asserts[i + 1]));
         }
     }
 
