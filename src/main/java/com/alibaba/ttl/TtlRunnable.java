@@ -17,6 +17,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
  * Use factory methods {@link #get} / {@link #gets} to create instance.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see com.alibaba.ttl.threadpool.TtlExecutors
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor

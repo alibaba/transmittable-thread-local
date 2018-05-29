@@ -11,6 +11,13 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
+ * @see java.util.concurrent.Executor
+ * @see java.util.concurrent.ExecutorService
+ * @see java.util.concurrent.ThreadPoolExecutor
+ * @see java.util.concurrent.ScheduledThreadPoolExecutor
+ * @see java.util.concurrent.Executors
+ * @see java.util.concurrent.CompletionService
+ * @see java.util.concurrent.ExecutorCompletionService
  */
 public final class TtlExecutors {
     /**

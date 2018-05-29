@@ -161,13 +161,37 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     /**
-     * {@link Transmitter} is <b><i>internal</i></b> manipulation api of {@link TransmittableThreadLocal},
-     * expose internal {@link #capture()}/{@link #replay(Object)}/{@link #restore(Object)} operation
-     * of {@link TransmittableThreadLocal} values for middleware integration,
-     * like {@link TtlRunnable} and {@link TtlCallable}.
+     * {@link Transmitter} transmit all {@link TransmittableThreadLocal} of current thread to
+     * any other thread by static method {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
      * <p>
-     * {@link Transmitter} can transmit all {@link TransmittableThreadLocal} of current thread to
-     * any other thread by {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)}.
+     * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
+     * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
+     * <p>
+     * Below is the example:
+     *
+     * <pre><code>
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread 1, capture all TransmittableThreadLocal values of thread 1
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * Object captured = Transmitter.capture();
+     *
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread 2
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * // replay all TransmittableThreadLocal values from thread 1
+     * Object backup = Transmitter.replay(captured);
+     * try {
+     *     // your biz logic, run with the TransmittableThreadLocal values of thread 1
+     *     ...
+     * } finally {
+     *     // restore the TransmittableThreadLocal of thread 2 when replay
+     *     Transmitter.restore(backup);
+     * }
+     * </code></pre>
+     * <p>
+     * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
      * @see TtlRunnable
@@ -178,7 +202,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         /**
          * Capture all {@link TransmittableThreadLocal} values in current thread.
          *
-         * @return captured {@link TransmittableThreadLocal}
+         * @return the captured {@link TransmittableThreadLocal} values
          */
         public static Object capture() {
             Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<>();
@@ -189,11 +213,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
 
         /**
-         * Replay the captured {@link TransmittableThreadLocal} values by {@link #capture()}
-         * after backup {@link TransmittableThreadLocal} values in current thread.
+         * Replay the captured {@link TransmittableThreadLocal} values from {@link #capture()},
+         * and return the backup {@link TransmittableThreadLocal} values in current thread before replay.
          *
-         * @param captured captured {@link TransmittableThreadLocal} values from other thread by {@link #capture()}
-         * @return backup {@link TransmittableThreadLocal} values before replay
+         * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
+         * @return the backup {@link TransmittableThreadLocal} values before replay
          * @see #capture()
          */
         public static Object replay(Object captured) {
@@ -231,9 +255,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
 
         /**
-         * Restore {@link TransmittableThreadLocal} values backup from {@link Transmitter#replay(Object)}.
+         * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
          *
-         * @param backup the {@link TransmittableThreadLocal} values backup from {@link Transmitter#replay(Object)}
+         * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
          */
         public static void restore(Object backup) {
             @SuppressWarnings("unchecked")
