@@ -1,53 +1,70 @@
 # :mortar_board: Developer Guide
 
+---------------------------
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [抓取，回放和恢复](#%E6%8A%93%E5%8F%96%E5%9B%9E%E6%94%BE%E5%92%8C%E6%81%A2%E5%A4%8D)
-- [关于`Java Agent`](#%E5%85%B3%E4%BA%8Ejava-agent)
-  - [`Java Agent`方式对应用代码无侵入](#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)
-  - [如何权衡`Java Agent`方式的失效情况](#%E5%A6%82%E4%BD%95%E6%9D%83%E8%A1%A1java-agent%E6%96%B9%E5%BC%8F%E7%9A%84%E5%A4%B1%E6%95%88%E6%83%85%E5%86%B5)
-  - [已有Java Agent中嵌入`TTL Agent`](#%E5%B7%B2%E6%9C%89java-agent%E4%B8%AD%E5%B5%8C%E5%85%A5ttl-agent)
-- [Bootstrap上添加通用库的`Jar`的问题及解决方法](#bootstrap%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93%E7%9A%84jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
-- [:books: 相关资料](#books-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-  - [Jdk core classes](#jdk-core-classes)
-  - [Java Agent](#java-agent)
-  - [Javassist](#javassist)
-  - [Shade插件](#shade%E6%8F%92%E4%BB%B6)
+- [📌 框架/中间件集成`TTL`传递](#-%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E9%9B%86%E6%88%90ttl%E4%BC%A0%E9%80%92)
+- [📟 关于`Java Agent`](#-%E5%85%B3%E4%BA%8Ejava-agent)
+    - [`Java Agent`方式对应用代码无侵入](#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)
+    - [如何权衡`Java Agent`方式的失效情况](#%E5%A6%82%E4%BD%95%E6%9D%83%E8%A1%A1java-agent%E6%96%B9%E5%BC%8F%E7%9A%84%E5%A4%B1%E6%95%88%E6%83%85%E5%86%B5)
+    - [已有Java Agent中嵌入`TTL Agent`](#%E5%B7%B2%E6%9C%89java-agent%E4%B8%AD%E5%B5%8C%E5%85%A5ttl-agent)
+- [👢 Bootstrap上添加通用库的`Jar`的问题及解决方法](#-bootstrap%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93%E7%9A%84jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
+    - [Jdk core classes](#jdk-core-classes)
+    - [Java Agent](#java-agent)
+    - [Javassist](#javassist)
+    - [Shade插件](#shade%E6%8F%92%E4%BB%B6)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# 抓取，回放和恢复
+---------------------------
 
-通过[`com.alibaba.ttl.TransmittableThreadLocal.Transmitter`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)直接抓取当前线程的所有 `TransmittableThreadLocal` 的值并在任意其他线程进行回放，有下列方法：
+# 📌 框架/中间件集成`TTL`传递
 
-- `capture`: 抓取当前线程所有 `TransmittableThreadLocal` 的值
-- `replay`: 备份当前线程的 `TransmittableThreadLocal` 值然后回放在 `capture` 中抓取的 `TransmittableThreadLocal` 值
-- `restore`: 恢复线程状态到 `replay` 之前
+框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)
+抓取当前线程的所有`TTL`值并在其他线程进行回放；在回放线程执行完业务操作后，恢复为回放线程原来的`TTL`值。
+
+[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
+
+1. `capture`方法：抓取线程（线程A）的所有`TTL`值。
+2. `replay`方法：在另一个线程（线程B）中，回放在`capture`方法中抓取的`TTL`值，并返回 回放前`TTL`值的备份
+3. `restore`方法：恢复线程B执行`replay`方法之前的`TTL`值（即备份）
 
 示例代码：
 
 ```java
-ExecutorService executorService = ...
+// ===========================================================================
+// 线程A
+// ===========================================================================
 
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
-//当前线程抓取
+// 1. 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
-executorService.submit(() -> {
-    final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
-    try {
-        // 你的业务逻辑，这里你可以获取到外面设置的值
-        String value = parent.get();
-    } finally {
-        TransmittableThreadLocal.Transmitter.restore(backup);
-    }
-});
+
+// ===========================================================================
+// 线程B
+// ===========================================================================
+
+// 2. 在异步线程中回放在capture方法中抓取的TTL值，并返回 回放前TTL值的备份
+final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
+try {
+    // 你的业务逻辑，这里你可以获取到外面设置的TTL值
+    String value = parent.get();
+    ...
+} finally {
+    // 3. 恢复线程B执行replay方法之前的TTL值（即备份）
+    TransmittableThreadLocal.Transmitter.restore(backup);
+}
 ```
 
-# 关于`Java Agent`
+`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java#L43)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java#L46)。
+
+# 📟 关于`Java Agent`
 
 ## `Java Agent`方式对应用代码无侵入
 
@@ -113,11 +130,11 @@ public class TransformerAdaptor implements ClassFileTransformer {
 -Xbootclasspath/a:/path/to/transmittable-thread-local-2.0.0.jar:/path/to/your/agent/jar/files
 ```
 
-# Bootstrap上添加通用库的`Jar`的问题及解决方法
+# 👢 Bootstrap上添加通用库的`Jar`的问题及解决方法
 
 通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
 
-`TTL`在`Bootstrap` `ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist`和`MTC`的`Javassist`有兼容性的风险。
+`TTL`在`Bootstrap` `ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist`和`TTL`的`Javassist`有兼容性的风险。
 
 可以通过`repackage`（重新命名包名）来解决这个问题。
 
@@ -125,7 +142,7 @@ public class TransformerAdaptor implements ClassFileTransformer {
 
 这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
 
-# :books: 相关资料
+# 📚 相关资料
 
 ## Jdk core classes
 
