@@ -23,6 +23,11 @@ import javassist.NotFoundException;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
+ * @see java.util.concurrent.Executor
+ * @see java.util.concurrent.ExecutorService
+ * @see java.util.concurrent.ThreadPoolExecutor
+ * @see java.util.concurrent.ScheduledThreadPoolExecutor
+ * @see java.util.concurrent.Executors
  */
 public class TtlTransformer implements ClassFileTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class.getName());
