@@ -219,7 +219,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.3.0</version>
+	<version>2.4.0</version>
 </dependency>
 ```
 
