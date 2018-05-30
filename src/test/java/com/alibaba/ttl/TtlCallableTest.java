@@ -6,12 +6,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static com.alibaba.ttl.Utils.CHILD;
 import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
@@ -43,6 +38,8 @@ public class TtlCallableTest {
     @AfterClass
     public static void afterClass() throws Exception {
         executorService.shutdown();
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        if (!executorService.isTerminated()) fail("Fail to shutdown thread pool");
     }
 
     @Test

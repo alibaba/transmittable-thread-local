@@ -5,12 +5,7 @@ import com.alibaba.ttl.testmodel.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -45,6 +40,8 @@ public class TtlRunnableTest {
     @AfterClass
     public static void afterClass() throws Exception {
         executorService.shutdown();
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        if (!executorService.isTerminated()) fail("Fail to shutdown thread pool");
     }
 
     @Test
