@@ -64,6 +64,7 @@ public class TtlTransformer implements ClassFileTransformer {
                 for (CtMethod method : clazz.getDeclaredMethods()) {
                     updateMethodOfExecutorClass(clazz, method);
                 }
+
                 return clazz.toBytecode();
 
             } else if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
@@ -159,7 +160,7 @@ public class TtlTransformer implements ClassFileTransformer {
         // new doExec method implementation
         CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
         final String code = "{\n" +
-                // do nothing/directly return, if is TTL Task
+                // do nothing/directly return, if is TTL ForkJoinTask
                 "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
                 "    return " + original_doExec_method_rename + "($$);\n" +
                 "}\n" +

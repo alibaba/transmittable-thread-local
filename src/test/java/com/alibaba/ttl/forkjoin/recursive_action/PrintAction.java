@@ -26,16 +26,8 @@ class PrintAction extends TtlRecursiveAction {
     volatile PrintAction leftSubAction;
     volatile PrintAction rightSubAction;
 
-
     public PrintAction(int[] numbers, int start, int end,
                        ConcurrentMap<String, TransmittableThreadLocal<String>> ttlMap, boolean changeTtlValue) {
-        this(numbers, start, end, false,
-                ttlMap, changeTtlValue);
-    }
-
-    public PrintAction(int[] numbers, int start, int end, boolean releaseTtlValueReferenceAfterCall,
-                       ConcurrentMap<String, TransmittableThreadLocal<String>> ttlMap, boolean changeTtlValue) {
-        super(releaseTtlValueReferenceAfterCall);
         this.numbers = numbers;
         this.start = start;
         this.end = end;
