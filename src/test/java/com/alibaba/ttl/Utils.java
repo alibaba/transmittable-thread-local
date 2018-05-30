@@ -65,6 +65,21 @@ public final class Utils {
         return Utils.captured(ttlInstances);
     }
 
+    public static Map<String, Object> modifyValuesExistInTtlInstances(String tag, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) {
+        System.out.println(tag + " Before Run:");
+        Utils.print(ttlInstances);
+        System.out.println();
+
+        // 1. modify the parent key
+        String p = ttlInstances.get(PARENT_MODIFIED_IN_CHILD).get() + tag;
+        ttlInstances.get(PARENT_MODIFIED_IN_CHILD).set(p);
+
+        // store value in task
+        System.out.println(tag + " After Run:");
+        Utils.print(ttlInstances);
+
+        return Utils.copied(ttlInstances);
+    }
     public static <T> void print(ConcurrentMap<String, TransmittableThreadLocal<T>> ttlInstances) {
         for (Map.Entry<String, TransmittableThreadLocal<T>> entry : ttlInstances.entrySet()) {
             String key = entry.getKey();
