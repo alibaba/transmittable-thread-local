@@ -29,14 +29,6 @@ class SumTask extends TtlRecursiveTask<Integer> {
 
     public SumTask(int[] numbers, int start, int end,
                    ConcurrentMap<String, TransmittableThreadLocal<String>> ttlMap, boolean changeTtlValue) {
-        this(numbers, start, end, false,
-                ttlMap, changeTtlValue);
-    }
-
-    public SumTask(int[] numbers, int start, int end, boolean releaseTtlValueReferenceAfterCall,
-                   ConcurrentMap<String, TransmittableThreadLocal<String>> ttlMap, boolean changeTtlValue) {
-        super(releaseTtlValueReferenceAfterCall);
-
         this.numbers = numbers;
         this.start = start;
         this.end = end;

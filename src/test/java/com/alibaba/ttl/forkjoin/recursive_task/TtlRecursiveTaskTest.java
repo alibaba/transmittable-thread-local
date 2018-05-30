@@ -83,23 +83,4 @@ public class TtlRecursiveTaskTest {
                 PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
         );
     }
-
-    @Test
-    public void test_releaseTtlValueReferenceAfterCall_isTrue() throws Exception {
-        ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
-
-        final SumTask sumTask = new SumTask(numbers, 0, numbers.length, true,
-                ttlInstances, false);
-
-        {
-            Future<Integer> future = pool.submit(sumTask);
-            System.out.println(future.get());
-        }
-
-        {
-            Future<Integer> future = pool.submit(sumTask);
-            System.out.println(future.get());
-        }
-    }
-
 }

@@ -1,7 +1,6 @@
 package com.alibaba.ttl;
 
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
@@ -10,24 +9,16 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  *
  * @author LNAmp
  * @see java.util.concurrent.RecursiveTask
- * @since 2.3.0
+ * @since 2.4.0
  */
 public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> {
 
     private static final long serialVersionUID = 1814679366926362436L;
 
-    protected final boolean releaseTtlValueReferenceAfterCall;
-
-    protected final AtomicReference<Object> capturedRef = new AtomicReference<>(capture());
+    private final Object captured = capture();
 
     protected TtlRecursiveTask() {
-        this(false);
     }
-
-    protected TtlRecursiveTask(boolean releaseTtlValueReferenceAfterCall) {
-        this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
-    }
-
 
     /**
      * The result of the computation.
@@ -53,11 +44,6 @@ public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> {
      * Implements execution conventions for RecursiveTask.
      */
     protected final boolean exec() {
-        Object captured = capturedRef.get();
-        if (captured == null || releaseTtlValueReferenceAfterCall && !capturedRef.compareAndSet(captured, null)) {
-            throw new IllegalStateException("TTL value reference is released after exec!");
-        }
-
         Object backup = replay(captured);
         try {
             result = compute();
