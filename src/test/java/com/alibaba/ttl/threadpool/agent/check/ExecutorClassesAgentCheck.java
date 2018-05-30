@@ -54,18 +54,18 @@ public final class ExecutorClassesAgentCheck {
         checkThreadPoolExecutorForRemoveMethod(executorService);
         checkScheduledExecutorService(scheduledExecutorService, ttlInstances);
 
-        System.out.println();
-        System.out.println("====================================");
-        System.out.println("Check OK!");
-        System.out.println("====================================");
 
         executorService.shutdown();
         scheduledExecutorService.shutdown();
-
-
         if (!executorService.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool");
         if (!scheduledExecutorService.awaitTermination(100, TimeUnit.MILLISECONDS))
             fail("Fail to shutdown thread pool");
+
+
+        System.out.println();
+        System.out.println("====================================");
+        System.out.println(ExecutorClassesAgentCheck.class.getSimpleName() + " OK!");
+        System.out.println("====================================");
     }
 
     private static void checkExecutorService(ExecutorService executorService, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {

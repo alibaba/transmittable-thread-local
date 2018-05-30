@@ -42,6 +42,8 @@ public class TtlTransformer implements ClassFileTransformer {
     }
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
+    private static final String TTL_RECURSIVE_ACTION_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveAction";
+    private static final String TTL_RECURSIVE_TASK_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveTask";
 
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
@@ -157,6 +159,10 @@ public class TtlTransformer implements ClassFileTransformer {
         // new doExec method implementation
         CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
         final String code = "{\n" +
+                // do nothing/directly return, if is TTL Task
+                "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
+                "    return " + original_doExec_method_rename + "($$);\n" +
+                "}\n" +
                 "java.lang.Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
                 "try {\n" +
                 "    return " + original_doExec_method_rename + "($$);\n" +

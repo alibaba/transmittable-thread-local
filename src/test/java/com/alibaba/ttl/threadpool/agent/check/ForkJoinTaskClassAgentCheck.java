@@ -26,6 +26,7 @@ public class ForkJoinTaskClassAgentCheck {
     private static final Integer SUM = 5050;
 
     public static void main(String[] args) throws Exception {
+
         test_TtlRecursiveTask_asyncWith_ForkJoinPool();
         test_TtlRecursiveTask_asyncWith_SingleThreadForkJoinPool();
 
@@ -35,6 +36,12 @@ public class ForkJoinTaskClassAgentCheck {
 
         singleThreadPool.shutdown();
         if (!singleThreadPool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool");
+
+
+        System.out.println();
+        System.out.println("====================================");
+        System.out.println(ForkJoinTaskClassAgentCheck.class.getSimpleName() + " OK!");
+        System.out.println("====================================");
     }
 
 
