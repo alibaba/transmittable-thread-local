@@ -2,13 +2,8 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
-
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
+import java.util.List;
 
 /**
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
@@ -26,14 +21,12 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
  * @since 0.9.0
  */
 public final class TtlRunnable implements Runnable {
-    private final AtomicReference<Object> capturedRef;
     private final Runnable runnable;
-    private final boolean releaseTtlValueReferenceAfterRun;
+    private final TransmittableThreadLocal.Capture capture;
 
     private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.capturedRef = new AtomicReference<>(capture());
         this.runnable = runnable;
-        this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
+        this.capture = TransmittableThreadLocal.capture(releaseTtlValueReferenceAfterRun);
     }
 
     /**
@@ -41,17 +34,10 @@ public final class TtlRunnable implements Runnable {
      */
     @Override
     public void run() {
-        Object captured = capturedRef.get();
-        if (captured == null || releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
-            throw new IllegalStateException("TTL value reference is released after run!");
-        }
-
-        Object backup = replay(captured);
-        try {
+        TransmittableThreadLocal.restoreAndRun(capture, (TransmittableThreadLocal.Action<Void, RuntimeException>) () -> {
             runnable.run();
-        } finally {
-            restore(backup);
-        }
+            return null;
+        });
     }
 
     /**
@@ -63,8 +49,12 @@ public final class TtlRunnable implements Runnable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TtlRunnable that = (TtlRunnable) o;
 
