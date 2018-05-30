@@ -24,7 +24,7 @@ public class TtlRecursiveActionTest {
     private static ForkJoinPool pool = new ForkJoinPool();
     private static ForkJoinPool singleThreadPool = new ForkJoinPool(1);
 
-    private static int[] numbers = IntStream.rangeClosed(1, 1000).toArray();
+    private static int[] numbers = IntStream.rangeClosed(1, 100).toArray();
 
     @AfterClass
     public static void afterClass() throws Exception {

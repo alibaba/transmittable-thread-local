@@ -23,8 +23,8 @@ public class TtlRecursiveTaskTest {
     private static final ForkJoinPool pool = new ForkJoinPool();
     private static final ForkJoinPool singleThreadPool = new ForkJoinPool(1);
 
-    private static final int[] numbers = IntStream.rangeClosed(1, 1000).toArray();
-    private static final Integer SUM = 500_500;
+    private static final int[] numbers = IntStream.rangeClosed(1, 100).toArray();
+    private static final Integer SUM = 5050;
 
     @AfterClass
     public static void afterClass() throws Exception {
