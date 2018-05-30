@@ -26,6 +26,7 @@ import static com.alibaba.ttl.Utils.createTestTtlValue;
 import static com.alibaba.ttl.Utils.expandThreadPool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -38,48 +39,33 @@ public final class ExecutorClassesAgentCheck {
         throw new InstantiationError("Must not instantiate this class");
     }
 
-    public static void main(String[] args) {
-        try {
-            ThreadPoolExecutor executorService = new ThreadPoolExecutor(3, 3,
-                    10L, TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<>());
-            ScheduledThreadPoolExecutor scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
+    public static void main(String[] args) throws Exception {
+        ThreadPoolExecutor executorService = new ThreadPoolExecutor(3, 3,
+                10L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>());
+        ScheduledThreadPoolExecutor scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
 
-            expandThreadPool(executorService);
-            expandThreadPool(scheduledExecutorService);
+        expandThreadPool(executorService);
+        expandThreadPool(scheduledExecutorService);
 
-            ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
+        ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances = createTestTtlValue();
 
-            checkExecutorService(executorService, ttlInstances);
-            checkThreadPoolExecutorForRemoveMethod(executorService);
-            checkScheduledExecutorService(scheduledExecutorService, ttlInstances);
+        checkExecutorService(executorService, ttlInstances);
+        checkThreadPoolExecutorForRemoveMethod(executorService);
+        checkScheduledExecutorService(scheduledExecutorService, ttlInstances);
 
-            System.out.println();
-            System.out.println("====================================");
-            System.out.println("Check OK!");
-            System.out.println("====================================");
+        System.out.println();
+        System.out.println("====================================");
+        System.out.println("Check OK!");
+        System.out.println("====================================");
 
-            executorService.shutdown();
-            scheduledExecutorService.shutdown();
+        executorService.shutdown();
+        scheduledExecutorService.shutdown();
 
-            if (!executorService.awaitTermination(3, TimeUnit.SECONDS)) {
-                System.out.println("Fail to close ThreadPoolExecutor");
-                System.exit(1);
-            }
-            if (!scheduledExecutorService.awaitTermination(3, TimeUnit.SECONDS)) {
-                System.out.println("Fail to close scheduledExecutorService");
-                System.exit(1);
-            }
 
-            ////////////////////////////////////////////////////
-            // do ForkJoinTaskClassAgentCheck
-            ////////////////////////////////////////////////////
-            ForkJoinTaskClassAgentCheck.main(args);
-        } catch (Throwable e) {
-            System.out.println("Exception when run AgentCheck: ");
-            e.printStackTrace(System.out);
-            System.exit(2);
-        }
+        if (!executorService.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool");
+        if (!scheduledExecutorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+            fail("Fail to shutdown thread pool");
     }
 
     private static void checkExecutorService(ExecutorService executorService, ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances) throws Exception {

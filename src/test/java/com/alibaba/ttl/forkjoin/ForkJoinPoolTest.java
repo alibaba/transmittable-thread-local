@@ -18,8 +18,7 @@ public class ForkJoinPoolTest {
     @AfterClass
     public static void afterClass() throws Exception {
         pool.shutdown();
-        pool.awaitTermination(100, TimeUnit.MILLISECONDS);
-        if (!pool.isTerminated()) fail("Fail to shutdown thread pool");
+        if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool");
     }
 
     @Test

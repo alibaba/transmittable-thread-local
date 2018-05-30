@@ -22,8 +22,7 @@ public class Demo {
         System.out.println(result); // result is 5000050000
 
         pool.shutdown();
-        pool.awaitTermination(100, TimeUnit.MILLISECONDS);
-        if (!pool.isTerminated()) fail("Fail to shutdown thread pool");
+        if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool");
     }
 }
 
