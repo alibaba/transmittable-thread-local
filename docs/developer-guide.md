@@ -37,32 +37,64 @@
 
 ```java
 // ===========================================================================
-// 线程A
+// 线程 A
 // ===========================================================================
 
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
-// 1. 抓取当前线程的所有TTL值
+// (1) 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
 
 // ===========================================================================
-// 线程B
+// 线程 B（异步线程）
 // ===========================================================================
 
-// 2. 在异步线程中回放在capture方法中抓取的TTL值，并返回 回放前TTL值的备份
+// (2) 在线程 B中回放在capture方法中抓取的TTL值，并返回 回放前TTL值的备份
 final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
 try {
     // 你的业务逻辑，这里你可以获取到外面设置的TTL值
     String value = parent.get();
+
+    System.out.println("Hello: " + value);
     ...
+    String result = "World: " + value;
 } finally {
-    // 3. 恢复线程B执行replay方法之前的TTL值（即备份）
+    // (3) 恢复线程 B执行replay方法之前的TTL值（即备份）
     TransmittableThreadLocal.Transmitter.restore(backup);
 }
 ```
 
 `TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java#L43)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java#L46)。
+
+当然可以使用`TransmittableThreadLocal.Transmitter`的工具方法`runSupplierWithCaptured`和`runCallableWithCaptured`和可爱的`Java 8 Lambda`语法
+来简化`replay`和`restore`操作，示例代码：
+
+```java
+// ===========================================================================
+// 线程 A
+// ===========================================================================
+
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
+parent.set("value-set-in-parent");
+
+// (1) 抓取当前线程的所有TTL值
+final Object captured = TransmittableThreadLocal.Transmitter.capture();
+
+// ===========================================================================
+// 线程 B（异步线程）
+// ===========================================================================
+
+String result = runSupplierWithCaptured(captured, () -> {
+    // 你的业务逻辑，这里你可以获取到外面设置的TTL值
+    String value = parent.get();
+    System.out.println("Hello: " + value);
+    ...
+    return "World: " + value;
+}); // (2) + (3)
+```
+
+更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)的`JavaDoc`。
 
 # 📟 关于`Java Agent`
 

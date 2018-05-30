@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -167,33 +169,70 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
      * <p>
-     * Below is the example:
+     * Below is the example code:
      *
      * <pre><code>
      * ///////////////////////////////////////////////////////////////////////////
-     * // in thread 1, capture all TransmittableThreadLocal values of thread 1
+     * // in thread A, capture all TransmittableThreadLocal values of thread 1
      * ///////////////////////////////////////////////////////////////////////////
      *
-     * Object captured = Transmitter.capture();
+     * Object captured = Transmitter.capture(); // (1)
      *
      * ///////////////////////////////////////////////////////////////////////////
-     * // in thread 2
+     * // in thread B
      * ///////////////////////////////////////////////////////////////////////////
      *
-     * // replay all TransmittableThreadLocal values from thread 1
-     * Object backup = Transmitter.replay(captured);
+     * // replay all TransmittableThreadLocal values from thread A
+     * Object backup = Transmitter.replay(captured); // (2)
      * try {
-     *     // your biz logic, run with the TransmittableThreadLocal values of thread 1
-     *     ...
+     *     // your biz logic, run with the TransmittableThreadLocal values of thread B
+     *     System.out.println("Hello");
+     *     // ...
+     *     return "World";
      * } finally {
-     *     // restore the TransmittableThreadLocal of thread 2 when replay
-     *     Transmitter.restore(backup);
+     *     // restore the TransmittableThreadLocal of thread B when replay
+     *     Transmitter.restore(backup); (3)
      * }
      * </code></pre>
      * <p>
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
+     * <hr>
+     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified
+     * by util methods {@link #runCallableWithCaptured(Object, Callable)} or {@link #runCallableWithCaptured(Object, Callable)}
+     * and the adorable {@code Java 8 lambda syntax}.
+     * <p>
+     * Below is the example code:
+     *
+     * <pre><code>
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread A, capture all TransmittableThreadLocal values of thread A
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * Object captured = Transmitter.capture(); // (1)
+     *
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread B
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * String result = runSupplierWithCaptured(captured, () -&gt; {
+     *      // your biz logic, run with the TransmittableThreadLocal values of thread A
+     *      System.out.println("Hello");
+     *      ...
+     *      return "World";
+     * }); // (2) + (3)
+     * </code></pre>
+     * <p>
+     * The reason of providing 2 util methods is the different {@code throws Exception} type from biz logic(@{code lambda}):
+     * <ol>
+     * <li>{@link #runCallableWithCaptured(Object, Callable)}: No {@code throws}</li>
+     * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: {@code throws {@link Exception}}</li>
+     * </ol>
+     * <p>
+     * If you has the different {@code throws Exception},
+     * you can define your own util method with your own {@code throws Exception} type function interface(@{code lambda}).
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
+     * @author Jerry Lee (oldratlee at gmail dot com)
      * @see TtlRunnable
      * @see TtlCallable
      * @since 2.3.0
@@ -203,6 +242,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * Capture all {@link TransmittableThreadLocal} values in current thread.
          *
          * @return the captured {@link TransmittableThreadLocal} values
+         * @since 2.3.0
          */
         public static Object capture() {
             Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<>();
@@ -219,6 +259,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
          * @return the backup {@link TransmittableThreadLocal} values before replay
          * @see #capture()
+         * @since 2.3.0
          */
         public static Object replay(Object captured) {
             @SuppressWarnings("unchecked")
@@ -258,6 +299,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
          *
          * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
+         * @since 2.3.0
          */
         public static void restore(Object backup) {
             @SuppressWarnings("unchecked")
@@ -283,6 +325,49 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 @SuppressWarnings("unchecked")
                 TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
                 threadLocal.set(entry.getValue());
+            }
+        }
+
+        /**
+         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
+         *
+         * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
+         * @param bizLogic biz logic
+         * @param <R>      the return type of biz logic
+         * @return the return value of biz logic
+         * @see #capture()
+         * @see #replay(Object)
+         * @see #restore(Object)
+         * @since 2.4.0
+         */
+        public static <R> R runSupplierWithCaptured(Object captured, Supplier<R> bizLogic) {
+            Object backup = replay(captured);
+            try {
+                return bizLogic.get();
+            } finally {
+                restore(backup);
+            }
+        }
+
+        /**
+         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
+         *
+         * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
+         * @param bizLogic biz logic
+         * @param <R>      the return type of biz logic
+         * @return the return value of biz logic
+         * @throws Exception exception threw by biz logic
+         * @see #capture()
+         * @see #replay(Object)
+         * @see #restore(Object)
+         * @since 2.4.0
+         */
+        public static <R> R runCallableWithCaptured(Object captured, Callable<R> bizLogic) throws Exception {
+            Object backup = replay(captured);
+            try {
+                return bizLogic.call();
+            } finally {
+                restore(backup);
             }
         }
     }
