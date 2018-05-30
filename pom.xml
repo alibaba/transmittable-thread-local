@@ -8,7 +8,7 @@
 	<version>2.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
-	<description>The missing std Java™ lib(simple &amp; 0-dependency) for middleware, transmitting ThreadLocal value between threads even using thread pool like components.</description>
+	<description>The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware, transmitting ThreadLocal value between threads even using thread pool like components.</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
 
