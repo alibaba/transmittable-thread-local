@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent;
+package com.alibaba.ttl.threadpool.agent.check;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.Utils;
@@ -30,10 +30,11 @@ import static org.junit.Assert.assertFalse;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
+ * @see com.alibaba.ttl.threadpool.agent.TtlTransformer
  */
-public final class AgentCheck {
+public final class ExecutorClassesAgentCheck {
 
-    private AgentCheck() {
+    private ExecutorClassesAgentCheck() {
         throw new InstantiationError("Must not instantiate this class");
     }
 
@@ -71,9 +72,9 @@ public final class AgentCheck {
             }
 
             ////////////////////////////////////////////////////
-            // do ForkJointAgentTest
+            // do ForkJoinTaskClassAgentCheck
             ////////////////////////////////////////////////////
-            ForkJointAgentTest.main(args);
+            ForkJoinTaskClassAgentCheck.main(args);
         } catch (Throwable e) {
             System.out.println("Exception when run AgentCheck: ");
             e.printStackTrace(System.out);

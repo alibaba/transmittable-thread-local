@@ -68,29 +68,7 @@ public class TtlTransformer implements ClassFileTransformer {
                 logger.info("Transforming class " + className);
                 final CtClass clazz = getCtClass(classFileBuffer, loader);
 
-                // add new field
-                final String capturedFieldName = "captured$field$add$by$ttl";
-                final CtField capturedField = CtField.make("private final java.lang.Object " + capturedFieldName + ";", clazz);
-                clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
-
-                // rename original doExec method
-                final String doExec_methodName = "doExec";
-                final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName);
-                final String original_doExec_method_rename = "original$doExec$method$renamed$by$ttl";
-                doExecMethod.setName(original_doExec_method_rename);
-
-                // new doExec method implementation
-                CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
-                final String code = "{\n" +
-                        "java.lang.Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
-                        "try {\n" +
-                        "    return " + original_doExec_method_rename + "($$);\n" +
-                        "} finally {\n" +
-                        "    com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);\n" +
-                        "}\n" + "}";
-                new_doExecMethod.setBody(code);
-                clazz.addMethod(new_doExecMethod);
-                logger.info("insert code around method " + doExecMethod + " of class " + className + ": " + code);
+                updateForkJoinTaskClass(className, clazz);
 
                 return clazz.toBytecode();
 
@@ -161,5 +139,32 @@ public class TtlTransformer implements ClassFileTransformer {
         if (insertCode.length() > 0) {
             method.insertBefore(insertCode.toString());
         }
+    }
+
+    private void updateForkJoinTaskClass(String className, CtClass clazz) throws CannotCompileException, NotFoundException {
+        // add new field
+        final String capturedFieldName = "captured$field$add$by$ttl";
+        final CtField capturedField = CtField.make("private final java.lang.Object " + capturedFieldName + ";", clazz);
+        clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
+        logger.info("add new field " + capturedFieldName + " to class " + className);
+
+        // rename original doExec method
+        final String doExec_methodName = "doExec";
+        final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName);
+        final String original_doExec_method_rename = "original$doExec$method$renamed$by$ttl";
+        doExecMethod.setName(original_doExec_method_rename);
+
+        // new doExec method implementation
+        CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
+        final String code = "{\n" +
+                "java.lang.Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
+                "try {\n" +
+                "    return " + original_doExec_method_rename + "($$);\n" +
+                "} finally {\n" +
+                "    com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);\n" +
+                "}\n" + "}";
+        new_doExecMethod.setBody(code);
+        clazz.addMethod(new_doExecMethod);
+        logger.info("insert code around method " + doExecMethod + " of class " + className + ": " + code);
     }
 }
