@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent;
+package com.alibaba.ttl.threadpool.agent.check;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.Utils;
@@ -16,8 +16,9 @@ import static org.junit.Assert.fail;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
+ * @see com.alibaba.ttl.threadpool.agent.TtlTransformer
  */
-public class ForkJointAgentTest {
+public class ForkJoinTaskClassAgentCheck {
     private static final ForkJoinPool pool = new ForkJoinPool();
     private static final ForkJoinPool singleThreadPool = new ForkJoinPool(1);
 
@@ -86,7 +87,6 @@ public class ForkJointAgentTest {
         );
     }
 }
-
 
 class SumTask extends RecursiveTask<Integer> {
     static final String CHANGE_POSTFIX = " + 1";
