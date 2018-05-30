@@ -2,7 +2,10 @@ package com.alibaba.ttl.perf.tps;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -32,9 +35,12 @@ public class TpsCounter {
         }
     }
 
-    public void stop() {
+    public void stop() throws InterruptedException {
         stopped = true;
+
         executorService.shutdown();
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        if (!executorService.isTerminated()) fail("Fail to shutdown thread pool");
     }
 
     public long getCount() {

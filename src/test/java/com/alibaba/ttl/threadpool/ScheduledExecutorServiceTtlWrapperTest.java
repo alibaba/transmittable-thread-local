@@ -24,9 +24,7 @@ import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
 import static com.alibaba.ttl.Utils.captured;
 import static com.alibaba.ttl.Utils.createTestTtlValue;
 import static com.alibaba.ttl.Utils.expandThreadPool;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -44,6 +42,8 @@ public class ScheduledExecutorServiceTtlWrapperTest {
     @AfterClass
     public static void afterClass() throws Exception {
         executorService.shutdown();
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        if (!executorService.isTerminated()) fail("Fail to shutdown thread pool");
     }
 
     private ConcurrentMap<String, TransmittableThreadLocal<String>> ttlInstances;
