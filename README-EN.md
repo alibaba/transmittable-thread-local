@@ -41,7 +41,7 @@ Transmittable ThreadLocal(TTL)
 
 # :wrench: Functions
 
-:point_right: The missing std Java™ lib(simple &amp; 0-dependency) for middleware,
+:point_right: The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware,
 transmitting ThreadLocal value between threads even using thread pool like components.
 Support `Java` 9/8.  
 \# if you need `Java` 6/7 support, please use version `2.2.x`.  
