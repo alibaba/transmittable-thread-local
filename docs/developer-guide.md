@@ -1,4 +1,4 @@
-# :mortar_board: Developer Guide
+# 🎓 Developer Guide
 
 ---------------------------
 
@@ -24,10 +24,10 @@
 
 # 📌 框架/中间件集成`TTL`传递
 
-框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)
+框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)
 抓取当前线程的所有`TTL`值并在其他线程进行回放；在回放线程执行完业务操作后，恢复为回放线程原来的`TTL`值。
 
-[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
+[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
 
 1. `capture`方法：抓取线程（线程A）的所有`TTL`值。
 2. `replay`方法：在另一个线程（线程B）中，回放在`capture`方法中抓取的`TTL`值，并返回 回放前`TTL`值的备份
@@ -94,7 +94,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 }); // (2) + (3)
 ```
 
-更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)的`JavaDoc`。
+更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)的`JavaDoc`。
 
 # 📟 关于`Java Agent`
 
@@ -133,7 +133,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 这样可以减少Java命令上Agent的配置。
 
-在自己的`ClassFileTransformer`中调用`TtlTransformer`，示例代码如下：
+在自己的`ClassFileTransformer`中调用[`TtlTransformer`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)，示例代码如下：
 
 ```java
 public class TransformerAdaptor implements ClassFileTransformer {
@@ -145,7 +145,7 @@ public class TransformerAdaptor implements ClassFileTransformer {
             throws IllegalClassFormatException {
         final byte[] transform = ttlTransformer.transform(
             loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
-        if (transform != null) {
+        if (transform != null && transform.length > 0) {
             return transform;
         }
 

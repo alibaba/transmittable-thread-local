@@ -1,4 +1,4 @@
-# :mortar_board: Developer Guide
+# 🎓 Developer Guide
 
 ---------------------------
 
@@ -14,7 +14,7 @@
 
 # 📌 Framework/Middleware integration to `TTL` transmittance
 
-[`TransmittableThreadLocal.Transmitter`](../main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201) to capture all `TTL` values of current thread and replay them in other thread.
+[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201) to capture all `TTL` values of current thread and replay them in other thread.
 
 There are following methods：
 

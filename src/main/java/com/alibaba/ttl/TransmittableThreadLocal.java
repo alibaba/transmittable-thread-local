@@ -229,7 +229,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * </ol>
      * <p>
      * If you has the different {@code throws Exception},
-     * you can define your own util method with your own {@code throws Exception} type function interface(@{code lambda}).
+     * you can define your own util method with your own {@code throws Exception} type function interface({@code lambda}).
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
      * @author Jerry Lee (oldratlee at gmail dot com)
