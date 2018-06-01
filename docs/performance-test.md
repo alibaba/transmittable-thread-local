@@ -1,8 +1,21 @@
-:umbrella: 性能测试
-=====================================
+# ☔️ 性能测试
 
-内存泄漏
-----------------------------
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [👻 内存泄漏](#-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F)
+    - [验证结果](#%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C)
+    - [执行方式](#%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F)
+- [🐎 TPS & 压力测试](#-tps--%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95)
+    - [验证结果](#%E9%AA%8C%E8%AF%81%E7%BB%93%E6%9E%9C-1)
+        - [TPS略有下降的原因分析](#tps%E7%95%A5%E6%9C%89%E4%B8%8B%E9%99%8D%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90)
+        - [FGC次数增多的原因分析](#fgc%E6%AC%A1%E6%95%B0%E5%A2%9E%E5%A4%9A%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90)
+    - [执行方式](#%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F-1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 👻 内存泄漏
 
 对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
@@ -21,8 +34,7 @@
 * 脚本[`run-memoryleak-TransmittableThreadLocal.sh`](../run-memoryleak-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
 测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../src/test/java/com/alibaba/ttl/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.java)。
 
-TPS & 压力测试
-----------------------------
+## 🐎 TPS & 压力测试
 
 对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 

@@ -1,5 +1,4 @@
-Transmittable ThreadLocal(TTL)
-=====================================
+# 📌 Transmittable ThreadLocal(TTL) 📌
 
 [![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=windows%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
@@ -12,7 +11,7 @@ Transmittable ThreadLocal(TTL)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/alibaba/transmittable-thread-local.svg)](http://isitmaintained.com/project/alibaba/transmittable-thread-local "Average time to resolve an issue")
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-[:book: English Documentation](README-EN.md) | :book: 中文文档
+[📖 English Documentation](README-EN.md) | 📖 中文文档
 
 ----------------------------------------
 
@@ -20,21 +19,21 @@ Transmittable ThreadLocal(TTL)
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [:wrench: 功能](#wrench-%E5%8A%9F%E8%83%BD)
-- [:art: 需求场景](#art-%E9%9C%80%E6%B1%82%E5%9C%BA%E6%99%AF)
-- [:busts_in_silhouette: User Guide](#busts_in_silhouette-user-guide)
+- [🔧 功能](#-%E5%8A%9F%E8%83%BD)
+- [🎨 需求场景](#-%E9%9C%80%E6%B1%82%E5%9C%BA%E6%99%AF)
+- [👥 User Guide](#-user-guide)
     - [1. 简单使用](#1-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8)
     - [2. 保证线程池中传递值](#2-%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E4%BC%A0%E9%80%92%E5%80%BC)
         - [2.1 修饰`Runnable`和`Callable`](#21-%E4%BF%AE%E9%A5%B0runnable%E5%92%8Ccallable)
             - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
-        - [2.3 使用Java Agent来修饰JDK线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
+        - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
             - [`Java Agent`的使用方式在什么情况下`TTL`会失效](#java-agent%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8Bttl%E4%BC%9A%E5%A4%B1%E6%95%88)
-- [:electric_plug: Java API Docs](#electric_plug-java-api-docs)
-- [:cookie: Maven依赖](#cookie-maven%E4%BE%9D%E8%B5%96)
-- [:question: FAQ](#question-faq)
-- [:moyai: 更多文档](#moyai-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
-- [:books: 相关资料](#books-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
+- [🔌 Java API Docs](#-java-api-docs)
+- [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
+- [❓ FAQ](#-faq)
+- [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
+- [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [Jdk core classes](#jdk-core-classes)
     - [Java Agent](#java-agent)
 
@@ -42,27 +41,24 @@ Transmittable ThreadLocal(TTL)
 
 ----------------------------------------
 
-:wrench: 功能
-============================
+# 🔧 功能
 
-:point_right: 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。支持`Java` 9/8。  
-\# 需要`Java` 6/7的支持使用`2.2.x`版本。
-
-一个`Java`标准库 本应为 中间件设施开发提供的标配能力；本库功能聚焦简单 & 0依赖。
+👉 在使用线程池等会缓存线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。
+一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖。   
+支持`Java` 9/8，需要`Java` 6/7的支持使用`2.2.x`版本。
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会缓存线程的组件的情况，线程由线程池创建好，并且线程是缓存起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#busts_in_silhouette-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
-整个库包含`TTL`核心功能、线程池修饰及`Agent`支持，只有不到 **_700 `SLOC`代码行_**，非常精小。
+整个库包含`TTL`核心功能、线程池修饰及`Agent`支持（`ExecutorService`/`ForkJoinPool`），只有不到 **_800 `SLOC`代码行_**，非常精小。
 
 欢迎 :clap:
 
 - 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
 - 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
-:art: 需求场景
-============================
+# 🎨 需求场景
 
 在`ThreadLocal`的需求场景即是`TTL`的潜在需求场景，如果你的业务需要『在使用线程池等会缓存线程的组件情况下传递`ThreadLocal`』则是`TTL`目标场景。
 
@@ -74,8 +70,7 @@ Transmittable ThreadLocal(TTL)
 
 各个场景的展开说明参见子文档 [需求场景](docs/requirement-scenario.md)。
 
-:busts_in_silhouette: User Guide
-=====================================
+# 👥 User Guide
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
@@ -84,7 +79,7 @@ Transmittable ThreadLocal(TTL)
 相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
 1. `protected`方法`copy`  
-    用于定制 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**时的拷贝行为，缺省传递的是引用。
+    用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。
 1. `protected`方法`beforeExecute`/`afterExecute`  
     执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
 
@@ -117,7 +112,7 @@ String value = parent.get();
 
 ### 2.1 修饰`Runnable`和`Callable`
 
-使用[`com.alibaba.ttl.TtlRunnable`](src/main/java/com/alibaba/ttl/TtlRunnable.java)和[`com.alibaba.ttl.TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
+使用[`TtlRunnable`](src/main/java/com/alibaba/ttl/TtlRunnable.java)和[`TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
@@ -188,7 +183,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-### 2.3 使用Java Agent来修饰JDK线程池实现类
+### 2.3 使用`Java Agent`来修饰`JDK`线程池实现类
 
 这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
 
@@ -215,7 +210,7 @@ String value = parent.get();
 
 Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo/AgentDemo.java)。
 
-目前Agent中，修饰了`jdk`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
+目前`Agent`中，修饰了`JDK`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
 
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
@@ -227,9 +222,9 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo
 
 **注意**：
 
-- Agent修改是JDK的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
+- `Agent`修改是`JDK`的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
 
-Java命令行示例如下：
+`Java`命令行示例如下：
 
 ```bash
 java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
@@ -238,7 +233,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
-有Demo演示『使用Java Agent来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
+有Demo演示『使用`Java Agent`来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
 
 #### `Java Agent`的使用方式在什么情况下`TTL`会失效
 
@@ -249,13 +244,11 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。
 
-:electric_plug: Java API Docs
-======================
+# 🔌 Java API Docs
 
 当前版本的Java API文档地址： <http://alibaba.github.io/transmittable-thread-local/apidocs/>
 
-:cookie: Maven依赖
-=====================================
+# 🍪 Maven依赖
 
 示例：
 
@@ -269,32 +262,27 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 
 可以在 [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22transmittable-thread-local%22) 查看可用的版本。
 
-:question: FAQ
-=====================================
+# ❓ FAQ
 
 - Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
 JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205  
 可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。   
 \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
 
-:moyai: 更多文档
-=====================================
+# 🗿 更多文档
 
-- [需求场景说明](docs/requirement-scenario.md)
-- [Developer Guide](docs/developer-guide.md)
-- [性能测试](docs/performance-test.md)
+- [🎨 需求场景说明](docs/requirement-scenario.md)
+- [🎓 Developer Guide](docs/developer-guide.md)
+- [️☔️ 性能测试](docs/performance-test.md)
 
-:books: 相关资料
-=====================================
+# 📚 相关资料
 
-Jdk core classes
-----------------------------
+## Jdk core classes
 
 * [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
 * [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
-Java Agent
-----------------------------
+## Java Agent
 
 * [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
 * [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
