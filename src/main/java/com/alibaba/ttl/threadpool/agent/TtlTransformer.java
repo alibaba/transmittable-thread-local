@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * TTL {@link ClassFileTransformer} of Java Agent
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
  * @see java.util.concurrent.Executor
@@ -48,8 +50,8 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
     @Override
-    public byte[] transform(ClassLoader loader, String classFile, Class<?> classBeingRedefined,
-                            ProtectionDomain protectionDomain, byte[] classFileBuffer) {
+    public byte[] transform(final ClassLoader loader, final String classFile, final Class<?> classBeingRedefined,
+                            final ProtectionDomain protectionDomain, final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
             if (classFile == null) {
@@ -99,11 +101,11 @@ public class TtlTransformer implements ClassFileTransformer {
         return EMPTY_BYTE_ARRAY;
     }
 
-    private static String toClassName(String classFile) {
+    private static String toClassName(final String classFile) {
         return classFile.replace('/', '.');
     }
 
-    private static CtClass getCtClass(byte[] classFileBuffer, ClassLoader classLoader) throws IOException {
+    private static CtClass getCtClass(final byte[] classFileBuffer, final ClassLoader classLoader) throws IOException {
         ClassPool classPool = new ClassPool(true);
         if (classLoader == null) {
             classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
@@ -116,7 +118,7 @@ public class TtlTransformer implements ClassFileTransformer {
         return clazz;
     }
 
-    private static void updateMethodOfExecutorClass(CtClass clazz, CtMethod method) throws NotFoundException, CannotCompileException {
+    private static void updateMethodOfExecutorClass(final CtClass clazz, final CtMethod method) throws NotFoundException, CannotCompileException {
         if (method.getDeclaringClass() != clazz) {
             return;
         }
@@ -144,23 +146,25 @@ public class TtlTransformer implements ClassFileTransformer {
         }
     }
 
-    private void updateForkJoinTaskClass(String className, CtClass clazz) throws CannotCompileException, NotFoundException {
+    private static void updateForkJoinTaskClass(final String className, final CtClass clazz) throws CannotCompileException, NotFoundException {
         // add new field
         final String capturedFieldName = "captured$field$add$by$ttl";
         final CtField capturedField = CtField.make("private final java.lang.Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
-        // rename original doExec method
         final String doExec_methodName = "doExec";
         final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName);
+        final CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
+
+        // rename original doExec method, and set to private method(avoid reflect out renamed method unexpectedly)
         final String original_doExec_method_rename = "original$doExec$method$renamed$by$ttl";
         doExecMethod.setName(original_doExec_method_rename);
+        doExecMethod.setModifiers(doExecMethod.getModifiers() & ~Modifier.PUBLIC /* remove public */ | Modifier.PRIVATE /* add private */);
 
-        // new doExec method implementation
-        CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
+        // set new doExec method implementation
         final String code = "{\n" +
-                // do nothing/directly return, if is TTL ForkJoinTask
+                // do nothing/directly return, if is TTL ForkJoinTask instance
                 "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
                 "    return " + original_doExec_method_rename + "($$);\n" +
                 "}\n" +
