@@ -370,5 +370,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 restore(backup);
             }
         }
+
+        private Transmitter() {
+            throw new InstantiationError("Must not instantiate this class");
+        }
     }
 }
