@@ -129,34 +129,35 @@ String result = runSupplierWithCaptured(captured, () -> {
 - 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：
 业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
-## 已有Java Agent中嵌入`TTL Agent`
+## 已有`Java Agent`中嵌入`TTL Agent`
 
-这样可以减少Java命令上Agent的配置。
+这样可以减少`Java`启动命令行上的`Agent`的配置。
 
-在自己的`ClassFileTransformer`中调用[`TtlTransformer`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)，示例代码如下：
+在自己的`Agent`中加上[`TtlTransformer`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)，示例代码如下：
 
 ```java
-public class TransformerAdaptor implements ClassFileTransformer {
-    final TtlTransformer ttlTransformer = new TtlTransformer();
+import com.alibaba.ttl.threadpool.agent.TtlAgent;
+import com.alibaba.ttl.threadpool.agent.TtlTransformer;
 
-    @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-            ProtectionDomain protectionDomain, byte[] classfileBuffer)
-            throws IllegalClassFormatException {
-        final byte[] transform = ttlTransformer.transform(
-            loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
-        if (transform != null && transform.length > 0) {
-            return transform;
-        }
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
+import java.util.logging.Logger;
 
-        // Your transform code ...
+public final class YourXxxAgent {
+    private static final Logger logger = Logger.getLogger(YourXxxAgent.class.getName());
 
-        return null;
+    public static void premain(String agentArgs, Instrumentation inst) {
+        TtlAgent.premain(agentArgs, inst); // add TTL Transformer
+        
+        // add your Transformer
+        ...
     }
 }
 ```
 
-注意还是要在`bootclasspath`上，加上`TTL`依赖的2个Jar：
+关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
+
+注意在`bootclasspath`上，还是要加上`TTL`依赖的Jar：
 
 ```bash
 -Xbootclasspath/a:/path/to/transmittable-thread-local-2.0.0.jar:/path/to/your/agent/jar/files

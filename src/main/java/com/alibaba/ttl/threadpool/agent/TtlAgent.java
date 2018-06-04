@@ -21,16 +21,13 @@ public final class TtlAgent {
     }
 
     public static void premain(String agentArgs, Instrumentation inst) {
-        logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs);
-        install(agentArgs, inst);
-    }
-
-    static void install(String agentArgs, Instrumentation inst) {
-        logger.info("[TtlAgent.install] agentArgs: " + agentArgs + ", Instrumentation: " + inst);
+        logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
 
         ClassFileTransformer transformer = new TtlTransformer();
         inst.addTransformer(transformer, true);
+        logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
 
-        logger.info("[TtlAgent.install] addTransformer success.");
+        logger.info("[TtlAgent.premain] end");
     }
+
 }
