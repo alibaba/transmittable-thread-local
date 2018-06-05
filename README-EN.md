@@ -34,6 +34,7 @@
     - [JDK core classes](#jdk-core-classes)
     - [Java Agent](#java-agent)
     - [Javassist](#javassist)
+- [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -41,7 +42,7 @@
 
 # 🔧 Functions
 
-:point_right: The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware,
+👉 The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware,
 transmitting ThreadLocal value between threads even using thread pool like components.
 Support `Java` 9/8.  
 \# if you need `Java` 6/7 support, please use version `2.2.x`.  
@@ -233,16 +234,24 @@ Check available version at [search.maven.org](http://search.maven.org/#search%7C
 
 ## JDK core classes
 
-* [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
-* [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
-* [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
-* [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
-* [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+- [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
+- [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
+- [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
+- [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 
 ## Javassist
 
-* [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
+- [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
+
+# 👷 Contributors
+
+- Jerry Lee \<oldratlee at gmail dot com> [@oldratlee](https://github.com/oldratlee)
+- Yang Fang \<snoop.fy at gmail dot com> [@driventokill](https://github.com/driventokill)
+- wuwen \<wuwen.55 at aliyun dot com> [@wuwen5](https://github.com/wuwen5)
+- 牧瑾 \<351450944 at qq dot com> [@LNAmp](https://github.com/LNAmp)
+- Your name here :-)
