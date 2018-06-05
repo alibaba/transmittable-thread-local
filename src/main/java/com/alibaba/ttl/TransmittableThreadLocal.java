@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -118,71 +119,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         holder.get().remove(this);
     }
 
-    static Map<TransmittableThreadLocal<?>, Object> copy() {
-        Map<TransmittableThreadLocal<?>, Object> copy = new HashMap<TransmittableThreadLocal<?>, Object>();
-        for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
-            copy.put(threadLocal, threadLocal.copyValue());
-        }
-        return copy;
-    }
-
-    static Map<TransmittableThreadLocal<?>, Object> backupAndSetToCopied(Map<TransmittableThreadLocal<?>, Object> copied) {
-        Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
-
-        for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
-             iterator.hasNext(); ) {
-            Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-            TransmittableThreadLocal<?> threadLocal = next.getKey();
-
-            // backup
-            backup.put(threadLocal, threadLocal.get());
-
-            // clear the TTL value only in copied
-            // avoid extra TTL value in copied, when run task.
-            if (!copied.containsKey(threadLocal)) {
-                iterator.remove();
-                threadLocal.superRemove();
-            }
-        }
-
-        // set value to copied TTL
-        for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : copied.entrySet()) {
-            @SuppressWarnings("unchecked")
-            TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
-            threadLocal.set(entry.getValue());
-        }
-
-        // call beforeExecute callback
-        doExecuteCallback(true);
-
-        return backup;
-    }
-
-    static void restoreBackup(Map<TransmittableThreadLocal<?>, Object> backup) {
-        // call afterExecute callback
-        doExecuteCallback(false);
-
-        for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
-             iterator.hasNext(); ) {
-            Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-            TransmittableThreadLocal<?> threadLocal = next.getKey();
-
-            // clear the TTL value only in backup
-            // avoid the extra value of backup after restore
-            if (!backup.containsKey(threadLocal)) {
-                iterator.remove();
-                threadLocal.superRemove();
-            }
-        }
-
-        // restore TTL value
-        for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : backup.entrySet()) {
-            @SuppressWarnings("unchecked")
-            TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
-            threadLocal.set(entry.getValue());
-        }
-    }
-
     private static void doExecuteCallback(boolean isBefore) {
         for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
             TransmittableThreadLocal<?> threadLocal = entry.getKey();
@@ -223,5 +159,188 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      */
     static void dump() {
         dump(null);
+    }
+
+    /**
+     * {@link Transmitter} transmit all {@link TransmittableThreadLocal} of current thread to
+     * any other thread by static method {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
+     * <p>
+     * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
+     * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
+     * <p>
+     * Below is the example code:
+     *
+     * <pre><code>
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread A, capture all TransmittableThreadLocal values of thread 1
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * Object captured = Transmitter.capture(); // (1)
+     *
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread B
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * // replay all TransmittableThreadLocal values from thread A
+     * Object backup = Transmitter.replay(captured); // (2)
+     * try {
+     *     // your biz logic, run with the TransmittableThreadLocal values of thread B
+     *     System.out.println("Hello");
+     *     // ...
+     *     return "World";
+     * } finally {
+     *     // restore the TransmittableThreadLocal of thread B when replay
+     *     Transmitter.restore(backup); (3)
+     * }
+     * </code></pre>
+     * <p>
+     * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
+     * <hr>
+     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified
+     * by util method {@link #runCallableWithCaptured(Object, Callable)}
+     * and the adorable {@code Java 8 lambda syntax}.
+     * <p>
+     * Below is the example code:
+     *
+     * <pre><code>
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread A, capture all TransmittableThreadLocal values of thread A
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * Object captured = Transmitter.capture(); // (1)
+     *
+     * ///////////////////////////////////////////////////////////////////////////
+     * // in thread B
+     * ///////////////////////////////////////////////////////////////////////////
+     *
+     * String result = runCallableWithCaptured(captured, () -&gt; {
+     *      // your biz logic, run with the TransmittableThreadLocal values of thread A
+     *      System.out.println("Hello");
+     *      ...
+     *      return "World";
+     * }); // (2) + (3)
+     * </code></pre>
+     * <p>
+     * If you has the different {@code throws Exception},
+     * you can define your own util method with your own {@code throws Exception} type function interface({@code lambda}).
+     *
+     * @author Yang Fang (snoop dot fy at gmail dot com)
+     * @author Jerry Lee (oldratlee at gmail dot com)
+     * @see TtlRunnable
+     * @see TtlCallable
+     * @since 2.2.2, 2.3.0
+     */
+    public static class Transmitter {
+        /**
+         * Capture all {@link TransmittableThreadLocal} values in current thread.
+         *
+         * @return the captured {@link TransmittableThreadLocal} values
+         */
+        public static Object capture() {
+            Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<TransmittableThreadLocal<?>, Object>();
+            for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
+                captured.put(threadLocal, threadLocal.copyValue());
+            }
+            return captured;
+        }
+
+        /**
+         * Replay the captured {@link TransmittableThreadLocal} values from {@link #capture()},
+         * and return the backup {@link TransmittableThreadLocal} values in current thread before replay.
+         *
+         * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
+         * @return the backup {@link TransmittableThreadLocal} values before replay
+         * @see #capture()
+         */
+        public static Object replay(Object captured) {
+            @SuppressWarnings("unchecked")
+            Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
+            Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
+
+            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+                 iterator.hasNext(); ) {
+                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
+                TransmittableThreadLocal<?> threadLocal = next.getKey();
+
+                // backup
+                backup.put(threadLocal, threadLocal.get());
+
+                // clear the TTL value only in captured
+                // avoid extra TTL value in captured, when run task.
+                if (!capturedMap.containsKey(threadLocal)) {
+                    iterator.remove();
+                    threadLocal.superRemove();
+                }
+            }
+
+            // set value to captured TTL
+            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : capturedMap.entrySet()) {
+                @SuppressWarnings("unchecked")
+                TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
+                threadLocal.set(entry.getValue());
+            }
+
+            // call beforeExecute callback
+            doExecuteCallback(true);
+
+            return backup;
+        }
+
+        /**
+         * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
+         *
+         * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
+         */
+        public static void restore(Object backup) {
+            @SuppressWarnings("unchecked")
+            Map<TransmittableThreadLocal<?>, Object> backupMap = (Map<TransmittableThreadLocal<?>, Object>) backup;
+            // call afterExecute callback
+            doExecuteCallback(false);
+
+            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+                 iterator.hasNext(); ) {
+                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
+                TransmittableThreadLocal<?> threadLocal = next.getKey();
+
+                // clear the TTL value only in backup
+                // avoid the extra value of backup after restore
+                if (!backupMap.containsKey(threadLocal)) {
+                    iterator.remove();
+                    threadLocal.superRemove();
+                }
+            }
+
+            // restore TTL value
+            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : backupMap.entrySet()) {
+                @SuppressWarnings("unchecked")
+                TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
+                threadLocal.set(entry.getValue());
+            }
+        }
+
+        /**
+         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
+         *
+         * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
+         * @param bizLogic biz logic
+         * @param <R>      the return type of biz logic
+         * @return the return value of biz logic
+         * @throws Exception exception threw by biz logic
+         * @see #capture()
+         * @see #replay(Object)
+         * @see #restore(Object)
+         */
+        public static <R> R runCallableWithCaptured(Object captured, Callable<R> bizLogic) throws Exception {
+            Object backup = replay(captured);
+            try {
+                return bizLogic.call();
+            } finally {
+                restore(backup);
+            }
+        }
+
+        private Transmitter() {
+            throw new InstantiationError("Must not instantiate this class");
+        }
     }
 }

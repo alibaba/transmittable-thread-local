@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import com.alibaba.ttl.TransmittableThreadLocal.Transmitter;
+
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,12 +24,12 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Deprecated
 public final class TtlTimerTask extends TimerTask {
-    private final AtomicReference<Map<TransmittableThreadLocal<?>, Object>> copiedRef;
+    private final AtomicReference<Object> copiedRef;
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlTimerTask(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
-        this.copiedRef = new AtomicReference<Map<TransmittableThreadLocal<?>, Object>>(TransmittableThreadLocal.copy());
+        this.copiedRef = new AtomicReference<Object>(Transmitter.capture());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -37,16 +39,16 @@ public final class TtlTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        Map<TransmittableThreadLocal<?>, Object> copied = copiedRef.get();
+        Object copied = copiedRef.get();
         if (copied == null || releaseTtlValueReferenceAfterRun && !copiedRef.compareAndSet(copied, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Map<TransmittableThreadLocal<?>, Object> backup = TransmittableThreadLocal.backupAndSetToCopied(copied);
+        Object backup = Transmitter.replay(copied);
         try {
             timerTask.run();
         } finally {
-            TransmittableThreadLocal.restoreBackup(backup);
+            Transmitter.restore(backup);
         }
     }
 
