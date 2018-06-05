@@ -1,9 +1,9 @@
 Transmittable ThreadLocal(TTL)
 =====================================
 
-[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=dev-v2.2.x-jdk6-support)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/dev-v2.2.x-jdk6-support.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/dev-v2.2.x-jdk6-support.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/dev-v2.2.x-jdk6-support)
+[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=v2.2.2)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![JDK6 Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.2.2.svg?label=jdk6%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.2.2.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.2.2)
 [![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local/2.2.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22transmittable-thread-local%22)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
 [![Join the chat at https://gitter.im/alibaba/transmittable-thread-local](https://badges.gitter.im/alibaba/transmittable-thread-local.svg)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -210,7 +210,7 @@ to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 # :electric_plug: Java API Docs
 
-The current version Java API documentation: <http://alibaba.github.io/transmittable-thread-local/apidocs/>
+The current version Java API documentation: <http://alibaba.github.io/transmittable-thread-local/apidocs/2.2.2/index.html>
 
 # :cookie: Maven dependency
 
@@ -218,7 +218,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.2.0</version>
+	<version>2.2.2</version>
 </dependency>
 ```
 
