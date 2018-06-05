@@ -16,7 +16,7 @@
     - `git push origin v2.x.x`
 1. 等待Tag的CI通过 <https://travis-ci.org/alibaba/transmittable-thread-local/builds>
 1. 发布版本到Maven中央库  
-    `mvn deploy -DperformRelease`
+    `./mvnw deploy -DperformRelease`
 1. 更新JavaDoc
     1. 生成JavaDoc，更新到分支gh-pages  
         `mv target/apidocs apidocs/2.x.x`
