@@ -18,13 +18,13 @@ runCmd() {
 
 cleanInstall() {
     [ "$1" = 'skip'  ] || {
-        mvn clean install -Dmaven.test.skip && mvn test-compile
+        ./mvnw clean install -Dmaven.test.skip && ./mvnw test-compile
     }
 }
 
 copyDeps() {
     [ "$1" = 'skip'  ] || {
-        mvn dependency:copy-dependencies -DincludeScope=test
+        ./mvnw dependency:copy-dependencies -DincludeScope=test
         # remove repackaged and shaded javassist lib
         rm target/dependency/javassist*
     }
