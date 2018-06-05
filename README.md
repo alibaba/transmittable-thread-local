@@ -36,6 +36,7 @@
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [Jdk core classes](#jdk-core-classes)
     - [Java Agent](#java-agent)
+- [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -53,7 +54,7 @@
 
 整个库包含`TTL`核心功能、线程池修饰及`Agent`支持（`ExecutorService`/`ForkJoinPool`），只有不到 **_800 `SLOC`代码行_**，非常精小。
 
-欢迎 :clap:
+欢迎 👏
 
 - 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
 - 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
@@ -279,12 +280,20 @@ JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205
 
 ## Jdk core classes
 
-* [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
-* [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
-* [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
-* [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
-* [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+- [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
+- [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
+- [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
+- [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+
+# 👷 Contributors
+
+- Jerry Lee \<oldratlee at gmail dot com> [@oldratlee](https://github.com/oldratlee)
+- Yang Fang \<snoop.fy at gmail dot com> [@driventokill](https://github.com/driventokill)
+- wuwen \<wuwen.55 at aliyun dot com> [@wuwen5](https://github.com/wuwen5)
+- 牧瑾 \<351450944 at qq dot com> [@LNAmp](https://github.com/LNAmp)
+- Your name here :-)
