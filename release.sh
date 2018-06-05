@@ -64,12 +64,12 @@ $deploy_maven && {
     echo '================================================================================'
     echo 'deploy to maven center repo...'
     echo '================================================================================'
-    mvn deploy -DperformRelease=true
+    ./mvnw deploy -DperformRelease=true
 }
 
 
 $deploy_java_doc && {
-    mvn install -Dmaven.test.skip=true -PsrcDoc
+    ./mvnw install -Dmaven.test.skip=true -PsrcDoc
 
     git checkout gh-pages
     mv target/apidocs "apidocs/$new_version"
