@@ -1,7 +1,7 @@
 package com.alibaba.ttl.testmodel;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.alibaba.ttl.Utils;
+import com.alibaba.utils.Utils;
 
 import java.util.Map;
 import java.util.concurrent.Callable;

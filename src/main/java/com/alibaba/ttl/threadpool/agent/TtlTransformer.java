@@ -36,7 +36,7 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
     private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
 
-    private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<>();
+    private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
     static {
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");

@@ -1,7 +1,7 @@
 package com.alibaba.ttl.threadpool.agent.check;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.alibaba.ttl.Utils;
+import com.alibaba.utils.Utils;
 import com.alibaba.ttl.testmodel.Task;
 
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.alibaba.ttl.Utils.CHILD;
-import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
-import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.assertTtlInstances;
-import static com.alibaba.ttl.Utils.captured;
-import static com.alibaba.ttl.Utils.createTestTtlValue;
-import static com.alibaba.ttl.Utils.expandThreadPool;
+import static com.alibaba.utils.Utils.CHILD;
+import static com.alibaba.utils.Utils.PARENT_AFTER_CREATE_TTL_TASK;
+import static com.alibaba.utils.Utils.PARENT_MODIFIED_IN_CHILD;
+import static com.alibaba.utils.Utils.PARENT_UNMODIFIED_IN_CHILD;
+import static com.alibaba.utils.Utils.assertTtlInstances;
+import static com.alibaba.utils.Utils.captured;
+import static com.alibaba.utils.Utils.createTestTtlValue;
+import static com.alibaba.utils.Utils.expandThreadPool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -42,7 +42,7 @@ public final class ExecutorClassesAgentCheck {
     public static void main(String[] args) throws Exception {
         ThreadPoolExecutor executorService = new ThreadPoolExecutor(3, 3,
                 10L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>());
+                new LinkedBlockingQueue<Runnable>());
         ScheduledThreadPoolExecutor scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
 
         expandThreadPool(executorService);
@@ -73,7 +73,7 @@ public final class ExecutorClassesAgentCheck {
         executorService.submit(task);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 
@@ -97,16 +97,19 @@ public final class ExecutorClassesAgentCheck {
     }
 
     private static void checkThreadPoolExecutorForRemoveMethod(ThreadPoolExecutor executor) throws Exception {
-        List<FutureTask<?>> sleepTasks = new ArrayList<>();
+        List<FutureTask<?>> sleepTasks = new ArrayList<FutureTask<?>>();
 
         final int COUNT = 4;
         for (int i = 0; i < COUNT; i++) {
-            FutureTask<?> futureTask = new FutureTask<>(() -> {
-                try {
-                    Thread.sleep(100);
-                    System.out.println("Run sleep task!");
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            FutureTask<?> futureTask = new FutureTask<Object>(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                        System.out.println("Run sleep task!");
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }, null);
 
@@ -115,7 +118,12 @@ public final class ExecutorClassesAgentCheck {
         }
 
         final FutureTask<?> taskToRemove =
-                new FutureTask<>(() -> System.out.println("Run taskToRemove!"), null);
+                new FutureTask<Object>(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Run taskToRemove!");
+                    }
+                }, null);
 
         executor.execute(taskToRemove);
         executor.remove(taskToRemove);
@@ -139,7 +147,7 @@ public final class ExecutorClassesAgentCheck {
         ScheduledFuture<?> future = scheduledExecutorService.schedule(task, 200, TimeUnit.MILLISECONDS);
 
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
 

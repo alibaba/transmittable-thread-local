@@ -180,7 +180,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-See demo [`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/AgentDemo.java).
+See demo [`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java).
 
 Agent decorate 2 thread pool implementation classes
 \(implementation code [`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)\):
@@ -207,7 +207,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
-Run the script [`run-agent-demo.sh`](run-agent-demo.sh)
+Run the script [`run-agent-demo.sh`](scritps/run-agent-demo.sh)
 to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 # 🔌 Java API Docs
