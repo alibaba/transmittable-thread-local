@@ -17,13 +17,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.alibaba.ttl.Utils.CHILD;
-import static com.alibaba.ttl.Utils.PARENT_AFTER_CREATE_TTL_TASK;
-import static com.alibaba.ttl.Utils.PARENT_MODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.PARENT_UNMODIFIED_IN_CHILD;
-import static com.alibaba.ttl.Utils.captured;
-import static com.alibaba.ttl.Utils.createTestTtlValue;
-import static com.alibaba.ttl.Utils.expandThreadPool;
+import static com.alibaba.utils.Utils.CHILD;
+import static com.alibaba.utils.Utils.PARENT_AFTER_CREATE_TTL_TASK;
+import static com.alibaba.utils.Utils.PARENT_MODIFIED_IN_CHILD;
+import static com.alibaba.utils.Utils.PARENT_UNMODIFIED_IN_CHILD;
+import static com.alibaba.utils.Utils.captured;
+import static com.alibaba.utils.Utils.createTestTtlValue;
+import static com.alibaba.utils.Utils.expandThreadPool;
 import static org.junit.Assert.*;
 
 /**
@@ -84,7 +84,7 @@ public class ScheduledExecutorServiceTtlWrapperTest {
 
     private void setLocalAfter() {
         // create after new Task, won't see parent value in in task!
-        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<>();
+        TransmittableThreadLocal<String> after = new TransmittableThreadLocal<String>();
         after.set(PARENT_AFTER_CREATE_TTL_TASK);
         ttlInstances.put(PARENT_AFTER_CREATE_TTL_TASK, after);
     }

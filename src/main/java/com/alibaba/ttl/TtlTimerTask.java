@@ -30,7 +30,7 @@ public final class TtlTimerTask extends TimerTask {
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlTimerTask(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
-        this.capturedRef = new AtomicReference<>(capture());
+        this.capturedRef = new AtomicReference<Object>(capture());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }

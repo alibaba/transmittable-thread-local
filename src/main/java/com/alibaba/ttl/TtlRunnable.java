@@ -2,13 +2,11 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.Collections;
 
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
  * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
@@ -31,7 +29,7 @@ public final class TtlRunnable implements Runnable {
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.capturedRef = new AtomicReference<>(capture());
+        this.capturedRef = new AtomicReference<Object>(capture());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -169,7 +167,7 @@ public final class TtlRunnable implements Runnable {
         if (null == tasks) {
             return Collections.emptyList();
         }
-        List<TtlRunnable> copy = new ArrayList<>();
+        List<TtlRunnable> copy = new ArrayList<TtlRunnable>();
         for (Runnable task : tasks) {
             copy.add(TtlRunnable.get(task, releaseTtlValueReferenceAfterRun, idempotent));
         }

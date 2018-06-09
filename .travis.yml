@@ -1,7 +1,19 @@
 language: java
+# how to install and set jdk on travis:
+# - Testing Against Multiple JDKs
+#   https://docs.travis-ci.com/user/languages/java/#Testing-Against-Multiple-JDKs
+# - JVM images
+#   https://docs.travis-ci.com/user/reference/trusty/#JVM-(Clojure%2C-Groovy%2C-Java%2C-Scala)-images
+# - Customizing the Build / Build Matrix
+#   https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix
+
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+
 jdk:
   - oraclejdk8
-  - oraclejdk9
 
 before_install:
   # workaroud for "buffer overflow detected" problem of openjdk:
@@ -14,17 +26,27 @@ before_install:
   - cat /etc/hosts # optionally check the content *after*
 
   # output env info
-  - ls -l /usr/lib/jvm
-  - echo "JAVA_HOME=$JAVA_HOME"
-  - echo "PATH=$PATH"
+  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/*
+  - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH"
   - ./mvnw --version
-
   - pip install --user codecov
 
 script:
+  # default Java 8, do build and test
   - ./mvnw clean install --batch-mode
-  - echo "Run Agent test"
-  - ./run-agent-test.sh skip
+  - ./scritps/run-agent-test.sh
+  # Java 6
+  - jdk_switcher use openjdk6
+  - ./scritps/run-junit.sh skipClean
+  - ./scritps/run-agent-test.sh skipClean
+  # Java 7
+  - jdk_switcher use openjdk7
+  - ./scritps/run-junit.sh skipClean
+  - ./scritps/run-agent-test.sh skipClean
+  # Java 9
+  - jdk_switcher use oraclejdk9
+  - ./scritps/run-junit.sh skipClean
+  - ./scritps/run-agent-test.sh skipClean
 
 after_success:
   - codecov

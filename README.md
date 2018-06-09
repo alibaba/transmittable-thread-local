@@ -209,7 +209,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/ttl/threadpool/agent/demo/AgentDemo.java)。
+Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。
 
 目前`Agent`中，修饰了`JDK`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
 
@@ -234,7 +234,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
-有Demo演示『使用`Java Agent`来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](run-agent-demo.sh)即可运行Demo。
+有Demo演示『使用`Java Agent`来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](scritps/run-agent-demo.sh)即可运行Demo。
 
 #### `Java Agent`的使用方式在什么情况下`TTL`会失效
 

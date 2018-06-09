@@ -101,12 +101,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
                 @Override
                 protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
-                    return new WeakHashMap<>();
+                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>();
                 }
 
                 @Override
                 protected Map<TransmittableThreadLocal<?>, ?> childValue(Map<TransmittableThreadLocal<?>, ?> parentValue) {
-                    return new WeakHashMap<>(parentValue);
+                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue);
                 }
             };
 
@@ -245,7 +245,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @since 2.3.0
          */
         public static Object capture() {
-            Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<>();
+            Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<TransmittableThreadLocal<?>, Object>();
             for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
                 captured.put(threadLocal, threadLocal.copyValue());
             }
@@ -264,7 +264,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         public static Object replay(Object captured) {
             @SuppressWarnings("unchecked")
             Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
-            Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<>();
+            Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
 
             for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
                  iterator.hasNext(); ) {
