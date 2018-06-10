@@ -1,7 +1,20 @@
 #!/bin/bash
 
-set -e
 set -o pipefail
+set -e
+# https://stackoverflow.com/questions/64786/error-handling-in-bash
+error() {
+    local parent_lineno="$1"
+    local message="$2"
+    local code="${3:-1}"
+    if [[ -n "$message" ]] ; then
+        redEcho "Error on or near line $(caller): ${message}; exiting with status ${code}"
+    else
+        redEcho "Error on or near line $(caller); exiting with status ${code}"
+    fi
+    exit "${code}"
+}
+trap 'error ${LINENO}' ERR
 
 ################################################################################
 # util functions
@@ -29,13 +42,20 @@ yellowEcho() {
 }
 
 runCmd() {
-    redEcho "Run under work directory $PWD :$nl$@"
+    colorEcho "36" "Run under work directory $PWD :$nl$@"
     "$@"
 }
 
 fatal() {
     redEcho "$@" 1>&2
     exit 1
+}
+
+headInfo() {
+    colorEcho "0;34;46" ================================================================================
+    echo "$@"
+    colorEcho "0;34;46" ================================================================================
+    echo
 }
 
 ################################################################################
