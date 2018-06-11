@@ -5,7 +5,7 @@
 
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.5.0-SNAPSHOT</version>
+	<version>2.5.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware, transmitting ThreadLocal
@@ -51,6 +51,28 @@
 			<name>Yang Fang</name>
 			<id>driventokill</id>
 			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<organization>Alibaba</organization>
+			<organizationUrl>http://www.alibaba.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>wuwen</name>
+			<id>wuwen</id>
+			<email>wuwen.55(AT)aliyun(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<organization>ofpay</organization>
+			<organizationUrl>http://www.ofpay.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>David Dai</name>
+			<id>LNAmp</id>
+			<email>351450944(AT)qq(DOT)com</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
