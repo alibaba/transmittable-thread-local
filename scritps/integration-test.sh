@@ -1,4 +1,6 @@
 #!/bin/bash
+cd "$(dirname "$(readlink -f "$0")")"
+
 source ./common.sh skipClean
 
 # set multi-version java home env
@@ -20,14 +22,15 @@ else
 fi
 
 headInfo "test with Java 8"
-./mvnw clean install --batch-mode
-./scritps/run-agent-test.sh
+runCmd ./mvnw clean install --batch-mode
+runCmd ./scritps/run-agent-test.sh
 
 # Java 6
 if [ -n "$JAVA6_HOME" ]; then
     headInfo "test with Java 6"
-    ./scritps/run-junit.sh skipClean
-    ./scritps/run-agent-test.sh skipClean
+    export JAVA_HOME="${JAVA6_HOME}"
+    runCmd ./scritps/run-junit.sh skipClean
+    runCmd ./scritps/run-agent-test.sh skipClean
 else
     headInfo "skip Java 6 test"
 fi
@@ -35,8 +38,9 @@ fi
 # Java 7
 if [ -n "$JAVA7_HOME" ]; then
     headInfo "test with Java 7"
-    ./scritps/run-junit.sh skipClean
-    ./scritps/run-agent-test.sh skipClean
+    export JAVA_HOME="${JAVA7_HOME}"
+    runCmd ./scritps/run-junit.sh skipClean
+    runCmd ./scritps/run-agent-test.sh skipClean
 else
     headInfo "skip Java 7 test"
 fi
@@ -44,8 +48,9 @@ fi
 # Java 9
 if [ -n "$JAVA9_HOME" ]; then
     headInfo "test with Java 9"
-    ./scritps/run-junit.sh skipClean
-    ./scritps/run-agent-test.sh skipClean
+    export JAVA_HOME="${JAVA9_HOME}"
+    runCmd ./scritps/run-junit.sh skipClean
+    runCmd ./scritps/run-agent-test.sh skipClean
 else
     headInfo "skip Java 9 test"
 fi
@@ -53,8 +58,9 @@ fi
 # Java 10
 if [ -n "$JAVA10_HOME" ]; then
     headInfo "test with Java 10"
-    ./scritps/run-junit.sh skipClean
-    ./scritps/run-agent-test.sh skipClean
+    export JAVA_HOME="${JAVA10_HOME}"
+    runCmd ./scritps/run-junit.sh skipClean
+    runCmd ./scritps/run-agent-test.sh skipClean
 else
     headInfo "skip Java 10 test"
 fi

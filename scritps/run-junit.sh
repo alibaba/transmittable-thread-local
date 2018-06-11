@@ -1,13 +1,13 @@
 #!/bin/bash
 
-cd "$(dirname "$(readlink -f $0)")"
+cd "$(dirname "$(readlink -f "$0")")"
 source ./common.sh
 
 junit_test_case() {
     (
         cd target/test-classes &&
         find . -iname '*Test.class' | sed '
-                s!^\./!!
+                s#^\./##
                 s/\.class$//
                 s#/#.#g
             '
