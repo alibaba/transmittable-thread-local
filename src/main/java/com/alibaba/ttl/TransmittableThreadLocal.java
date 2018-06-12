@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 /**
  * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
  * <p>
- * Note: this class extends {@link java.lang.InheritableThreadLocal},
+ * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -163,8 +163,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     /**
-     * {@link Transmitter} transmit all {@link TransmittableThreadLocal} of current thread to
-     * any other thread by static method {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
+     * {@link Transmitter} transmit all {@link TransmittableThreadLocal} values of current thread to
+     * other thread by static method {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
      * <p>
      * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
@@ -173,7 +173,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      *
      * <pre><code>
      * ///////////////////////////////////////////////////////////////////////////
-     * // in thread A, capture all TransmittableThreadLocal values of thread 1
+     * // in thread A, capture all TransmittableThreadLocal values of thread A
      * ///////////////////////////////////////////////////////////////////////////
      *
      * Object captured = Transmitter.capture(); // (1)
@@ -198,7 +198,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
      * <hr>
      * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified
-     * by util methods {@link #runCallableWithCaptured(Object, Callable)} or {@link #runCallableWithCaptured(Object, Callable)}
+     * by util methods {@link #runCallableWithCaptured(Object, Callable)} or {@link #runSupplierWithCaptured(Object, Supplier)}
      * and the adorable {@code Java 8 lambda syntax}.
      * <p>
      * Below is the example code:
@@ -222,10 +222,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * }); // (2) + (3)
      * </code></pre>
      * <p>
-     * The reason of providing 2 util methods is the different {@code throws Exception} type from biz logic(@{code lambda}):
+     * The reason of providing 2 util methods is the different {@code throws Exception} type from biz logic({@code lambda}):
      * <ol>
      * <li>{@link #runCallableWithCaptured(Object, Callable)}: No {@code throws}</li>
-     * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: {@code throws {@link Exception}}</li>
+     * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: {@code throws Exception}</li>
      * </ol>
      * <p>
      * If you has the different {@code throws Exception},
