@@ -58,12 +58,34 @@
 			<organization>Alibaba</organization>
 			<organizationUrl>http://www.alibaba.com</organizationUrl>
 		</developer>
+		<developer>
+			<name>wuwen</name>
+			<id>wuwen</id>
+			<email>wuwen.55(AT)aliyun(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<organization>ofpay</organization>
+			<organizationUrl>http://www.ofpay.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>David Dai</name>
+			<id>LNAmp</id>
+			<email>351450944(AT)qq(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<organization>Alibaba</organization>
+			<organizationUrl>http://www.alibaba.com</organizationUrl>
+		</developer>
 	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.2.41</kotlin.version>
+		<kotlin.version>1.2.50</kotlin.version>
 	</properties>
 
 	<dependencies>
