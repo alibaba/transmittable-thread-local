@@ -1,8 +1,12 @@
 package com.alibaba.ttl.threadpool.agent;
 
 
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlExecutorTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlForkJoinTransformlet;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -21,13 +25,22 @@ public final class TtlAgent {
     }
 
     public static void premain(String agentArgs, Instrumentation inst) {
-        logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
+        try {
 
-        ClassFileTransformer transformer = new TtlTransformer();
-        inst.addTransformer(transformer, true);
-        logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
+            logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
 
-        logger.info("[TtlAgent.premain] end");
+            @SuppressWarnings("unchecked") ClassFileTransformer transformer = new TtlTransformer(TtlExecutorTransformlet.class, TtlForkJoinTransformlet.class);
+            inst.addTransformer(transformer, true);
+            logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
+
+            logger.info("[TtlAgent.premain] end");
+
+        } catch (Exception e) {
+            String msg = "Fail to load TtlAgent , cause: " + e.toString();
+            if (logger.isLoggable(Level.SEVERE)) {
+                logger.log(Level.SEVERE, msg, e);
+            }
+            throw new IllegalStateException(msg, e);
+        }
     }
-
 }
