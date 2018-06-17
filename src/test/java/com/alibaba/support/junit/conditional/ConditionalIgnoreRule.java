@@ -11,16 +11,16 @@
  ******************************************************************************/
 package com.alibaba.support.junit.conditional;
 
+import org.junit.Assume;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Modifier;
-
-import org.junit.Assume;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
 
 /**
  * @see <a href="https://www.codeaffine.com/2013/11/18/a-junit-rule-to-conditionally-ignore-tests/">A JUnit Rule to Conditionally Ignore Tests</a>

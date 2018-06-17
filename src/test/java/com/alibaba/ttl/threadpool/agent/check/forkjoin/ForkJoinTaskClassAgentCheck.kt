@@ -1,56 +1,51 @@
-package com.alibaba.ttl.forkjoin.recursive_task
+@file:JvmName("ForkJoinTaskClassAgentCheck")
+
+package com.alibaba.ttl.threadpool.agent.check.forkjoin
 
 import com.alibaba.*
-import com.alibaba.support.junit.conditional.BelowJava7
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.ttl.TtlRecursiveTask
-import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
-import org.junit.Rule
-import org.junit.Test
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.RecursiveTask
 import java.util.concurrent.TimeUnit
+
 
 private val pool = ForkJoinPool()
 private val singleThreadPool = ForkJoinPool(1)
 
 /**
- * @author LNAmp
+ * !! Quick and dirty: copy code from [com.alibaba.ttl.forkjoin.recursive_task.TtlRecursiveTaskTest] !!
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @author wuwen5 (wuwen.55 at aliyun dot com)
+ * @see com.alibaba.ttl.threadpool.agent.TtlForkJoinTransformer
  */
-class TtlRecursiveTaskTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+fun main(args: Array<String>) {
 
-    @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
-    fun test_TtlRecursiveTask_asyncWith_ForkJoinPool() {
-        run_test_with_pool(pool)
-    }
+    check_TtlRecursiveTask_asyncWith_ForkJoinPool()
+    check_TtlRecursiveTask_asyncWith_SingleThreadForkJoinPool()
 
-    @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
-    fun test_TtlRecursiveTask_asyncWith_SingleThreadForkJoinPool() {
-        run_test_with_pool(singleThreadPool)
-    }
 
-    companion object {
-        @AfterClass
-        @Suppress("unused")
-        fun afterClass() {
-            pool.shutdown()
-            if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
+    pool.shutdown()
+    if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
 
-            singleThreadPool.shutdown()
-            if (!singleThreadPool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
-        }
+    singleThreadPool.shutdown()
+    if (!singleThreadPool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
 
-    }
+    printHead("ForkJoinTaskClassAgentCheck OK!")
+}
+
+
+private fun check_TtlRecursiveTask_asyncWith_ForkJoinPool() {
+    printHead("check_TtlRecursiveTask_asyncWith_ForkJoinPool")
+    run_test_with_pool(pool)
+}
+
+private fun check_TtlRecursiveTask_asyncWith_SingleThreadForkJoinPool() {
+    printHead("check_TtlRecursiveTask_asyncWith_SingleThreadForkJoinPool")
+    run_test_with_pool(singleThreadPool)
 }
 
 private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
@@ -101,7 +96,8 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
  * @see com.alibaba.ttl.TtlRecursiveTask
  */
 private class SumTask(private val numbers: IntRange,
-                      private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : TtlRecursiveTask<Int>() {
+                      private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>,
+                      private val changeTtlValue: Boolean = false) : RecursiveTask<Int>() {
 
     lateinit var copied: Map<String, Any>
     lateinit var leftSubTask: SumTask

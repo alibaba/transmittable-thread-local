@@ -1,10 +1,9 @@
 package com.alibaba.demo.forkjoinpool
 
+import org.junit.Assert.fail
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.RecursiveTask
 import java.util.concurrent.TimeUnit
-
-import org.junit.Assert.fail
 
 /**
  * ForkJoinPool use demo.

@@ -1,21 +1,18 @@
 package com.alibaba.ttl.forkjoin.recursive_action
 
+import com.alibaba.*
+import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRecursiveAction
-import com.alibaba.utils.Utils
 import org.junit.AfterClass
+import org.junit.Assert.fail
+import org.junit.Rule
 import org.junit.Test
-
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.TimeUnit
-
-import com.alibaba.utils.Utils.*
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.BelowJava7
-import org.junit.Assert.fail
-import org.junit.Rule
 
 
 private val pool = ForkJoinPool()
@@ -45,8 +42,8 @@ class TtlRecursiveActionTest {
     }
 
     companion object {
-        @Suppress("unused")
         @AfterClass
+        @Suppress("unused")
         fun afterClass() {
             pool.shutdown()
             if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
@@ -59,40 +56,41 @@ class TtlRecursiveActionTest {
 }
 
 private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
-    val ttlInstances = createTestTtlValue()
+    val ttlInstances = createParentTtlInstances()
 
     val printAction = PrintAction(1..42, ttlInstances)
 
-    val after = TransmittableThreadLocal<String>()
-    after.set(PARENT_AFTER_CREATE_TTL_TASK)
-    ttlInstances[PARENT_AFTER_CREATE_TTL_TASK] = after
+    // create after new Task, won't see parent value in in task!
+    createParentTtlInstancesAfterCreateChild(ttlInstances)
+
 
     val future = forkJoinPool.submit(printAction)
     future.get()
 
+
     // child Inheritable
-    assertTtlInstances(printAction.copied,
-            PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
-            PARENT_MODIFIED_IN_CHILD /* Not change*/, PARENT_MODIFIED_IN_CHILD
+    assertTtlValues(printAction.copied,
+            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
     )
 
     // left grand Task Inheritable, changed value
-    assertTtlInstances(printAction.leftSubAction.copied,
-            PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
-            PARENT_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */, PARENT_MODIFIED_IN_CHILD
+    assertTtlValues(printAction.leftSubAction.copied,
+            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */, PARENT_CREATE_MODIFIED_IN_CHILD
     )
 
     // right grand Task Inheritable, not change value
-    assertTtlInstances(printAction.rightSubAction.copied,
-            PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
-            PARENT_MODIFIED_IN_CHILD /* Not change*/, PARENT_MODIFIED_IN_CHILD
+    assertTtlValues(printAction.rightSubAction.copied,
+            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
     )
 
     // child do not effect parent
-    assertTtlInstances(captured(ttlInstances),
-            PARENT_UNMODIFIED_IN_CHILD, PARENT_UNMODIFIED_IN_CHILD,
-            PARENT_MODIFIED_IN_CHILD, PARENT_MODIFIED_IN_CHILD,
-            PARENT_AFTER_CREATE_TTL_TASK, PARENT_AFTER_CREATE_TTL_TASK
+    assertTtlValues(copyTtlValues(ttlInstances),
+            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD, PARENT_CREATE_MODIFIED_IN_CHILD,
+            PARENT_CREATE_AFTER_CREATE_CHILD, PARENT_CREATE_AFTER_CREATE_CHILD
     )
 }
 
@@ -102,27 +100,21 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
  *
  * @author LNAmp
  */
-internal class PrintAction(private val numbers: IntRange,
-                           private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : TtlRecursiveAction() {
+private class PrintAction(private val numbers: IntRange,
+                          private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : TtlRecursiveAction() {
 
-    @Volatile
     lateinit var copied: Map<String, Any>
-    @Volatile
     lateinit var leftSubAction: PrintAction
-    @Volatile
     lateinit var rightSubAction: PrintAction
 
     override fun compute() {
         if (changeTtlValue) {
-            Utils.modifyValuesExistInTtlInstances(CHANGE_POSTFIX, ttlMap)
+            modifyParentTtlInstances(CHANGE_POSTFIX, ttlMap)
         }
 
         try {
-
-
-            if (numbers.count() <= 5) {
-                println("numbers: $numbers")
-
+            if (numbers.count() <= 10) {
+                println("print numbers: $numbers")
             } else {
                 val mid = numbers.start + numbers.count() / 2
 
@@ -138,7 +130,7 @@ internal class PrintAction(private val numbers: IntRange,
                 right.join()
             }
         } finally {
-            this.copied = Utils.captured(this.ttlMap)
+            this.copied = copyTtlValues(this.ttlMap)
         }
     }
 

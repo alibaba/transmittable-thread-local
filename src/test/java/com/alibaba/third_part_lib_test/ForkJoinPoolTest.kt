@@ -1,8 +1,8 @@
 package com.alibaba.third_part_lib_test
 
+import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.BelowJava7
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Rule
@@ -23,7 +23,7 @@ class ForkJoinPoolTest {
     fun test_sameTaskDirectReturn_onlyExec1Time_ifHaveRun() {
         val pool = ForkJoinPool()
 
-        val numbers = 1L..42L
+        val numbers = 1L..100L
         val sumTask = SumTask(numbers)
 
         // same task instance run 10 times
@@ -46,7 +46,7 @@ internal class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
     override fun compute(): Long? {
         execCounter.incrementAndGet()
 
-        return if (numbers.count() < 16) {
+        return if (numbers.count() <= 16) {
             // compute directly
             numbers.sum()
         } else {
