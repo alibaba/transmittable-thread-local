@@ -1,11 +1,10 @@
 package com.alibaba.ttl.perf.tps
 
+import org.junit.Assert.fail
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
-
-import org.junit.Assert.fail
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)

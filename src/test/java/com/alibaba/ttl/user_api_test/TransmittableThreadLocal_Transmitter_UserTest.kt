@@ -108,6 +108,7 @@ class TransmittableThreadLocal_Transmitter_UserTest {
         }
 
         @AfterClass
+        @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
             executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
