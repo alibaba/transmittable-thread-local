@@ -1,7 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.check
 
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.ttl.TtlRecursiveTask
 import com.alibaba.utils.Utils
 import java.util.concurrent.*
 
@@ -96,7 +95,7 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
  * @see com.alibaba.ttl.TtlRecursiveTask
  */
 internal class SumTask(private val numbers: IntRange,
-                       private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : TtlRecursiveTask<Int>() {
+                       private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : RecursiveTask<Int>() {
 
     @Volatile
     lateinit var copied: Map<String, Any>
