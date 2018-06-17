@@ -3,7 +3,7 @@
 package com.alibaba.ttl.perf.tps
 
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.ttl.perf.Utils
+import com.alibaba.ttl.perf.getRandomString
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
 
     tpsCounter.setAction(Runnable {
         val threadLocal = TransmittableThreadLocal<String>()
-        threadLocal.set(Utils.getRandomString())
+        threadLocal.set(getRandomString())
     })
 
     while (true) {
