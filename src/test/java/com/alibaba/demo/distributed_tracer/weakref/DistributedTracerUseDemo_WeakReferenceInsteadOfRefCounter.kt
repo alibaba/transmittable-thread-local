@@ -1,7 +1,7 @@
 package com.alibaba.demo.distributed_tracer.weakref
 
+import com.alibaba.expandThreadPool
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.utils.Utils
 import com.alibaba.ttl.threadpool.TtlExecutors
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -24,7 +24,7 @@ private val executorService = TtlExecutors.getTtlExecutorService(
  */
 fun main(args: Array<String>) {
     // ensure threads in pool is pre-created.
-    Utils.expandThreadPool(executorService)
+    expandThreadPool(executorService)
 
     for (i in 0..42) {
         rpcInvokeIn()

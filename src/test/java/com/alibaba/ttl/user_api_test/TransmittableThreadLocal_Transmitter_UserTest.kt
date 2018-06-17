@@ -1,10 +1,10 @@
 package com.alibaba.ttl.user_api_test
 
+import com.alibaba.expandThreadPool
 import com.alibaba.support.junit.conditional.BelowJava8
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.utils.Utils.expandThreadPool
 import org.junit.AfterClass
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail

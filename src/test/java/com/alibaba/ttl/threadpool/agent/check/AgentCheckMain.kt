@@ -7,10 +7,10 @@ import org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast
 
 fun main(args: Array<String>) {
     try {
-        ExecutorClassesAgentCheck.main(args)
+        com.alibaba.ttl.threadpool.agent.check.executor.main(args)
 
         if (isJavaVersionAtLeast(JavaVersion.JAVA_1_7))
-            ForkJoinTaskClassAgentCheck.main(args)
+            com.alibaba.ttl.threadpool.agent.check.forkjoin.main(args)
 
     } catch (e: Throwable) {
         println("Exception when run AgentCheck: ")

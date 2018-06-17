@@ -2,14 +2,11 @@ package com.alibaba.ttl.reported_bugs
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRunnable
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicReference
-
-import org.junit.Assert.assertEquals
 
 /**
  * Bug URL: https://github.com/alibaba/transmittable-thread-local/issues/70
