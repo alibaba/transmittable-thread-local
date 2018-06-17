@@ -3,9 +3,7 @@ package com.alibaba.ttl;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
  * {@link TtlTimerTask} decorate {@link TimerTask}, so as to get {@link TransmittableThreadLocal}

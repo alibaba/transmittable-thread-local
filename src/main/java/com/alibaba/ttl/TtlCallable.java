@@ -2,14 +2,12 @@ package com.alibaba.ttl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.Collections;
 
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay;
-import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
  * {@link TtlCallable} decorate {@link Callable}, so as to get {@link TransmittableThreadLocal}
