@@ -24,7 +24,7 @@
 
 # 📌 框架/中间件集成`TTL`传递
 
-框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)
+框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)
 抓取当前线程的所有`TTL`值并在其他线程进行回放；在回放线程执行完业务操作后，恢复为回放线程原来的`TTL`值。
 
 [`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
@@ -65,7 +65,7 @@ try {
 }
 ```
 
-`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java#L43)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java#L46)。
+`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 当然可以使用`TransmittableThreadLocal.Transmitter`的工具方法`runSupplierWithCaptured`和`runCallableWithCaptured`和可爱的`Java 8 Lambda`语法
 来简化`replay`和`restore`操作，示例代码：
@@ -94,7 +94,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 }); // (2) + (3)
 ```
 
-更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)的`JavaDoc`。
+更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)的`JavaDoc`。
 
 # 📟 关于`Java Agent`
 
@@ -106,12 +106,12 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 按框架图，把前面示例代码操作可以分成下面几部分：
 
-1. 读取信息设置到`TTL`。    
-这部分在容器中完成，无需应用参与。
-2. 提交`Runnable`到线程池。要有修饰操作`Runnable`（无论是直接修饰`Runnable`还是修饰线程池）。    
-这部分操作一定是在用户应用中触发。
-3. 读取`TTL`，做业务检查。    
-在`SDK`中完成，无需应用参与。
+1. 读取信息设置到`TTL`。  
+    这部分在容器中完成，无需应用参与。
+2. 提交`Runnable`到线程池。要有修饰操作`Runnable`（无论是直接修饰`Runnable`还是修饰线程池）。  
+    这部分操作一定是在用户应用中触发。
+3. 读取`TTL`，做业务检查。  
+    在`SDK`中完成，无需应用参与。
 
 只有第2部分的操作和应用代码相关。
 
@@ -123,17 +123,17 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：
 
-- 不推荐使用`Timer`类，推荐用`ScheduledThreadPoolExecutor`。
-`ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
-如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。
-- 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：
-业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
+- 不推荐使用`Timer`类，推荐用`ScheduledThreadPoolExecutor`。  
+    `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
+    如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。
+- 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：  
+    业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
 ## 已有`Java Agent`中嵌入`TTL Agent`
 
 这样可以减少`Java`启动命令行上的`Agent`的配置。
 
-在自己的`Agent`中加上[`TtlTransformer`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)，示例代码如下：
+在自己的`Agent`中加上`TTL Agent`的逻辑，示例代码如下（[`YourXxxAgent.java`](../src/test/java/com/alibaba/demo/agent/YourXxxAgent.java)）：
 
 ```java
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
@@ -148,14 +148,14 @@ public final class YourXxxAgent {
 
     public static void premain(String agentArgs, Instrumentation inst) {
         TtlAgent.premain(agentArgs, inst); // add TTL Transformer
-        
+
         // add your Transformer
         ...
     }
 }
 ```
 
-关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
+关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
 
 注意在`bootclasspath`上，还是要加上`TTL`依赖的Jar：
 
@@ -179,20 +179,20 @@ public final class YourXxxAgent {
 
 ## Jdk core classes
 
-* [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
-* [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
-* [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
-* [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
-* [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
-* [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+- [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
+- [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
+- [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
+- [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 
 ## Javassist
 
-* [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
+- [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
 
 ## Shade插件
 
-* `Maven`的[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件
+- `Maven`的[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件
