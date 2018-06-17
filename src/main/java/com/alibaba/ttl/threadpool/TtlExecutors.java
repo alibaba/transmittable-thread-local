@@ -10,7 +10,6 @@ import java.util.concurrent.ScheduledExecutorService;
  * Factory Utils for getting TTL Wrapper of jdk executors.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 0.9.0
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor
@@ -18,6 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @see java.util.concurrent.Executors
  * @see java.util.concurrent.CompletionService
  * @see java.util.concurrent.ExecutorCompletionService
+ * @since 0.9.0
  */
 public final class TtlExecutors {
     /**

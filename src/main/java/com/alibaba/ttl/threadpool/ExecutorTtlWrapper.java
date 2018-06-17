@@ -1,7 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
-import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlRunnable;
 
 import java.util.concurrent.Executor;
 
