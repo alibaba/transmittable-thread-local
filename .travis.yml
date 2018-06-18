@@ -35,6 +35,9 @@ before_install:
   - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH"
   - ./mvnw --version
 
+install:
+  - pip install --user codecov
+
 script:
   # default oracle jdk 8, do build and test
   - ./mvnw clean install --batch-mode
@@ -81,7 +84,7 @@ script:
   - mvn cobertura:cobertura
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
 
 # Caching Dependencies and Directories
 # https://docs.travis-ci.com/user/caching/
@@ -89,6 +92,7 @@ cache:
   directories:
     - $HOME/.m2
     - $HOME/.jdk
+    - $HOME/.cache/pip
 before_cache:
   # clear TTL maven self install
   - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local
