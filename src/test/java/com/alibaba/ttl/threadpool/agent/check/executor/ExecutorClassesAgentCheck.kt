@@ -87,9 +87,12 @@ private fun checkThreadPoolExecutorForRemoveMethod(executor: ThreadPoolExecutor)
     assertFalse(taskToRemove.isDone)
     assertFalse(taskToRemove.isCancelled) // task is directly removed from work queue, so not cancelled!
 
-    println("executor.activeCount: ${executor.activeCount}")
-    Thread.sleep(1)
+    println("executor.activeCount: ${executor.activeCount}")    // NOTE: activeCount value is not strong published
+    Thread.sleep(1)                                             // read and wait, then assert check!
     assertEquals(0L, executor.activeCount.toLong()) // No more task in executor, so remove op is success!
+
+    assertFalse(taskToRemove.isDone)
+    assertFalse(taskToRemove.isCancelled) // task is directly removed from work queue, so not cancelled!
 
 }
 
