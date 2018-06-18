@@ -56,38 +56,39 @@ script:
   - ./scritps/run-junit.sh skipClean
   - ./scritps/run-agent-test.sh skipClean
   # open jdk 9
-  - export JAVA_HOME=$HOME/openjdk9
-  - $TRAVIS_BUILD_DIR/install-jdk.sh --feature 9 --os linux-x64 --license GPL --target $JAVA_HOME
+  - export JAVA_HOME=$HOME/.jdk/openjdk9
+  - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 9 --os linux-x64 --license GPL --target $JAVA_HOME; fi
   - ./scritps/run-junit.sh skipClean
   - ./scritps/run-agent-test.sh skipClean
   #  oracle jdk 10
-  - export JAVA_HOME=$HOME/oraclejdk10
-  - $TRAVIS_BUILD_DIR/install-jdk.sh --feature 10 --os linux-x64 --license BCL --target $JAVA_HOME
+  - export JAVA_HOME=$HOME/.jdk/oraclejdk10
+  - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 10 --os linux-x64 --license BCL --target $JAVA_HOME; fi
   - ./scritps/run-junit.sh skipClean
   - ./scritps/run-agent-test.sh skipClean
   #  open jdk 10
-  - export JAVA_HOME=$HOME/openjdk10
-  - $TRAVIS_BUILD_DIR/install-jdk.sh --feature 10 --os linux-x64 --license GPL --target $JAVA_HOME
+  - export JAVA_HOME=$HOME/.jdk/openjdk10
+  - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 10 --os linux-x64 --license GPL --target $JAVA_HOME; fi
   - ./scritps/run-junit.sh skipClean
   - ./scritps/run-agent-test.sh skipClean
   #  open jdk 11
-  - export JAVA_HOME=$HOME/openjdk11
-  - $TRAVIS_BUILD_DIR/install-jdk.sh --feature 11 --os linux-x64 --license GPL --target $JAVA_HOME
+  - export JAVA_HOME=$HOME/.jdk/openjdk11
+  - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 11 --os linux-x64 --license GPL --target $JAVA_HOME; fi
   - ./scritps/run-junit.sh skipClean
   - ./scritps/run-agent-test.sh skipClean
   # codecov
   - jdk_switcher use oraclejdk8
   - mvn clean -V
   - mvn cobertura:cobertura
-  # clear TTL maven self install
-  - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local
-
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-# cache between builds
+# Caching Dependencies and Directories
+# https://docs.travis-ci.com/user/caching/
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.cache/pip
+    - $HOME/.jdk
+before_cache:
+  # clear TTL maven self install
+  - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local
