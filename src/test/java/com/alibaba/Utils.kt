@@ -26,7 +26,7 @@ fun expandThreadPool(executor: ExecutorService) {
 }
 
 fun printHead(title: String) {
-    println("\n======================================\n$title\n======================================\n")
+    println("======================================\n$title\n======================================")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +110,7 @@ fun <T> printTtlInstances(ttlInstances: TtlInstances<T>, title: String = "") {
             .map { (k, v) -> "$k: ${v.get()}" }
             .joinToString()
     val output = (headList + valueString + "^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^")
+            .filter { it.isNotBlank() }
             .joinToString("\n")
     println(output)
 }
