@@ -100,7 +100,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 ## `Java Agent`方式对应用代码无侵入
 
-相对修饰`Runnable`或是线程池的方式，`Java Agent`方式为什么是应用代码无侵入的？
+[User Guide - 2.3 使用`Java Agent`来修饰`JDK`线程池实现类](../README.md#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB) 说到了，相对修饰`Runnable`或是线程池的方式，`Java Agent`方式是对应用代码无侵入的。下面做一些展开说明。
 
 <img src="scenario-framework-sdk-arch.png" alt="构架图" width="260" />
 
@@ -173,7 +173,7 @@ public final class YourXxxAgent {
 
 可以通过`repackage`（重新命名包名）来解决这个问题。
 
-`Maven`提供了[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件，可以完成`repackage`操作，并把`Javassist`的类加到`TTL`的`Jar`中。
+`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成`repackage`操作，并把`Javassist`的类加到`TTL`的`Jar`中。
 
 这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
 

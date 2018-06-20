@@ -191,11 +191,11 @@ String value = parent.get();
 示例代码：
 
 ```java
-// 框架代码
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+// ## 1. 框架上层逻辑，后续流程框架调用业务 ##
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
-// 应用代码
+// ## 2. 应用逻辑，后续流程业务调用框架下层逻辑 ##
 ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 Runnable task = new Task("1");
@@ -203,13 +203,12 @@ Callable call = new Call("2");
 executorService.submit(task);
 executorService.submit(call);
 
-// =====================================================
-
+// ## 3. 框架下层逻辑 ##
 // Task或是Call中可以读取，值是"value-set-in-parent"
-String value = parent.get();
+String value = context.get();
 ```
 
-Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。
+Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。执行工程下的脚本[`scritps/run-agent-demo.sh`](scritps/run-agent-demo.sh)即可运行Demo。
 
 目前`Agent`中，修饰了`JDK`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
 
@@ -233,8 +232,6 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
     -cp classes \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
-
-有Demo演示『使用`Java Agent`来修饰线程池实现类』，执行工程下的脚本[`run-agent-demo.sh`](scritps/run-agent-demo.sh)即可运行Demo。
 
 #### `Java Agent`的使用方式在什么情况下`TTL`会失效
 
