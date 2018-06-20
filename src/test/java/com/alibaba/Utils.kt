@@ -20,7 +20,7 @@ fun expandThreadPool(executor: ExecutorService) {
     // toList, avoid lazy
     val list: List<Future<*>> = (0 until count).map {
         executor.submit { Thread.sleep(100) }
-    }.toList()
+    }
 
     list.forEach { it.get() }
 }
@@ -122,12 +122,12 @@ fun <T> printTtlInstances(ttlInstances: TtlInstances<T>, title: String = "") {
 
 typealias  TtlValues<T> = Map<String, T>
 
-fun <T> copyTtlValues(ttlInstances: ConcurrentMap<String, TransmittableThreadLocal<T>>): TtlValues<T> =
+fun <T> copyTtlValues(ttlInstances: TtlInstances<T>): TtlValues<T> =
         ttlInstances.filter { (_, v) -> v.get() != null }.map { (k, v) -> Pair(k, v.get()) }.toMap()
 
 
 fun <T> assertTtlValues(copied: TtlValues<T>, vararg asserts: String?) {
-    val message = "Assert Fail:\ncopyTtlValues: " + copied + "\n asserts: " + Arrays.toString(asserts)
+    val message = "Assert Fail:\ncopyTtlValues: $copied\n asserts: ${Arrays.toString(asserts)}"
 
     if (asserts.size % 2 != 0) {
         throw IllegalStateException("should even count! $message")

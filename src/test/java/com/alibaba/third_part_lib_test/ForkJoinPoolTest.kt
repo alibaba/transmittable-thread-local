@@ -41,7 +41,7 @@ class ForkJoinPoolTest {
 
 
 internal class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
-    var execCounter = AtomicInteger(0)
+    val execCounter = AtomicInteger(0)
 
     override fun compute(): Long? {
         execCounter.incrementAndGet()

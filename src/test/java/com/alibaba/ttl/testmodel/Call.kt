@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentMap
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class Call(val tag: String, private val ttlInstances: ConcurrentMap<String, TransmittableThreadLocal<String>> = ConcurrentHashMap()) : Callable<String> {
+class Call(private val tag: String, private val ttlInstances: ConcurrentMap<String, TransmittableThreadLocal<String>> = ConcurrentHashMap()) : Callable<String> {
 
     lateinit var copied: Map<String, String>
 

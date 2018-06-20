@@ -8,9 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class CallbackTestTransmittableThreadLocal : TransmittableThreadLocal<FooPojo>() {
-    var copyCounter = AtomicInteger()
-    var beforeExecuteCounter = AtomicInteger()
-    var afterExecuteCounter = AtomicInteger()
+    val copyCounter = AtomicInteger()
+    val beforeExecuteCounter = AtomicInteger()
+    val afterExecuteCounter = AtomicInteger()
 
     override fun copy(parentValue: FooPojo): FooPojo {
         copyCounter.incrementAndGet()

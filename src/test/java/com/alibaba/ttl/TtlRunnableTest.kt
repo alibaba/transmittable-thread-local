@@ -189,12 +189,10 @@ class TtlRunnableTest {
         val task = Task("1", ttlInstances)
         val ttlRunnable = TtlRunnable.get(task, true)
 
-        var future = executorService.submit(ttlRunnable)
-        assertNull(future.get())
+        assertNull(executorService.submit(ttlRunnable).get())
 
-        future = executorService.submit(ttlRunnable)
         try {
-            future.get()
+            executorService.submit(ttlRunnable).get()
             fail()
         } catch (expected: ExecutionException) {
             assertThat<Throwable>(expected.cause, instanceOf(IllegalStateException::class.java))

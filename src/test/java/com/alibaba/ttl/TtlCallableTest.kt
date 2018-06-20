@@ -97,12 +97,10 @@ class TtlCallableTest {
         val ttlCallable = TtlCallable.get(call, true)
         assertSame(call, ttlCallable.callable)
 
-        var future = executorService.submit(ttlCallable)
-        assertEquals("ok", future.get())
+        assertEquals("ok", executorService.submit(ttlCallable).get())
 
-        future = executorService.submit(ttlCallable)
         try {
-            future.get()
+            executorService.submit(ttlCallable).get()
             fail()
         } catch (expected: ExecutionException) {
             assertThat<Throwable>(expected.cause, instanceOf(IllegalStateException::class.java))
