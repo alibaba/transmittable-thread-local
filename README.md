@@ -185,7 +185,8 @@ String value = parent.get();
 
 ### 2.3 使用`Java Agent`来修饰`JDK`线程池实现类
 
-这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。即可以做到应用代码 **无侵入**，后面文档有结合实际场景的架构对这一点的说明。
+这种方式，实现线程池的传递是透明的，代码中没有修饰`Runnable`或是线程池的代码。即可以做到应用代码 **无侵入**。  
+\# 关于 **无侵入** 的更多说明参见文档[`Java Agent`方式对应用代码无侵入](docs/developer-guide.md#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)。
 
 示例代码：
 
@@ -240,8 +241,8 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，传递会失效。
 
 - 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
-覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。   
-修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
+    覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。  
+    修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
 - 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。
 
 # 🔌 Java API Docs
@@ -254,9 +255,9 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 
 ```xml
 <dependency>
-	<groupId>com.alibaba</groupId>
-	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.5.1</version>
+    <groupId>com.alibaba</groupId>
+    <artifactId>transmittable-thread-local</artifactId>
+    <version>2.5.1</version>
 </dependency>
 ```
 
@@ -265,9 +266,9 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 # ❓ FAQ
 
 - Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
-JDK Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205  
-可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。   
-\# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
+    JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
+    可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
+    \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
 
 # 🗿 更多文档
 

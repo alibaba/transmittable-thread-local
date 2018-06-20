@@ -119,6 +119,8 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 使用`Java Agent`方式，应用无需修改代码，即做到 相对应用代码 透明地完成跨线程池的上下文传递。
 
+更多关于应用场景的了解说明参见文档[需求场景](requirement-scenario.md)。
+
 ## 如何权衡`Java Agent`方式的失效情况
 
 把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：

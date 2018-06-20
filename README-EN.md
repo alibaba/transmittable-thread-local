@@ -56,10 +56,10 @@ If you have problem or question, please [submit Issue](https://github.com/alibab
 
 # 🎨 Requirements
 
-The Requirements listed below is also why I sort out `TTL` in my work. 
+The Requirements listed below is also why I sort out `TTL` in my work.
 
-* Application container or high layer framework transmit information to low layer sdk.
-* Transmit context to logging without application code aware.
+- Application container or high layer framework transmit information to low layer sdk.
+- Transmit context to logging without application code aware.
 
 # 👥 User Guide
 
@@ -73,7 +73,7 @@ parent.set("value-set-in-parent");
 // =====================================================
 
 // read in child thread, value is "value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html) instead.
@@ -98,13 +98,13 @@ parent.set("value-set-in-parent");
 
 Runnable task = new Task("1");
 // extra work, create decorated ttlRunnable object
-Runnable ttlRunnable = TtlRunnable.get(task); 
+Runnable ttlRunnable = TtlRunnable.get(task);
 executorService.submit(ttlRunnable);
 
 // =====================================================
 
 // read in task, value is "value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 above code show how to dealing with `Runnable`, `Callable` is similar:
@@ -115,13 +115,13 @@ parent.set("value-set-in-parent");
 
 Callable call = new Call("1");
 // extra work, create decorated ttlCallable object
-Callable ttlCallable = TtlCallable.get(call); 
+Callable ttlCallable = TtlCallable.get(call);
 executorService.submit(ttlCallable);
 
 // =====================================================
 
 // read in call, value is "value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 ### 2.2 Decorate thread pool
@@ -134,16 +134,16 @@ to decorate thread pool.
 
 Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
 
-* `getTtlExecutor`: decorate interface `Executor`
-* `getTtlExecutorService`: decorate interface `ExecutorService`
-* `getTtlScheduledExecutorService`: decorate interface `ScheduledExecutorService`
+- `getTtlExecutor`: decorate interface `Executor`
+- `getTtlExecutorService`: decorate interface `ExecutorService`
+- `getTtlScheduledExecutorService`: decorate interface `ScheduledExecutorService`
 
 Sample code:
 
 ```java
 ExecutorService executorService = ...
 // extra work, create decorated executorService object
-executorService = TtlExecutors.getTtlExecutorService(executorService); 
+executorService = TtlExecutors.getTtlExecutorService(executorService);
 
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
@@ -156,7 +156,7 @@ executorService.submit(call);
 // =====================================================
 
 // read in Task or Callable, value is "value-set-in-parent"
-String value = parent.get(); 
+String value = parent.get();
 ```
 
 ### 2.3 Use Java Agent to decorate thread pool implementation class
@@ -187,15 +187,15 @@ Agent decorate 2 thread pool implementation classes
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
 
-Add start options on Java command: 
+Add start options on Java command:
 
 - `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
 - `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
 
-**NOTE**： 
+**NOTE**：
 
-* Agent modify the `JDK` classes, add code refer to the class of `TTL`, so the jar of `TTL Agent` should add to `bootclasspath`.
-* `TTL Agent` modify the class by `javassist`, so the Jar of `javassist` should add to `bootclasspath` too.
+- Agent modify the `JDK` classes, add code refer to the class of `TTL`, so the jar of `TTL Agent` should add to `bootclasspath`.
+- `TTL Agent` modify the class by `javassist`, so the Jar of `javassist` should add to `bootclasspath` too.
 
 Java command example:
 
@@ -217,9 +217,9 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 
 ```xml
 <dependency>
-	<groupId>com.alibaba</groupId>
-	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.5.1</version>
+    <groupId>com.alibaba</groupId>
+    <artifactId>transmittable-thread-local</artifactId>
+    <version>2.5.1</version>
 </dependency>
 ```
 
