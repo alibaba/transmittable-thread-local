@@ -79,19 +79,19 @@ done
 readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
 readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
 
-readonly JAVA_CMD="$JAVA_HOME/bin/java -Xmx128m -Xms128m -ea"
-readonly debug_opts="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+readonly -a JAVA_CMD=( "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US )
+readonly -a JAVA_DEBUG_OPTS=( -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 )
 
 #################################################################################
 # maven operation functions
 #################################################################################
 
 mvnClean() {
-    runCmd ./mvnw clean || fatal "fail to mvn clean install!"
+    runCmd ./mvnw clean || fatal "fail to mvn clean!"
 }
 
 mvnBuildJar() {
-    runCmd ./mvnw install -Dmaven.test.skip || fatal "fail to mvn jar!"
+    runCmd ./mvnw install -Dmaven.test.skip || fatal "fail to build jar!"
 }
 
 mvnCompileTest() {
