@@ -109,6 +109,6 @@ public final class TtlTimerTask extends TimerTask {
                 throw new IllegalStateException("Already TtlTimerTask!");
             }
         }
-        return new TtlTimerTask(timerTask, false);
+        return new TtlTimerTask(timerTask, releaseTtlValueReferenceAfterRun);
     }
 }
