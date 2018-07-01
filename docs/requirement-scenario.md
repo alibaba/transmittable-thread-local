@@ -43,7 +43,17 @@ PS： 多谢 [@wyzssw](https://github.com/https://github.com/wyzssw) 对分布�
 
 > The Stack and the Map are managed per thread and are based on ThreadLocal by default. The Map can be configured to use an InheritableThreadLocal by setting system property isThreadContextMapInheritable to "true". When configured this way, the contents of the Map will be passed to child threads. However, as discussed in the [Executors](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html#privilegedThreadFactory%28%29) class and in other cases where thread pooling is utilized, the ThreadContext may not always be automatically passed to worker threads. In those cases the pooling mechanism should provide a means for doing so. The getContext() and cloneStack() methods can be used to obtain copies of the Map and Stack respectively.
 
-即是`TTL`要解决的问题，提供`Log4j2 MDC`的`TTL`集成，详见工程[`log4j2-ttl-thread-context-map`](https://github.com/oldratlee/log4j2-ttl-thread-context-map)。
+即是`TTL`要解决的问题，提供`Log4j2 MDC`的`TTL`集成，详见工程[`log4j2-ttl-thread-context-map`](https://github.com/oldratlee/log4j2-ttl-thread-context-map)。对应依赖：
+
+```xml
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>log4j2-ttl-thread-context-map</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
+可以在 [search.maven.org](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.alibaba%22%20AND%20a%3A%22log4j2-ttl-thread-context-map%22) 查看可用的版本。
 
 PS： 多谢 @bwzhang2011 和 @wuwen5 对日志场景说明交流和实现上讨论建议：
 
@@ -54,7 +64,17 @@ PS： 多谢 @bwzhang2011 和 @wuwen5 对日志场景说明交流和实现上讨
 
 ### `Logback MDC`的`TTL`集成
 
-`Logback`的集成参见[@ofpay](https://github.com/ofpay)提供的[`logback-mdc-ttl`](https://github.com/ofpay/logback-mdc-ttl)。
+`Logback`的集成参见[@ofpay](https://github.com/ofpay)提供的[`logback-mdc-ttl`](https://github.com/ofpay/logback-mdc-ttl)。对应依赖：
+
+```xml
+<dependency>
+    <groupId>com.ofpay</groupId>
+    <artifactId>logback-mdc-ttl</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
+
+可以在 [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.ofpay%22%20AND%20a%3A%22logback-mdc-ttl%22) 查看可用的版本。
 
 这个集成已经在 **_线上产品环境_** 使用的。说明详见[欧飞网的使用场景](https://github.com/alibaba/transmittable-thread-local/issues/73#issuecomment-300665308)。
 
