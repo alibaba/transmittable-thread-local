@@ -263,8 +263,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
             Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
 
-            for (Iterator<TransmittableThreadLocal<?>> iterator = holder.get().iterator();
-                 iterator.hasNext(); ) {
+            for (Iterator<TransmittableThreadLocal<?>> iterator = holder.get().iterator(); iterator.hasNext(); ) {
                 TransmittableThreadLocal<?> threadLocal = iterator.next();
 
                 // backup
