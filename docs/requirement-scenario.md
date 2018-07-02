@@ -29,7 +29,7 @@
 
 PS： 多谢 [@wyzssw](https://github.com/https://github.com/wyzssw) 对分布式追踪系统场景说明交流和实现上讨论建议：
 
-- [Issue: 分布式追踪系统场景下，如何使用MTC](https://github.com/alibaba/transmittable-thread-local/issues/53)
+- [Issue: 分布式追踪系统场景下，如何使用TTL](https://github.com/alibaba/transmittable-thread-local/issues/53)
 
 ## 🌵 2. 日志收集记录系统上下文
 
@@ -59,8 +59,6 @@ PS： 多谢 @bwzhang2011 和 @wuwen5 对日志场景说明交流和实现上讨
 
 - [Issue: 能否提供与LOG4J(2)中的MDC集成或增强](https://github.com/alibaba/transmittable-thread-local/issues/49)  [@bwzhang2011](https://github.com/bwzhang2011)
 - [Issue: slf4j MDCAdapter with multi-thread-context 支持](https://github.com/alibaba/transmittable-thread-local/issues/51)  [@bwzhang2011](https://github.com/bwzhang2011)
-- [Issue: 基于MtContextThreadLocal的ThreadContextMap实现](https://github.com/oldratlee/log4j-slf4j-impl-patch-mtc/issues/1)  [@bwzhang2011](https://github.com/bwzhang2011)
-- [Issue: 是不是可以不用采用覆盖替换MtcLog4jMDCAdapter类的方式呢](https://github.com/oldratlee/log4j-slf4j-impl-patch-mtc/issues/2) [@wuwen5](https://github.com/wuwen5)
 
 ### `Logback MDC`的`TTL`集成
 
