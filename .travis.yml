@@ -41,43 +41,43 @@ install:
 script:
   # default oracle jdk 8, do build and test
   - ./mvnw clean install --batch-mode
-  - ./scritps/run-agent-test.sh
+  - ./scripts/run-agent-test.sh
   # open jdk 6
   - jdk_switcher use openjdk6
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # open jdk 7
   - jdk_switcher use openjdk7
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # open jdk 8
   - jdk_switcher use openjdk8
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # oracle jdk 9
   - jdk_switcher use oraclejdk9
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # open jdk 9
   - export JAVA_HOME=$HOME/.jdk/openjdk9
   - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 9 --os linux-x64 --license GPL --target $JAVA_HOME; fi
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   #  oracle jdk 10
   - export JAVA_HOME=$HOME/.jdk/oraclejdk10
   - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 10 --os linux-x64 --license BCL --target $JAVA_HOME; fi
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   #  open jdk 10
   - export JAVA_HOME=$HOME/.jdk/openjdk10
   - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 10 --os linux-x64 --license GPL --target $JAVA_HOME; fi
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   #  open jdk 11
   - export JAVA_HOME=$HOME/.jdk/openjdk11
   - if [ ! -d "$JAVA_HOME" ]; then ./install-jdk.sh --feature 11 --os linux-x64 --license GPL --target $JAVA_HOME; fi
-  - ./scritps/run-junit.sh skipClean
-  - ./scritps/run-agent-test.sh skipClean
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # codecov
   - jdk_switcher use oraclejdk8
   - mvn clean -V

@@ -208,7 +208,7 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。执行工程下的脚本[`scritps/run-agent-demo.sh`](scritps/run-agent-demo.sh)即可运行Demo。
+Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
 
 目前`Agent`中，修饰了`JDK`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
 

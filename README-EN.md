@@ -206,7 +206,7 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
 
-Run the script [`scritps/run-agent-demo.sh`](scritps/run-agent-demo.sh)
+Run the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)
 to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 # 🔌 Java API Docs
