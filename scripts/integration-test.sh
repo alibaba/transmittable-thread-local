@@ -22,14 +22,14 @@ fi
 
 headInfo "test with Java 8"
 runCmd ./mvnw clean install --batch-mode
-runCmd ./scritps/run-agent-test.sh
+runCmd ./scripts/run-agent-test.sh
 
 # Java 6
 if [ -n "$JAVA6_HOME" ]; then
     headInfo "test with Java 6"
     export JAVA_HOME="${JAVA6_HOME}"
-    runCmd ./scritps/run-junit.sh skipClean
-    runCmd ./scritps/run-agent-test.sh skipClean
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
 else
     headInfo "skip Java 6 test"
 fi
@@ -38,8 +38,8 @@ fi
 if [ -n "$JAVA7_HOME" ]; then
     headInfo "test with Java 7"
     export JAVA_HOME="${JAVA7_HOME}"
-    runCmd ./scritps/run-junit.sh skipClean
-    runCmd ./scritps/run-agent-test.sh skipClean
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
 else
     headInfo "skip Java 7 test"
 fi
@@ -48,8 +48,8 @@ fi
 if [ -n "$JAVA9_HOME" ]; then
     headInfo "test with Java 9"
     export JAVA_HOME="${JAVA9_HOME}"
-    runCmd ./scritps/run-junit.sh skipClean
-    runCmd ./scritps/run-agent-test.sh skipClean
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
 else
     headInfo "skip Java 9 test"
 fi
@@ -58,8 +58,8 @@ fi
 if [ -n "$JAVA10_HOME" ]; then
     headInfo "test with Java 10"
     export JAVA_HOME="${JAVA10_HOME}"
-    runCmd ./scritps/run-junit.sh skipClean
-    runCmd ./scritps/run-agent-test.sh skipClean
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
 else
     headInfo "skip Java 10 test"
 fi
