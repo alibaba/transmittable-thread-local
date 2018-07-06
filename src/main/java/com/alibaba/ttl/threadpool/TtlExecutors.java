@@ -46,7 +46,7 @@ public final class TtlExecutors {
 
     /**
      * {@link TransmittableThreadLocal} Wrapper of {@link ScheduledExecutorService},
-     * transmit the {@link TransmittableThreadLocal } from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
+     * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      */
     public static ScheduledExecutorService getTtlScheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
