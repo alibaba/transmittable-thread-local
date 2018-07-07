@@ -97,6 +97,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return copy(get());
     }
 
+    // Note about holder:
+    // 1. The value of holder is type Map<TransmittableThreadLocal<?>, ?> (WeakHashMap implementation),
+    //    but it is used as *set*.
+    // 2. WeakHashMap support null value.
     private static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
             new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
                 @Override
