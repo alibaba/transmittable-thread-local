@@ -25,15 +25,24 @@ public class TtlTransformer implements ClassFileTransformer {
 
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
-    @SuppressWarnings("unchecked")
-    final List<JavassistTransformlet> transformletList = new ArrayList();
+    final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
 
-    @SuppressWarnings("unchecked")
-    public TtlTransformer(Class<? extends JavassistTransformlet>... transformletClasses) throws Exception {
-        for (Class<? extends JavassistTransformlet> transformletClass : transformletClasses) {
-            final JavassistTransformlet transformlet = transformletClass.getConstructor().newInstance();
-            transformletList.add(transformlet);
+    final List<JavassistDynamicMutipleClassTransformlet> dynamicTransformletList 
+    	= new ArrayList<JavassistDynamicMutipleClassTransformlet>();
 
+    public TtlTransformer(Class<? extends Transformlet>... transformletClasses ) throws Exception {
+        for (Class<? extends Transformlet> transformletClass : transformletClasses) {
+            
+            final Transformlet transformlet = transformletClass.getConstructor().newInstance();
+            
+            if(transformlet instanceof JavassistTransformlet){
+                JavassistTransformlet jtransformlet =(JavassistTransformlet) transformlet;
+                transformletList.add(jtransformlet);
+            }else if(transformlet instanceof JavassistDynamicMutipleClassTransformlet){
+                JavassistDynamicMutipleClassTransformlet dynamictransformlet =(JavassistDynamicMutipleClassTransformlet) transformlet;
+                dynamicTransformletList.add(dynamictransformlet);
+            }
+            
             logger.info("[TtlTransformer] add Transformlet " + transformletClass + " success");
         }
     }
@@ -48,6 +57,16 @@ public class TtlTransformer implements ClassFileTransformer {
             }
 
             final String className = toClassName(classFile);
+            
+            for (JavassistDynamicMutipleClassTransformlet dynamicTransformlet : dynamicTransformletList) {
+            	final CtClass clazz = getCtClass(classFileBuffer, loader);
+            	if (dynamicTransformlet.needTransform(clazz, className )) {
+                    logger.info("Dynamic Transforming class " + className);
+                    dynamicTransformlet.doTransform(clazz);
+                    return clazz.toBytecode();
+                }
+            }
+            
             for (JavassistTransformlet transformlet : transformletList) {
                 if (transformlet.needTransform(className)) {
                     logger.info("Transforming class " + className);
@@ -56,6 +75,7 @@ public class TtlTransformer implements ClassFileTransformer {
                     return clazz.toBytecode();
                 }
             }
+            
         } catch (Throwable t) {
             String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
             if (logger.isLoggable(Level.SEVERE)) {

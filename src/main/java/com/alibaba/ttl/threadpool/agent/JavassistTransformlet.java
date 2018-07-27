@@ -12,7 +12,8 @@ import java.io.IOException;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.5.1
  */
-public interface JavassistTransformlet {
+public interface JavassistTransformlet extends Transformlet {
+
     boolean needTransform(String className);
 
     void doTransform(CtClass clazz) throws NotFoundException, CannotCompileException, IOException;
