@@ -173,8 +173,15 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
+							<!--
+								Instrumentation Specification
+									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html
+									- https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description
+								JAR Manifest - JAR File Specification
+									- https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest
+							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
-							<Can-Redefine-Classes>true</Can-Redefine-Classes>
+							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
 						</manifestEntries>
