@@ -2,6 +2,7 @@
 
 set -o pipefail
 set -e
+
 # https://stackoverflow.com/questions/64786/error-handling-in-bash
 error() {
     local parent_lineno="$1"
@@ -46,8 +47,8 @@ runCmd() {
     "$@"
 }
 
-fatal() {
-    redEcho "$@" 1>&2
+die() {
+    redEcho "Error: $@" 1>&2
     exit 1
 }
 
@@ -58,19 +59,23 @@ headInfo() {
     echo
 }
 
-################################################################################
-# auto adjust pwd to project dir, and set project to BASE var
-################################################################################
-while true; do
-    [ -f pom.xml ] && {
-        readonly BASE="$PWD"
-        yellowEcho "Find project base dir: $PWD"
-        break
-    }
-    [ / = "PWD" ] &&  fatal "fail to detect project directory!"
+#################################################################################
+# auto adjust pwd to project root dir, and set PROJECT_ROOT_DIR var
+#################################################################################
+adjustPwdToProjectRootDir() {
+    while true; do
+        [ / = "$PWD" ] && die "fail to detect project directory!"
 
-    cd ..
-done
+        [ -f pom.xml ] && {
+            readonly PROJECT_ROOT_DIR="$PWD"
+            yellowEcho "Find project root dir: $PWD"
+            break
+        }
+        cd ..
+    done
+}
+
+adjustPwdToProjectRootDir
 
 #################################################################################
 # project common info
@@ -79,29 +84,34 @@ done
 readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
 readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
 
-readonly -a JAVA_CMD=( "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US )
-readonly -a JAVA_DEBUG_OPTS=( -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 )
+# set env variable TTL_DEBUG_ENABLE to enable java debug mode
+readonly -a JAVA_CMD=(
+    "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US
+    ${ENABLE_JAVA_RUN_DEBUG+
+        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
+    }
+)
 
 #################################################################################
 # maven operation functions
 #################################################################################
 
 mvnClean() {
-    runCmd ./mvnw clean || fatal "fail to mvn clean!"
+    runCmd ./mvnw clean || die "fail to mvn clean!"
 }
 
 mvnBuildJar() {
-    runCmd ./mvnw install -Dmaven.test.skip || fatal "fail to build jar!"
+    runCmd ./mvnw install -Dmaven.test.skip || die "fail to build jar!"
 }
 
 mvnCompileTest() {
-    runCmd ./mvnw test-compile || fatal "fail to mvn test-compile!"
+    runCmd ./mvnw test-compile || die "fail to mvn test-compile!"
 }
 
 readonly dependencies_dir="target/dependency"
 
 mvnCopyDependencies() {
-    runCmd ./mvnw dependency:copy-dependencies -DincludeScope=test || fatal "fail to mvn copy-dependencies!"
+    runCmd ./mvnw dependency:copy-dependencies -DincludeScope=test || die "fail to mvn copy-dependencies!"
 
     # remove repackaged and shaded javassist lib
     rm $dependencies_dir/javassist-*
