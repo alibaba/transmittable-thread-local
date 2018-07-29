@@ -79,8 +79,8 @@ done
 readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
 readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
 
-readonly -a JAVA_CMD=( "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US )
-readonly -a JAVA_DEBUG_OPTS=( -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 )
+# set env variable TTL_DEBUG_ENABLE to enable java debug mode
+readonly -a JAVA_CMD=( "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US ${TTL_DEBUG_ENABLE+ -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005} )
 
 #################################################################################
 # maven operation functions
