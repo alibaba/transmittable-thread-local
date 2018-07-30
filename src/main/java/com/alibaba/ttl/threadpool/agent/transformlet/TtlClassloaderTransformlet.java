@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.alibaba.ttl.threadpool.agent.JavassistDynamicMutipleClassTransformlet;
@@ -53,10 +54,8 @@ public class TtlClassloaderTransformlet implements JavassistDynamicMutipleClassT
                         null);
                 final String original_load_method_rename = "original$loadClass$method$renamed$by$ttl";
                 loadClassMethod.setName(original_load_method_rename);// rename loadClass
-
                 CtClass[] parameterTypes = loadClassMethod.getParameterTypes();
                 String codeWeaveParameter = ((parameterTypes.length == 1) ? ("$1") : ("$1,$2"));
-
                 final String code = "{\n" + 
                         "boolean isAgentClass = com.alibaba.ttl.classloader.TtlExtendLoader.isAgentLoadClass($1);\n"+ 
                         "if(isAgentClass){\n"+ 
@@ -83,7 +82,6 @@ public class TtlClassloaderTransformlet implements JavassistDynamicMutipleClassT
                 logger.info(
                         "insert code around method " + new_loadClassMethod + " of class " + className + ": " + code);
             }
-
         }
     }
 
@@ -92,6 +90,13 @@ public class TtlClassloaderTransformlet implements JavassistDynamicMutipleClassT
         try {
             supserClazz = clazz.getSuperclass();
         } catch (NotFoundException e) {
+            if (logger.isLoggable(Level.SEVERE)) {
+                logger.log(Level.SEVERE, "class"+ clazz+" can't get super class not found");
+            }
+        } catch (ClassCircularityError e) {
+            if (logger.isLoggable(Level.SEVERE)) {
+                logger.log(Level.SEVERE, "class"+ clazz+" can't get super class as circularity error"+ e.getMessage());
+            }
         }
 
         if (supserClazz != null) {
