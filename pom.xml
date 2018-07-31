@@ -181,6 +181,7 @@
 									- https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
+							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
 							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
