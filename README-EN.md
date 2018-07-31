@@ -201,8 +201,7 @@ Add start options on Java command:
 Java command example:
 
 ```bash
-java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
-    -javaagent:transmittable-thread-local-2.0.0.jar \
+java -javaagent:transmittable-thread-local-2.0.0.jar \
     -cp classes \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```

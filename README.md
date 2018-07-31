@@ -228,8 +228,7 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java
 `Java`命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
-    -javaagent:transmittable-thread-local-2.0.0.jar \
+java -javaagent:transmittable-thread-local-2.0.0.jar \
     -cp classes \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```

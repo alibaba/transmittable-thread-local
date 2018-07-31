@@ -34,8 +34,8 @@ test_script:
       $cp=Get-ChildItem target\dependency\*.jar | Select-Object -ExpandProperty FullName
       $cp=$cp + 'target\test-classes'
       $cp=$cp -join ';'
-      echo "java -Xmx256m -Xms256m -Xbootclasspath/a:$ttl_jar -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck"
-      $output=java -Xmx256m -Xms256m -Xbootclasspath/a:$ttl_jar -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck 2>&1
+      echo "java -Xmx256m -Xms256m -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck"
+      $output=java -Xmx256m -Xms256m -javaagent:$ttl_jar -cp $cp -ea com.alibaba.ttl.threadpool.agent.AgentCheck 2>&1
       $output.CategoryInfo.TargetName | Out-Default
 
 cache:
