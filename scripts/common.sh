@@ -101,7 +101,7 @@ mvnClean() {
 }
 
 mvnBuildJar() {
-    runCmd ./mvnw install -Dmaven.test.skip || die "fail to build jar!"
+    runCmd ./mvnw install -Pgen-src+doc -Pgen-git-properties -Dmaven.test.skip || die "fail to build jar!"
 }
 
 mvnCompileTest() {
