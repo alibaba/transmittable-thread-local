@@ -29,6 +29,8 @@
             - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
         - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
+            - [关于`boot class path`设置](#%E5%85%B3%E4%BA%8Eboot-class-path%E8%AE%BE%E7%BD%AE)
+            - [`Java`的启动参数配置](#java%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
             - [`Java Agent`的使用方式在什么情况下`TTL`会失效](#java-agent%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8Bttl%E4%BC%9A%E5%A4%B1%E6%95%88)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
@@ -216,20 +218,46 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java
 - `java.util.concurrent.ThreadPoolExecutor`
 - `java.util.concurrent.ScheduledThreadPoolExecutor`
 
-在`Java`的启动参数加上：
+#### 关于`boot class path`设置
 
-- `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
-- `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
+因为修饰了`JDK`的标准库的类，标准库由`bootstrap class loader`加载；上面修饰后的`JDK`类引用了`TTL`的代码，所以`TTL`的`Jar`需要加到`boot class path`上。
 
-**注意**：
+`TTL`从`v2.6.0`开始，加载`TTL Agent`会自动把自己的`Jar`设置到`boot class path`上。
 
-- `Agent`修改是`JDK`的类，类中加入了引用`TTL`的代码，所以`TTL Agent`的`Jar`要加到`bootclasspath`上。
+**_注意_**：不能修改下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.x.jar`）。如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像之前的版本的做法一样）。
+
+实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
+
+> Boot-Class-Path
+> A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
+> These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
+
+更多详见
+
+- [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
+
+#### `Java`的启动参数配置
+
+在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar`。
+
+如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.x.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
+比如修改文件名成`ttl-foo-name-changed.jar`，则还加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
 
 `Java`命令行示例如下：
 
 ```bash
-java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
-    -javaagent:transmittable-thread-local-2.0.0.jar \
+java -javaagent:path/to/transmittable-thread-local-2.x.x.jar \
+    -cp classes \
+    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+```
+
+或是
+
+```bash
+java -javaagent:path/to/ttl-foo-name-changed.jar \
+    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
     -cp classes \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
@@ -283,10 +311,13 @@ java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
 
 ## Java Agent
 
-- [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
 - [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 - [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 - [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+- 官方文档
+    - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
+    - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+    - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 # 👷 Contributors
 

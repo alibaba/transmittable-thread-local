@@ -190,19 +190,40 @@ Agent decorate 2 thread pool implementation classes
 
 Add start options on Java command:
 
-- `-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.x.jar`
-- `-javaagent:/path/to/transmittable-thread-local-2.x.x.jar`
+- `-javaagent:path/to/transmittable-thread-local-2.x.x.jar`
 
 **NOTE**：
 
-- Agent modify the `JDK` classes, add code refer to the class of `TTL`, so the jar of `TTL Agent` should add to `bootclasspath`.
-- `TTL Agent` modify the class by `javassist`, so the Jar of `javassist` should add to `bootclasspath` too.
+- Because TTL agent modify the `JDK` std lib classes, make code refer from std lib class to the `TTL` class, so the jar of `TTL Agent` should add to `boot classpath`.
+- Since `v2.6.0`, `TTL agent jar` will auto add self to `boot classpath`. But you can NOT modify the downloaded `TTL jar` file name.
+    - if you modified the download `TTL jar` file name(eg: `ttl-foo-name-changed.jar`), 
+      you must add by `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
+
+Implementation is using `Boot-Class-Path` property of `manifest` file(`META-INF/MANIFEST.MF`) in the `TTL Java Agent Jar`
+
+> Boot-Class-Path
+> A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
+> These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
+
+More info:
+
+- [`Java Agent Specification` - `JavaDoc`文档](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 Java command example:
 
 ```bash
-java -Xbootclasspath/a:transmittable-thread-local-2.0.0.jar \
-    -javaagent:transmittable-thread-local-2.0.0.jar \
+java -javaagent:transmittable-thread-local-2.x.x.jar \
+    -cp classes \
+    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+```
+
+or
+
+```bash
+java -javaagent:path/to/ttl-foo-name-changed.jar \
+    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
     -cp classes \
     com.alibaba.ttl.threadpool.agent.demo.AgentDemo
 ```
