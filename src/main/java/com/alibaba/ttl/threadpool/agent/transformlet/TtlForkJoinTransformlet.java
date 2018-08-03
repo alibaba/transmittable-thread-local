@@ -5,7 +5,7 @@ import javassist.*;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
 import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMethod;
 
@@ -19,7 +19,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMet
  * @since 2.5.1
  */
 public class TtlForkJoinTransformlet implements JavassistTransformlet {
-    private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class.getName());
+    private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
     private static final String TTL_RECURSIVE_ACTION_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveAction";
     private static final String TTL_RECURSIVE_TASK_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveTask";

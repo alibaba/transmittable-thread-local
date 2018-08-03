@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
 import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMethod;
 
@@ -27,7 +27,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMet
  * @since 2.5.1
  */
 public class TtlExecutorTransformlet implements JavassistTransformlet {
-    private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class.getName());
+    private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class);
 
     private static final String TTL_RUNNABLE_CLASS_NAME = "com.alibaba.ttl.TtlRunnable";
     private static final String TTL_CALLABLE_CLASS_NAME = "com.alibaba.ttl.TtlCallable";

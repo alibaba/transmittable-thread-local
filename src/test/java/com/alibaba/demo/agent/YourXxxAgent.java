@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public final class YourXxxAgent {
     private static final Logger logger = Logger.getLogger(YourXxxAgent.class.getName());
 
-    public static void premain(String agentArgs, Instrumentation inst) {
+    public static void premain(String agentArgs, Instrumentation inst) throws Exception {
         TtlAgent.premain(agentArgs, inst); // add TTL Transformer
 
         // add your Transformer

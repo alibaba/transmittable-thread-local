@@ -11,7 +11,8 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -21,15 +22,14 @@ import java.util.logging.Logger;
  * @since 0.9.0
  */
 public class TtlTransformer implements ClassFileTransformer {
-    private static final Logger logger = Logger.getLogger(TtlTransformer.class.getName());
+    private static final Logger logger = Logger.getLogger(TtlTransformer.class);
 
     private static final byte[] EMPTY_BYTE_ARRAY = {};
 
-    @SuppressWarnings("unchecked")
-    final List<JavassistTransformlet> transformletList = new ArrayList();
+    private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
 
     @SuppressWarnings("unchecked")
-    public TtlTransformer(Class<? extends JavassistTransformlet>... transformletClasses) throws Exception {
+    TtlTransformer(Class<? extends JavassistTransformlet>... transformletClasses) throws Exception {
         for (Class<? extends JavassistTransformlet> transformletClass : transformletClasses) {
             final JavassistTransformlet transformlet = transformletClass.getConstructor().newInstance();
             transformletList.add(transformlet);
@@ -58,9 +58,7 @@ public class TtlTransformer implements ClassFileTransformer {
             }
         } catch (Throwable t) {
             String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
-            if (logger.isLoggable(Level.SEVERE)) {
-                logger.log(Level.SEVERE, msg, t);
-            }
+            logger.log(Level.SEVERE, msg, t);
             throw new IllegalStateException(msg, t);
         }
 
