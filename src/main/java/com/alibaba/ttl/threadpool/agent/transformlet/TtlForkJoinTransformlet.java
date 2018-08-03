@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.logging.Logger;
 
+import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMethod;
+
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
  *
@@ -64,6 +66,6 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
                 "}\n" + "}";
         new_doExecMethod.setBody(code);
         clazz.addMethod(new_doExecMethod);
-        logger.info("insert code around method " + doExecMethod + " of class " + className + ": " + code);
+        logger.info("insert code around method " + signatureOfMethod(doExecMethod) + " of class " + className + ": " + code);
     }
 }
