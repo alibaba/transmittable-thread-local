@@ -85,7 +85,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.2.51</kotlin.version>
+		<kotlin.version>1.2.60</kotlin.version>
 	</properties>
 
 	<dependencies>
