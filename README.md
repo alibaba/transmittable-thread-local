@@ -225,7 +225,8 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java
 
 `TTL`从`v2.6.0`开始，加载`TTL Agent`会自动把自己的`Jar`设置到`boot class path`上。
 
-**_注意_**：不能修改下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.x.jar`）。如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像之前的版本的做法一样）。
+**_注意_**：不能修改从`Maven`库下载的`TTL`的`Jar`的文件名（形如`transmittable-thread-local-2.x.x.jar`）。
+如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。
 
 实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
 

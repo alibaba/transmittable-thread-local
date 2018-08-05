@@ -16,7 +16,7 @@ import java.util.logging.Level;
  * <p>
  * <b><i>NOTE:</i></b><br>
  * Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.
- * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name.<br>
+ * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.x.jar}}).<br>
  * if you modified the downloaded TTL agent jar file name(eg: {@code ttl-foo-name-changed.jar}),
  * you must add TTL agent jar to {@code boot classpath} manually
  * by java option {@code -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar}.
@@ -58,13 +58,13 @@ public final class TtlAgent {
      * only log to {@code stderr} when error.
      * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
      * <li>{@code ttl.agent.logger : STDOUT}<br>
-     * log to {@code stdout}, more info than {@code ttl.agent.logger : STDERR} is needed when developing.</li>
+     * Log to {@code stdout}, more info than {@code ttl.agent.logger:STDERR}; This is needed when developing.</li>
      * </ul>
      * <p>
      * configuration example:
      * <ul>
-     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.6.0.jar}</li>
-     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.6.0.jar=ttl.agent.logger:STDOUT}</li>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar}</li>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
