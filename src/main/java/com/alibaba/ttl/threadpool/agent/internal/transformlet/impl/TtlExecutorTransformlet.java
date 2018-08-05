@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -8,9 +9,10 @@ import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
@@ -27,17 +29,15 @@ import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 public class TtlExecutorTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class);
 
-    private static final String TTL_RUNNABLE_CLASS_NAME = "com.alibaba.ttl.TtlRunnable";
-    private static final String TTL_CALLABLE_CLASS_NAME = "com.alibaba.ttl.TtlCallable";
-
-    private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
-    private static final String CALLABLE_CLASS_NAME = "java.util.concurrent.Callable";
-
     private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
+    private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<String, String>();
 
     static {
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ScheduledThreadPoolExecutor");
+
+        PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put("java.lang.Runnable", "com.alibaba.ttl.TtlRunnable");
+        PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put("java.util.concurrent.Callable", "com.alibaba.ttl.TtlCallable");
     }
 
     @Override
@@ -64,13 +64,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         CtClass[] parameterTypes = method.getParameterTypes();
         StringBuilder insertCode = new StringBuilder();
         for (int i = 0; i < parameterTypes.length; i++) {
-            CtClass paraType = parameterTypes[i];
-            if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d, false, true);", i + 1, TTL_RUNNABLE_CLASS_NAME, i + 1);
-                logger.info("insert code before method " + Utils.signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
-                insertCode.append(code);
-            } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
-                String code = String.format("$%d = %s.get($%d, false, true);", i + 1, TTL_CALLABLE_CLASS_NAME, i + 1);
+            final String paramTypeName = parameterTypes[i].getName();
+            if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
+                String code = String.format("$%d = %s.get($%d, false, true);", i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
                 logger.info("insert code before method " + Utils.signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
@@ -79,5 +75,4 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             method.insertBefore(insertCode.toString());
         }
     }
-
 }
