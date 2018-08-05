@@ -11,6 +11,10 @@ import java.util.logging.Level;
  * @since 2.6.0
  */
 public abstract class Logger {
+    public static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
+    public static final String STDOUT = "STDOUT";
+    public static final String STDERR = "STDERR";
+
     private static volatile int loggerImplType = -1;
 
     public static void setLoggerImplType(String type) {
@@ -18,9 +22,9 @@ public abstract class Logger {
             throw new IllegalStateException("TTL logger implementation type is already set! type = " + loggerImplType);
         }
 
-        if ("STDERR".equalsIgnoreCase(type)) {
+        if (STDERR.equalsIgnoreCase(type)) {
             loggerImplType = 0;
-        } else if ("STDOUT".equalsIgnoreCase(type)) {
+        } else if (STDOUT.equalsIgnoreCase(type)) {
             loggerImplType = 1;
         } else {
             loggerImplType = 0;

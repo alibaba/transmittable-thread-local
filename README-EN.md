@@ -195,14 +195,14 @@ Add start options on Java command:
 
 **NOTE**：
 
-- Because TTL agent modify the `JDK` std lib classes, make code refer from std lib class to the `TTL` class, so the jar of `TTL Agent` should add to `boot classpath`.
-- Since `v2.6.0`, `TTL agent jar` will auto add self to `boot classpath`. But you can NOT modify the downloaded `TTL jar` file name.
-    - if you modified the download `TTL jar` file name(eg: `ttl-foo-name-changed.jar`), 
-      you must add by `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
+- Because TTL agent modified the `JDK` std lib classes, make code refer from std lib class to the TTL classes, so the TTL Agent jar must be added to `boot classpath`.
+- Since `v2.6.0`, TTL agent jar will auto add self to `boot classpath`. But you **should _NOT_** modify the downloaded TTL jar file name.
+    - if you modified the downloaded TTL jar file name(eg: `ttl-foo-name-changed.jar`), 
+      you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
 
-Implementation is using `Boot-Class-Path` property of `manifest` file(`META-INF/MANIFEST.MF`) in the `TTL Java Agent Jar`
+The implementation of auto adding self agent jar to `boot classpath` use the `Boot-Class-Path` property of manifest file(`META-INF/MANIFEST.MF`) in the TTL Java Agent Jar:
 
-> Boot-Class-Path
+> Boot-Class-Path  
 > A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
 > These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
 
