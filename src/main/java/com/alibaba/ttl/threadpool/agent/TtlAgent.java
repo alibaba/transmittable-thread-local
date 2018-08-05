@@ -1,8 +1,8 @@
 package com.alibaba.ttl.threadpool.agent;
 
 
-import com.alibaba.ttl.threadpool.agent.transformlet.TtlExecutorTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.TtlForkJoinTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;

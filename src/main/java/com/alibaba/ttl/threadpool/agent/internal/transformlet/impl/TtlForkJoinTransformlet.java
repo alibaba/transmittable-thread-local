@@ -1,13 +1,13 @@
-package com.alibaba.ttl.threadpool.agent.transformlet;
+package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import com.alibaba.ttl.threadpool.agent.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMethod;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.ForkJoinTask}.

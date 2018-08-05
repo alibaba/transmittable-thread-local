@@ -4,6 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
+/**
+ * logger adaptor for ttl java agent, internal use for ttl usage only!
+ *
+ * @author Jerry Lee (oldratlee at gmail dot com)
+ * @since 2.6.0
+ */
 public abstract class Logger {
     private static volatile int loggerImplType = -1;
 

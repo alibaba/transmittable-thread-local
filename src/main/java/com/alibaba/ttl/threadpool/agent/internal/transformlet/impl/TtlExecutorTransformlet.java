@@ -1,6 +1,6 @@
-package com.alibaba.ttl.threadpool.agent.transformlet;
+package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import com.alibaba.ttl.threadpool.agent.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -11,8 +11,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
-
-import static com.alibaba.ttl.threadpool.agent.transformlet.Utils.signatureOfMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
@@ -69,11 +67,11 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             CtClass paraType = parameterTypes[i];
             if (RUNNABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d, false, true);", i + 1, TTL_RUNNABLE_CLASS_NAME, i + 1);
-                logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
+                logger.info("insert code before method " + Utils.signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             } else if (CALLABLE_CLASS_NAME.equals(paraType.getName())) {
                 String code = String.format("$%d = %s.get($%d, false, true);", i + 1, TTL_CALLABLE_CLASS_NAME, i + 1);
-                logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
+                logger.info("insert code before method " + Utils.signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
         }
