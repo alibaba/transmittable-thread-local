@@ -58,7 +58,7 @@ public final class TtlAgent {
      * only log to {@code stderr} when error.
      * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
      * <li>{@code ttl.agent.logger : STDOUT}<br>
-     * log to {@code stdout}, more info than {@code  ttl.agent.logger : STDERR} is needed when developing.</li>
+     * log to {@code stdout}, more info than {@code ttl.agent.logger : STDERR} is needed when developing.</li>
      * </ul>
      * <p>
      * configuration example:

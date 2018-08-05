@@ -89,11 +89,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
-    void superRemove() {
+    private void superRemove() {
         super.remove();
     }
 
-    T copyValue() {
+    private T copyValue() {
         return copy(get());
     }
 
@@ -278,20 +278,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 // backup
                 backup.put(threadLocal, threadLocal.get());
 
-                // clear the TTL value only in captured
-                // avoid extra TTL value in captured, when run task.
+                // clear the TTL values only in captured
+                // avoid extra TTL values in captured, when run task.
                 if (!capturedMap.containsKey(threadLocal)) {
                     iterator.remove();
                     threadLocal.superRemove();
                 }
             }
 
-            // set value to captured TTL
-            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : capturedMap.entrySet()) {
-                @SuppressWarnings("unchecked")
-                TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
-                threadLocal.set(entry.getValue());
-            }
+            // set values to captured TTL
+            setTtlValuesTo(capturedMap);
 
             // call beforeExecute callback
             doExecuteCallback(true);
@@ -316,16 +312,20 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
                 TransmittableThreadLocal<?> threadLocal = next.getKey();
 
-                // clear the TTL value only in backup
-                // avoid the extra value of backup after restore
+                // clear the TTL values only in backup
+                // avoid the extra values of backup after restore
                 if (!backupMap.containsKey(threadLocal)) {
                     iterator.remove();
                     threadLocal.superRemove();
                 }
             }
 
-            // restore TTL value
-            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : backupMap.entrySet()) {
+            // restore TTL values
+            setTtlValuesTo(backupMap);
+        }
+
+        private static void setTtlValuesTo(Map<TransmittableThreadLocal<?>, Object> ttlValues) {
+            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : ttlValues.entrySet()) {
                 @SuppressWarnings("unchecked")
                 TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
                 threadLocal.set(entry.getValue());
