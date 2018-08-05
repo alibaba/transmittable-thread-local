@@ -9,7 +9,8 @@
             - ./scripts/gen-pom4ide.sh 重新生成 pom4ide
         - 更新README
             - 更新badge的引用，由master分支名改成Tag名  
-                `sed 's/master/v2.x.x/g' -i README*`
+                - `sed 's/master/v2.x.x/g' -i README*`
+                - `javadoc` badge 添加版本
             - 示例Maven依赖的版本
             - 更新JavaDoc链接到固定版本  
                 http://alibaba.github.io/transmittable-thread-local/apidocs/2.x.x/index.html
