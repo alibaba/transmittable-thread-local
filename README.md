@@ -230,7 +230,8 @@ Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java
 
 实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
 
-> Boot-Class-Path
+> `Boot-Class-Path`
+>
 > A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
 > These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
 
@@ -285,7 +286,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
 </dependency>
 ```
 
@@ -326,5 +327,6 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 - Jerry Lee \<oldratlee at gmail dot com> [@oldratlee](https://github.com/oldratlee)
 - Yang Fang \<snoop.fy at gmail dot com> [@driventokill](https://github.com/driventokill)
 - wuwen \<wuwen.55 at aliyun dot com> [@wuwen5](https://github.com/wuwen5)
+- Xiaowei Shi \<179969622 at qq dot com>  [@xwshiustc](https://github.com/xwshiustc)
 - David Dai \<351450944 at qq dot com> [@LNAmp](https://github.com/LNAmp)
 - Your name here :-)

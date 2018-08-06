@@ -202,7 +202,8 @@ Add start options on Java command:
 
 The implementation of auto adding self agent jar to `boot classpath` use the `Boot-Class-Path` property of manifest file(`META-INF/MANIFEST.MF`) in the TTL Java Agent Jar:
 
-> Boot-Class-Path  
+> `Boot-Class-Path`
+>
 > A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
 > These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
 
@@ -242,7 +243,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
 </dependency>
 ```
 
@@ -275,5 +276,6 @@ Check available version at [search.maven.org](http://search.maven.org/#search%7C
 - Jerry Lee \<oldratlee at gmail dot com> [@oldratlee](https://github.com/oldratlee)
 - Yang Fang \<snoop.fy at gmail dot com> [@driventokill](https://github.com/driventokill)
 - wuwen \<wuwen.55 at aliyun dot com> [@wuwen5](https://github.com/wuwen5)
+- Xiaowei Shi \<179969622 at qq dot com>  [@xwshiustc](https://github.com/xwshiustc)
 - David Dai \<351450944 at qq dot com> [@LNAmp](https://github.com/LNAmp)
 - Your name here :-)

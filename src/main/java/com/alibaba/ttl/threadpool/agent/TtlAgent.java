@@ -16,7 +16,7 @@ import java.util.logging.Level;
  * <p>
  * <b><i>NOTE:</i></b><br>
  * Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.
- * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.x.jar}}).<br>
+ * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.x.jar}).<br>
  * if you modified the downloaded TTL agent jar file name(eg: {@code ttl-foo-name-changed.jar}),
  * you must add TTL agent jar to {@code boot classpath} manually
  * by java option {@code -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar}.
