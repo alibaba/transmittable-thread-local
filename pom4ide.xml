@@ -95,6 +95,13 @@
 			<version>3.23.1-GA</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.0.20.Final</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

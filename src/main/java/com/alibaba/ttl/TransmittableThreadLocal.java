@@ -1,5 +1,8 @@
 package com.alibaba.ttl;
 
+import com.alibaba.ttl.internal.TtlValue;
+import com.alibaba.ttl.internal.TtlValueFactory;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +17,10 @@ import java.util.logging.Logger;
  * <p>
  * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
+ * <p>
+ * If you have netty in the runtime and {@link io.netty.util.internal.FastThreadLocal} is supported. You can store
+ * {@link TransmittableThreadLocal} in {@link io.netty.util.internal.FastThreadLocal} to give up inheritance for better performance.
+ * </p>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TtlRunnable
@@ -22,6 +29,9 @@ import java.util.logging.Logger;
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     private static final Logger logger = Logger.getLogger(TransmittableThreadLocal.class.getName());
+
+    // Hold the real value to support special optimization for thread local
+    private final TtlValue<T> ttlValue = TtlValueFactory.create();
 
     /**
      * Computes the value for this transmittable thread-local variable
@@ -66,7 +76,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     @Override
     public final T get() {
-        T value = super.get();
+        T value = ttlValue != null ? ttlValue.get() : super.get();
         if (null != value) {
             addValue();
         }
@@ -75,7 +85,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     @Override
     public final void set(T value) {
-        super.set(value);
+        setTtlValue(value);
         if (null == value) { // may set null to remove value
             removeValue();
         } else {
@@ -83,10 +93,22 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
     }
 
+    private void setTtlValue(T value) {
+        if (ttlValue != null) {
+            ttlValue.set(value);
+        } else {
+            super.set(value);
+        }
+    }
+
     @Override
     public final void remove() {
         removeValue();
-        super.remove();
+        if (ttlValue != null) {
+            ttlValue.remove();
+        } else {
+            super.remove();
+        }
     }
 
     private void superRemove() {

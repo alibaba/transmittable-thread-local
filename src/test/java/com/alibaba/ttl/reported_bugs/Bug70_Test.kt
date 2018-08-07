@@ -2,6 +2,7 @@ package com.alibaba.ttl.reported_bugs
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRunnable
+import com.alibaba.ttl.internal.TtlValueFactory
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.concurrent.Executors
@@ -29,15 +30,18 @@ class Bug70_Test {
                 .get()
         assertEquals(hello, task1.get())
 
-        val taskRef = AtomicReference<FutureTask<String>>()
-        val thread = Thread {
-            val task2 = FutureTask<String> { threadLocal.get() }
-            val runnable = TtlRunnable.get(task2, false, false)
-            executorService.submit(runnable)
-            taskRef.set(task2)
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            val taskRef = AtomicReference<FutureTask<String>>()
+            val thread = Thread {
+                val task2 = FutureTask<String> { threadLocal.get() }
+                val runnable = TtlRunnable.get(task2, false, false)
+                executorService.submit(runnable)
+                taskRef.set(task2)
+            }
+            thread.start()
+            thread.join()
+            assertEquals(hello, taskRef.get().get())
         }
-        thread.start()
-        thread.join()
-        assertEquals(hello, taskRef.get().get())
     }
 }
