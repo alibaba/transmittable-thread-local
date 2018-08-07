@@ -1,6 +1,7 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
+import com.alibaba.ttl.internal.TtlValueFactory
 import com.alibaba.ttl.testmodel.*
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
@@ -33,11 +34,14 @@ class TtlRunnableTest {
         ttlRunnable.run()
 
 
-        // child Inheritable
-        assertChildTtlValues("1", task.copied)
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertChildTtlValues("1", task.copied)
 
-        // child do not effect parent
-        assertParentTtlValues(copyTtlValues(ttlInstances))
+            // child do not effect parent
+            assertParentTtlValues(copyTtlValues(ttlInstances))
+        }
     }
 
     @Test
@@ -55,8 +59,11 @@ class TtlRunnableTest {
         thread1.join()
 
 
-        // child Inheritable
-        assertChildTtlValues("1", task.copied)
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertChildTtlValues("1", task.copied)
+        }
 
         // child do not effect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
@@ -77,8 +84,11 @@ class TtlRunnableTest {
         submit.get()
 
 
-        // child Inheritable
-        assertChildTtlValues("1", task.copied)
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertChildTtlValues("1", task.copied)
+        }
 
         // child do not effect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
@@ -102,8 +112,11 @@ class TtlRunnableTest {
         submit.get()
 
 
-        // child Inheritable
-        assertChildTtlValues("1", task.copied)
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertChildTtlValues("1", task.copied)
+        }
 
         // child do not effect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
@@ -168,11 +181,14 @@ class TtlRunnableTest {
         val submit = executorService.submit(ttlRunnable)
         submit.get()
 
-        // child Inheritable
-        assertEquals(3, task.copied.size.toLong())
-        assertEquals(FooPojo(PARENT_CREATE_UNMODIFIED_IN_CHILD, 1), task.copied[PARENT_CREATE_UNMODIFIED_IN_CHILD])
-        assertEquals(FooPojo(PARENT_CREATE_MODIFIED_IN_CHILD + "1", 2), task.copied[PARENT_CREATE_MODIFIED_IN_CHILD])
-        assertEquals(FooPojo(CHILD_CREATE + 1, 3), task.copied[CHILD_CREATE + 1])
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertEquals(3, task.copied.size.toLong())
+            assertEquals(FooPojo(PARENT_CREATE_UNMODIFIED_IN_CHILD, 1), task.copied[PARENT_CREATE_UNMODIFIED_IN_CHILD])
+            assertEquals(FooPojo(PARENT_CREATE_MODIFIED_IN_CHILD + "1", 2), task.copied[PARENT_CREATE_MODIFIED_IN_CHILD])
+            assertEquals(FooPojo(CHILD_CREATE + 1, 3), task.copied[CHILD_CREATE + 1])
+        }
 
         // child do not effect parent
         val copied = copyTtlValues(ttlInstances)

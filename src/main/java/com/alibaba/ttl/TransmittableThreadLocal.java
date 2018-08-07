@@ -1,5 +1,8 @@
 package com.alibaba.ttl;
 
+import com.alibaba.ttl.internal.TtlValue;
+import com.alibaba.ttl.internal.TtlValueFactory;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +17,10 @@ import java.util.logging.Logger;
  * <p>
  * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
+ * <p>
+ * If you have netty in the runtime and {@link io.netty.util.internal.FastThreadLocal} is supported. You can store
+ * {@link TransmittableThreadLocal} in {@link io.netty.util.internal.FastThreadLocal} to give up inheritance for better performance.
+ * </p>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TtlRunnable
@@ -66,7 +73,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     @Override
     public final T get() {
-        T value = super.get();
+        T value = ttlValue != null ? ttlValue.get() : super.get();
         if (null != value) {
             addValue();
         }
@@ -75,7 +82,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     @Override
     public final void set(T value) {
-        super.set(value);
+        if (ttlValue != null) {
+            ttlValue.set(value);
+        } else {
+            super.set(value);
+        }
         if (null == value) { // may set null to remove value
             removeValue();
         } else {
@@ -86,7 +97,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public final void remove() {
         removeValue();
-        super.remove();
+        if (ttlValue != null) {
+            ttlValue.remove();
+        } else {
+            super.remove();
+        }
     }
 
     void superRemove() {
@@ -96,6 +111,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     T copyValue() {
         return copy(get());
     }
+
+    private TtlValue<T> ttlValue = TtlValueFactory.create();
 
     private static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
             new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {

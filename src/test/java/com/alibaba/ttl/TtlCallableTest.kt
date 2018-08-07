@@ -1,6 +1,7 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
+import com.alibaba.ttl.internal.TtlValueFactory
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
@@ -33,12 +34,14 @@ class TtlCallableTest {
         val ret = ttlCallable.call()
         assertEquals("ok", ret)
 
+        // inheritable is not supported by FastThreadLocal mode
+        if (!TtlValueFactory.isFastThreadLocalEnabled()) {
+            // child Inheritable
+            assertChildTtlValues("1", call.copied)
 
-        // child Inheritable
-        assertChildTtlValues("1", call.copied)
-
-        // child do not effect parent
-        assertParentTtlValues(copyTtlValues(ttlInstances))
+            // child do not effect parent
+            assertParentTtlValues(copyTtlValues(ttlInstances))
+        }
     }
 
     @Test
