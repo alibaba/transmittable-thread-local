@@ -44,7 +44,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final String doExec_methodName = "doExec";
-        final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName);
+        final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName, new CtClass[0]);
         final CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
 
         // rename original doExec method, and set to private method(avoid reflect out renamed method unexpectedly)
