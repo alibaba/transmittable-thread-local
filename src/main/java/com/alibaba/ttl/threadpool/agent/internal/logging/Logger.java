@@ -64,7 +64,7 @@ public abstract class Logger {
         @Override
         public void log(Level level, String msg, Throwable thrown) {
             if (level == Level.SEVERE) {
-                final String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                final String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
                 System.err.printf("%s %s [%s] %s: %s%n", time, level, Thread.currentThread().getName(), logClass.getSimpleName(), msg);
                 if (thrown != null) thrown.printStackTrace();
             }
@@ -78,7 +78,7 @@ public abstract class Logger {
 
         @Override
         public void log(Level level, String msg, Throwable thrown) {
-            final String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            final String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
             System.out.printf("%s %s [%s] %s: %s%n", time, level, Thread.currentThread().getName(), logClass.getSimpleName(), msg);
             if (thrown != null) thrown.printStackTrace(System.out);
         }
