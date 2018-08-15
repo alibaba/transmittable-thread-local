@@ -183,11 +183,13 @@ String value = parent.get();
 
 See demo [`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java).
 
-Agent decorate 2 thread pool implementation classes
-\(implementation code [`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)\):
+At present, `TTL` agent has decorated below `JDK` thread pool implementation:
 
-- `java.util.concurrent.ThreadPoolExecutor`
-- `java.util.concurrent.ScheduledThreadPoolExecutor`
+- `java.util.concurrent.ThreadPoolExecutor` and `java.util.concurrent.ScheduledThreadPoolExecutor`  
+    decoration implemetation code is in [`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)
+- `java.util.concurrent.ForkJoinTask`（corresponding thread pool is `java.util.concurrent.ForkJoinPool`）  
+    decoration implemetation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
+
 
 Add start options on Java command:
 

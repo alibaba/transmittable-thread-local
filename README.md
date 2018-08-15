@@ -214,10 +214,12 @@ String value = context.get();
 
 Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
 
-目前`Agent`中，修饰了`JDK`中的两个线程池实现类（实现代码在[`TtlTransformer.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)）：
+目前`TTL Agent`中，修饰了`JDK`中的线程池实现如下：
 
-- `java.util.concurrent.ThreadPoolExecutor`
-- `java.util.concurrent.ScheduledThreadPoolExecutor`
+- `java.util.concurrent.ThreadPoolExecutor` 和 `java.util.concurrent.ScheduledThreadPoolExecutor`  
+    修饰实现代码在[`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)
+- `java.util.concurrent.ForkJoinTask`（对应的线程池是`java.util.concurrent.ForkJoinPool`）  
+    修饰实现代码在[`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
 
 #### 关于`boot class path`设置
 
