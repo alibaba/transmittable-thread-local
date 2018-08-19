@@ -10,11 +10,11 @@ import java.util.concurrent.atomic.AtomicLong
 
 
 private val executorService = TtlExecutors.getTtlExecutorService(
-        Executors.newFixedThreadPool(1, { r: Runnable ->
+        Executors.newFixedThreadPool(1) { r: Runnable ->
             val thread = Thread(r, "Executors")
             thread.isDaemon = true
             thread
-        })
+        }
 )
 
 /**

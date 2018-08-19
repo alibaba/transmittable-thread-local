@@ -20,7 +20,7 @@ private val singleThreadPool = ForkJoinPool(1)
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
- * @see com.alibaba.ttl.threadpool.agent.TtlForkJoinTransformer
+ * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet
  */
 fun main(args: Array<String>) {
 

@@ -17,12 +17,9 @@ fun expandThreadPool(executor: ExecutorService) {
         Math.min(10, executor.maximumPoolSize)
     } else 10
 
-    // toList, avoid lazy
-    val list: List<Future<*>> = (0 until count).map {
+    (0 until count).map {
         executor.submit { Thread.sleep(100) }
-    }
-
-    list.forEach { it.get() }
+    }.forEach { it.get() }
 }
 
 fun printHead(title: String) {

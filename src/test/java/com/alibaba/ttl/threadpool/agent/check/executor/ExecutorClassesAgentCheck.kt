@@ -13,7 +13,7 @@ private const val POOL_SIZE = 3
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
- * @see com.alibaba.ttl.threadpool.agent.TtlExecutorTransformer
+ * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet
  */
 fun main(args: Array<String>) {
     val executorService = ThreadPoolExecutor(POOL_SIZE, POOL_SIZE,

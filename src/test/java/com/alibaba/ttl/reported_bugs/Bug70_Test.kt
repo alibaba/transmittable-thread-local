@@ -7,6 +7,7 @@ import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.thread
 
 /**
  * Bug URL: https://github.com/alibaba/transmittable-thread-local/issues/70
@@ -17,27 +18,23 @@ class Bug70_Test {
     @Test
     fun test_bug70() {
         val hello = "hello"
-
         val executorService = Executors.newSingleThreadExecutor()
-        val threadLocal = TransmittableThreadLocal<String>()
-
-        threadLocal.set(hello)
+        val threadLocal = TransmittableThreadLocal<String>().apply { set(hello) }
         assertEquals(hello, threadLocal.get())
 
-        val task1 = FutureTask<String> { threadLocal.get() }
-        executorService.submit(TtlRunnable.get(task1))
-                .get()
-        assertEquals(hello, task1.get())
+        val futureTask = FutureTask<String> { threadLocal.get() }.also {
+            executorService.submit(TtlRunnable.get(it))
+                    .get()
+        }
+        assertEquals(hello, futureTask.get())
 
         val taskRef = AtomicReference<FutureTask<String>>()
-        val thread = Thread {
-            val task2 = FutureTask<String> { threadLocal.get() }
-            val runnable = TtlRunnable.get(task2, false, false)
-            executorService.submit(runnable)
-            taskRef.set(task2)
-        }
-        thread.start()
-        thread.join()
+        thread(name = "the thread for run executor action") {
+            FutureTask<String> { threadLocal.get() }.also {
+                executorService.submit(TtlRunnable.get(it, false, false))
+                taskRef.set(it)
+            }
+        }.join()
         assertEquals(hello, taskRef.get().get())
     }
 }
