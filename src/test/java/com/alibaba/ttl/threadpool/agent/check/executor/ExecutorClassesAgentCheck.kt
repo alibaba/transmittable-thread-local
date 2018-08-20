@@ -65,35 +65,21 @@ private fun checkExecutorService(executorService: ExecutorService) {
 private fun checkThreadPoolExecutorForRemoveMethod(executor: ThreadPoolExecutor) {
     printHead("checkThreadPoolExecutorForRemoveMethod")
 
-    val sleepTasks: List<FutureTask<Any>> = (0 until POOL_SIZE * 2).map {
-        val futureTask: FutureTask<Any> = FutureTask<Any>({
-            Thread.sleep(100)
-            println("Run sleep task!")
-        }, null)
-        executor.execute(futureTask)
-        futureTask
-    }.toList()
+    val futures = (0 until POOL_SIZE * 2).map {
+        executor.submit { Thread.sleep(10) }
+    }
 
-    val taskToRemove = FutureTask<Any>({ println("Run taskToRemove!") }, null)
-    executor.execute(taskToRemove)
-    executor.remove(taskToRemove)
+    Runnable {
+        println("Task should be removed!")
+    }.let {
+        executor.execute(it)
+        // Does ThreadPoolExecutor#remove method take effect?
+        assertTrue(executor.remove(it))
+        assertFalse(executor.remove(it))
+    }
 
     // wait sleep task finished.
-    sleepTasks.forEach { it.get(300, TimeUnit.MILLISECONDS) }
-
-    /////////////////////////////////////////////////////////////
-    // Does ThreadPoolExecutor#remove method take effect?
-    /////////////////////////////////////////////////////////////
-    assertFalse(taskToRemove.isDone)
-    assertFalse(taskToRemove.isCancelled) // task is directly removed from work queue, so not cancelled!
-
-    println("executor.activeCount: ${executor.activeCount}")    // NOTE: activeCount value is not strong published
-    Thread.sleep(1)                                             // read and wait, then assert check!
-    assertEquals(0L, executor.activeCount.toLong()) // No more task in executor, so remove op is success!
-
-    assertFalse(taskToRemove.isDone)
-    assertFalse(taskToRemove.isCancelled) // task is directly removed from work queue, so not cancelled!
-
+    futures.forEach { it.get(100, TimeUnit.MILLISECONDS) }
 }
 
 private fun checkScheduledExecutorService(scheduledExecutorService: ScheduledExecutorService) {
