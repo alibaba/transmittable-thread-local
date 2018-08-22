@@ -278,8 +278,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 // backup
                 backup.put(threadLocal, threadLocal.get());
 
-                // clear the TTL values only in captured
-                // avoid extra TTL values in captured, when run task.
+                // clear the TTL values that is not in captured
+                // avoid the extra TTL values after replay when run task
                 if (!capturedMap.containsKey(threadLocal)) {
                     iterator.remove();
                     threadLocal.superRemove();
@@ -312,8 +312,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
                 TransmittableThreadLocal<?> threadLocal = next.getKey();
 
-                // clear the TTL values only in backup
-                // avoid the extra values of backup after restore
+                // clear the TTL values that is not in backup
+                // avoid the extra TTL values after restore
                 if (!backupMap.containsKey(threadLocal)) {
                     iterator.remove();
                     threadLocal.superRemove();
