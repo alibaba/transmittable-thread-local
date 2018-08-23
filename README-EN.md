@@ -181,7 +181,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-See demo [`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java).
+See demo [`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt).
 
 At present, `TTL` agent has decorated below `JDK` thread pool implementation:
 

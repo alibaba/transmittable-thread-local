@@ -212,7 +212,7 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-Demo参见[`AgentDemo.java`](src/test/java/com/alibaba/demo/agent/AgentDemo.java)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
+Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
 
 目前`TTL Agent`中，修饰了`JDK`中的线程池实现如下：
 
