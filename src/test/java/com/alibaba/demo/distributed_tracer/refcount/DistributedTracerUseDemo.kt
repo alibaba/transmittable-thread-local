@@ -5,6 +5,8 @@ import com.alibaba.ttl.threadpool.TtlExecutors
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.concurrent.thread
+import java.lang.Thread.sleep
 
 /**
  * DistributedTracer(DT) use demo.
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger
 fun main(args: Array<String>) {
     rpcInvokeIn()
 
-    Thread.sleep(100)
+    sleep(100)
 }
 
 private fun rpcInvokeIn() {
@@ -43,9 +45,7 @@ private fun rpcInvokeIn() {
 
 private val executorService = TtlExecutors.getTtlExecutorService(
         Executors.newFixedThreadPool(1) { r: Runnable ->
-            val thread = Thread(r, "Executors")
-            thread.isDaemon = true
-            thread
+            Thread(r, "Executors").apply { isDaemon = true }
         }
 )
 
@@ -55,7 +55,7 @@ private fun syncMethod() {
 
     // async call by new Thread
     // FIXME Bug!! 没有 Increase/Decrease reference counter操作!
-    Thread(::syncMethod_ByNewThread, "Thread-by-new").start()
+    thread(name = "Thread-by-new") { syncMethod_ByNewThread() }
 
     invokeServerWithRpc("server 1")
 }

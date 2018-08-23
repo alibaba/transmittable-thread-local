@@ -3,17 +3,16 @@ package com.alibaba.demo.distributed_tracer.weakref
 import com.alibaba.expandThreadPool
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.threadpool.TtlExecutors
+import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
-
+import kotlin.concurrent.thread
 
 private val executorService = TtlExecutors.getTtlExecutorService(
         Executors.newFixedThreadPool(1) { r: Runnable ->
-            val thread = Thread(r, "Executors")
-            thread.isDaemon = true
-            thread
+            Thread(r, "Executors").apply { isDaemon = true }
         }
 )
 
@@ -33,11 +32,11 @@ fun main(args: Array<String>) {
     println("WARN: finished rpc invocation")
 
     // help to check GC status
-    Thread.sleep(200)
+    sleep(200)
     println("WARN: Call System.gc")
     System.gc()
     println("WARN: Called System.gc")
-    Thread.sleep(100)
+    sleep(100)
 
     println("Exit Main.")
 }
@@ -77,7 +76,7 @@ private fun syncMethod() {
     executorService.submit { asyncMethod() }
 
     // async call by new Thread
-    Thread(::syncMethod_ByNewThread, "Thread-by-new").start()
+    thread(name = "Thread-by-new") { syncMethod_ByNewThread() }
 
     invokeServerWithRpc("server 1")
 }
@@ -124,8 +123,8 @@ internal data class LeafSpanIdInfo(val current: AtomicInteger = AtomicInteger(1)
 internal data class DtTransferInfo(val traceId: String, val baseSpanId: String, val leafSpanIdInfo: LeafSpanIdInfo) {
     // Output GC operation
     // How to implement finalize() in kotlin? - https://stackoverflow.com/questions/43784161
-    @Suppress("unused")
-    fun finalize() {
+    @Suppress("unused", "ProtectedInFinal")
+    protected fun finalize() {
         System.out.printf("DEBUG: gc DtTransferInfo traceId %s in thread %s: %s%n",
                 traceId, Thread.currentThread().name, this)
     }

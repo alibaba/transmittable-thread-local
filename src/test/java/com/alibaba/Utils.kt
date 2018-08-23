@@ -5,8 +5,12 @@ package com.alibaba
 import com.alibaba.ttl.TransmittableThreadLocal
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import java.lang.Thread.sleep
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.ThreadPoolExecutor
 
 
 /**
@@ -18,7 +22,7 @@ fun expandThreadPool(executor: ExecutorService) {
     } else 10
 
     (0 until count).map {
-        executor.submit { Thread.sleep(100) }
+        executor.submit { sleep(100) }
     }.forEach { it.get() }
 }
 
