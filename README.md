@@ -271,10 +271,10 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，传递会失效。
 
-- 用户代码中继承`java.util.concurrent.ThreadPoolExecutor`和`java.util.concurrent.ScheduledThreadPoolExecutor`，
-    覆盖了`execute`、`submit`、`schedule`等提交任务的方法，并且没有调用父类的方法。  
-    修改线程池类的实现，`execute`、`submit`、`schedule`等提交任务的方法禁止这些被覆盖，可以规避这个问题。
-- 目前，没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。
+- 目前，`Agent`没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。  
+    - `Timer`是`JDK 1.3`的老类，不推荐使用`Timer`类，推荐用[`ScheduledExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html)。  
+    `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
+    如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
 
 # 🔌 Java API Docs
 

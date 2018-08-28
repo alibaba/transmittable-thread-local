@@ -9,7 +9,6 @@
 - [📌 框架/中间件集成`TTL`传递](#-%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E9%9B%86%E6%88%90ttl%E4%BC%A0%E9%80%92)
 - [📟 关于`Java Agent`](#-%E5%85%B3%E4%BA%8Ejava-agent)
     - [`Java Agent`方式对应用代码无侵入](#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)
-    - [如何权衡`Java Agent`方式的失效情况](#%E5%A6%82%E4%BD%95%E6%9D%83%E8%A1%A1java-agent%E6%96%B9%E5%BC%8F%E7%9A%84%E5%A4%B1%E6%95%88%E6%83%85%E5%86%B5)
     - [已有`Java Agent`中嵌入`TTL Agent`](#%E5%B7%B2%E6%9C%89java-agent%E4%B8%AD%E5%B5%8C%E5%85%A5ttl-agent)
 - [👢 Bootstrap上添加通用库的`Jar`的问题及解决方法](#-bootstrap%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93%E7%9A%84jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
@@ -120,16 +119,6 @@ String result = runSupplierWithCaptured(captured, () -> {
 使用`Java Agent`方式，应用无需修改代码，即做到 相对应用代码 透明地完成跨线程池的上下文传递。
 
 更多关于应用场景的了解说明参见文档[需求场景](requirement-scenario.md)。
-
-## 如何权衡`Java Agent`方式的失效情况
-
-把这些失效情况都解决了是最好的，但复杂化了实现。下面是一些权衡：
-
-- 不推荐使用`Timer`类，推荐用`ScheduledThreadPoolExecutor`。  
-    `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
-    如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。
-- 覆盖了`execute`、`submit`、`schedule`的问题的权衡是：  
-    业务上没有修改这些方法的需求。并且线程池类提供了`beforeExecute`方法用于插入扩展的逻辑。
 
 ## 已有`Java Agent`中嵌入`TTL Agent`
 

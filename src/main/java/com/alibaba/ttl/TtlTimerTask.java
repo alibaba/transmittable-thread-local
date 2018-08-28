@@ -18,6 +18,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.Timer
  * @see TimerTask
+ * @see <a href="https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency">10. [Mandatory] Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions.</a>
  * @since 0.9.1
  * @deprecated Use {@link TtlRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link java.util.Timer}, {@link java.util.TimerTask}.
  */
