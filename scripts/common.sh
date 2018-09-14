@@ -91,27 +91,30 @@ readonly -a JAVA_CMD=(
         -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
     }
 )
+readonly -a MVN_CMD=(
+    ./mvnw -V
+)
 
 #################################################################################
 # maven operation functions
 #################################################################################
 
 mvnClean() {
-    runCmd ./mvnw clean || die "fail to mvn clean!"
+    runCmd "${MVN_CMD[@]}" clean || die "fail to mvn clean!"
 }
 
 mvnBuildJar() {
-    runCmd ./mvnw install -Pgen-src+doc -Pgen-git-properties -Dmaven.test.skip || die "fail to build jar!"
+    runCmd "${MVN_CMD[@]}" install -Pgen-src+doc -Pgen-git-properties -Dmaven.test.skip || die "fail to build jar!"
 }
 
 mvnCompileTest() {
-    runCmd ./mvnw test-compile || die "fail to mvn test-compile!"
+    runCmd "${MVN_CMD[@]}" test-compile || die "fail to mvn test-compile!"
 }
 
 readonly dependencies_dir="target/dependency"
 
 mvnCopyDependencies() {
-    runCmd ./mvnw dependency:copy-dependencies -DincludeScope=test || die "fail to mvn copy-dependencies!"
+    runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test || die "fail to mvn copy-dependencies!"
 
     # remove repackaged and shaded javassist lib
     rm $dependencies_dir/javassist-*
@@ -146,8 +149,6 @@ getClasspath() {
 #################################################################################
 # maven actions
 #################################################################################
-
-runCmd ./mvnw --version
 
 if [ "$1" != "skipClean" ]; then 
     mvnClean

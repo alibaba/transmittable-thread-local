@@ -13,7 +13,7 @@ source ./common.sh skipClean
 if [ -n "$JAVA10_HOME" ]; then
     export JAVA_HOME="${JAVA10_HOME}"
 else
-    current_java_version=$(./mvnw -v | awk -F'[ ,]' '/^Java version/{print $3}')
+    current_java_version=$("${MVN_CMD[@]}" -v | awk -F'[ ,]' '/^Java version/{print $3}')
     if [[ default_java_version != 10.* ]]; then
         echo "Fail to get java 10 home!"
         exit 1
@@ -21,7 +21,7 @@ else
 fi
 
 headInfo "test with Java 10"
-runCmd ./mvnw clean install --batch-mode
+runCmd "${MVN_CMD[@]}" clean install --batch-mode
 runCmd ./scripts/run-agent-test.sh
 
 # Java 6
