@@ -207,10 +207,10 @@
 						<manifestEntries>
 							<!--
 								Instrumentation Specification
-									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html
-									- https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description
+									- https://docs.oracle.com/javase/10/docs/technotes/guides/instrumentation/index.html
+									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
 								JAR Manifest - JAR File Specification
-									- https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest
+									- https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
 							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
@@ -299,7 +299,7 @@
 							<encoding>UTF-8</encoding>
 							<docencoding>UTF-8</docencoding>
 							<links>
-								<link>https://docs.oracle.com/javase/8/docs/api</link>
+								<link>https://docs.oracle.com/javase/10/docs/api</link>
 							</links>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>*.internal.*</excludePackageNames>

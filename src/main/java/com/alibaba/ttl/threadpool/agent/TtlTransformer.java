@@ -20,7 +20,7 @@ import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see ClassFileTransformer
- * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+ * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @since 0.9.0
  */
 public class TtlTransformer implements ClassFileTransformer {

@@ -48,7 +48,7 @@
 transmitting ThreadLocal value between threads even using thread pooling components.
 Support `Java` 11/10/9/8/7/6.
 
-Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
+Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
@@ -78,7 +78,7 @@ parent.set("value-set-in-parent");
 String value = parent.get();
 ```
 
-This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html) instead.
+This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
 Application need transmit value from the time task is created to the point task is executed.
@@ -211,8 +211,8 @@ The implementation of auto adding self agent jar to `boot classpath` use the `Bo
 
 More info:
 
-- [`Java Agent Specification` - `JavaDoc`文档](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
-- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [`Java Agent Specification` - `JavaDoc`文档](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 Java command example:
@@ -259,12 +259,12 @@ Check available version at [search.maven.org](https://search.maven.org/search?q=
 
 ## JDK core classes
 
-- [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
-- [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
-- [Java Agent规范](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html)
+- [Java Agent规范](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
 - [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 - [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 - [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)

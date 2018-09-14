@@ -34,12 +34,12 @@ import java.util.logging.Level;
  * </blockquote>
  * <p>
  * More info about {@code Boot-Class-Path} see
- * <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>.
+ * <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Instrumentation
- * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
- * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest">JAR File Specification - JAR Manifest</a>
+ * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+ * @see <a href="https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest">JAR File Specification - JAR Manifest</a>
  * @see <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html">Working with Manifest Files - The Java™ TutorialsHide</a>
  * @since 0.9.0
  */
@@ -67,7 +67,7 @@ public final class TtlAgent {
      * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
      * </ul>
      *
-     * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+     * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
      * @see Logger
      * @see Logger#TTL_AGENT_LOGGER_KEY
      * @see Logger#STDERR

@@ -51,9 +51,9 @@
 👉 在使用线程池等会池化复用线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。
 一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 11/10/9/8/7/6。
 
-`JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
+`JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
 整个库包含`TTL`核心功能、线程池修饰及`Agent`支持（`ExecutorService`/`ForkJoinPool`），只有不到 **_800 `SLOC`代码行_**，非常精小。
 
@@ -78,9 +78,9 @@
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
-相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)，添加了
+相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
 1. `protected`方法`copy`  
     用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。
@@ -106,7 +106,7 @@ parent.set("value-set-in-parent");
 String value = parent.get();
 ```
 
-这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
 但对于使用线程池等会池化复用线程的组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -239,8 +239,8 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。
 
 更多详见
 
-- [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
-- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 #### `Java`的启动参数配置
@@ -272,7 +272,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 由于`Runnable`和`Callable`的修饰代码，是在线程池类中插入的。下面的情况会让插入的代码被绕过，传递会失效。
 
 - 目前，`Agent`没有修饰`java.util.Timer`类，使用`Timer`时，`TTL`会有问题。  
-    - `Timer`是`JDK 1.3`的老类，不推荐使用`Timer`类，推荐用[`ScheduledExecutorService`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html)。  
+    - `Timer`是`JDK 1.3`的老类，不推荐使用`Timer`类，推荐用[`ScheduledExecutorService`](https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/ScheduledExecutorService.html)。  
     `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
     如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
 
@@ -311,8 +311,8 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 
 ## Jdk core classes
 
-- [WeakHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/WeakHashMap.html)
-- [InheritableThreadLocal](https://docs.oracle.com/javase/8/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
 ## Java Agent
 
@@ -320,8 +320,8 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 - [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 - [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 - 官方文档
-    - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html#package.description)
-    - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+    - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
+    - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
     - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 # 👷 Contributors
