@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
@@ -25,13 +26,13 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     private static final String TTL_RECURSIVE_TASK_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveTask";
 
     @Override
-    public boolean needTransform(String className) {
-        return FORK_JOIN_TASK_CLASS_NAME.equals(className);
-    }
-
-    @Override
-    public void doTransform(CtClass clazz) throws NotFoundException, CannotCompileException, IOException {
-        updateForkJoinTaskClass(clazz);
+    public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
+        if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
+            final CtClass clazz = getCtClass(classFileBuffer, loader);
+            updateForkJoinTaskClass(clazz);
+            return clazz.toBytecode();
+        }
+        return null;
     }
 
     private void updateForkJoinTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {

@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
+
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
  *
@@ -41,15 +43,15 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     @Override
-    public boolean needTransform(String className) {
-        return EXECUTOR_CLASS_NAMES.contains(className);
-    }
-
-    @Override
-    public void doTransform(CtClass clazz) throws NotFoundException, CannotCompileException, IOException {
-        for (CtMethod method : clazz.getDeclaredMethods()) {
-            updateMethodOfExecutorClass(clazz, method);
+    public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
+        if (EXECUTOR_CLASS_NAMES.contains(className)) {
+            final CtClass clazz = getCtClass(classFileBuffer, loader);
+            for (CtMethod method : clazz.getDeclaredMethods()) {
+                updateMethodOfExecutorClass(clazz, method);
+            }
+            return clazz.toBytecode();
         }
+        return null;
     }
 
     private void updateMethodOfExecutorClass(final CtClass clazz, final CtMethod method) throws NotFoundException, CannotCompileException {

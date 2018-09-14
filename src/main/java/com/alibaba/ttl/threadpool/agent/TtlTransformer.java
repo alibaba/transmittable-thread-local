@@ -51,12 +51,8 @@ public class TtlTransformer implements ClassFileTransformer {
 
             final String className = toClassName(classFile);
             for (JavassistTransformlet transformlet : transformletList) {
-                if (transformlet.needTransform(className)) {
-                    logger.info("Transforming class " + className);
-                    final CtClass clazz = getCtClass(classFileBuffer, loader);
-                    transformlet.doTransform(clazz);
-                    return clazz.toBytecode();
-                }
+                final byte[] bytes = transformlet.doTransform(className, classFileBuffer, loader);
+                if (bytes != null) return bytes;
             }
         } catch (Throwable t) {
             String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
@@ -69,18 +65,5 @@ public class TtlTransformer implements ClassFileTransformer {
 
     private static String toClassName(final String classFile) {
         return classFile.replace('/', '.');
-    }
-
-    private static CtClass getCtClass(final byte[] classFileBuffer, final ClassLoader classLoader) throws IOException {
-        final ClassPool classPool = new ClassPool(true);
-        if (classLoader == null) {
-            classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
-        } else {
-            classPool.appendClassPath(new LoaderClassPath(classLoader));
-        }
-
-        final CtClass clazz = classPool.makeClass(new ByteArrayInputStream(classFileBuffer), false);
-        clazz.defrost();
-        return clazz;
     }
 }

@@ -1,8 +1,9 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
+import javassist.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * @since 2.6.0
@@ -35,5 +36,18 @@ class Utils {
 
         stringBuilder.append(")");
         return stringBuilder.toString();
+    }
+
+    static CtClass getCtClass(final byte[] classFileBuffer, final ClassLoader classLoader) throws IOException {
+        final ClassPool classPool = new ClassPool(true);
+        if (classLoader == null) {
+            classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
+        } else {
+            classPool.appendClassPath(new LoaderClassPath(classLoader));
+        }
+
+        final CtClass clazz = classPool.makeClass(new ByteArrayInputStream(classFileBuffer), false);
+        clazz.defrost();
+        return clazz;
     }
 }
