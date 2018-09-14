@@ -305,7 +305,8 @@
 							<excludePackageNames>*.internal.*</excludePackageNames>
 							<overview>src/api/overview.html</overview>
 							<additionalJOptions>
-								<additionalJOption>-J-Duser.language=en -J-Duser.country=US</additionalJOption>
+								<additionalJOption>-J-Duser.language=en</additionalJOption>
+								<additionalJOption>-J-Duser.country=US</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -424,6 +425,26 @@
 								</configuration>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>above-jdk9</id>
+			<activation>
+				<jdk>[9,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<additionalJOptions>
+								<additionalJOption>-html5</additionalJOption>
+								<additionalJOption>-J-Duser.language=en</additionalJOption>
+								<additionalJOption>-J-Duser.country=US</additionalJOption>
+							</additionalJOptions>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

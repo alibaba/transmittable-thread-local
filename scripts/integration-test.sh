@@ -9,18 +9,18 @@ source ./common.sh skipClean
 #   - JAVA9_HOME
 #   - JAVA10_HOME
 
-# Java 8
-if [ -n "$JAVA8_HOME" ]; then
-    export JAVA_HOME="${JAVA8_HOME}"
+# Java 10
+if [ -n "$JAVA10_HOME" ]; then
+    export JAVA_HOME="${JAVA10_HOME}"
 else
-    current_java_version=$(./mvn -v | awk -F'[ ,]' '/^Java version/{print $3}')
-    if [[ default_java_version != "1.8."* ]]; then
-        echo "Fail to get java 8 home!"
+    current_java_version=$(./mvnw -v | awk -F'[ ,]' '/^Java version/{print $3}')
+    if [[ default_java_version != 10.* ]]; then
+        echo "Fail to get java 10 home!"
         exit 1
     fi
 fi
 
-headInfo "test with Java 8"
+headInfo "test with Java 10"
 runCmd ./mvnw clean install --batch-mode
 runCmd ./scripts/run-agent-test.sh
 
@@ -44,6 +44,16 @@ else
     headInfo "skip Java 7 test"
 fi
 
+# Java 8
+if [ -n "$JAVA8_HOME" ]; then
+    headInfo "test with Java 8"
+    export JAVA_HOME="${JAVA8_HOME}"
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
+else
+    headInfo "skip Java 8 test"
+fi
+
 # Java 9
 if [ -n "$JAVA9_HOME" ]; then
     headInfo "test with Java 9"
@@ -54,12 +64,12 @@ else
     headInfo "skip Java 9 test"
 fi
 
-# Java 10
-if [ -n "$JAVA10_HOME" ]; then
-    headInfo "test with Java 10"
-    export JAVA_HOME="${JAVA10_HOME}"
+# Java 11
+if [ -n "$JAVA9_HOME" ]; then
+    headInfo "test with Java 11"
+    export JAVA_HOME="${JAVA9_HOME}"
     runCmd ./scripts/run-junit.sh skipClean
     runCmd ./scripts/run-agent-test.sh skipClean
 else
-    headInfo "skip Java 10 test"
+    headInfo "skip Java 11 test"
 fi
