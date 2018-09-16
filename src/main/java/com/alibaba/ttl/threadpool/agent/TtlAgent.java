@@ -2,13 +2,14 @@ package com.alibaba.ttl.threadpool.agent;
 
 
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -50,8 +51,12 @@ public final class TtlAgent {
 
     /**
      * Entrance method of TTL Java Agent.
-     * <p>
-     * The log of TTL Java Agent is config by agent argument, using key {@code ttl.agent.logger}.
+     *
+     * <h2>TTL Agent configuration</h2>
+     * Configure TTL agent via agent arguments, format is {@code k1:v1,k2:v2}. Below is available configuration keys.
+     *
+     * <h3>The log configuration</h3>
+     * The log of TTL Java Agent is config by key {@code ttl.agent.logger}.
      *
      * <ul>
      * <li>{@code ttl.agent.logger : STDERR}<br>
@@ -67,6 +72,14 @@ public final class TtlAgent {
      * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
      * </ul>
      *
+     * <h3>Enable TimerTask class decoration</h3>
+     * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}. Do not enable when no configuration for this key.
+     * <p>
+     * configuration example: {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
+     *
+     * <h3>Multi key configuration example</h3>
+     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.enable.timer.task:true}
+     *
      * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
      * @see Logger
      * @see Logger#TTL_AGENT_LOGGER_KEY
@@ -74,14 +87,22 @@ public final class TtlAgent {
      * @see Logger#STDOUT
      */
     public static void premain(String agentArgs, Instrumentation inst) {
-        Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(agentArgs));
+        final Map<String, String> kvs = splitCommaColonStringToKV(agentArgs);
+
+        Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
         final Logger logger = Logger.getLogger(TtlAgent.class);
 
         try {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
 
-            @SuppressWarnings("unchecked")
-            ClassFileTransformer transformer = new TtlTransformer(TtlExecutorTransformlet.class, TtlForkJoinTransformlet.class);
+            final List<Class<? extends JavassistTransformlet>> transformletList = new ArrayList<Class<? extends JavassistTransformlet>>();
+            transformletList.add(TtlExecutorTransformlet.class);
+            transformletList.add(TtlForkJoinTransformlet.class);
+            if (enableTimerTask(kvs)) {
+                transformletList.add(TtlTimerTaskTransformlet.class);
+            }
+
+            final ClassFileTransformer transformer = new TtlTransformer(transformletList);
             inst.addTransformer(transformer, true);
             logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
 
@@ -93,9 +114,17 @@ public final class TtlAgent {
         }
     }
 
-    private static String getLogImplTypeFromAgentArgs(String agentArgs) {
-        final Map<String, String> kv = splitCommaColonStringToKV(agentArgs);
-        return kv.get(Logger.TTL_AGENT_LOGGER_KEY);
+    private static String getLogImplTypeFromAgentArgs(final Map<String, String> kvs) {
+        return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
+    }
+
+    private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
+
+    private static boolean enableTimerTask(final Map<String, String> kvs) {
+        final boolean hasEnableKey = kvs.containsKey(TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+        if (!hasEnableKey) return false;
+
+        return !"false".equalsIgnoreCase(kvs.get(TTL_AGENT_ENABLE_TIMER_TASK_KEY));
     }
 
     /**

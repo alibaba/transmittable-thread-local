@@ -40,7 +40,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         final String className = clazz.getName();
 
         final String capturedFieldName = "captured$field$add$by$ttl";
-        final CtField capturedField = CtField.make("private final java.lang.Object " + capturedFieldName + ";", clazz);
+        final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
@@ -59,7 +59,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
                 "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
                 "    return " + original_doExec_method_rename + "($$);\n" +
                 "}\n" +
-                "java.lang.Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
+                "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
                 "try {\n" +
                 "    return " + original_doExec_method_rename + "($$);\n" +
                 "} finally {\n" +

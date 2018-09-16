@@ -1,19 +1,13 @@
 package com.alibaba.ttl.threadpool.agent;
 
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.LoaderClassPath;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -30,8 +24,7 @@ public class TtlTransformer implements ClassFileTransformer {
 
     private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
 
-    @SuppressWarnings("unchecked")
-    TtlTransformer(Class<? extends JavassistTransformlet>... transformletClasses) throws Exception {
+    TtlTransformer(List<Class<? extends JavassistTransformlet>> transformletClasses) throws Exception {
         for (Class<? extends JavassistTransformlet> transformletClass : transformletClasses) {
             final JavassistTransformlet transformlet = transformletClass.getConstructor().newInstance();
             transformletList.add(transformlet);
