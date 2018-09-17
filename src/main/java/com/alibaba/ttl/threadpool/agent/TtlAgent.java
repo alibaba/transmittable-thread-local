@@ -73,9 +73,11 @@ public final class TtlAgent {
      * </ul>
      *
      * <h3>Enable TimerTask class decoration</h3>
-     * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}. Do not enable when no configuration for this key.
+     * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
+     * When no configuration for this key, default does not enabled.
      * <p>
-     * configuration example: {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
+     * Configuration example:<br>
+     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
      *
      * <h3>Multi key configuration example</h3>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.enable.timer.task:true}
@@ -128,7 +130,7 @@ public final class TtlAgent {
     }
 
     /**
-     * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({"k1"->"v1", "k2" -> "v2"}).
+     * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
      */
     static Map<String, String> splitCommaColonStringToKV(String commaColonString) {
         Map<String, String> ret = new HashMap<String, String>();
