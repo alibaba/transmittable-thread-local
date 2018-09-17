@@ -189,7 +189,10 @@ At present, `TTL` agent has decorated below `JDK` thread pool implementation:
     decoration implemetation code is in [`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)
 - `java.util.concurrent.ForkJoinTask`（corresponding thread pool is `java.util.concurrent.ForkJoinPool`）  
     decoration implemetation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
-
+- `java.util.TimerTask`（corresponding thread pool is `java.util.Timer`）  
+    decoration implemetation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)  
+    **_NOTE_**: decoration for `TimerTask` default is disable, enabled by agent argument `ttl.agent.enable.timer.task`: `-javaagent:path/to/transmittable-thread-local-2.x.x.jar:ttl.agent.enable.timer.task:true`.  
+    more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
 
 Add start options on Java command:
 
@@ -199,8 +202,8 @@ Add start options on Java command:
 
 - Because TTL agent modified the `JDK` std lib classes, make code refer from std lib class to the TTL classes, so the TTL Agent jar must be added to `boot classpath`.
 - Since `v2.6.0`, TTL agent jar will auto add self to `boot classpath`. But you **should _NOT_** modify the downloaded TTL jar file name in the maven repo(eg: `transmittable-thread-local-2.x.x.jar`).
-    - if you modified the downloaded TTL jar file name(eg: `ttl-foo-name-changed.jar`), 
-      you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
+    - if you modified the downloaded TTL jar file name(eg: `ttl-foo-name-changed.jar`),
+        you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
 
 The implementation of auto adding self agent jar to `boot classpath` use the `Boot-Class-Path` property of manifest file(`META-INF/MANIFEST.MF`) in the TTL Java Agent Jar:
 
