@@ -357,7 +357,7 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>2.2.4</version>
+						<version>2.2.5</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
@@ -438,6 +438,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.0.1</version>
 						<configuration>
 							<additionalJOptions>
 								<additionalJOption>-html5</additionalJOption>
@@ -464,8 +465,8 @@
 						https://stackoverflow.com/a/18420462/922688
 					-->
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>3.0.0-M2</version>
 						<executions>
 							<execution>
 								<id>enforce-versions</id>
