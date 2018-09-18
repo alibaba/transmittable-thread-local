@@ -65,9 +65,9 @@ else
 fi
 
 # Java 11
-if [ -n "$JAVA9_HOME" ]; then
+if [ -n "$JAVA11_HOME" ]; then
     headInfo "test with Java 11"
-    export JAVA_HOME="${JAVA9_HOME}"
+    export JAVA_HOME="${JAVA11_HOME}"
     runCmd ./scripts/run-junit.sh skipClean
     runCmd ./scripts/run-agent-test.sh skipClean
 else
