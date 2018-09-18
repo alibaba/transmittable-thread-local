@@ -73,8 +73,8 @@ script:
   - ./scripts/run-agent-test.sh skipClean
   # codecov
   - jdk_switcher use oraclejdk8
-  - mvn clean -V
-  - mvn cobertura:cobertura
+  - ./mvnw clean -V
+  - ./mvnw cobertura:cobertura
 
 after_success:
   - codecov
