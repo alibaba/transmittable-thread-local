@@ -21,7 +21,7 @@ else
 fi
 
 headInfo "test with Java 10"
-runCmd "${MVN_CMD[@]}" clean install --batch-mode
+runCmd "${MVN_CMD[@]}" clean install
 runCmd ./scripts/run-agent-test.sh
 
 # Java 6
@@ -72,4 +72,14 @@ if [ -n "$JAVA11_HOME" ]; then
     runCmd ./scripts/run-agent-test.sh skipClean
 else
     headInfo "skip Java 11 test"
+fi
+
+# Java 12
+if [ -n "$JAVA12_HOME" ]; then
+    headInfo "test with Java 12"
+    export JAVA_HOME="${JAVA12_HOME}"
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
+else
+    headInfo "skip Java 12 test"
 fi

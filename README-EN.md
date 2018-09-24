@@ -46,7 +46,7 @@
 
 👉 The missing std Java™ lib(simple & 0-dependency) for framework/middleware,
 transmitting ThreadLocal value between threads even using thread pooling components.
-Support `Java` 11/10/9/8/7/6.
+Support `Java` 12/11/10/9/8/7/6.
 
 Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.

@@ -10,27 +10,34 @@ fi
 switch_to_open_jdk9() {
     export JAVA_HOME=$HOME/.jdk/openjdk9
     if [ ! -d "$JAVA_HOME" ]; then
-        "$install_jdk_bin" --feature 9 --license GPL --target $JAVA_HOME
+        "$install_jdk_bin" --feature 9 --license GPL --target "$JAVA_HOME"
     fi
 }
 
 switch_to_oracle_jdk10() {
     export JAVA_HOME=$HOME/.jdk/oraclejdk10
     if [ ! -d "$JAVA_HOME" ]; then
-        "$install_jdk_bin" --feature 10 --license BCL --target $JAVA_HOME
+        "$install_jdk_bin" --feature 10 --license BCL --target "$JAVA_HOME"
     fi
 }
 
 switch_to_open_jdk10() {
     export JAVA_HOME=$HOME/.jdk/openjdk10
     if [ ! -d "$JAVA_HOME" ]; then
-        "$install_jdk_bin" --feature 10 --license GPL --target $JAVA_HOME
+        "$install_jdk_bin" --feature 10 --license GPL --target "$JAVA_HOME"
     fi
 }
 
 switch_to_open_jdk11() {
     export JAVA_HOME=$HOME/.jdk/openjdk11
     if [ ! -d "$JAVA_HOME" ]; then
-        "$install_jdk_bin" --feature 11 --license GPL --target $JAVA_HOME
+        "$install_jdk_bin" --feature 11 --license GPL --target "$JAVA_HOME"
+    fi
+}
+
+switch_to_open_jdk12() {
+    export JAVA_HOME=$HOME/.jdk/openjdk12
+    if [ ! -d "$JAVA_HOME" ]; then
+        "$install_jdk_bin" --feature 12 --license GPL --target "$JAVA_HOME"
     fi
 }

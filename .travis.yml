@@ -37,7 +37,7 @@ install:
 script:
   # default oracle jdk 10, do build and test
   - switch_to_oracle_jdk10
-  - ./mvnw -V clean install --batch-mode
+  - ./mvnw -V clean install
   - ./scripts/run-agent-test.sh
   # open jdk 6
   - jdk_switcher use openjdk6
@@ -71,6 +71,10 @@ script:
   - switch_to_open_jdk11
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
+  #  open jdk 12
+  - switch_to_open_jdk12
+  - ./scripts/run-junit.sh skipClean
+  - ./scripts/run-agent-test.sh skipClean
   # codecov
   - jdk_switcher use oraclejdk8
   - ./mvnw clean -V
@@ -78,7 +82,7 @@ script:
 
 after_success:
   - codecov
-  - git status
+  - git status --ignored
 
 # Caching Dependencies and Directories
 # https://docs.travis-ci.com/user/caching/

@@ -48,13 +48,13 @@
 # 🔧 功能
 
 👉 在使用线程池等会池化复用线程的组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。
-一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 11/10/9/8/7/6。
+一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 12/11/10/9/8/7/6。
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
 本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
-整个库包含`TTL`核心功能、线程池修饰及`Agent`支持（`ExecutorService`/`ForkJoinPool`），只有不到 **_800 `SLOC`代码行_**，非常精小。
+整个库包含`TTL`核心功能（核心用户`API`与框架/中间件的集成`API`）、线程池修饰（`ExecutorService`/`ForkJoinPool`/`TimerTask`）及其`Java Agent`支持，只有不到 **_1000 `SLOC`代码行_**，非常精小。
 
 欢迎 👏
 
