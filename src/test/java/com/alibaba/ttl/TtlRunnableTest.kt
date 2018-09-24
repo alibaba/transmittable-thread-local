@@ -241,11 +241,7 @@ class TtlRunnableTest {
     }
 
     companion object {
-        private val executorService = Executors.newFixedThreadPool(3)
-
-        init {
-            expandThreadPool(executorService)
-        }
+        private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 
         @AfterClass
         @Suppress("unused")

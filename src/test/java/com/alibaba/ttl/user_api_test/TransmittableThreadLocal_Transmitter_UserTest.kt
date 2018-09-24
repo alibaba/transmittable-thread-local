@@ -11,6 +11,7 @@ import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -101,11 +102,7 @@ class TransmittableThreadLocal_Transmitter_UserTest {
         private val PARENT = "parent: " + Date()
         private val CHILD = "child: " + Date()
 
-        private val executorService = Executors.newFixedThreadPool(3)
-
-        init {
-            expandThreadPool(executorService)
-        }
+        private val executorService: ExecutorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 
         @AfterClass
         @Suppress("unused")

@@ -69,29 +69,32 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
 
 
     // child Inheritable
-    assertTtlValues(printAction.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/),
+            printAction.copied
     )
 
     // left grand Task Inheritable, changed value
-    assertTtlValues(printAction.leftSubAction.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */),
+            printAction.leftSubAction.copied
     )
 
     // right grand Task Inheritable, not change value
-    assertTtlValues(printAction.rightSubAction.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/),
+            printAction.rightSubAction.copied
     )
 
     // child do not effect parent
-    assertTtlValues(copyTtlValues(ttlInstances),
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD, PARENT_CREATE_MODIFIED_IN_CHILD,
-            PARENT_CREATE_AFTER_CREATE_CHILD, PARENT_CREATE_AFTER_CREATE_CHILD
-    )
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD,
+                    PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
+            copyTtlValues(ttlInstances))
 }
 
 

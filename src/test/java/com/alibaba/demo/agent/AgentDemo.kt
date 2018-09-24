@@ -3,6 +3,7 @@
 package com.alibaba.demo.agent
 
 import com.alibaba.ttl.TransmittableThreadLocal
+import java.lang.IllegalStateException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -33,7 +34,7 @@ fun main(args: Array<String>) {
 
     executorService.shutdown()
     if (!executorService.awaitTermination(3, TimeUnit.SECONDS)) {
-        System.exit(1)
+        throw IllegalStateException("Fail to shutdown executorService!")
     }
 }
 

@@ -6,7 +6,6 @@ import com.alibaba.ttl.TransmittableThreadLocal
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import java.lang.Thread.sleep
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ExecutorService
@@ -107,7 +106,7 @@ fun <T> printTtlInstances(ttlInstances: TtlInstances<T>, title: String = "") {
     val headList =
             if (title.isBlank()) emptyList()
             else listOf("## $title [${Thread.currentThread().name}] ##")
-    val valueString = ttlInstances.filter { (_, v) -> v.get() != null }
+    val valueString = ttlInstances.filterValues { it.get() != null }
             .map { (k, v) -> "$k: ${v.get()}" }
             .joinToString()
     val output = (headList + valueString + "^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^")
@@ -124,51 +123,39 @@ fun <T> printTtlInstances(ttlInstances: TtlInstances<T>, title: String = "") {
 typealias  TtlValues<T> = Map<String, T>
 
 fun <T> copyTtlValues(ttlInstances: TtlInstances<T>): TtlValues<T> =
-        ttlInstances.filter { (_, v) -> v.get() != null }.map { (k, v) -> Pair(k, v.get()) }.toMap()
+        ttlInstances.filterValues { it.get() != null }
+                .mapValues { (_, v) -> v.get() }
 
-
-fun <T> assertTtlValues(copied: TtlValues<T>, vararg asserts: String?) {
-    val message = "Assert Fail:\ncopyTtlValues: $copied\n asserts: ${Arrays.toString(asserts)}"
-
-    if (asserts.size % 2 != 0) {
-        throw IllegalStateException("should even count! $message")
-    }
-
-    assertEquals("assertTtlValues size not equals! $message", (asserts.size / 2).toLong(), copied.size.toLong())
-
-    var i = 0
-    while (i < asserts.size) {
-        val expectedValue = asserts[i]
-
-        val ttlKey = asserts[i + 1]
-        val actual = copied[ttlKey]
-
-        assertEquals(message, expectedValue, actual)
-        i += 2
-    }
+fun <T> assertTtlValues(expected: TtlValues<T>, copied: TtlValues<T>) {
+    val message = "Assert Fail:\nexpected: $expected\ncopyTtlValues: $copied"
+    assertEquals("size not equals! $message", expected.size, copied.size)
+    assertEquals(message, expected, copied)
 }
 
 fun <T> assertChildTtlValues(tag: String, values: TtlValues<T>) {
-    assertTtlValues(values,
-            PARENT_CREATE_MODIFIED_IN_CHILD + tag, PARENT_CREATE_MODIFIED_IN_CHILD,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            CHILD_CREATE + tag, CHILD_CREATE + tag
+    assertTtlValues(
+            mapOf(PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + tag,
+                    PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    CHILD_CREATE + tag to CHILD_CREATE + tag),
+            values
     )
 }
 
 fun <T> assertChildTtlValuesWithParentCreateAfterCreateChild(tag: String, values: TtlValues<T>) {
-    assertTtlValues(values,
-            PARENT_CREATE_MODIFIED_IN_CHILD + tag, PARENT_CREATE_MODIFIED_IN_CHILD,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            CHILD_CREATE + tag, CHILD_CREATE + tag,
-            PARENT_CREATE_AFTER_CREATE_CHILD, PARENT_CREATE_AFTER_CREATE_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + tag,
+                    PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    CHILD_CREATE + tag to CHILD_CREATE + tag,
+                    PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
+            values
     )
 }
 
 fun <T> assertParentTtlValues(values: TtlValues<T>) {
-    assertTtlValues(values,
-            PARENT_CREATE_MODIFIED_IN_CHILD, PARENT_CREATE_MODIFIED_IN_CHILD, // restored after call!
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_AFTER_CREATE_CHILD, PARENT_CREATE_AFTER_CREATE_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD, // restored after call!
+                    PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
+            values
     )
 }

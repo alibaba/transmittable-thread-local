@@ -38,7 +38,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        executorService!!.execute(task)
+        executorService.execute(task)
         Thread.sleep(100)
 
         // child Inheritable
@@ -53,7 +53,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService!!.submit(call)
+        val future = executorService.submit(call)
         assertEquals("ok", future.get())
 
         // child Inheritable
@@ -68,7 +68,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService!!.submit(task, "ok")
+        val future = executorService.submit(task, "ok")
         assertEquals("ok", future.get())
 
         // child Inheritable
@@ -83,7 +83,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService!!.submit(task)
+        val future = executorService.submit(task)
         assertNull(future.get())
 
         // child Inheritable
@@ -99,7 +99,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService!!.invokeAll(Arrays.asList(call1, call2))
+        val futures = executorService.invokeAll(Arrays.asList(call1, call2))
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -118,7 +118,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService!!.invokeAll(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
+        val futures = executorService.invokeAll(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -137,7 +137,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val s = executorService!!.invokeAny(Arrays.asList(call1, call2))
+        val s = executorService.invokeAny(Arrays.asList(call1, call2))
         assertEquals("ok", s)
 
         assertTrue(call1.isCopied || call2.isCopied)
@@ -157,7 +157,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val s = executorService!!.invokeAny(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
+        val s = executorService.invokeAny(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
         assertEquals("ok", s)
 
         assertTrue(call1.isCopied || call2.isCopied)
@@ -177,7 +177,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService!!.schedule(task, 1, TimeUnit.SECONDS)
+        val future = executorService.schedule(task, 1, TimeUnit.SECONDS)
         assertNull(future.get())
 
         // child Inheritable
@@ -191,7 +191,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService!!.schedule(call, 1, TimeUnit.SECONDS)
+        val future = executorService.schedule(call, 1, TimeUnit.SECONDS)
         assertEquals("ok", future.get())
 
         // child Inheritable
@@ -205,7 +205,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService!!.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS)
+        val future = executorService.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS)
         Thread.sleep(100)
         future.cancel(true)
 
@@ -221,7 +221,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService!!.scheduleWithFixedDelay(task, 0, 50, TimeUnit.SECONDS)
+        val future = executorService.scheduleWithFixedDelay(task, 0, 50, TimeUnit.SECONDS)
 
         Thread.sleep(100)
         future.cancel(true)
@@ -231,21 +231,18 @@ class ScheduledExecutorServiceTtlWrapperTest {
     }
 
     companion object {
-        private var executorService: ScheduledExecutorService? = null
-
-        init {
-            val scheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(3)
-            scheduledThreadPoolExecutor.setKeepAliveTime(1024, TimeUnit.DAYS)
-            executorService = TtlExecutors.getTtlScheduledExecutorService(scheduledThreadPoolExecutor)
-            expandThreadPool(executorService!!)
+        private val executorService: ScheduledExecutorService = ScheduledThreadPoolExecutor(3).let {
+            it.setKeepAliveTime(10, TimeUnit.SECONDS)
+            expandThreadPool(it)
+            TtlExecutors.getTtlScheduledExecutorService(it)
         }
 
         @AfterClass
         @Suppress("unused")
         fun afterClass() {
-            executorService!!.shutdown()
-            executorService!!.awaitTermination(100, TimeUnit.MILLISECONDS)
-            if (!executorService!!.isTerminated) fail("Fail to shutdown thread pool")
+            executorService.shutdown()
+            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
+            if (!executorService.isTerminated) fail("Fail to shutdown thread pool")
         }
     }
 }

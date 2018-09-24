@@ -5,16 +5,19 @@ import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.threadpool.TtlExecutors
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.concurrent.thread
 
-private val executorService = TtlExecutors.getTtlExecutorService(
-        Executors.newFixedThreadPool(1) { r: Runnable ->
-            Thread(r, "Executors").apply { isDaemon = true }
-        }
-)
+private val executorService: ExecutorService = Executors.newFixedThreadPool(1) { r: Runnable ->
+    Thread(r, "Executors").apply { isDaemon = true }
+}.let {
+    // ensure threads in pool is pre-created.
+    expandThreadPool(it)
+    TtlExecutors.getTtlExecutorService(it)
+}
 
 /**
  * DistributedTracer(DT) use demo.
@@ -22,9 +25,6 @@ private val executorService = TtlExecutors.getTtlExecutorService(
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 fun main(args: Array<String>) {
-    // ensure threads in pool is pre-created.
-    expandThreadPool(executorService)
-
     for (i in 0..42) {
         rpcInvokeIn()
     }

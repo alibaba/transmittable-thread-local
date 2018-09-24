@@ -63,28 +63,34 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
 
 
     // child Inheritable
-    assertTtlValues(sumTask.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/
+            ),
+            sumTask.copied
     )
 
     // left grand Task Inheritable, changed value
-    assertTtlValues(sumTask.leftSubTask.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD + SumTask.CHANGE_POSTFIX /* CHANGED */, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + SumTask.CHANGE_POSTFIX /* CHANGED */
+            ),
+            sumTask.leftSubTask.copied
     )
 
     // right grand Task Inheritable, not change value
-    assertTtlValues(sumTask.rightSubTask.copied,
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/, PARENT_CREATE_MODIFIED_IN_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/),
+            sumTask.rightSubTask.copied
     )
 
     // child do not effect parent
-    assertTtlValues(copyTtlValues(ttlInstances),
-            PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_UNMODIFIED_IN_CHILD,
-            PARENT_CREATE_MODIFIED_IN_CHILD, PARENT_CREATE_MODIFIED_IN_CHILD,
-            PARENT_CREATE_AFTER_CREATE_CHILD, PARENT_CREATE_AFTER_CREATE_CHILD
+    assertTtlValues(
+            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD,
+                    PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
+            copyTtlValues(ttlInstances)
     )
 }
 
@@ -103,7 +109,7 @@ private class SumTask(private val numbers: IntRange,
     lateinit var leftSubTask: SumTask
     lateinit var rightSubTask: SumTask
 
-    override fun compute(): Int? {
+    override fun compute(): Int {
         if (changeTtlValue) {
             modifyParentTtlInstances(CHANGE_POSTFIX, ttlMap)
         }
