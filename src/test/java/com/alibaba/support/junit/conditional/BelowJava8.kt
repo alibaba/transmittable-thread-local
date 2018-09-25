@@ -9,6 +9,6 @@ import org.apache.commons.lang3.SystemUtils
  */
 class BelowJava8 : IgnoreCondition {
     override fun isSatisfied(): Boolean =
-            if (System.getProperty("java.specification.version").toDouble() >= 9) true
+            if (System.getProperty("java.specification.version").toDouble() >= 9) false
             else !SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_1_8)
 }
