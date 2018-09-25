@@ -4,10 +4,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * {@link TransmittableThreadLocal} Wrapper of {@link ScheduledExecutorService},
@@ -43,5 +40,10 @@ class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper imple
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
         return scheduledExecutorService.scheduleWithFixedDelay(TtlRunnable.get(command), initialDelay, delay, unit);
+    }
+
+    @Override
+    public ScheduledExecutorService unwrap() {
+        return scheduledExecutorService;
     }
 }

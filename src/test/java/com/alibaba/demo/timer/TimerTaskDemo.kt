@@ -1,9 +1,7 @@
 package com.alibaba.demo.timer
 
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 /**
  * @see [Java Timer TimerTask Example](https://www.journaldev.com/1050/java-timer-timertask-example)

@@ -1,9 +1,8 @@
 package com.alibaba.ttl.threadpool.agent
 
 import com.alibaba.ttl.threadpool.agent.TtlAgent.splitCommaColonStringToKV
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class TtlAgentTest {
     @Test

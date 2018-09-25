@@ -83,4 +83,9 @@ class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorSe
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return executorService.invokeAny(TtlCallable.gets(tasks), timeout, unit);
     }
+
+    @Override
+    public ExecutorService unwrap() {
+        return executorService;
+    }
 }

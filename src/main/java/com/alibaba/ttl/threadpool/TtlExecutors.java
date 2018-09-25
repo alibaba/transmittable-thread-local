@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Factory Utils for getting TTL Wrapper of jdk executors.
+ * Factory Utils for getting TTL wrapper of jdk executors.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.concurrent.Executor
@@ -54,6 +54,48 @@ public final class TtlExecutors {
             return scheduledExecutorService;
         }
         return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService);
+    }
+
+    /**
+     * check the executor is TTL wrapper executor or not.
+     * <p>
+     * if the parameter executor is TTL wrapper, return {@code true}, otherwise {@code false}.
+     * <p>
+     * NOTE: if input executor is {@code null}, return {@code false}.
+     *
+     * @param executor input executor
+     * @param <T>      Executor type
+     * @see #getTtlExecutor(Executor)
+     * @see #getTtlExecutorService(ExecutorService)
+     * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
+     * @see #unwrap(Executor)
+     * @since 2.8.0
+     */
+    public static <T extends Executor> boolean isTtlWrapper(T executor) {
+        return (executor instanceof ExecutorTtlWrapper);
+    }
+
+    /**
+     * Unwrap TTL wrapper executor to the original/underneath one.
+     * <p>
+     * if the parameter executor is TTL wrapper, return the original/underneath executor;
+     * otherwise, just return the input parameter executor.
+     * <p>
+     * NOTE: if input executor is {@code null}, return {@code null}.
+     *
+     * @param executor input executor
+     * @param <T>      Executor type
+     * @see #getTtlExecutor(Executor)
+     * @see #getTtlExecutorService(ExecutorService)
+     * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
+     * @see #isTtlWrapper(Executor)
+     * @since 2.8.0
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Executor> T unwrap(T executor) {
+        if (!isTtlWrapper(executor)) return executor;
+
+        return (T) ((ExecutorTtlWrapper) executor).unwrap();
     }
 
     private TtlExecutors() {

@@ -6,8 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @since 2.6.0
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @since 2.6.0
  */
 class Utils {
     /**

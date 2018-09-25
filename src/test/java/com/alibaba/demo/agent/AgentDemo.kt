@@ -3,7 +3,6 @@
 package com.alibaba.demo.agent
 
 import com.alibaba.ttl.TransmittableThreadLocal
-import java.lang.IllegalStateException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit

@@ -1,7 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet;
 
 import javassist.CannotCompileException;
-import javassist.CtClass;
 import javassist.NotFoundException;
 
 import java.io.IOException;

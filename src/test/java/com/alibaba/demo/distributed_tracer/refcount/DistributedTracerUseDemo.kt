@@ -2,11 +2,11 @@ package com.alibaba.demo.distributed_tracer.refcount
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.threadpool.TtlExecutors
+import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
-import java.lang.Thread.sleep
 
 /**
  * DistributedTracer(DT) use demo.

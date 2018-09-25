@@ -24,4 +24,8 @@ class ExecutorTtlWrapper implements Executor {
     public void execute(Runnable command) {
         executor.execute(TtlRunnable.get(command));
     }
+
+    public Executor unwrap() {
+        return executor;
+    }
 }
