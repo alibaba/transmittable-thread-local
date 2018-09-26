@@ -16,11 +16,13 @@ private const val POOL_SIZE = 3
  * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet
  */
 fun main(args: Array<String>) {
+    val threadFactory = ThreadFactory { Thread(it).apply { isDaemon = true } }
+
     val executorService = ThreadPoolExecutor(POOL_SIZE, POOL_SIZE,
             10L, TimeUnit.SECONDS,
-            LinkedBlockingQueue())
+            LinkedBlockingQueue(), threadFactory)
 
-    val scheduledExecutorService = ScheduledThreadPoolExecutor(POOL_SIZE)
+    val scheduledExecutorService = ScheduledThreadPoolExecutor(POOL_SIZE, threadFactory)
 
     expandThreadPool(executorService)
     expandThreadPool(scheduledExecutorService)
