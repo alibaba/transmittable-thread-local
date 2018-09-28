@@ -3,6 +3,7 @@ package com.alibaba.ttl.threadpool;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlRunnable;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 
 /**
@@ -16,15 +17,16 @@ import java.util.concurrent.Executor;
 class ExecutorTtlWrapper implements Executor {
     private final Executor executor;
 
-    ExecutorTtlWrapper(Executor executor) {
+    ExecutorTtlWrapper(@Nonnull Executor executor) {
         this.executor = executor;
     }
 
     @Override
-    public void execute(Runnable command) {
+    public void execute(@Nonnull Runnable command) {
         executor.execute(TtlRunnable.get(command));
     }
 
+    @Nonnull
     public Executor unwrap() {
         return executor;
     }

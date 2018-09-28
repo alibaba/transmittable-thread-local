@@ -235,7 +235,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
             it.setKeepAliveTime(10, TimeUnit.SECONDS)
             expandThreadPool(it)
             TtlExecutors.getTtlScheduledExecutorService(it)
-        }
+        }!!
 
         @AfterClass
         @Suppress("unused")

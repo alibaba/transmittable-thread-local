@@ -94,7 +94,7 @@ class TtlCallableTest {
         val ttlInstances = createParentTtlInstances()
 
         val call = Call("1", ttlInstances)
-        val ttlCallable = TtlCallable.get(call, true)
+        val ttlCallable = TtlCallable.get(call, true)!!
         assertSame(call, ttlCallable.callable)
 
         assertEquals("ok", executorService.submit(ttlCallable).get())

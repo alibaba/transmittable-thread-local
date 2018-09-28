@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -145,7 +147,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     /**
      * Debug only method!
      */
-    static void dump(String title) {
+    static void dump(@Nullable String title) {
         if (title != null && title.length() > 0) {
             System.out.printf("Start TransmittableThreadLocal[%s] Dump...\n", title);
         } else {
@@ -248,6 +250,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @return the captured {@link TransmittableThreadLocal} values
          * @since 2.3.0
          */
+        @Nonnull
         public static Object capture() {
             Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<TransmittableThreadLocal<?>, Object>();
             for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
@@ -265,7 +268,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #capture()
          * @since 2.3.0
          */
-        public static Object replay(Object captured) {
+        @Nonnull
+        public static Object replay(@Nonnull Object captured) {
             @SuppressWarnings("unchecked")
             Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
             Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
@@ -301,7 +305,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
          * @since 2.3.0
          */
-        public static void restore(Object backup) {
+        public static void restore(@Nonnull Object backup) {
             @SuppressWarnings("unchecked")
             Map<TransmittableThreadLocal<?>, Object> backupMap = (Map<TransmittableThreadLocal<?>, Object>) backup;
             // call afterExecute callback
@@ -324,7 +328,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             setTtlValuesTo(backupMap);
         }
 
-        private static void setTtlValuesTo(Map<TransmittableThreadLocal<?>, Object> ttlValues) {
+        private static void setTtlValuesTo(@Nonnull Map<TransmittableThreadLocal<?>, Object> ttlValues) {
             for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : ttlValues.entrySet()) {
                 @SuppressWarnings("unchecked")
                 TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
@@ -344,7 +348,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #restore(Object)
          * @since 2.3.1
          */
-        public static <R> R runSupplierWithCaptured(Object captured, Supplier<R> bizLogic) {
+        public static <R> R runSupplierWithCaptured(@Nonnull Object captured, Supplier<R> bizLogic) {
             Object backup = replay(captured);
             try {
                 return bizLogic.get();

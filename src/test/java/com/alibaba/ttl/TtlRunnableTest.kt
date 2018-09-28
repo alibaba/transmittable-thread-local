@@ -24,7 +24,7 @@ class TtlRunnableTest {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
-        val ttlRunnable = TtlRunnable.get(task)
+        val ttlRunnable = TtlRunnable.get(task)!!
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
@@ -204,7 +204,7 @@ class TtlRunnableTest {
     @Test
     fun test_get_same() {
         val task = Task("1")
-        val ttlRunnable = TtlRunnable.get(task)
+        val ttlRunnable = TtlRunnable.get(task)!!
         assertSame(task, ttlRunnable.runnable)
     }
 

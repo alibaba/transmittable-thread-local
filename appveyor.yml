@@ -27,7 +27,7 @@ install:
 test_script:
   - ./mvnw.cmd clean install --batch-mode
   - ./mvnw.cmd dependency:copy-dependencies -DincludeScope=test
-  - rm target/dependency/javassist*
+  - rm target/dependency/javassist* target/dependency/jsr305-*
   - echo "Run Agent test"
   - ps: |
       $ttl_jar=Get-ChildItem target\transmittable-thread-local-*.jar -Exclude *-sources.jar | Select-Object -ExpandProperty FullName

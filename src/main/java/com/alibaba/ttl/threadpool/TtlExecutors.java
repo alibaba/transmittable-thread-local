@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +26,8 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
      */
-    public static Executor getTtlExecutor(Executor executor) {
+    @Nullable
+    public static Executor getTtlExecutor(@Nullable Executor executor) {
         if (null == executor || executor instanceof ExecutorTtlWrapper) {
             return executor;
         }
@@ -37,7 +39,8 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      */
-    public static ExecutorService getTtlExecutorService(ExecutorService executorService) {
+    @Nullable
+    public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
         if (executorService == null || executorService instanceof ExecutorServiceTtlWrapper) {
             return executorService;
         }
@@ -49,7 +52,8 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      */
-    public static ScheduledExecutorService getTtlScheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
+    @Nullable
+    public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
         if (scheduledExecutorService == null || scheduledExecutorService instanceof ScheduledExecutorServiceTtlWrapper) {
             return scheduledExecutorService;
         }
@@ -71,7 +75,7 @@ public final class TtlExecutors {
      * @see #unwrap(Executor)
      * @since 2.8.0
      */
-    public static <T extends Executor> boolean isTtlWrapper(T executor) {
+    public static <T extends Executor> boolean isTtlWrapper(@Nullable T executor) {
         return (executor instanceof ExecutorTtlWrapper);
     }
 
@@ -91,8 +95,9 @@ public final class TtlExecutors {
      * @see #isTtlWrapper(Executor)
      * @since 2.8.0
      */
+    @Nullable
     @SuppressWarnings("unchecked")
-    public static <T extends Executor> T unwrap(T executor) {
+    public static <T extends Executor> T unwrap(@Nullable T executor) {
         if (!isTtlWrapper(executor)) return executor;
 
         return (T) ((ExecutorTtlWrapper) executor).unwrap();

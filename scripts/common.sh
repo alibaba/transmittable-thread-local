@@ -117,13 +117,13 @@ mvnCopyDependencies() {
     runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test || die "fail to mvn copy-dependencies!"
 
     # remove repackaged and shaded javassist lib
-    rm $dependencies_dir/javassist-*
+    rm "$dependencies_dir"/javassist-* "$dependencies_dir"/jsr305-*
 }
 
 getClasspathOfDependencies() {
     [ -e "$dependencies_dir" ] || mvnCopyDependencies 1>&2
 
-    echo $dependencies_dir/*.jar | tr ' ' :
+    echo "$dependencies_dir"/*.jar | tr ' ' :
 }
 
 getClasspathWithoutTtlJar() {

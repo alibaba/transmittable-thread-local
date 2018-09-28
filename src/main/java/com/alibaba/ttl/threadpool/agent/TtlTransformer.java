@@ -3,6 +3,8 @@ package com.alibaba.ttl.threadpool.agent;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class TtlTransformer implements ClassFileTransformer {
     }
 
     @Override
-    public final byte[] transform(final ClassLoader loader, final String classFile, final Class<?> classBeingRedefined,
+    public final byte[] transform(@Nonnull final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
                                   final ProtectionDomain protectionDomain, final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.

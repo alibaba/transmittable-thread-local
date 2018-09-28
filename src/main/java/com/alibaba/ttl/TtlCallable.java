@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +33,7 @@ public final class TtlCallable<V> implements Callable<V> {
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
 
-    private TtlCallable(Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
+    private TtlCallable(@Nonnull Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.callable = callable;
         this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
@@ -55,6 +57,7 @@ public final class TtlCallable<V> implements Callable<V> {
         }
     }
 
+    @Nonnull
     public Callable<V> getCallable() {
         return callable;
     }
@@ -101,7 +104,8 @@ public final class TtlCallable<V> implements Callable<V> {
      * @param releaseTtlValueReferenceAfterCall release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
      * @return Wrapped {@link Callable}
      */
-    public static <T> TtlCallable<T> get(Callable<T> callable, boolean releaseTtlValueReferenceAfterCall) {
+    @Nullable
+    public static <T> TtlCallable<T> get(@Nullable Callable<T> callable, boolean releaseTtlValueReferenceAfterCall) {
         return get(callable, releaseTtlValueReferenceAfterCall, false);
     }
 
@@ -115,7 +119,8 @@ public final class TtlCallable<V> implements Callable<V> {
      * @param idempotent                        is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Callable}
      */
-    public static <T> TtlCallable<T> get(Callable<T> callable, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
+    @Nullable
+    public static <T> TtlCallable<T> get(@Nullable Callable<T> callable, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
         if (null == callable) {
             return null;
         }
@@ -137,7 +142,8 @@ public final class TtlCallable<V> implements Callable<V> {
      * @param tasks task to be wrapped
      * @return Wrapped {@link Callable}
      */
-    public static <T> List<TtlCallable<T>> gets(Collection<? extends Callable<T>> tasks) {
+    @Nonnull
+    public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks) {
         return gets(tasks, false, false);
     }
 
@@ -148,7 +154,8 @@ public final class TtlCallable<V> implements Callable<V> {
      * @param releaseTtlValueReferenceAfterCall release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
      * @return Wrapped {@link Callable}
      */
-    public static <T> List<TtlCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall) {
+    @Nonnull
+    public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall) {
         return gets(tasks, releaseTtlValueReferenceAfterCall, false);
     }
 
@@ -160,7 +167,8 @@ public final class TtlCallable<V> implements Callable<V> {
      * @param idempotent                        is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Callable}
      */
-    public static <T> List<TtlCallable<T>> gets(Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
+    @Nonnull
+    public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
         if (null == tasks) {
             return Collections.emptyList();
         }

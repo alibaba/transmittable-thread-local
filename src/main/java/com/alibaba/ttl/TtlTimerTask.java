@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -28,7 +30,7 @@ public final class TtlTimerTask extends TimerTask {
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;
 
-    private TtlTimerTask(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
+    private TtlTimerTask(@Nonnull TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
@@ -58,6 +60,7 @@ public final class TtlTimerTask extends TimerTask {
         return super.cancel();
     }
 
+    @Nonnull
     public TimerTask getTimerTask() {
         return timerTask;
     }
@@ -70,7 +73,8 @@ public final class TtlTimerTask extends TimerTask {
      * @param timerTask input {@link TimerTask}
      * @return Wrapped {@link TimerTask}
      */
-    public static TtlTimerTask get(TimerTask timerTask) {
+    @Nullable
+    public static TtlTimerTask get(@Nullable TimerTask timerTask) {
         return get(timerTask, false, false);
     }
 
@@ -83,7 +87,8 @@ public final class TtlTimerTask extends TimerTask {
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
      * @return Wrapped {@link TimerTask}
      */
-    public static TtlTimerTask get(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
+    @Nullable
+    public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
         return get(timerTask, releaseTtlValueReferenceAfterRun, false);
     }
 
@@ -97,7 +102,8 @@ public final class TtlTimerTask extends TimerTask {
      * @param idempotent                       is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link TimerTask}
      */
-    public static TtlTimerTask get(TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
+    @Nullable
+    public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == timerTask) {
             return null;
         }

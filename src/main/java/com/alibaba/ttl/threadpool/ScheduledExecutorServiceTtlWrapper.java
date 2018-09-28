@@ -4,6 +4,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.*;
 
 /**
@@ -17,32 +18,37 @@ import java.util.concurrent.*;
 class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper implements ScheduledExecutorService {
     final ScheduledExecutorService scheduledExecutorService;
 
-    public ScheduledExecutorServiceTtlWrapper(ScheduledExecutorService scheduledExecutorService) {
+    public ScheduledExecutorServiceTtlWrapper(@Nonnull ScheduledExecutorService scheduledExecutorService) {
         super(scheduledExecutorService);
         this.scheduledExecutorService = scheduledExecutorService;
     }
 
+    @Nonnull
     @Override
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+    public ScheduledFuture<?> schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
         return scheduledExecutorService.schedule(TtlRunnable.get(command), delay, unit);
     }
 
+    @Nonnull
     @Override
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+    public <V> ScheduledFuture<V> schedule(@Nonnull Callable<V> callable, long delay, @Nonnull TimeUnit unit) {
         return scheduledExecutorService.schedule(TtlCallable.get(callable), delay, unit);
     }
 
+    @Nonnull
     @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    public ScheduledFuture<?> scheduleAtFixedRate(@Nonnull Runnable command, long initialDelay, long period, @Nonnull TimeUnit unit) {
         return scheduledExecutorService.scheduleAtFixedRate(TtlRunnable.get(command), initialDelay, period, unit);
     }
 
+    @Nonnull
     @Override
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(@Nonnull Runnable command, long initialDelay, long delay, @Nonnull TimeUnit unit) {
         return scheduledExecutorService.scheduleWithFixedDelay(TtlRunnable.get(command), initialDelay, delay, unit);
     }
 
     @Override
+    @Nonnull
     public ScheduledExecutorService unwrap() {
         return scheduledExecutorService;
     }

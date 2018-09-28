@@ -95,6 +95,12 @@
 			<version>3.23.1-GA</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
+			<optional>true</optional>
+		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

@@ -17,7 +17,7 @@ private val executorService: ExecutorService = Executors.newFixedThreadPool(1) {
     // ensure threads in pool is pre-created.
     expandThreadPool(it)
     TtlExecutors.getTtlExecutorService(it)
-}
+}!!
 
 /**
  * DistributedTracer(DT) use demo.

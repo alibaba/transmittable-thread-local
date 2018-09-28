@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +30,7 @@ public final class TtlRunnable implements Runnable {
     private final Runnable runnable;
     private final boolean releaseTtlValueReferenceAfterRun;
 
-    private TtlRunnable(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
+    private TtlRunnable(@Nonnull Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
@@ -55,6 +57,7 @@ public final class TtlRunnable implements Runnable {
     /**
      * return original/unwrapped {@link Runnable}.
      */
+    @Nonnull
     public Runnable getRunnable() {
         return runnable;
     }
@@ -86,7 +89,8 @@ public final class TtlRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    public static TtlRunnable get(Runnable runnable) {
+    @Nullable
+    public static TtlRunnable get(@Nullable Runnable runnable) {
         return get(runnable, false, false);
     }
 
@@ -98,7 +102,8 @@ public final class TtlRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    public static TtlRunnable get(Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
+    @Nullable
+    public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
         return get(runnable, releaseTtlValueReferenceAfterRun, false);
     }
 
@@ -113,7 +118,8 @@ public final class TtlRunnable implements Runnable {
      * @return Wrapped {@link Runnable}
      * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
-    public static TtlRunnable get(Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
+    @Nullable
+    public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == runnable) {
             return null;
         }
@@ -136,7 +142,8 @@ public final class TtlRunnable implements Runnable {
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks) {
+    @Nonnull
+    public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks) {
         return gets(tasks, false, false);
     }
 
@@ -148,7 +155,8 @@ public final class TtlRunnable implements Runnable {
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun) {
+    @Nonnull
+    public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun) {
         return gets(tasks, releaseTtlValueReferenceAfterRun, false);
     }
 
@@ -163,7 +171,8 @@ public final class TtlRunnable implements Runnable {
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
-    public static List<TtlRunnable> gets(Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
+    @Nonnull
+    public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == tasks) {
             return Collections.emptyList();
         }

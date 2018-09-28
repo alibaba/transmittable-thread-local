@@ -43,11 +43,9 @@ private fun rpcInvokeIn() {
     decreaseSpanIdRefCount()
 }
 
-private val executorService = TtlExecutors.getTtlExecutorService(
-        Executors.newFixedThreadPool(1) { r: Runnable ->
-            Thread(r, "Executors").apply { isDaemon = true }
-        }
-)
+private val executorService = Executors.newFixedThreadPool(1) { r: Runnable ->
+    Thread(r, "Executors").apply { isDaemon = true }
+}.let { TtlExecutors.getTtlExecutorService(it) }!!
 
 private fun syncMethod() {
     // async call by TTL Executor, Test OK!

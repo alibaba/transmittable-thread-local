@@ -7,6 +7,8 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTr
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public final class TtlAgent {
      * @see Logger#STDERR
      * @see Logger#STDOUT
      */
-    public static void premain(String agentArgs, Instrumentation inst) {
+    public static void premain(String agentArgs, @Nonnull Instrumentation inst) {
         final Map<String, String> kvs = splitCommaColonStringToKV(agentArgs);
 
         Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
@@ -119,13 +121,13 @@ public final class TtlAgent {
         }
     }
 
-    private static String getLogImplTypeFromAgentArgs(final Map<String, String> kvs) {
+    private static String getLogImplTypeFromAgentArgs(@Nonnull final Map<String, String> kvs) {
         return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
     }
 
     private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
-    private static boolean enableTimerTask(final Map<String, String> kvs) {
+    private static boolean enableTimerTask(@Nonnull final Map<String, String> kvs) {
         final boolean hasEnableKey = kvs.containsKey(TTL_AGENT_ENABLE_TIMER_TASK_KEY);
         if (!hasEnableKey) return false;
 
@@ -135,7 +137,8 @@ public final class TtlAgent {
     /**
      * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
      */
-    static Map<String, String> splitCommaColonStringToKV(String commaColonString) {
+    @Nonnull
+    static Map<String, String> splitCommaColonStringToKV(@Nullable String commaColonString) {
         Map<String, String> ret = new HashMap<String, String>();
         if (commaColonString == null || commaColonString.trim().length() == 0) return ret;
 
