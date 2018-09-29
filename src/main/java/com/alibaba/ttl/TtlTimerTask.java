@@ -65,6 +65,21 @@ public final class TtlTimerTask extends TimerTask {
         return timerTask;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TtlTimerTask that = (TtlTimerTask) o;
+
+        return timerTask != null ? timerTask.equals(that.timerTask) : that.timerTask == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return timerTask != null ? timerTask.hashCode() : 0;
+    }
+
     /**
      * Factory method, wrapper input {@link Runnable} to {@link TtlTimerTask}.
      * <p>
