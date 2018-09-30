@@ -114,10 +114,9 @@ mvnCompileTest() {
 readonly dependencies_dir="target/dependency"
 
 mvnCopyDependencies() {
-    runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test || die "fail to mvn copy-dependencies!"
-
-    # remove repackaged and shaded javassist lib
-    rm "$dependencies_dir"/javassist-* "$dependencies_dir"/jsr305-*
+    # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
+    # exclude repackaged and shaded javassist libs
+    runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305 || die "fail to mvn copy-dependencies!"
 }
 
 getClasspathOfDependencies() {
