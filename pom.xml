@@ -355,15 +355,21 @@
 							<charset>UTF-8</charset>
 							<encoding>UTF-8</encoding>
 							<docencoding>UTF-8</docencoding>
-							<links>
-								<link>https://docs.oracle.com/javase/10/docs/api</link>
-							</links>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>*.internal.*</excludePackageNames>
 							<overview>src/api/overview.html</overview>
 							<additionalJOptions>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
+								<!--
+									more infos about link setting:
+									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
+									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
+								-->
+								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
+								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -501,9 +507,14 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
 							<additionalJOptions>
+								<!-- additionalJOptions not support appending, must duplicate all options 0_o! -->
 								<additionalJOption>-html5</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
+								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
+								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
