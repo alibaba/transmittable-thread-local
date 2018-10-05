@@ -349,7 +349,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #restore(Object)
          * @since 2.3.1
          */
-        public static <R> R runSupplierWithCaptured(@Nonnull Object captured, Supplier<R> bizLogic) {
+        public static <R> R runSupplierWithCaptured(@Nonnull Object captured, @Nonnull Supplier<R> bizLogic) {
             Object backup = replay(captured);
             try {
                 return bizLogic.get();
@@ -371,7 +371,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #restore(Object)
          * @since 2.3.1
          */
-        public static <R> R runCallableWithCaptured(Object captured, Callable<R> bizLogic) throws Exception {
+        public static <R> R runCallableWithCaptured(@Nonnull Object captured, @Nonnull Callable<R> bizLogic) throws Exception {
             Object backup = replay(captured);
             try {
                 return bizLogic.call();
