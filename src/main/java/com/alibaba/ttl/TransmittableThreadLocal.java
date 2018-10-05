@@ -228,14 +228,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * }); // (2) + (3)
      * </code></pre>
      * <p>
-     * The reason of providing 2 util methods is the different {@code throws Exception} type from biz logic({@code lambda}):
+     * The reason of providing 2 util methods is the different {@code throws Exception} type so as to satisfy your biz logic({@code lambda}):
      * <ol>
-     * <li>{@link #runCallableWithCaptured(Object, Callable)}: No {@code throws}</li>
-     * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: {@code throws Exception}</li>
+     * <li>{@link #runCallableWithCaptured(Object, Callable)}: {@code throws Exception}</li>
+     * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: No {@code throws}</li>
      * </ol>
      * <p>
-     * If you has the different {@code throws Exception},
-     * you can define your own util method with your own {@code throws Exception} type function interface({@code lambda}).
+     * If you need the different {@code throws Exception} type,
+     * you can define your own util method(function interface({@code lambda})) with your own {@code throws Exception} type.
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
      * @author Jerry Lee (oldratlee at gmail dot com)
@@ -303,6 +303,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
          *
          * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
+         * @see #replay(Object)
          * @since 2.3.0
          */
         public static void restore(@Nonnull Object backup) {
