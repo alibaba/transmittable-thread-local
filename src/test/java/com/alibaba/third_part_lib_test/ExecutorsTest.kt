@@ -16,7 +16,6 @@ class ExecutorsTest {
 
         val futures = (0..size * 2).map {
             threadPool.submit {
-                println("run $it")
                 Thread.sleep(10)
             }
         }

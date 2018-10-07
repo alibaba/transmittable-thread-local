@@ -1,6 +1,9 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
+import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.testmodel.DeepCopyFooTransmittableThreadLocal
 import com.alibaba.ttl.testmodel.FooPojo
 import com.alibaba.ttl.testmodel.FooTask
@@ -9,6 +12,7 @@ import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.AfterClass
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -22,8 +26,12 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlRunnableTest {
+    @Rule
+    @JvmField
+    val rule = ConditionalIgnoreRule()
 
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_ttlRunnable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
@@ -72,13 +80,19 @@ class TtlRunnableTest {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
-        val ttlRunnable = TtlRunnable.get(task)
+        val ttlRunnable = if (noTtlAgentRun()) TtlRunnable.get(task) else task
 
-        // create after new Task, won't see parent value in in task!
-        createParentTtlInstancesAfterCreateChild(ttlInstances)
-
-
+        if (noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
         val submit = executorService.submit(ttlRunnable)
+        if (!noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
+
+
         submit.get()
 
 
@@ -98,12 +112,17 @@ class TtlRunnableTest {
 
 
         val task = Task("1", ttlInstances)
-        val ttlRunnable = TtlRunnable.get(task)
+        val ttlRunnable = if (noTtlAgentRun()) TtlRunnable.get(task) else task
 
-        // create after new Task, won't see parent value in in task!
-        createParentTtlInstancesAfterCreateChild(ttlInstances)
-
+        if (noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
         val submit = executorService.submit(ttlRunnable)
+        if (!noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
         submit.get()
 
 
@@ -141,34 +160,38 @@ class TtlRunnableTest {
         counterTtl.set("Foo")
 
         // do copy when decorate runnable
-        val ttlRunnable1 = TtlRunnable.get { /* do nothing Runnable */ }
-        assertEquals(1, counterTtl.copyCounter.get().toLong())
-        assertEquals(0, counterTtl.beforeExecuteCounter.get().toLong())
-        assertEquals(0, counterTtl.afterExecuteCounter.get().toLong())
+        val ttlRunnable1 = if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
+        assertEquals(if (noTtlAgentRun()) 1 else 0, counterTtl.copyCounter.get())
+        assertEquals(0, counterTtl.beforeExecuteCounter.get())
+        assertEquals(0, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable1).get()
-        assertEquals(1, counterTtl.copyCounter.get().toLong())
-        assertEquals(1, counterTtl.beforeExecuteCounter.get().toLong())
-        assertEquals(1, counterTtl.afterExecuteCounter.get().toLong())
+        assertEquals(1, counterTtl.copyCounter.get())
+        assertEquals(1, counterTtl.beforeExecuteCounter.get())
+        Thread.sleep(1)
+        assertEquals(1, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable1).get()
-        assertEquals(1, counterTtl.copyCounter.get().toLong())
-        assertEquals(2, counterTtl.beforeExecuteCounter.get().toLong())
-        assertEquals(2, counterTtl.afterExecuteCounter.get().toLong())
+        assertEquals(if (noTtlAgentRun()) 1 else 2, counterTtl.copyCounter.get())
+        assertEquals(2, counterTtl.beforeExecuteCounter.get())
+        Thread.sleep(1)
+        assertEquals(2, counterTtl.afterExecuteCounter.get())
 
         // do copy when decorate runnable
-        val ttlRunnable2 = TtlRunnable.get { /* do nothing Runnable */ }
-        assertEquals(2, counterTtl.copyCounter.get().toLong())
-        assertEquals(2, counterTtl.beforeExecuteCounter.get().toLong())
-        assertEquals(2, counterTtl.afterExecuteCounter.get().toLong())
+        val ttlRunnable2 = if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
+        assertEquals(if (noTtlAgentRun()) 2 else 2, counterTtl.copyCounter.get())
+        assertEquals(2, counterTtl.beforeExecuteCounter.get())
+        Thread.sleep(1)
+        assertEquals(2, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable2).get()
-        assertEquals(2, counterTtl.copyCounter.get().toLong())
-        assertEquals(3, counterTtl.beforeExecuteCounter.get().toLong())
-        assertEquals(3, counterTtl.afterExecuteCounter.get().toLong())
+        assertEquals(if (noTtlAgentRun()) 2 else 3, counterTtl.copyCounter.get())
+        assertEquals(3, counterTtl.beforeExecuteCounter.get())
+        Thread.sleep(1)
+        assertEquals(3, counterTtl.afterExecuteCounter.get())
     }
 
     @Test
@@ -184,14 +207,22 @@ class TtlRunnableTest {
         ttlInstances[PARENT_CREATE_MODIFIED_IN_CHILD] = p
 
         val task = FooTask("1", ttlInstances)
-        val ttlRunnable = TtlRunnable.get(task)
+        val ttlRunnable = if (noTtlAgentRun()) TtlRunnable.get(task) else task
 
-        // create after new Task, won't see parent value in in task!
-        val after = DeepCopyFooTransmittableThreadLocal()
-        after.set(FooPojo(PARENT_CREATE_AFTER_CREATE_CHILD, 4))
-        ttlInstances[PARENT_CREATE_AFTER_CREATE_CHILD] = after
-
+        if (noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            val after = DeepCopyFooTransmittableThreadLocal()
+            after.set(FooPojo(PARENT_CREATE_AFTER_CREATE_CHILD, 4))
+            ttlInstances[PARENT_CREATE_AFTER_CREATE_CHILD] = after
+        }
         val submit = executorService.submit(ttlRunnable)
+        if (!noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            val after = DeepCopyFooTransmittableThreadLocal()
+            after.set(FooPojo(PARENT_CREATE_AFTER_CREATE_CHILD, 4))
+            ttlInstances[PARENT_CREATE_AFTER_CREATE_CHILD] = after
+        }
+
         submit.get()
 
         // child Inheritable
@@ -209,6 +240,7 @@ class TtlRunnableTest {
     }
 
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_releaseTtlValueReferenceAfterRun() {
         val ttlInstances = createParentTtlInstances()
 

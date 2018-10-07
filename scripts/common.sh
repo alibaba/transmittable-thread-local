@@ -145,6 +145,17 @@ getClasspath() {
     echo "$(getTtlJarPath):$(getClasspathWithoutTtlJar)"
 }
 
+junit_test_case() {
+    (
+        cd target/test-classes &&
+        find . -iname '*Test.class' | sed '
+                s%^\./%%
+                s/\.class$//
+                s%/%.%g
+            '
+    )
+}
+
 #################################################################################
 # maven actions
 #################################################################################

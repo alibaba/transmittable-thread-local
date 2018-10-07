@@ -50,10 +50,6 @@ import java.util.logging.Level;
  * @since 0.9.0
  */
 public final class TtlAgent {
-    private TtlAgent() {
-        throw new InstantiationError("Must not instantiate this class");
-    }
-
     /**
      * Entrance method of TTL Java Agent.
      *
@@ -114,6 +110,8 @@ public final class TtlAgent {
             logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
 
             logger.info("[TtlAgent.premain] end");
+
+            ttlAgentLoaded = true;
         } catch (Exception e) {
             String msg = "Fail to load TtlAgent , cause: " + e.toString();
             logger.log(Level.SEVERE, msg, e);
@@ -154,5 +152,15 @@ public final class TtlAgent {
         }
 
         return ret;
+    }
+
+    public static boolean isTtlAgentLoaded() {
+        return ttlAgentLoaded;
+    }
+
+    private static boolean ttlAgentLoaded = false;
+
+    private TtlAgent() {
+        throw new InstantiationError("Must not instantiate this class");
     }
 }

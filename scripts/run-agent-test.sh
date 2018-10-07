@@ -3,10 +3,11 @@
 cd "$(dirname "$(readlink -f "$0")")"
 source ./common.sh
 
-# Run agent check for ExecutorService, ForkJoinPool
+# Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
-    com.alibaba.ttl.threadpool.agent.check.AgentCheckMain
+    -Drun-ttl-test-under-agent=true \
+    org.junit.runner.JUnitCore $(junit_test_case | grep -vE '\.TtlAgentTest$')
 
 # Run agent check for Timer/TimerTask
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \

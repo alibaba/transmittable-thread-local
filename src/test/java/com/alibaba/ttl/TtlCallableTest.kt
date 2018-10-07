@@ -1,11 +1,15 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
+import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.AfterClass
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
 import java.util.*
 import java.util.concurrent.Callable
@@ -18,12 +22,18 @@ import java.util.concurrent.TimeUnit
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlCallableTest {
+    @Rule
+    @JvmField
+    val rule = ConditionalIgnoreRule()
 
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_TtlCallable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
         val call = Call("1", ttlInstances)
+
+
         val ttlCallable = TtlCallable.get(call)
 
         // create after new Task, won't see parent value in in task!
@@ -46,13 +56,18 @@ class TtlCallableTest {
         val ttlInstances = createParentTtlInstances()
 
         val call = Call("1", ttlInstances)
-        val ttlCallable = TtlCallable.get(call)
+        val ttlCallable = if (noTtlAgentRun()) TtlCallable.get(call) else call
 
-        // create after new Task, won't see parent value in in task!
-        createParentTtlInstancesAfterCreateChild(ttlInstances)
-
-
+        if (noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
         val future = executorService.submit(ttlCallable)
+        if (!noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
+
         assertEquals("ok", future.get())
 
 
@@ -72,13 +87,19 @@ class TtlCallableTest {
         newTtlInstanceAndPut("add and removed!", ttlInstances).remove()
 
         val call = Call("1", ttlInstances)
-        val ttlCallable = TtlCallable.get(call)
+        val ttlCallable = if (noTtlAgentRun()) TtlCallable.get(call) else call
 
 
-        // create after new Task, won't see parent value in in task!
-        createParentTtlInstancesAfterCreateChild(ttlInstances)
-
+        if (noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
         val future = executorService.submit(ttlCallable)
+        if (!noTtlAgentRun()) {
+            // create after new Task, won't see parent value in in task!
+            createParentTtlInstancesAfterCreateChild(ttlInstances)
+        }
+
         assertEquals("ok", future.get())
 
 
@@ -90,6 +111,7 @@ class TtlCallableTest {
     }
 
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_releaseTtlValueReferenceAfterCall() {
         val ttlInstances = createParentTtlInstances()
 

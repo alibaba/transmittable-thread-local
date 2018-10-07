@@ -1,7 +1,11 @@
 package com.alibaba.ttl.threadpool
 
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
+import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.threadpool.TtlExecutors.*
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.Executors.newScheduledThreadPool
 
@@ -9,7 +13,12 @@ import java.util.concurrent.Executors.newScheduledThreadPool
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlExecutorsTest {
+    @Rule
+    @JvmField
+    val rule = ConditionalIgnoreRule()
+
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_common() {
         val newScheduledThreadPool = newScheduledThreadPool(3)
 
@@ -35,8 +44,8 @@ class TtlExecutorsTest {
 
     @Test
     fun test_null() {
-        assertNull(TtlExecutors.getTtlExecutor(null))
-        assertNull(TtlExecutors.getTtlExecutorService(null))
+        assertNull(getTtlExecutor(null))
+        assertNull(getTtlExecutorService(null))
         assertNull(getTtlScheduledExecutorService(null))
 
         assertFalse(isTtlWrapper(null))

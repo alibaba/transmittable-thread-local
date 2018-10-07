@@ -3,6 +3,7 @@
 package com.alibaba
 
 import com.alibaba.ttl.TransmittableThreadLocal
+import com.alibaba.ttl.threadpool.agent.TtlAgent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import java.lang.Thread.sleep
@@ -158,4 +159,10 @@ fun <T> assertParentTtlValues(values: TtlValues<T>) {
                     PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
             values
     )
+}
+
+fun noTtlAgentRun(): Boolean = TtlAgent.isTtlAgentLoaded().let {
+    val isUnderAgentSet = System.getProperties().containsKey("run-ttl-test-under-agent")
+    assertEquals(isUnderAgentSet, it)
+    !it
 }
