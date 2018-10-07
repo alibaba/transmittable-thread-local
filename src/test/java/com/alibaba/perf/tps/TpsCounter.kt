@@ -1,4 +1,4 @@
-package com.alibaba.ttl.perf.tps
+package com.alibaba.perf.tps
 
 import org.junit.Assert.fail
 import java.util.concurrent.ExecutorService

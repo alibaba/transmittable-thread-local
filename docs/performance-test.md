@@ -30,9 +30,9 @@
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`memoryleak-ThreadLocal.sh`](../scripts/perf-test/memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../src/test/java/com/alibaba/ttl/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.kt)。
+测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.kt)。
 * 脚本[`memoryleak-TransmittableThreadLocal.sh`](../scripts/perf-test/memoryleak-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
-测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../src/test/java/com/alibaba/ttl/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.kt)。
+测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.kt)。
 
 ## 🐎 TPS & 压力测试
 
@@ -149,6 +149,6 @@ GC情况如下（1分钟输出一次）：
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`tps-ThreadLocal.sh`](../scripts/perf-test/tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`CreateThreadLocalInstanceTps`](../src/test/java/com/alibaba/ttl/perf/tps/CreateThreadLocalInstanceTps.kt)。
+测试类是[`CreateThreadLocalInstanceTps`](../src/test/java/com/alibaba/perf/tps/CreateThreadLocalInstanceTps.kt)。
 * [`tps-TransmittableThreadLocal.sh`](../scripts/perf-test/tps-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
-测试类是[`CreateTransmittableThreadLocalInstanceTps`](../src/test/java/com/alibaba/ttl/perf/tps/CreateTransmittableThreadLocalInstanceTps.kt)。
+测试类是[`CreateTransmittableThreadLocalInstanceTps`](../src/test/java/com/alibaba/perf/tps/CreateTransmittableThreadLocalInstanceTps.kt)。

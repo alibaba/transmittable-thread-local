@@ -1,9 +1,9 @@
 @file:JvmName("NoMemoryLeak_TransmittableThreadLocal_NoRemove")
 
-package com.alibaba.ttl.perf.memoryleak
+package com.alibaba.perf.memoryleak
 
 import com.alibaba.ttl.TransmittableThreadLocal
-import com.alibaba.ttl.perf.getRandomString
+import com.alibaba.perf.getRandomString
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
