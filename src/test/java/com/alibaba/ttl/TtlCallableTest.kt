@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class TtlCallableTest {
 
     @Test
-    fun test_TtlCallable_inSameThread() {
+    fun test_TtlCallable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
         val call = Call("1", ttlInstances)
@@ -30,8 +30,8 @@ class TtlCallableTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val ret = ttlCallable.call()
-        assertEquals("ok", ret)
+        // run in the *current* thread
+        assertEquals("ok", ttlCallable.call())
 
 
         // child Inheritable
@@ -42,7 +42,7 @@ class TtlCallableTest {
     }
 
     @Test
-    fun test_TtlCallable_asyncWithExecutorService() {
+    fun test_TtlCallable_asyncRunByExecutorService() {
         val ttlInstances = createParentTtlInstances()
 
         val call = Call("1", ttlInstances)
@@ -64,7 +64,7 @@ class TtlCallableTest {
     }
 
     @Test
-    fun test_removeSameAsNotSet() {
+    fun test_remove_sameAsNotSet() {
         val ttlInstances = createParentTtlInstances()
 
 

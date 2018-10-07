@@ -1,7 +1,10 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
-import com.alibaba.ttl.testmodel.*
+import com.alibaba.ttl.testmodel.DeepCopyFooTransmittableThreadLocal
+import com.alibaba.ttl.testmodel.FooPojo
+import com.alibaba.ttl.testmodel.FooTask
+import com.alibaba.ttl.testmodel.Task
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.AfterClass
@@ -12,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 
 /**
@@ -20,7 +24,7 @@ import java.util.concurrent.TimeUnit
 class TtlRunnableTest {
 
     @Test
-    fun test_ttlRunnable_inSameThread() {
+    fun test_ttlRunnable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -30,6 +34,7 @@ class TtlRunnableTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
+        // run in the *current* thread
         ttlRunnable.run()
 
 
@@ -41,7 +46,7 @@ class TtlRunnableTest {
     }
 
     @Test
-    fun test_ttlRunnable_asyncWithNewThread() {
+    fun test_ttlRunnable_asyncRunByNewThread() {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -63,7 +68,7 @@ class TtlRunnableTest {
     }
 
     @Test
-    fun test_TtlRunnable_asyncWithExecutorService() {
+    fun test_TtlRunnable_asyncRunByExecutorService() {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -85,7 +90,7 @@ class TtlRunnableTest {
     }
 
     @Test
-    fun test_removeSameAsNotSet() {
+    fun test_remove_sameAsNotSet() {
         val ttlInstances = createParentTtlInstances()
 
         // add and remove !!
@@ -111,38 +116,59 @@ class TtlRunnableTest {
 
     @Test
     fun test_callback_copy_beforeExecute_afterExecute() {
-        val callbackTestTransmittableThreadLocal = CallbackTestTransmittableThreadLocal()
+        class CounterTransmittableThreadLocal : TransmittableThreadLocal<String?>() {
+            val copyCounter = AtomicInteger()
+            val beforeExecuteCounter = AtomicInteger()
+            val afterExecuteCounter = AtomicInteger()
 
-        callbackTestTransmittableThreadLocal.set(FooPojo("jerry", 42))
+            override fun copy(parentValue: String?): String? {
+                copyCounter.incrementAndGet()
+                return super.copy(parentValue)
+            }
 
-        val task1 = { }
+            override fun beforeExecute() {
+                beforeExecuteCounter.incrementAndGet()
+                super.beforeExecute()
+            }
+
+            override fun afterExecute() {
+                afterExecuteCounter.incrementAndGet()
+                super.afterExecute()
+            }
+        }
+
+        val counterTtl = CounterTransmittableThreadLocal()
+        counterTtl.set("Foo")
+
         // do copy when decorate runnable
-        val ttlRunnable1 = TtlRunnable.get(task1)
+        val ttlRunnable1 = TtlRunnable.get { /* do nothing Runnable */ }
+        assertEquals(1, counterTtl.copyCounter.get().toLong())
+        assertEquals(0, counterTtl.beforeExecuteCounter.get().toLong())
+        assertEquals(0, counterTtl.afterExecuteCounter.get().toLong())
 
+        // do before/after when run
         executorService.submit(ttlRunnable1).get()
+        assertEquals(1, counterTtl.copyCounter.get().toLong())
+        assertEquals(1, counterTtl.beforeExecuteCounter.get().toLong())
+        assertEquals(1, counterTtl.afterExecuteCounter.get().toLong())
 
-        assertEquals(1, callbackTestTransmittableThreadLocal.copyCounter.get().toLong())
-        assertEquals(1, callbackTestTransmittableThreadLocal.beforeExecuteCounter.get().toLong())
-        assertEquals(1, callbackTestTransmittableThreadLocal.afterExecuteCounter.get().toLong())
-
-
+        // do before/after when run
         executorService.submit(ttlRunnable1).get()
+        assertEquals(1, counterTtl.copyCounter.get().toLong())
+        assertEquals(2, counterTtl.beforeExecuteCounter.get().toLong())
+        assertEquals(2, counterTtl.afterExecuteCounter.get().toLong())
 
-        assertEquals(1, callbackTestTransmittableThreadLocal.copyCounter.get().toLong())
-        assertEquals(2, callbackTestTransmittableThreadLocal.beforeExecuteCounter.get().toLong())
-        assertEquals(2, callbackTestTransmittableThreadLocal.afterExecuteCounter.get().toLong())
-
-
-        val task2 = { }
         // do copy when decorate runnable
-        val ttlRunnable2 = TtlRunnable.get(task2)
+        val ttlRunnable2 = TtlRunnable.get { /* do nothing Runnable */ }
+        assertEquals(2, counterTtl.copyCounter.get().toLong())
+        assertEquals(2, counterTtl.beforeExecuteCounter.get().toLong())
+        assertEquals(2, counterTtl.afterExecuteCounter.get().toLong())
 
-
+        // do before/after when run
         executorService.submit(ttlRunnable2).get()
-
-        assertEquals(2, callbackTestTransmittableThreadLocal.copyCounter.get().toLong())
-        assertEquals(3, callbackTestTransmittableThreadLocal.beforeExecuteCounter.get().toLong())
-        assertEquals(3, callbackTestTransmittableThreadLocal.afterExecuteCounter.get().toLong())
+        assertEquals(2, counterTtl.copyCounter.get().toLong())
+        assertEquals(3, counterTtl.beforeExecuteCounter.get().toLong())
+        assertEquals(3, counterTtl.afterExecuteCounter.get().toLong())
     }
 
     @Test
