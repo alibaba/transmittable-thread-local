@@ -61,7 +61,11 @@ class TtlRunnableTest {
 
 
         // child Inheritable
-        assertChildTtlValues("1", task.copied)
+        if (TransmittableThreadLocal.isInheritable()) {
+            assertChildTtlValues("1", task.copied)
+        } else {
+            assertChildTtlValuesDisableInheritable("1", task.copied)
+        }
 
         // child do not effect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
