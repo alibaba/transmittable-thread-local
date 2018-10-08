@@ -14,7 +14,18 @@ import java.util.logging.Logger;
  * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
  *
+ * <b>Note</b>:
+ * If the <b>inheritable</b> ability of {@link InheritableThreadLocal} has <b>potential leaking problem</b>,
+ * you can disable the <b>Inheritable</b> ability by overriding method {@link #childValue(Object)}:
+ * <pre> {@code
+ * TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
+ *     protected String childValue(String parentValue) {
+ *         return initialValue();
+ *     }
+ * }}</pre>
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @author Yang Fang (snoop dot fy at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
  * @since 0.10.0
