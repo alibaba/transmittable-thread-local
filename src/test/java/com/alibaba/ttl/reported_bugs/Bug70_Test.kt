@@ -17,6 +17,11 @@ class Bug70_Test {
 
     @Test
     fun test_bug70() {
+        // only works if TransmittableThreadLocal is inheritable
+        if (!TransmittableThreadLocal.isInheritable()) {
+            return
+        }
+
         val hello = "hello"
         val executorService = Executors.newSingleThreadExecutor()
         val threadLocal = TransmittableThreadLocal<String>().apply { set(hello) }

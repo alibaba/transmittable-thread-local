@@ -17,6 +17,12 @@ import java.util.logging.Logger;
  * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
  *
+ * <p>
+ * <strong>Caution</strong>: <a href="https://github.com/alibaba/transmittable-thread-local/issues/100">Potential leaking problem</a>
+ * may be introduced by InheritableThreadLocal, you can disable it by setting
+ * `com.alibaba.ttl.inheritable` to false, default is true.
+ * </p>
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
@@ -24,6 +30,9 @@ import java.util.logging.Logger;
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     private static final Logger logger = Logger.getLogger(TransmittableThreadLocal.class.getName());
+
+    private static final boolean IS_INHERITABLE = Boolean.parseBoolean(
+            System.getProperty("com.alibaba.ttl.inheritable", "true"));
 
     /**
      * Computes the value for this transmittable thread-local variable
@@ -66,6 +75,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     protected void afterExecute() {
     }
 
+    /**
+     * @return if inheritable as {@link InheritableThreadLocal}
+     */
+    public static boolean isInheritable() {
+        return IS_INHERITABLE;
+    }
+
     @Override
     public final T get() {
         T value = super.get();
@@ -91,6 +107,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
+    @Override
+    protected T childValue(T parentValue) {
+        return isInheritable() ? super.childValue(parentValue) : null;
+    }
+
     private void superRemove() {
         super.remove();
     }
@@ -112,7 +133,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
                 @Override
                 protected Map<TransmittableThreadLocal<?>, ?> childValue(Map<TransmittableThreadLocal<?>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue);
+                    return isInheritable()
+                            ? new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue)
+                            : new WeakHashMap<TransmittableThreadLocal<?>, Object>();
                 }
             };
 

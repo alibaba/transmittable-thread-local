@@ -141,6 +141,16 @@ fun <T> assertChildTtlValues(tag: String, values: TtlValues<T>) {
     )
 }
 
+fun <T> assertChildTtlValuesDisableInheritable(tag: String, values: TtlValues<T>) {
+    // if Inheritable is disabled,  PARENT_CREATE_UNMODIFIED_IN_CHILD will not be seen
+    // and PARENT_CREATE_MODIFIED_IN_CHILD will be modified on null value.
+    assertTtlValues(
+            mapOf(PARENT_CREATE_MODIFIED_IN_CHILD to "null$tag",
+                    CHILD_CREATE + tag to CHILD_CREATE + tag),
+            values
+    )
+}
+
 fun <T> assertChildTtlValuesWithParentCreateAfterCreateChild(tag: String, values: TtlValues<T>) {
     assertTtlValues(
             mapOf(PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + tag,
