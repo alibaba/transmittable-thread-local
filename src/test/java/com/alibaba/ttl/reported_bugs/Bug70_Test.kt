@@ -22,11 +22,10 @@ class Bug70_Test {
         val threadLocal = TransmittableThreadLocal<String>().apply { set(hello) }
         assertEquals(hello, threadLocal.get())
 
-        val futureTask = FutureTask<String> { threadLocal.get() }.also {
+        FutureTask<String> { threadLocal.get() }.also {
             executorService.submit(TtlRunnable.get(it))
-                    .get()
+            assertEquals(hello, it.get())
         }
-        assertEquals(hello, futureTask.get())
 
         val taskRef = AtomicReference<FutureTask<String>>()
         thread(name = "the thread for run executor action") {
