@@ -214,10 +214,10 @@
 						<manifestEntries>
 							<!--
 								Instrumentation Specification
-									- https://docs.oracle.com/javase/10/docs/technotes/guides/instrumentation/index.html
+									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html (this doc for java 8)
 									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
 								JAR Manifest - JAR File Specification
-									- https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest
+									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
 							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
@@ -365,6 +365,7 @@
 									more infos about link setting:
 									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
 									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
+									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
 								-->
 								<additionalJOption>-link</additionalJOption>
 								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>

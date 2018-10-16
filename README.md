@@ -251,7 +251,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。
 更多详见
 
 - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
-- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 #### `Java`的启动参数配置
@@ -323,7 +323,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 - [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
 - 官方文档
     - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
-    - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+    - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
     - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 # 👷 Contributors

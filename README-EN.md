@@ -215,7 +215,7 @@ The implementation of auto adding self agent jar to `boot classpath` use the `Bo
 More info:
 
 - [`Java Agent Specification` - `JavaDoc`文档](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
-- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/technotes/guides/jar/jar.html#JAR_Manifest)
+- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 Java command example:
