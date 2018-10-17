@@ -221,7 +221,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。
     修饰实现代码在[`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
 1. `java.util.TimerTask`的子类（对应的线程池组件是`java.util.Timer`）  
     修饰实现代码在[`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)  
-    **_注意_**：缺省没有开启`TimerTask`的修饰，使用`Agent`参数`ttl.agent.enable.timer.task`开启：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar:ttl.agent.enable.timer.task:true`。  
+    **_注意_**：缺省没有开启`TimerTask`的修饰，使用`Agent`参数`ttl.agent.enable.timer.task`开启：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`。  
     更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
 
 > **关于`java.util.TimerTask`/`java.util.Timer`**

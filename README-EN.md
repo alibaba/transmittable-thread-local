@@ -191,7 +191,7 @@ At present, `TTL` agent has decorated below `JDK` thread pool implementation:
     decoration implemetation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
 - `java.util.TimerTask`（corresponding thread pool is `java.util.Timer`）  
     decoration implemetation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)  
-    **_NOTE_**: decoration for `TimerTask` default is disable, enabled by agent argument `ttl.agent.enable.timer.task`: `-javaagent:path/to/transmittable-thread-local-2.x.x.jar:ttl.agent.enable.timer.task:true`.  
+    **_NOTE_**: decoration for `TimerTask` default is disable, enabled by agent argument `ttl.agent.enable.timer.task`: `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`.  
     more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
 
 Add start options on Java command:
