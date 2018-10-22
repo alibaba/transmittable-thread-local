@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.threadpool.agent.TtlAgent;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.Executor;
@@ -9,6 +10,13 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Factory Utils for getting TTL wrapper of jdk executors.
+ * <p>
+ * <b><i>Note:</i></b>
+ * <ul>
+ * <li>all method is {@code null}-safe, when input {@code executor} parameter is {@code null}, return {@code null}.</li>
+ * <li>skip decorating thread pool/{@code executor}(aka. just return input {@code executor})
+ * when ttl agent is loaded, Or when input {@code executor} is already decorated.</li>
+ * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.concurrent.Executor
@@ -28,7 +36,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static Executor getTtlExecutor(@Nullable Executor executor) {
-        if (null == executor || executor instanceof ExecutorTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof ExecutorTtlWrapper) {
             return executor;
         }
         return new ExecutorTtlWrapper(executor);
@@ -41,7 +49,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
-        if (executorService == null || executorService instanceof ExecutorServiceTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof ExecutorServiceTtlWrapper) {
             return executorService;
         }
         return new ExecutorServiceTtlWrapper(executorService);
@@ -54,7 +62,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
-        if (scheduledExecutorService == null || scheduledExecutorService instanceof ScheduledExecutorServiceTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof ScheduledExecutorServiceTtlWrapper) {
             return scheduledExecutorService;
         }
         return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService);
