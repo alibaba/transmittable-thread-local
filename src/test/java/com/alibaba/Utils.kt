@@ -42,28 +42,17 @@ internal const val CHILD_CREATE = "child-create"
 typealias  TtlInstances<T> = ConcurrentMap<String, TransmittableThreadLocal<T>>
 
 fun createParentTtlInstances(ttlInstances: TtlInstances<String> = ConcurrentHashMap()): TtlInstances<String> {
-    printTtlInstances(ttlInstances, "Before run(createParentTtlInstances):")
-
     listOf(PARENT_CREATE_UNMODIFIED_IN_CHILD, PARENT_CREATE_MODIFIED_IN_CHILD).forEach {
         newTtlInstanceAndPut(it, ttlInstances)
     }
-
-    printTtlInstances(ttlInstances, "After run(createParentTtlInstances):")
-
     return ttlInstances
 }
 
 fun createParentTtlInstancesAfterCreateChild(ttlInstances: TtlInstances<String>) {
-    printTtlInstances(ttlInstances, "Before run(createParentTtlInstancesAfterCreateChild):")
-
     newTtlInstanceAndPut(PARENT_CREATE_AFTER_CREATE_CHILD, ttlInstances)
-
-    printTtlInstances(ttlInstances, "After run(createParentTtlInstancesAfterCreateChild):")
 }
 
 fun createChildTtlInstancesAndModifyParentTtlInstances(tag: String, ttlInstances: TtlInstances<String>): TtlValues<String> {
-    printTtlInstances(ttlInstances, "$tag Before run(createChildTtlInstancesAndModifyParentTtlInstances):")
-
     // 1. Add new
     val newChildKey = "$CHILD_CREATE$tag"
     newTtlInstanceAndPut(newChildKey, ttlInstances)
@@ -72,19 +61,13 @@ fun createChildTtlInstancesAndModifyParentTtlInstances(tag: String, ttlInstances
     val ttl: TransmittableThreadLocal<String>? = ttlInstances[PARENT_CREATE_MODIFIED_IN_CHILD]
     ttl!!.set("${ttl.get()}$tag")
 
-    printTtlInstances(ttlInstances, "$tag After run(createChildTtlInstancesAndModifyParentTtlInstances):")
-
     return copyTtlValues(ttlInstances)
 }
 
 fun modifyParentTtlInstances(tag: String, ttlInstances: TtlInstances<String>): TtlValues<String> {
-    printTtlInstances(ttlInstances, "$tag Before Run(modifyParentTtlInstances):")
-
     // modify the parent key
     val ttl: TransmittableThreadLocal<String>? = ttlInstances[PARENT_CREATE_MODIFIED_IN_CHILD]
     ttl!!.set("${ttl.get()}$tag")
-
-    printTtlInstances(ttlInstances, "$tag After Run(modifyParentTtlInstances):")
 
     return copyTtlValues(ttlInstances)
 }

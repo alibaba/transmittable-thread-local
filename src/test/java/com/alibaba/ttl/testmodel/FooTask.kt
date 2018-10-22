@@ -17,8 +17,6 @@ class FooTask(private val value: String, private val ttlInstances: ConcurrentMap
 
     override fun run() {
         try {
-            printTtlInstances(ttlInstances, "Before Run:")
-
             // Add new
             val child = DeepCopyFooTransmittableThreadLocal()
             child.set(FooPojo(CHILD_CREATE + value, 3))
@@ -27,7 +25,6 @@ class FooTask(private val value: String, private val ttlInstances: ConcurrentMap
             // modify the parent key
             ttlInstances[PARENT_CREATE_MODIFIED_IN_CHILD]!!.get()!!.name = ttlInstances[PARENT_CREATE_MODIFIED_IN_CHILD]!!.get()!!.name + value
 
-            printTtlInstances(ttlInstances, "After Run:")
             copied = copyTtlValues(ttlInstances)
 
             println("Task $value finished!")
