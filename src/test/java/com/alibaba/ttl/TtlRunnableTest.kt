@@ -2,8 +2,6 @@ package com.alibaba.ttl
 
 import com.alibaba.*
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.testmodel.DeepCopyFooTransmittableThreadLocal
 import com.alibaba.ttl.testmodel.FooPojo
 import com.alibaba.ttl.testmodel.FooTask
@@ -31,7 +29,6 @@ class TtlRunnableTest {
     val rule = ConditionalIgnoreRule()
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_ttlRunnable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
@@ -240,7 +237,6 @@ class TtlRunnableTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_releaseTtlValueReferenceAfterRun() {
         val ttlInstances = createParentTtlInstances()
 

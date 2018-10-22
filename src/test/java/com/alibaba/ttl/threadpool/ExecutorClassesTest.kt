@@ -28,8 +28,7 @@ class ExecutorClassesTest {
         Runnable {
             println("Task should be removed!")
         }.let {
-            if (noTtlAgentRun()) TtlRunnable.get(it)
-            else it
+            if (noTtlAgentRun()) TtlRunnable.get(it) else it
         }.let {
             executorService.execute(it)
             // Does ThreadPoolExecutor#remove method take effect?

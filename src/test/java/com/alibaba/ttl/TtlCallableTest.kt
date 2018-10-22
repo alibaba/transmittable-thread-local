@@ -2,8 +2,6 @@ package com.alibaba.ttl
 
 import com.alibaba.*
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
@@ -27,7 +25,6 @@ class TtlCallableTest {
     val rule = ConditionalIgnoreRule()
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_TtlCallable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
 
@@ -111,7 +108,6 @@ class TtlCallableTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_releaseTtlValueReferenceAfterCall() {
         val ttlInstances = createParentTtlInstances()
 
