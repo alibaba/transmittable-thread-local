@@ -35,8 +35,8 @@ install:
   - pip install --user codecov
 
 script:
-  # default oracle jdk 10, do build and test
-  - switch_to_oracle_jdk10
+  # default jdk 10, do build and test
+  - switch_to_open_jdk10
   - ./mvnw -V clean install
   - ./scripts/run-agent-test.sh
   # open jdk 6
@@ -61,10 +61,6 @@ script:
   - ./scripts/run-agent-test.sh skipClean
   # open jdk 9
   - switch_to_open_jdk9
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 10
-  - switch_to_open_jdk10
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
   #  open jdk 11
