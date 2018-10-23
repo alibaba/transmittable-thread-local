@@ -7,7 +7,7 @@ source ./common.sh
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
     -Drun-ttl-test-under-agent=true \
-    org.junit.runner.JUnitCore $(junit_test_case | grep -vE '\.TtlAgentTest$')
+    org.junit.runner.JUnitCore $(junit_test_case | grep -vE '\.TtlAgentTest$|\.JavassistTest$')
 
 # Run agent check for Timer/TimerTask
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
