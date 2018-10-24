@@ -359,6 +359,7 @@
 							<excludePackageNames>*.internal.*</excludePackageNames>
 							<overview>src/api/overview.html</overview>
 							<additionalJOptions>
+								<additionalJOption>-quiet</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
 								<!--
@@ -366,11 +367,15 @@
 									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
 									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
 									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
+									无法在Javadoc注释中链接到JDK10
+									http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
 								-->
-								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>-linkoffline</additionalJOption>
 								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
-								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>${project.basedir}/docs/package-list/jsr305/</additionalJOption>
+								<additionalJOption>-linkoffline</additionalJOption>
 								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
+								<additionalJOption>${project.basedir}/docs/package-list/java/</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -508,14 +513,17 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
 							<additionalJOptions>
-								<!-- additionalJOptions not support appending, must duplicate all options 0_o! -->
 								<additionalJOption>-html5</additionalJOption>
+								<!-- additionalJOptions not support appending, must duplicate all options 0_o! -->
+								<additionalJOption>-quiet</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
-								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>-linkoffline</additionalJOption>
 								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
-								<additionalJOption>-link</additionalJOption>
+								<additionalJOption>${project.basedir}/docs/package-list/jsr305/</additionalJOption>
+								<additionalJOption>-linkoffline</additionalJOption>
 								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
+								<additionalJOption>${project.basedir}/docs/package-list/java/</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -547,7 +555,7 @@
 								<configuration>
 									<rules>
 										<requireJavaVersion>
-											<version>[10,)</version>
+											<version>[11,)</version>
 										</requireJavaVersion>
 									</rules>
 								</configuration>
