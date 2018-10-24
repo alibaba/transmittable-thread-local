@@ -4,6 +4,7 @@ import javassist.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -21,8 +22,9 @@ class Utils {
         final StringBuilder stringBuilder = new StringBuilder();
 
         final String returnType = method.getReturnType().getSimpleName();
+        final String modifier = Modifier.toString(method.getModifiers());
         final String methodName = method.getName();
-        stringBuilder.append(returnType).append(" ")
+        stringBuilder.append(modifier).append(" ").append(returnType).append(" ")
                 .append(methodName).append("(");
 
         final CtClass[] parameterTypes = method.getParameterTypes();

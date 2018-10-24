@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
@@ -66,7 +67,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final String paramTypeName = parameterTypes[i].getName();
             if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
                 String code = String.format("$%d = %s.get($%d, false, true);", i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
-                logger.info("insert code before method " + Utils.signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
+                logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
         }
