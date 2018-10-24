@@ -40,9 +40,7 @@ public class TtlTransformer implements ClassFileTransformer {
                                   final ProtectionDomain protectionDomain, final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
-            if (classFile == null) {
-                return EMPTY_BYTE_ARRAY;
-            }
+            if (classFile == null) return EMPTY_BYTE_ARRAY;
 
             final String className = toClassName(classFile);
             for (JavassistTransformlet transformlet : transformletList) {

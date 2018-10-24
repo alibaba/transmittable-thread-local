@@ -22,19 +22,13 @@ public abstract class Logger {
             throw new IllegalStateException("TTL logger implementation type is already set! type = " + loggerImplType);
         }
 
-        if (STDERR.equalsIgnoreCase(type)) {
-            loggerImplType = 0;
-        } else if (STDOUT.equalsIgnoreCase(type)) {
-            loggerImplType = 1;
-        } else {
-            loggerImplType = 0;
-        }
+        if (STDERR.equalsIgnoreCase(type)) loggerImplType = 0;
+        else if (STDOUT.equalsIgnoreCase(type)) loggerImplType = 1;
+        else loggerImplType = 0;
     }
 
     public static Logger getLogger(Class<?> clazz) {
-        if (loggerImplType == -1) {
-            throw new IllegalStateException("TTL logger implementation type is NOT set!");
-        }
+        if (loggerImplType == -1) throw new IllegalStateException("TTL logger implementation type is NOT set!");
 
         switch (loggerImplType) {
             case 1:

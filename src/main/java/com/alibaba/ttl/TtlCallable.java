@@ -121,17 +121,12 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Nullable
     public static <T> TtlCallable<T> get(@Nullable Callable<T> callable, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
-        if (null == callable) {
-            return null;
-        }
+        if (null == callable) return null;
 
         if (callable instanceof TtlCallable) {
-            if (idempotent) {
-                // avoid redundant decoration, and ensure idempotency
-                return (TtlCallable<T>) callable;
-            } else {
-                throw new IllegalStateException("Already TtlCallable!");
-            }
+            // avoid redundant decoration, and ensure idempotency
+            if (idempotent) return (TtlCallable<T>) callable;
+            else throw new IllegalStateException("Already TtlCallable!");
         }
         return new TtlCallable<T>(callable, releaseTtlValueReferenceAfterCall);
     }
@@ -169,9 +164,8 @@ public final class TtlCallable<V> implements Callable<V> {
      */
     @Nonnull
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
-        if (null == tasks) {
-            return Collections.emptyList();
-        }
+        if (null == tasks) return Collections.emptyList();
+
         List<TtlCallable<T>> copy = new ArrayList<TtlCallable<T>>();
         for (Callable<T> task : tasks) {
             copy.add(TtlCallable.get(task, releaseTtlValueReferenceAfterCall, idempotent));

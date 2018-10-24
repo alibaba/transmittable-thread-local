@@ -69,20 +69,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public final T get() {
         T value = super.get();
-        if (null != value) {
-            addValue();
-        }
+        if (null != value) addValue();
         return value;
     }
 
     @Override
     public final void set(T value) {
         super.set(value);
-        if (null == value) { // may set null to remove value
-            removeValue();
-        } else {
-            addValue();
-        }
+        // may set null to remove value
+        if (null == value) removeValue();
+        else addValue();
     }
 
     @Override
@@ -131,11 +127,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             TransmittableThreadLocal<?> threadLocal = entry.getKey();
 
             try {
-                if (isBefore) {
-                    threadLocal.beforeExecute();
-                } else {
-                    threadLocal.afterExecute();
-                }
+                if (isBefore) threadLocal.beforeExecute();
+                else threadLocal.afterExecute();
             } catch (Throwable t) {
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t.toString(), t);

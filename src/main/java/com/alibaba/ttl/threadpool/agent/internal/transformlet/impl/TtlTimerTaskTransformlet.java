@@ -37,15 +37,11 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
         // class contains method `void run()` ?
         try {
             final CtMethod runMethod = clazz.getDeclaredMethod(RUN_METHOD_NAME, new CtClass[0]);
-            if (!CtClass.voidType.equals(runMethod.getReturnType())) {
-                return null;
-            }
+            if (!CtClass.voidType.equals(runMethod.getReturnType())) return null;
         } catch (NotFoundException e) {
             return null;
         }
-        if (!clazz.subclassOf(clazz.getClassPool().get(TIMER_TASK_CLASS_NAME))) {
-            return null;
-        }
+        if (!clazz.subclassOf(clazz.getClassPool().get(TIMER_TASK_CLASS_NAME))) return null;
 
         logger.info("Transforming class " + className);
         updateTimerTaskClass(clazz);

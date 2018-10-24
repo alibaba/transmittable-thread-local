@@ -101,9 +101,7 @@ public final class TtlAgent {
             final List<Class<? extends JavassistTransformlet>> transformletList = new ArrayList<Class<? extends JavassistTransformlet>>();
             transformletList.add(TtlExecutorTransformlet.class);
             transformletList.add(TtlForkJoinTransformlet.class);
-            if (enableTimerTask(kvs)) {
-                transformletList.add(TtlTimerTaskTransformlet.class);
-            }
+            if (enableTimerTask(kvs)) transformletList.add(TtlTimerTaskTransformlet.class);
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList);
             inst.addTransformer(transformer, true);
@@ -146,9 +144,7 @@ public final class TtlAgent {
             if (kv.length == 0) continue;
 
             if (kv.length == 1) ret.put(kv[0], "");
-            else {
-                ret.put(kv[0], kv[1]);
-            }
+            else ret.put(kv[0], kv[1]);
         }
 
         return ret;

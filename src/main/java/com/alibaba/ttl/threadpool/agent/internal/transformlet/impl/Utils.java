@@ -28,9 +28,7 @@ class Utils {
         final CtClass[] parameterTypes = method.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
             CtClass parameterType = parameterTypes[i];
-            if (i != 0) {
-                stringBuilder.append(", ");
-            }
+            if (i != 0) stringBuilder.append(", ");
             stringBuilder.append(parameterType.getSimpleName());
         }
 

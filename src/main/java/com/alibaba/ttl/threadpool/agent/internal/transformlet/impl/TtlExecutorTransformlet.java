@@ -55,13 +55,10 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     private void updateMethodOfExecutorClass(final CtClass clazz, final CtMethod method) throws NotFoundException, CannotCompileException {
-        if (method.getDeclaringClass() != clazz) {
-            return;
-        }
+        if (method.getDeclaringClass() != clazz) return;
+
         final int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) {
-            return;
-        }
+        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
 
         CtClass[] parameterTypes = method.getParameterTypes();
         StringBuilder insertCode = new StringBuilder();
@@ -73,8 +70,6 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
                 insertCode.append(code);
             }
         }
-        if (insertCode.length() > 0) {
-            method.insertBefore(insertCode.toString());
-        }
+        if (insertCode.length() > 0) method.insertBefore(insertCode.toString());
     }
 }

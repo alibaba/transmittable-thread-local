@@ -119,17 +119,12 @@ public final class TtlTimerTask extends TimerTask {
      */
     @Nullable
     public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == timerTask) {
-            return null;
-        }
+        if (null == timerTask) return null;
 
         if (timerTask instanceof TtlTimerTask) {
-            if (idempotent) {
-                // avoid redundant decoration, and ensure idempotency
-                return (TtlTimerTask) timerTask;
-            } else {
-                throw new IllegalStateException("Already TtlTimerTask!");
-            }
+            // avoid redundant decoration, and ensure idempotency
+            if (idempotent) return (TtlTimerTask) timerTask;
+            else throw new IllegalStateException("Already TtlTimerTask!");
         }
         return new TtlTimerTask(timerTask, releaseTtlValueReferenceAfterRun);
     }

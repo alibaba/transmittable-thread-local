@@ -120,17 +120,12 @@ public final class TtlRunnable implements Runnable {
      */
     @Nullable
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == runnable) {
-            return null;
-        }
+        if (null == runnable) return null;
 
         if (runnable instanceof TtlRunnable) {
-            if (idempotent) {
-                // avoid redundant decoration, and ensure idempotency
-                return (TtlRunnable) runnable;
-            } else {
-                throw new IllegalStateException("Already TtlRunnable!");
-            }
+            // avoid redundant decoration, and ensure idempotency
+            if (idempotent) return (TtlRunnable) runnable;
+            else throw new IllegalStateException("Already TtlRunnable!");
         }
         return new TtlRunnable(runnable, releaseTtlValueReferenceAfterRun);
     }
@@ -173,9 +168,8 @@ public final class TtlRunnable implements Runnable {
      */
     @Nonnull
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == tasks) {
-            return Collections.emptyList();
-        }
+        if (null == tasks) return Collections.emptyList();
+
         List<TtlRunnable> copy = new ArrayList<TtlRunnable>();
         for (Runnable task : tasks) {
             copy.add(TtlRunnable.get(task, releaseTtlValueReferenceAfterRun, idempotent));
