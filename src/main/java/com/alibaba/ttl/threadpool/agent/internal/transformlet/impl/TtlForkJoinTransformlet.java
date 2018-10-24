@@ -5,10 +5,8 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransform
 import javassist.*;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
@@ -45,27 +43,15 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
-        final CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, clazz, null);
+        final String original_doExec_method_rename = renamedMethodNameByTtl(doExecMethod);
 
-        // rename original doExec method, and set to private method(avoid reflect out renamed method unexpectedly)
-        final String original_doExec_method_rename = "original$" + doExecMethod.getName()+ "$method$renamed$by$ttl";
-        doExecMethod.setName(original_doExec_method_rename);
-        doExecMethod.setModifiers(doExecMethod.getModifiers() & ~Modifier.PUBLIC /* remove public */ | Modifier.PRIVATE /* add private */);
-
-        // set new doExec method implementation
-        final String code = "{\n" +
-                // do nothing/directly return, if is TTL ForkJoinTask instance
-                "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
-                "    return " + original_doExec_method_rename + "($$);\n" +
+        final String beforeCode = "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
+                "    return " + original_doExec_method_rename + "($$);\n" + // do nothing/directly return, if is TTL ForkJoinTask instance
                 "}\n" +
-                "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
-                "try {\n" +
-                "    return " + original_doExec_method_rename + "($$);\n" +
-                "} finally {\n" +
-                "    com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);\n" +
-                "}\n" + "}";
-        new_doExecMethod.setBody(code);
-        clazz.addMethod(new_doExecMethod);
-        logger.info("insert code around method " + signatureOfMethod(doExecMethod) + " of class " + className + ": " + code);
+                "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
+
+        final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
+
+        doTryFinallyForMethod(doExecMethod, original_doExec_method_rename, beforeCode, finallyCode);
     }
 }

@@ -5,10 +5,9 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransform
 import javassist.*;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doTryFinallyForMethod;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.TimerTask}.
@@ -58,23 +57,10 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod runMethod = clazz.getDeclaredMethod(RUN_METHOD_NAME, new CtClass[0]);
-        final CtMethod new_runMethod = CtNewMethod.copy(runMethod, clazz, null);
 
-        // rename original run method, and set to private method(avoid reflect out renamed method unexpectedly)
-        final String original_run_method_rename = "original$" + runMethod.getName() + "$method$renamed$by$ttl";
-        runMethod.setName(original_run_method_rename);
-        runMethod.setModifiers(runMethod.getModifiers() & ~Modifier.PUBLIC /* remove public */ | Modifier.PRIVATE /* add private */);
+        final String beforeCode = "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
+        final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        // set new run method implementation
-        final String code = "{\n" +
-                "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");\n" +
-                "try {\n" +
-                "    return " + original_run_method_rename + "($$);\n" +
-                "} finally {\n" +
-                "    com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);\n" +
-                "}\n" + "}";
-        new_runMethod.setBody(code);
-        clazz.addMethod(new_runMethod);
-        logger.info("insert code around method " + signatureOfMethod(runMethod) + " of class " + className + ": " + code);
+        doTryFinallyForMethod(runMethod, beforeCode, finallyCode);
     }
 }

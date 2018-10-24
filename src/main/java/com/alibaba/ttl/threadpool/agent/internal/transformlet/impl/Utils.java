@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import javassist.*;
 
 import java.io.ByteArrayInputStream;
@@ -11,6 +12,8 @@ import java.lang.reflect.Modifier;
  * @since 2.6.0
  */
 class Utils {
+    private static final Logger logger = Logger.getLogger(Utils.class);
+
     /**
      * String like {@code ScheduledFuture scheduleAtFixedRate(Runnable, long, long, TimeUnit)}
      * for {@link  java.util.concurrent.ScheduledThreadPoolExecutor#scheduleAtFixedRate}.
@@ -49,5 +52,38 @@ class Utils {
         final CtClass clazz = classPool.makeClass(new ByteArrayInputStream(classFileBuffer), false);
         clazz.defrost();
         return clazz;
+    }
+
+
+    static String renamedMethodNameByTtl(CtMethod method) {
+        return "original$" + method.getName() + "$method$renamed$by$ttl";
+    }
+
+    static void doTryFinallyForMethod(CtMethod method, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
+        doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
+    }
+
+    static void doTryFinallyForMethod(CtMethod method, String originalMethodRename, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
+        final CtClass clazz = method.getDeclaringClass();
+        final CtMethod new_method = CtNewMethod.copy(method, clazz, null);
+
+        // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
+        method.setName(originalMethodRename);
+        method.setModifiers(method.getModifiers()
+                & ~Modifier.PUBLIC /* remove public */
+                & ~Modifier.PROTECTED /* remove protected */
+                | Modifier.PRIVATE /* add private */);
+
+        // set new method implementation
+        final String code = "{\n" +
+                beforeCode + "\n" +
+                "try {\n" +
+                "    return " + originalMethodRename + "($$);\n" +
+                "} finally {\n" +
+                "    " + finallyCode + "\n" +
+                "} }";
+        new_method.setBody(code);
+        clazz.addMethod(new_method);
+        logger.info("insert code around method " + signatureOfMethod(method) + " of class " + clazz.getName() + ": " + code);
     }
 }
