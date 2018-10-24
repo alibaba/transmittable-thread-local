@@ -71,12 +71,12 @@ script:
   - switch_to_open_jdk12
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
+
+after_success:
   # codecov
   - jdk_switcher use oraclejdk8
   - ./mvnw clean -V
   - ./mvnw cobertura:cobertura
-
-after_success:
   - codecov
   - git status --ignored
 
