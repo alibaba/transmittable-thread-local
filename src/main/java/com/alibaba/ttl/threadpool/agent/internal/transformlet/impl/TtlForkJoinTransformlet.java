@@ -44,12 +44,11 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
-        final String doExec_methodName = "doExec";
-        final CtMethod doExecMethod = clazz.getDeclaredMethod(doExec_methodName, new CtClass[0]);
-        final CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, doExec_methodName, clazz, null);
+        final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
+        final CtMethod new_doExecMethod = CtNewMethod.copy(doExecMethod, clazz, null);
 
         // rename original doExec method, and set to private method(avoid reflect out renamed method unexpectedly)
-        final String original_doExec_method_rename = "original$doExec$method$renamed$by$ttl";
+        final String original_doExec_method_rename = "original$" + doExecMethod.getName()+ "$method$renamed$by$ttl";
         doExecMethod.setName(original_doExec_method_rename);
         doExecMethod.setModifiers(doExecMethod.getModifiers() & ~Modifier.PUBLIC /* remove public */ | Modifier.PRIVATE /* add private */);
 

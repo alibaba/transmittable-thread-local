@@ -58,10 +58,10 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod runMethod = clazz.getDeclaredMethod(RUN_METHOD_NAME, new CtClass[0]);
-        final CtMethod new_runMethod = CtNewMethod.copy(runMethod, RUN_METHOD_NAME, clazz, null);
+        final CtMethod new_runMethod = CtNewMethod.copy(runMethod, clazz, null);
 
         // rename original run method, and set to private method(avoid reflect out renamed method unexpectedly)
-        final String original_run_method_rename = "original$run$method$renamed$by$ttl";
+        final String original_run_method_rename = "original$" + runMethod.getName() + "$method$renamed$by$ttl";
         runMethod.setName(original_run_method_rename);
         runMethod.setModifiers(runMethod.getModifiers() & ~Modifier.PUBLIC /* remove public */ | Modifier.PRIVATE /* add private */);
 
