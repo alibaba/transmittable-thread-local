@@ -2,10 +2,7 @@ package com.alibaba.ttl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -293,10 +290,23 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
 
         /**
+         * Clear all {@link TransmittableThreadLocal} values in current thread,
+         * and return the backup {@link TransmittableThreadLocal} values in current thread before clear.
+         *
+         * @return the backup {@link TransmittableThreadLocal} values before clear
+         * @since 2.9.0
+         */
+        @Nonnull
+        public static Object clear() {
+            return replay(Collections.emptyMap());
+        }
+
+        /**
          * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
          *
          * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
          * @see #replay(Object)
+         * @see #clear()
          * @since 2.3.0
          */
         public static void restore(@Nonnull Object backup) {
@@ -352,6 +362,25 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
 
         /**
+         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operation.
+         *
+         * @param bizLogic biz logic
+         * @param <R>      the return type of biz logic
+         * @return the return value of biz logic
+         * @see #clear()
+         * @see #restore(Object)
+         * @since 2.9.0
+         */
+        public static <R> R runSupplierWithClear(@Nonnull Supplier<R> bizLogic) {
+            Object backup = clear();
+            try {
+                return bizLogic.get();
+            } finally {
+                restore(backup);
+            }
+        }
+
+        /**
          * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
          *
          * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
@@ -366,6 +395,26 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         public static <R> R runCallableWithCaptured(@Nonnull Object captured, @Nonnull Callable<R> bizLogic) throws Exception {
             Object backup = replay(captured);
+            try {
+                return bizLogic.call();
+            } finally {
+                restore(backup);
+            }
+        }
+
+        /**
+         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operation.
+         *
+         * @param bizLogic biz logic
+         * @param <R>      the return type of biz logic
+         * @return the return value of biz logic
+         * @throws Exception exception threw by biz logic
+         * @see #clear()
+         * @see #restore(Object)
+         * @since 2.9.0
+         */
+        public static <R> R runCallableWithClear(@Nonnull Callable<R> bizLogic) throws Exception {
+            Object backup = clear();
             try {
                 return bizLogic.call();
             } finally {

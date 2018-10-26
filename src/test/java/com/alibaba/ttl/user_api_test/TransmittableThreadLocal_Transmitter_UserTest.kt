@@ -6,8 +6,7 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
 import org.junit.AfterClass
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -50,6 +49,30 @@ class TransmittableThreadLocal_Transmitter_UserTest {
     }
 
     @Test
+    fun test_clear_restore() {
+        val ttl = TransmittableThreadLocal<String>()
+        ttl.set(PARENT)
+
+        val future = executorService.submit {
+            ttl.set(CHILD)
+
+            val backup = TransmittableThreadLocal.Transmitter.clear()
+
+            assertNull(ttl.get())
+
+            TransmittableThreadLocal.Transmitter.restore(backup)
+
+            assertEquals(CHILD, ttl.get())
+        }
+
+        assertEquals(PARENT, ttl.get())
+
+        future.get(100, TimeUnit.MILLISECONDS)
+
+        assertEquals(PARENT, ttl.get())
+    }
+
+    @Test
     @ConditionalIgnore(condition = BelowJava8::class)
     fun test_runSupplierWithCaptured() {
         val ttl = TransmittableThreadLocal<String>()
@@ -73,6 +96,27 @@ class TransmittableThreadLocal_Transmitter_UserTest {
     }
 
     @Test
+    @ConditionalIgnore(condition = BelowJava8::class)
+    fun test_runSupplierWithClear() {
+        val ttl = TransmittableThreadLocal<String>()
+        ttl.set(PARENT)
+
+        val future = executorService.submit {
+            ttl.set("child")
+            TransmittableThreadLocal.Transmitter.runSupplierWithClear {
+                assertNull(ttl.get())
+                ttl.get()
+            }
+        }
+
+        assertEquals(PARENT, ttl.get())
+
+        future.get(100, TimeUnit.MILLISECONDS)
+
+        assertEquals(PARENT, ttl.get())
+    }
+
+    @Test
     fun test_runCallableWithCaptured() {
         val ttl = TransmittableThreadLocal<String>()
         ttl.set(PARENT)
@@ -84,6 +128,30 @@ class TransmittableThreadLocal_Transmitter_UserTest {
             try {
                 TransmittableThreadLocal.Transmitter.runCallableWithCaptured(capture) {
                     assertEquals(PARENT, ttl.get())
+                    ttl.get()
+                }
+            } catch (e: Exception) {
+                throw RuntimeException(e)
+            }
+        }
+
+        assertEquals(PARENT, ttl.get())
+
+        future.get(100, TimeUnit.MILLISECONDS)
+
+        assertEquals(PARENT, ttl.get())
+    }
+
+    @Test
+    fun test_runCallableWithClear() {
+        val ttl = TransmittableThreadLocal<String>()
+        ttl.set(PARENT)
+
+        val future = executorService.submit {
+            ttl.set("child")
+            try {
+                TransmittableThreadLocal.Transmitter.runCallableWithClear {
+                    assertNull(ttl.get())
                     ttl.get()
                 }
             } catch (e: Exception) {
