@@ -32,10 +32,16 @@ public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> {
      */
     protected abstract V compute();
 
+    /**
+     * see {@link ForkJoinTask#getRawResult()}
+     */
     public final V getRawResult() {
         return result;
     }
 
+    /**
+     * see {@link ForkJoinTask#setRawResult(Object)}
+     */
     protected final void setRawResult(V value) {
         result = value;
     }

@@ -83,7 +83,7 @@ public final class TtlCallable<V> implements Callable<V> {
     }
 
     /**
-     * Factory method, wrapper input {@link Callable} to {@link TtlCallable}.
+     * Factory method, wrap input {@link Callable} to {@link TtlCallable}.
      * <p>
      * This method is idempotent.
      *
@@ -96,7 +96,7 @@ public final class TtlCallable<V> implements Callable<V> {
 
 
     /**
-     * Factory method, wrapper input {@link Callable} to {@link TtlCallable}.
+     * Factory method, wrap input {@link Callable} to {@link TtlCallable}.
      * <p>
      * This method is idempotent.
      *
@@ -110,7 +110,7 @@ public final class TtlCallable<V> implements Callable<V> {
     }
 
     /**
-     * Factory method, wrapper input {@link Callable} to {@link TtlCallable}.
+     * Factory method, wrap input {@link Callable} to {@link TtlCallable}.
      * <p>
      * This method is idempotent.
      *
@@ -132,7 +132,7 @@ public final class TtlCallable<V> implements Callable<V> {
     }
 
     /**
-     * wrapper input {@link Callable} Collection to {@link TtlCallable} Collection.
+     * wrap input {@link Callable} Collection to {@link TtlCallable} Collection.
      *
      * @param tasks task to be wrapped
      * @return Wrapped {@link Callable}
@@ -143,7 +143,7 @@ public final class TtlCallable<V> implements Callable<V> {
     }
 
     /**
-     * wrapper input {@link Callable} Collection to {@link TtlCallable} Collection.
+     * wrap input {@link Callable} Collection to {@link TtlCallable} Collection.
      *
      * @param tasks                             task to be wrapped
      * @param releaseTtlValueReferenceAfterCall release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
@@ -155,7 +155,7 @@ public final class TtlCallable<V> implements Callable<V> {
     }
 
     /**
-     * wrapper input {@link Callable} Collection to {@link TtlCallable} Collection.
+     * wrap input {@link Callable} Collection to {@link TtlCallable} Collection.
      *
      * @param tasks                             task to be wrapped
      * @param releaseTtlValueReferenceAfterCall release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.

@@ -150,11 +150,14 @@ public final class TtlAgent {
         return ret;
     }
 
+    private static boolean ttlAgentLoaded = false;
+
+    /**
+     * whether TTL agent is loaded.
+     */
     public static boolean isTtlAgentLoaded() {
         return ttlAgentLoaded;
     }
-
-    private static boolean ttlAgentLoaded = false;
 
     private TtlAgent() {
         throw new InstantiationError("Must not instantiate this class");

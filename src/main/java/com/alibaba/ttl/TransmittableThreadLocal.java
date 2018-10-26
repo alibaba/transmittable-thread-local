@@ -63,6 +63,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     protected void afterExecute() {
     }
 
+    /**
+     * see {@link InheritableThreadLocal#get()}
+     */
     @Override
     public final T get() {
         T value = super.get();
@@ -70,6 +73,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         return value;
     }
 
+    /**
+     * see {@link InheritableThreadLocal#set}
+     */
     @Override
     public final void set(T value) {
         super.set(value);
@@ -78,6 +84,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         else addValue();
     }
 
+    /**
+     * see {@link InheritableThreadLocal#remove()}
+     */
     @Override
     public final void remove() {
         removeValue();
@@ -160,7 +169,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     /**
      * {@link Transmitter} transmit all {@link TransmittableThreadLocal} values of current thread to
-     * other thread by static method {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
+     * other thread by static methods {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
      * <p>
      * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
@@ -302,9 +311,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         }
 
         /**
-         * Restore the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}.
+         * Restore the backup {@link TransmittableThreadLocal} values from {@link #replay(Object)}/{@link #clear()}.
          *
-         * @param backup the backup {@link TransmittableThreadLocal} values from {@link Transmitter#replay(Object)}
+         * @param backup the backup {@link TransmittableThreadLocal} values from {@link #replay(Object)}/{@link #clear()}
          * @see #replay(Object)
          * @see #clear()
          * @since 2.3.0

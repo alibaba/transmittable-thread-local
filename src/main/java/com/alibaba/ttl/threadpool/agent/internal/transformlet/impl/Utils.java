@@ -15,7 +15,7 @@ class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class);
 
     /**
-     * String like {@code ScheduledFuture scheduleAtFixedRate(Runnable, long, long, TimeUnit)}
+     * String like {@code public ScheduledFuture scheduleAtFixedRate(Runnable, long, long, TimeUnit)}
      * for {@link  java.util.concurrent.ScheduledThreadPoolExecutor#scheduleAtFixedRate}.
      *
      * @param method method object
@@ -63,12 +63,12 @@ class Utils {
         doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
     }
 
-    static void doTryFinallyForMethod(CtMethod method, String originalMethodRename, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
+    static void doTryFinallyForMethod(CtMethod method, String renamedMethodName, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
         final CtMethod new_method = CtNewMethod.copy(method, clazz, null);
 
         // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
-        method.setName(originalMethodRename);
+        method.setName(renamedMethodName);
         method.setModifiers(method.getModifiers()
                 & ~Modifier.PUBLIC /* remove public */
                 & ~Modifier.PROTECTED /* remove protected */
@@ -78,7 +78,7 @@ class Utils {
         final String code = "{\n" +
                 beforeCode + "\n" +
                 "try {\n" +
-                "    return " + originalMethodRename + "($$);\n" +
+                "    return " + renamedMethodName + "($$);\n" +
                 "} finally {\n" +
                 "    " + finallyCode + "\n" +
                 "} }";

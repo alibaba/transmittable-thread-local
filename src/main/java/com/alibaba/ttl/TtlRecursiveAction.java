@@ -26,16 +26,14 @@ public abstract class TtlRecursiveAction extends ForkJoinTask<Void> {
     protected abstract void compute();
 
     /**
-     * Always returns {@code null}.
-     *
-     * @return {@code null} always
+     * see {@link ForkJoinTask#getRawResult()}
      */
     public final Void getRawResult() {
         return null;
     }
 
     /**
-     * Requires null completion value.
+     * see {@link ForkJoinTask#setRawResult(Object)}
      */
     protected final void setRawResult(Void mustBeNull) {
     }

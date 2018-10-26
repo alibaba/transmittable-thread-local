@@ -83,7 +83,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
+     * Factory method, wrap input {@link Runnable} to {@link TtlRunnable}.
      *
      * @param runnable input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @return Wrapped {@link Runnable}
@@ -95,7 +95,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
+     * Factory method, wrap input {@link Runnable} to {@link TtlRunnable}.
      *
      * @param runnable                         input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
@@ -108,7 +108,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * Factory method, wrapper input {@link Runnable} to {@link TtlRunnable}.
+     * Factory method, wrap input {@link Runnable} to {@link TtlRunnable}.
      *
      * @param runnable                         input {@link Runnable}. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
@@ -131,7 +131,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * wrapper input {@link Runnable} Collection to {@link TtlRunnable} Collection.
+     * wrap input {@link Runnable} Collection to {@link TtlRunnable} Collection.
      *
      * @param tasks task to be wrapped. if input is {@code null}, return {@code null}.
      * @return wrapped tasks
@@ -143,7 +143,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * wrapper input {@link Runnable} Collection to {@link TtlRunnable} Collection.
+     * wrap input {@link Runnable} Collection to {@link TtlRunnable} Collection.
      *
      * @param tasks                            task to be wrapped. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
@@ -156,7 +156,7 @@ public final class TtlRunnable implements Runnable {
     }
 
     /**
-     * wrapper input {@link Runnable} Collection to {@link TtlRunnable} Collection.
+     * wrap input {@link Runnable} Collection to {@link TtlRunnable} Collection.
      *
      * @param tasks                            task to be wrapped. if input is {@code null}, return {@code null}.
      * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.

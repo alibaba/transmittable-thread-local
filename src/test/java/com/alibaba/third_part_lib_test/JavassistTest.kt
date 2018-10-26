@@ -2,16 +2,14 @@ package com.alibaba.third_part_lib_test
 
 import javassist.ClassPool
 import javassist.CtClass
-import org.hamcrest.CoreMatchers
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
+import org.hamcrest.CoreMatchers.containsString
+import org.junit.Assert.*
 import org.junit.Test
 
+/**
+ * [simplify the try-finally code gen by javassist, do not need copy method #115](https://github.com/alibaba/transmittable-thread-local/issues/115)
+ */
 class JavassistTest {
-    /**
-     * [simplify the try-finally code gen by javassist, do not need copy method #115](https://github.com/alibaba/transmittable-thread-local/issues/115)
-     */
     @Test
     fun insertAfter_as_finally() {
         val classPool = ClassPool(true)
@@ -26,6 +24,7 @@ class JavassistTest {
         (instance as Runnable).let {
             try {
                 it.run()
+
                 fail()
             } catch (e: RuntimeException) {
                 assertEquals("Intended", e.message)
@@ -54,10 +53,11 @@ class JavassistTest {
 
         try {
             (ctClass.toClass().getDeclaredConstructor().newInstance() as Runnable).run()
+
             fail()
         } catch (e: VerifyError) {
-            Assert.assertThat<String>(e.message, CoreMatchers.containsString("Bad local variable type"))
             e.printStackTrace()
+            assertThat<String>(e.message, containsString("Bad local variable type"))
         }
     }
 }

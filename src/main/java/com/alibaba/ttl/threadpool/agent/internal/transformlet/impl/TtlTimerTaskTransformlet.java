@@ -51,7 +51,7 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
         // add new field
         final String className = clazz.getName();
 
-        final String capturedFieldName = "captured$field$add$by$ttl";
+        final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
         logger.info("add new field " + capturedFieldName + " to class " + className);

@@ -19,6 +19,7 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
  */
 public class TtlForkJoinTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
+
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
     private static final String TTL_RECURSIVE_ACTION_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveAction";
     private static final String TTL_RECURSIVE_TASK_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveTask";
@@ -37,21 +38,21 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         // add new field
         final String className = clazz.getName();
 
-        final String capturedFieldName = "captured$field$add$by$ttl";
+        final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
-        final String original_doExec_method_rename = renamedMethodNameByTtl(doExecMethod);
+        final String doExec_renamed_method_rename = renamedMethodNameByTtl(doExecMethod);
 
         final String beforeCode = "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
-                "    return " + original_doExec_method_rename + "($$);\n" + // do nothing/directly return, if is TTL ForkJoinTask instance
+                "    return " + doExec_renamed_method_rename + "($$);\n" + // do nothing/directly return, if is TTL ForkJoinTask instance
                 "}\n" +
                 "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
 
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        doTryFinallyForMethod(doExecMethod, original_doExec_method_rename, beforeCode, finallyCode);
+        doTryFinallyForMethod(doExecMethod, doExec_renamed_method_rename, beforeCode, finallyCode);
     }
 }
