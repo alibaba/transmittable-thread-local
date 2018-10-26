@@ -248,7 +248,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.8.1</version>
+    <version>2.9.0</version>
 </dependency>
 ```
 
