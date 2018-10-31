@@ -11,7 +11,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see java.util.concurrent.RecursiveAction
  * @since 2.4.0
  */
-public abstract class TtlRecursiveAction extends ForkJoinTask<Void> {
+public abstract class TtlRecursiveAction extends ForkJoinTask<Void> implements TtlEnhanced {
 
     private static final long serialVersionUID = -5753568484583412377L;
 

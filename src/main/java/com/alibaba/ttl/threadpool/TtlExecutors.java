@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
 
 import javax.annotation.Nullable;
@@ -34,7 +35,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static Executor getTtlExecutor(@Nullable Executor executor) {
-        if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof ExecutorTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
             return executor;
         }
         return new ExecutorTtlWrapper(executor);
@@ -47,7 +48,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
-        if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof ExecutorServiceTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
             return executorService;
         }
         return new ExecutorServiceTtlWrapper(executorService);
@@ -60,7 +61,7 @@ public final class TtlExecutors {
      */
     @Nullable
     public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
-        if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof ScheduledExecutorServiceTtlWrapper) {
+        if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof TtlEnhanced) {
             return scheduledExecutorService;
         }
         return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService);
@@ -82,7 +83,7 @@ public final class TtlExecutors {
      * @since 2.8.0
      */
     public static <T extends Executor> boolean isTtlWrapper(@Nullable T executor) {
-        return executor instanceof ExecutorTtlWrapper;
+        return executor instanceof TtlEnhanced;
     }
 
     /**

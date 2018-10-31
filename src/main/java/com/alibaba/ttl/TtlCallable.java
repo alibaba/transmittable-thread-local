@@ -28,7 +28,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see java.util.concurrent.ExecutorCompletionService
  * @since 0.9.0
  */
-public final class TtlCallable<V> implements Callable<V> {
+public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
     private final AtomicReference<Object> capturedRef;
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
@@ -123,7 +123,7 @@ public final class TtlCallable<V> implements Callable<V> {
     public static <T> TtlCallable<T> get(@Nullable Callable<T> callable, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
         if (null == callable) return null;
 
-        if (callable instanceof TtlCallable) {
+        if (callable instanceof TtlEnhanced) {
             // avoid redundant decoration, and ensure idempotency
             if (idempotent) return (TtlCallable<T>) callable;
             else throw new IllegalStateException("Already TtlCallable!");

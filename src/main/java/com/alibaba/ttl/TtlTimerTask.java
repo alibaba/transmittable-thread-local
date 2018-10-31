@@ -25,7 +25,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @deprecated Use {@link TtlRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link java.util.Timer}, {@link java.util.TimerTask}.
  */
 @Deprecated
-public final class TtlTimerTask extends TimerTask {
+public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
     private final AtomicReference<Object> capturedRef;
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;
@@ -121,7 +121,7 @@ public final class TtlTimerTask extends TimerTask {
     public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == timerTask) return null;
 
-        if (timerTask instanceof TtlTimerTask) {
+        if (timerTask instanceof TtlEnhanced) {
             // avoid redundant decoration, and ensure idempotency
             if (idempotent) return (TtlTimerTask) timerTask;
             else throw new IllegalStateException("Already TtlTimerTask!");

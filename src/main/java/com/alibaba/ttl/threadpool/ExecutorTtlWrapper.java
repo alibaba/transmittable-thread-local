@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.TtlEnhanced;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
@@ -14,7 +15,7 @@ import java.util.concurrent.Executor;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
-class ExecutorTtlWrapper implements Executor {
+class ExecutorTtlWrapper implements Executor, TtlEnhanced {
     private final Executor executor;
 
     ExecutorTtlWrapper(@Nonnull Executor executor) {

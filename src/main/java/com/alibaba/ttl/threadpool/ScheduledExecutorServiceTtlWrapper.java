@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlCallable;
+import com.alibaba.ttl.TtlEnhanced;
 import com.alibaba.ttl.TtlRunnable;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ import java.util.concurrent.*;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
-class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper implements ScheduledExecutorService {
+class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper implements ScheduledExecutorService, TtlEnhanced {
     final ScheduledExecutorService scheduledExecutorService;
 
     public ScheduledExecutorServiceTtlWrapper(@Nonnull ScheduledExecutorService scheduledExecutorService) {
