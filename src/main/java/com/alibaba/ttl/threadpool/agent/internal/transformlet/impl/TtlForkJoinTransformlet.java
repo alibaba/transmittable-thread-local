@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
@@ -21,13 +22,12 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
-    private static final String TTL_RECURSIVE_ACTION_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveAction";
-    private static final String TTL_RECURSIVE_TASK_CLASS_NAME = "com.alibaba.ttl.TtlRecursiveTask";
 
     @Override
     public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
         if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
             final CtClass clazz = getCtClass(classFileBuffer, loader);
+
             updateForkJoinTaskClass(clazz);
             return clazz.toBytecode();
         }
@@ -40,13 +40,13 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
 
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
-        clazz.addField(capturedField, "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture();");
+        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doCaptureWhenNotTtlEnhanced(this);");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
         final String doExec_renamed_method_rename = renamedMethodNameByTtl(doExecMethod);
 
-        final String beforeCode = "if (this instanceof " + TTL_RECURSIVE_ACTION_CLASS_NAME + " || this instanceof " + TTL_RECURSIVE_TASK_CLASS_NAME + ") {\n" +
+        final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" +
                 "    return " + doExec_renamed_method_rename + "($$);\n" + // do nothing/directly return, if is TTL ForkJoinTask instance
                 "}\n" +
                 "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";

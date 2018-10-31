@@ -1,5 +1,7 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import javassist.*;
 
@@ -11,7 +13,7 @@ import java.lang.reflect.Modifier;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.6.0
  */
-class Utils {
+public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class);
 
     /**
@@ -86,4 +88,11 @@ class Utils {
         clazz.addMethod(new_method);
         logger.info("insert code around method " + signatureOfMethod(method) + " of class " + clazz.getName() + ": " + code);
     }
+
+    @SuppressWarnings("unused")
+    public static Object doCaptureWhenNotTtlEnhanced(Object obj) {
+        if (obj instanceof TtlEnhanced) return null;
+        else return TransmittableThreadLocal.Transmitter.capture();
+    }
+
 }

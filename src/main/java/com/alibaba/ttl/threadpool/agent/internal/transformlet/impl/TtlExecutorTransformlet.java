@@ -14,8 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
@@ -47,6 +46,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
         if (EXECUTOR_CLASS_NAMES.contains(className)) {
             final CtClass clazz = getCtClass(classFileBuffer, loader);
+
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateMethodOfExecutorClass(clazz, method);
             }
