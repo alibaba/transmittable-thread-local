@@ -28,6 +28,9 @@ class InheritableTest {
         // NOTE: newCachedThreadPool create thread lazily
         assertEquals("hello", threadPool.submit(callable).get())
 
+        // current thread's TTL must be exist when using DisableInheritableThreadFactory
+        assertEquals("hello", ttl.get())
+
         threadPool.shutdown()
     }
 
@@ -44,6 +47,9 @@ class InheritableTest {
         // so here value is "hello" transmitted by TtlCallable wrapper
         // IGNORE this test case when TtlAgent is run.
         assertNull(threadPool.submit(callable).get())
+
+        // current thread's TTL must be exist when using DisableInheritableThreadFactory
+        assertEquals("hello", ttl.get())
 
         threadPool.shutdown()
     }
