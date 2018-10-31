@@ -4,9 +4,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
 
 import javax.annotation.Nullable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
 
 /**
  * Factory Utils for getting TTL wrapper of jdk executors.
@@ -84,7 +82,7 @@ public final class TtlExecutors {
      * @since 2.8.0
      */
     public static <T extends Executor> boolean isTtlWrapper(@Nullable T executor) {
-        return (executor instanceof ExecutorTtlWrapper);
+        return executor instanceof ExecutorTtlWrapper;
     }
 
     /**
@@ -109,6 +107,54 @@ public final class TtlExecutors {
         if (!isTtlWrapper(executor)) return executor;
 
         return (T) ((ExecutorTtlWrapper) executor).unwrap();
+    }
+
+    /**
+     * Wrapper of  {@link ThreadFactory}, disable inheritable.
+     *
+     * @param threadFactory input thread factory
+     * @see DisableInheritableThreadFactory
+     * @since 2.10.0
+     */
+    @Nullable
+    public static ThreadFactory getDisableInheritableThreadFactory(@Nullable ThreadFactory threadFactory) {
+        if (threadFactory == null || isDisableInheritableThreadFactory(threadFactory)) return threadFactory;
+
+        return new DisableInheritableThreadFactoryWrapper(threadFactory);
+    }
+
+    /**
+     * Wrapper of {@link Executors#defaultThreadFactory()}, disable inheritable.
+     *
+     * @see #getDisableInheritableThreadFactory(ThreadFactory)
+     * @since 2.10.0
+     */
+    @Nullable
+    public static ThreadFactory getDefaultDisableInheritableThreadFactory() {
+        return getDisableInheritableThreadFactory(Executors.defaultThreadFactory());
+    }
+
+    /**
+     * check the {@link ThreadFactory} is  {@link DisableInheritableThreadFactory} or not.
+     *
+     * @see DisableInheritableThreadFactory
+     * @since 2.10.0
+     */
+    public static boolean isDisableInheritableThreadFactory(@Nullable ThreadFactory threadFactory) {
+        return threadFactory instanceof DisableInheritableThreadFactory;
+    }
+
+    /**
+     * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
+     *
+     * @see DisableInheritableThreadFactory
+     * @since 2.10.0
+     */
+    @Nullable
+    public static ThreadFactory unwrap(@Nullable ThreadFactory threadFactory) {
+        if (!isDisableInheritableThreadFactory(threadFactory)) return threadFactory;
+
+        return ((DisableInheritableThreadFactory) threadFactory).unwrap();
     }
 
     private TtlExecutors() {
