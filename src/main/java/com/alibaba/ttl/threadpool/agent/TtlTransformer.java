@@ -26,12 +26,10 @@ public class TtlTransformer implements ClassFileTransformer {
 
     private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
 
-    TtlTransformer(List<Class<? extends JavassistTransformlet>> transformletClasses) throws Exception {
-        for (Class<? extends JavassistTransformlet> transformletClass : transformletClasses) {
-            final JavassistTransformlet transformlet = transformletClass.getConstructor().newInstance();
-            transformletList.add(transformlet);
-
-            logger.info("[TtlTransformer] add Transformlet " + transformletClass + " success");
+    TtlTransformer(List<? extends JavassistTransformlet> transformletList) {
+        for (JavassistTransformlet transformlet : transformletList) {
+            this.transformletList.add(transformlet);
+            logger.info("[TtlTransformer] add Transformlet " + transformlet.getClass() + " success");
         }
     }
 

@@ -23,14 +23,15 @@ public class Utils {
      * @param method method object
      * @return method signature string
      */
-    static String signatureOfMethod(final CtMethod method) throws NotFoundException {
+    static String signatureOfMethod(final CtBehavior method) throws NotFoundException {
         final StringBuilder stringBuilder = new StringBuilder();
 
-        final String returnType = method.getReturnType().getSimpleName();
-        final String modifier = Modifier.toString(method.getModifiers());
-        final String methodName = method.getName();
-        stringBuilder.append(modifier).append(" ").append(returnType).append(" ")
-                .append(methodName).append("(");
+        stringBuilder.append(Modifier.toString(method.getModifiers()));
+        if (method instanceof CtMethod) {
+            final String returnType = ((CtMethod) method).getReturnType().getSimpleName();
+            stringBuilder.append(" ").append(returnType);
+        }
+        stringBuilder.append(" ").append(method.getName()).append("(");
 
         final CtClass[] parameterTypes = method.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {

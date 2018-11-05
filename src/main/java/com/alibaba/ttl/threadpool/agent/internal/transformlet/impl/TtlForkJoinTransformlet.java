@@ -22,6 +22,14 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
+    private static final String FORK_JOIN_POOL_CLASS_NAME = "java.util.concurrent.ForkJoinPool";
+    private static final String FORK_JOIN_WORKER_THREAD_FACTORY_CLASS_NAME = "java.util.concurrent.ForkJoinPool$ForkJoinWorkerThreadFactory";
+
+    private final boolean disableInheritable;
+
+    public TtlForkJoinTransformlet(boolean disableInheritable) {
+        this.disableInheritable = disableInheritable;
+    }
 
     @Override
     public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
@@ -30,7 +38,12 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
 
             updateForkJoinTaskClass(clazz);
             return clazz.toBytecode();
+        } else if (disableInheritable && FORK_JOIN_POOL_CLASS_NAME.equals(className)) {
+            final CtClass clazz = getCtClass(classFileBuffer, loader);
+            updateConstructorDisableInheritable(clazz);
+            return clazz.toBytecode();
         }
+
         return null;
     }
 
@@ -54,5 +67,21 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
         doTryFinallyForMethod(doExecMethod, doExec_renamed_method_rename, beforeCode, finallyCode);
+    }
+
+    private void updateConstructorDisableInheritable(final CtClass clazz) throws NotFoundException, CannotCompileException {
+        for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
+            final CtClass[] parameterTypes = constructor.getParameterTypes();
+            final StringBuilder insertCode = new StringBuilder();
+            for (int i = 0; i < parameterTypes.length; i++) {
+                final String paramTypeName = parameterTypes[i].getName();
+                if (FORK_JOIN_WORKER_THREAD_FACTORY_CLASS_NAME.equals(paramTypeName)) {
+                    String code = String.format("$%d = com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper.getDisableInheritableForkJoinWorkerThreadFactory($%<d);", i + 1);
+                    logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
+                    insertCode.append(code);
+                }
+            }
+            if (insertCode.length() > 0) constructor.insertBefore(insertCode.toString());
+        }
     }
 }

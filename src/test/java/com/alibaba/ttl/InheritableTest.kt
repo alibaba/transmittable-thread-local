@@ -1,5 +1,6 @@
 package com.alibaba.ttl
 
+import com.alibaba.hasTtlTtlAgentRunWithDisableInheritableForThreadPool
 import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
@@ -15,6 +16,7 @@ import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.ThreadPoolExecutor
 
 private const val hello = "hello"
 private val defaultValue = "${Date()} ${Math.random()}"
@@ -144,6 +146,17 @@ class InheritableTest {
         }
     }
 
+    @Test
+    fun disableInheritable_Executors_ByAgent() {
+        val threadPool = Executors.newCachedThreadPool() as ThreadPoolExecutor
+        try {
+            assertEquals(hasTtlTtlAgentRunWithDisableInheritableForThreadPool(),
+                    TtlExecutors.isDisableInheritableThreadFactory(threadPool.threadFactory))
+        } finally {
+            threadPool.shutdown()
+        }
+    }
+
     // ===================================================
     // ForkJoinPool
     // ===================================================
@@ -260,6 +273,18 @@ class InheritableTest {
 
             // current thread's TTL must be exist when using DisableInheritableForkJoinWorkerThreadFactory
             assertEquals(hello, ttl.get())
+        } finally {
+            threadPool.shutdown()
+        }
+    }
+
+    @Test
+    @ConditionalIgnore(condition = BelowJava7::class)
+    fun disableInheritable_ForkJoinPool_ByAgent() {
+        val threadPool = ForkJoinPool(4)
+        try {
+            assertEquals(hasTtlTtlAgentRunWithDisableInheritableForThreadPool(),
+                    TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(threadPool.factory))
         } finally {
             threadPool.shutdown()
         }

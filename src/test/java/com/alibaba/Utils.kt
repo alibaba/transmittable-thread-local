@@ -4,8 +4,7 @@ package com.alibaba
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.threadpool.agent.TtlAgent
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -144,8 +143,22 @@ fun <T> assertParentTtlValues(values: TtlValues<T>) {
     )
 }
 
+
 fun noTtlAgentRun(): Boolean = TtlAgent.isTtlAgentLoaded().let {
     val isUnderAgentSet = System.getProperties().containsKey("run-ttl-test-under-agent")
     assertEquals(isUnderAgentSet, it)
     !it
 }
+
+fun hasTtlAgentRun(): Boolean = !noTtlAgentRun()
+
+
+fun noTtlAgentDisableInheritableForThreadPool(): Boolean = TtlAgent.isDisableInheritableForThreadPool().let {
+    val isUnderAgentSet = System.getProperties().containsKey("run-ttl-test-under-agent-with-disable-inheritable")
+    assertEquals(isUnderAgentSet, it)
+    if (it) assertTrue(hasTtlAgentRun())
+
+    !it
+}
+
+fun hasTtlTtlAgentRunWithDisableInheritableForThreadPool(): Boolean = !noTtlAgentDisableInheritableForThreadPool()

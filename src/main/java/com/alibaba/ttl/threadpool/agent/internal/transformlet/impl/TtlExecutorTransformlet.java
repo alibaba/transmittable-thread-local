@@ -2,10 +2,7 @@ package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
-import javassist.CannotCompileException;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
+import javassist.*;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -14,7 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
@@ -42,6 +40,14 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put("java.util.concurrent.Callable", "com.alibaba.ttl.TtlCallable");
     }
 
+    private static final String THREAD_FACTORY_CLASS_NAME = "java.util.concurrent.ThreadFactory";
+
+    private final boolean disableInheritable;
+
+    public TtlExecutorTransformlet(boolean disableInheritable) {
+        this.disableInheritable = disableInheritable;
+    }
+
     @Override
     public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
         if (EXECUTOR_CLASS_NAMES.contains(className)) {
@@ -50,6 +56,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateMethodOfExecutorClass(clazz, method);
             }
+
+            if (disableInheritable) updateConstructorDisableInheritable(clazz);
+
             return clazz.toBytecode();
         }
         return null;
@@ -72,5 +81,21 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             }
         }
         if (insertCode.length() > 0) method.insertBefore(insertCode.toString());
+    }
+
+    private void updateConstructorDisableInheritable(final CtClass clazz) throws NotFoundException, CannotCompileException {
+        for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
+            final CtClass[] parameterTypes = constructor.getParameterTypes();
+            final StringBuilder insertCode = new StringBuilder();
+            for (int i = 0; i < parameterTypes.length; i++) {
+                final String paramTypeName = parameterTypes[i].getName();
+                if (THREAD_FACTORY_CLASS_NAME.equals(paramTypeName)) {
+                    String code = String.format("$%d = com.alibaba.ttl.threadpool.TtlExecutors.getDisableInheritableThreadFactory($%<d);", i + 1);
+                    logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
+                    insertCode.append(code);
+                }
+            }
+            if (insertCode.length() > 0) constructor.insertBefore(insertCode.toString());
+        }
     }
 }

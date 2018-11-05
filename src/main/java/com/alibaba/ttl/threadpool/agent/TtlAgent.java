@@ -73,15 +73,36 @@ public final class TtlAgent {
      * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
      * </ul>
      *
+     * <h3>Disable inheritable for thread pool</h3>
+     * <p>
+     * Enable "disable inheritable" for thread pool, config by key {@code ttl.agent.disable.inheritable.for.thread.pool}.
+     * When no configuration for this key, default does <b>not</b> enabled.
+     *
+     * <ul>
+     * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
+     * of {@link java.util.concurrent.ThreadPoolExecutor}
+     * to {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}
+     * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)}.
+     * </li>
+     * <li>rewrite the {@link java.util.concurrent.ForkJoinPool} constructor parameter
+     * of {@link java.util.concurrent.ForkJoinPool}
+     * to {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
+     * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)}.
+     * </li>
+     * </ul>
+     * <p>
+     * Configuration example:<br>
+     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
+     *
      * <h3>Enable TimerTask class decoration</h3>
      * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
-     * When no configuration for this key, default does not enabled.
+     * When no configuration for this key, default does <b>not</b> enabled.
      * <p>
      * Configuration example:<br>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
      *
      * <h3>Multi key configuration example</h3>
-     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.enable.timer.task:true}
+     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
      *
      * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
      * @see Logger
@@ -90,18 +111,19 @@ public final class TtlAgent {
      * @see Logger#STDOUT
      */
     public static void premain(String agentArgs, @Nonnull Instrumentation inst) {
-        final Map<String, String> kvs = splitCommaColonStringToKV(agentArgs);
+        kvs = splitCommaColonStringToKV(agentArgs);
 
         Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
         final Logger logger = Logger.getLogger(TtlAgent.class);
 
         try {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
+            final boolean disableInheritable = isDisableInheritableForThreadPool();
 
-            final List<Class<? extends JavassistTransformlet>> transformletList = new ArrayList<Class<? extends JavassistTransformlet>>();
-            transformletList.add(TtlExecutorTransformlet.class);
-            transformletList.add(TtlForkJoinTransformlet.class);
-            if (enableTimerTask(kvs)) transformletList.add(TtlTimerTaskTransformlet.class);
+            final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
+            transformletList.add(new TtlExecutorTransformlet(disableInheritable));
+            transformletList.add(new TtlForkJoinTransformlet(disableInheritable));
+            if (isEnableTimerTask()) transformletList.add(new TtlTimerTaskTransformlet());
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList);
             inst.addTransformer(transformer, true);
@@ -121,13 +143,54 @@ public final class TtlAgent {
         return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
     }
 
+    private static volatile Map<String, String> kvs;
+
+    private static volatile boolean ttlAgentLoaded = false;
+
+    /**
+     * Whether TTL agent is loaded.
+     *
+     * @since 2.9.0
+     */
+    public static boolean isTtlAgentLoaded() {
+        return ttlAgentLoaded;
+    }
+
     private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
-    private static boolean enableTimerTask(@Nonnull final Map<String, String> kvs) {
-        final boolean hasEnableKey = kvs.containsKey(TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+    private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL = "ttl.agent.disable.inheritable.for.thread.pool";
+
+    /**
+     * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     *
+     * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
+     * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+     * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
+     * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
+     * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
+     * @since 2.10.1
+     */
+    public static boolean isDisableInheritableForThreadPool() {
+        return isOptionSet(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL);
+    }
+
+    /**
+     * Whether timer task is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     *
+     * @since 2.10.1
+     */
+    public static boolean isEnableTimerTask() {
+        return isOptionSet(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+    }
+
+    private static boolean isOptionSet(@Nullable final Map<String, String> kvs, @Nonnull String key) {
+        if (null == kvs) return false;
+
+        final boolean hasEnableKey = kvs.containsKey(key);
         if (!hasEnableKey) return false;
 
-        return !"false".equalsIgnoreCase(kvs.get(TTL_AGENT_ENABLE_TIMER_TASK_KEY));
+        return !"false".equalsIgnoreCase(kvs.get(key));
     }
 
     /**
@@ -148,15 +211,6 @@ public final class TtlAgent {
         }
 
         return ret;
-    }
-
-    private static boolean ttlAgentLoaded = false;
-
-    /**
-     * whether TTL agent is loaded.
-     */
-    public static boolean isTtlAgentLoaded() {
-        return ttlAgentLoaded;
     }
 
     private TtlAgent() {
