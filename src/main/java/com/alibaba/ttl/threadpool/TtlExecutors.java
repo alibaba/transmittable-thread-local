@@ -25,6 +25,8 @@ import java.util.concurrent.*;
  * @see java.util.concurrent.Executors
  * @see java.util.concurrent.CompletionService
  * @see java.util.concurrent.ExecutorCompletionService
+ * @see ThreadFactory
+ * @see Executors#defaultThreadFactory()
  * @since 0.9.0
  */
 public final class TtlExecutors {

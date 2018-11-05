@@ -5,6 +5,10 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * @author Jerry Lee (oldratlee at gmail dot com)
+ * @since 2.10.0
+ */
 class DisableInheritableThreadFactoryWrapper implements DisableInheritableThreadFactory {
     final ThreadFactory threadFactory;
 

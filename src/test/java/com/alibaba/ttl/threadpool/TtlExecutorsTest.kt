@@ -1,54 +1,59 @@
 package com.alibaba.ttl.threadpool
 
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
+import com.alibaba.noTtlAgentRun
 import com.alibaba.ttl.threadpool.TtlExecutors.*
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors.newScheduledThreadPool
+import java.util.concurrent.ThreadFactory
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlExecutorsTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
-    fun test_common() {
+    fun test_common_executors() {
         val newScheduledThreadPool = newScheduledThreadPool(3)
 
         getTtlExecutor(newScheduledThreadPool).let {
-            assertTrue(it is ExecutorTtlWrapper)
-            assertTrue(isTtlWrapper(it))
+            if (noTtlAgentRun()) assertTrue(it is ExecutorTtlWrapper)
+            assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
         }
         getTtlExecutorService(newScheduledThreadPool).let {
-            assertTrue(it is ExecutorServiceTtlWrapper)
-            assertTrue(isTtlWrapper(it))
+            if (noTtlAgentRun()) assertTrue(it is ExecutorServiceTtlWrapper)
+            assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
         }
         getTtlScheduledExecutorService(newScheduledThreadPool).let {
-            assertTrue(it is ScheduledExecutorServiceTtlWrapper)
-            assertTrue(isTtlWrapper(it))
+            if (noTtlAgentRun()) assertTrue(it is ScheduledExecutorServiceTtlWrapper)
+            assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
+        }
+
+        val threadFactory = ThreadFactory { Thread(it) }
+        getDisableInheritableThreadFactory(threadFactory).let {
+            assertTrue(it is DisableInheritableThreadFactory)
+            assertTrue(isDisableInheritableThreadFactory(it))
+
+            assertSame(threadFactory, unwrap(it))
         }
     }
 
     @Test
-    fun test_null() {
+    fun test_null_executors() {
         assertNull(getTtlExecutor(null))
         assertNull(getTtlExecutorService(null))
         assertNull(getTtlScheduledExecutorService(null))
 
         assertFalse(isTtlWrapper(null))
-        assertNull(unwrap(null))
+        assertNull(unwrap<Executor>(null))
     }
+
+
 }
