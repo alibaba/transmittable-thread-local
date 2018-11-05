@@ -11,23 +11,32 @@ import java.util.logging.Logger;
 /**
  * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
  * <p>
- * Note: {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
+ * <b>Note</b>:<br>
+ * {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
  * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
- *
- * <b>Note</b>:
  * If the <b>inheritable</b> ability of {@link InheritableThreadLocal} has <b>potential leaking problem</b>,
- * you can disable the <b>Inheritable</b> ability by overriding method {@link #childValue(Object)}:
+ * you can disable the <b>Inheritable</b> ability
+ * <p>
+ * 1) by overriding method {@link #childValue(Object)}:
  * <pre> {@code
- * TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
- *     protected String childValue(String parentValue) {
- *         return initialValue();
- *     }
- * }}</pre>
+ *   TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
+ *       protected String childValue(String parentValue) {
+ *           return initialValue();
+ *       }
+ *   }}</pre>
+ * <p>
+ * 2) or by {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}, {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
+ * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
+ * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+ * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
+ * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
+ * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+ * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
  * @since 0.10.0
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {

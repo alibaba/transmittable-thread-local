@@ -6,7 +6,7 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIg
 import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.support.junit.conditional.IsAgentRunOrBelowJava7
 import com.alibaba.ttl.threadpool.TtlExecutors
-import com.alibaba.ttl.threadpool.TtlForkJoinPool
+import com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Rule
@@ -172,7 +172,7 @@ class InheritableTest {
     @Test
     @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_DisableInheritableForkJoinWorkerThreadFactory() {
-        val threadPool = ForkJoinPool(4, TtlForkJoinPool.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
+        val threadPool = ForkJoinPool(4, TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
         try {
             val ttl = TransmittableThreadLocal<String?>()
             ttl.set(hello)
@@ -243,7 +243,7 @@ class InheritableTest {
     @Test
     @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_TtlDefaultValue_DisableInheritableForkJoinWorkerThreadFactory_TtlWithInitialValue() {
-        val threadPool = ForkJoinPool(4, TtlForkJoinPool.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
+        val threadPool = ForkJoinPool(4, TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
         try {
             val ttl = object : TransmittableThreadLocal<String>() {
                 override fun initialValue(): String = defaultValue

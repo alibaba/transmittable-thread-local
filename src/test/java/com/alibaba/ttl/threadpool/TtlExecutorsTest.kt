@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadFactory
 class TtlExecutorsTest {
 
     @Test
-    fun test_common_executors() {
+    fun test_common() {
         val newScheduledThreadPool = newScheduledThreadPool(3)
 
         getTtlExecutor(newScheduledThreadPool).let {
@@ -46,7 +46,7 @@ class TtlExecutorsTest {
     }
 
     @Test
-    fun test_null_executors() {
+    fun test_null() {
         assertNull(getTtlExecutor(null))
         assertNull(getTtlExecutorService(null))
         assertNull(getTtlScheduledExecutorService(null))
@@ -54,6 +54,4 @@ class TtlExecutorsTest {
         assertFalse(isTtlWrapper(null))
         assertNull(unwrap<Executor>(null))
     }
-
-
 }

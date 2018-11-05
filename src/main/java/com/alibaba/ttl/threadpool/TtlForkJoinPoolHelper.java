@@ -15,7 +15,7 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
  * @see ForkJoinPool#defaultForkJoinWorkerThreadFactory
  * @since 2.10.1
  */
-public class TtlForkJoinPool {
+public class TtlForkJoinPoolHelper {
     /**
      * Wrapper of {@link ForkJoinWorkerThreadFactory}, disable inheritable.
      *
@@ -65,6 +65,6 @@ public class TtlForkJoinPool {
         return ((DisableInheritableForkJoinWorkerThreadFactoryWrapper) threadFactory).unwrap();
     }
 
-    private TtlForkJoinPool() {
+    private TtlForkJoinPoolHelper() {
     }
 }
