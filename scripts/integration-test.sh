@@ -3,26 +3,33 @@ cd "$(dirname "$(readlink -f "$0")")"
 source ./common.sh skipClean
 
 # set multi-version java home env
-#   - JAVA8_HOME
 #   - JAVA6_HOME
+#   - JAVA8_HOME
 #   - JAVA7_HOME
 #   - JAVA9_HOME
 #   - JAVA10_HOME
+#   - JAVA11_HOME
+#   - JAVA12_HOME
 
-# Java 10
-if [ -n "$JAVA10_HOME" ]; then
-    export JAVA_HOME="${JAVA10_HOME}"
+# Java 11
+if [ -n "$JAVA11_HOME" ]; then
+    export JAVA_HOME="${JAVA11_HOME}"
 else
     current_java_version=$("${MVN_CMD[@]}" -v | awk -F'[ ,]' '/^Java version/{print $3}')
-    if [[ default_java_version != 10.* ]]; then
-        echo "Fail to get java 10 home!"
+    if [[ default_java_version != 11.* ]]; then
+        echo "Fail to get java 11 home!"
         exit 1
     fi
 fi
 
-headInfo "test with Java 10"
-runCmd "${MVN_CMD[@]}" clean install
-runCmd ./scripts/run-agent-test.sh
+headInfo "test with Java 11"
+if [ "$1" = "skipClean "]; then
+    runCmd "${MVN_CMD[@]}" clean install
+    runCmd ./scripts/run-agent-test.sh
+else
+    runCmd "${MVN_CMD[@]}" install
+    runCmd ./scripts/run-agent-test.sh skipClean
+fi
 
 # Java 6
 if [ -n "$JAVA6_HOME" ]; then
@@ -65,9 +72,9 @@ else
 fi
 
 # Java 11
-if [ -n "$JAVA11_HOME" ]; then
-    headInfo "test with Java 11"
-    export JAVA_HOME="${JAVA11_HOME}"
+if [ -n "$JAVA10_HOME" ]; then
+    headInfo "test with Java 10"
+    export JAVA_HOME="${JAVA10_HOME}"
     runCmd ./scripts/run-junit.sh skipClean
     runCmd ./scripts/run-agent-test.sh skipClean
 else
