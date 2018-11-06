@@ -280,7 +280,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <http://alibaba.github.io/transmittable-thread-local/apidocs/>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/>
 
 # 🍪 Maven依赖
 
@@ -290,7 +290,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.10.0</version>
+    <version>2.10.1</version>
 </dependency>
 ```
 

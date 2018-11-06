@@ -240,7 +240,7 @@ to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 # 🔌 Java API Docs
 
-The current version Java API documentation: <http://alibaba.github.io/transmittable-thread-local/apidocs/>
+The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/>
 
 # 🍪 Maven dependency
 
@@ -248,7 +248,7 @@ The current version Java API documentation: <http://alibaba.github.io/transmitta
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.10.0</version>
+    <version>2.10.1</version>
 </dependency>
 ```
 
