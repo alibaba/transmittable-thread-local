@@ -13,28 +13,38 @@ import java.util.logging.Logger;
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link java.lang.InheritableThreadLocal},
- * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.
+ * so {@link TransmittableThreadLocal} first is a {@link java.lang.InheritableThreadLocal}.<br>
  * If the <b>inheritable</b> ability of {@link InheritableThreadLocal} has <b>potential leaking problem</b>,
- * you can disable the <b>Inheritable</b> ability
+ * you can disable the <b>inheritable</b> ability:
  * <p>
- * 1) by overriding method {@link #childValue(Object)}:
- * <pre> {@code
- *   TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
- *       protected String childValue(String parentValue) {
- *           return initialValue();
- *       }
- *   }}</pre>
+ * ❶ by wrapping thread factory using method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)} / {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()}
+ * for thread pooling components({@link java.util.concurrent.ThreadPoolExecutor}, {@link java.util.concurrent.ForkJoinPool}).
+ * Inheritable feature in thread pooling components should <b>never</b> happen,
+ * because threads in thread pooling components is pre-created and pooled, these threads is neutral for biz logic/data.
+ * <br>
+ * You can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
+ * so as to wrap thread factory for thread pooling components({@link java.util.concurrent.ThreadPoolExecutor}, {@link java.util.concurrent.ForkJoinPool})
+ * automatically and transparently.
  * <p>
- * 2) or by {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}, {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
+ * ❷ or by overriding method {@link #childValue(Object)}.
+ * Whether the value should be inheritable or not can be controlled by the data owner,
+ * disable it <b>carefully</b> when data owner have a clear idea.
+ * <pre> {@code TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
+ *     protected String childValue(String parentValue) {
+ *         return initialValue();
+ *     }
+ * }}</pre>
+ * <p>
+ * More discussion about "disable the <b>inheritable</b> ability"
+ * see <a href="https://github.com/alibaba/transmittable-thread-local/issues/100">
+ *     issue #100: disable Inheritable when it's not necessary and buggy(eg. has potential memory leaking problem)</a>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
- * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
  * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
  * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
- * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
  * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
  * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
  * @since 0.10.0

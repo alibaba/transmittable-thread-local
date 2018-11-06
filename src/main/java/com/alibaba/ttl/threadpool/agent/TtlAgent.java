@@ -20,6 +20,8 @@ import java.util.logging.Level;
 /**
  * TTL Java Agent.
  * <p>
+ * The configuration/arguments for agent see the javadoc of {@link #premain(String, Instrumentation)}
+ * <p>
  * <b><i>NOTE:</i></b><br>
  * Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.
  * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.x.jar}).<br>
@@ -56,27 +58,10 @@ public final class TtlAgent {
      * <h2>TTL Agent configuration</h2>
      * Configure TTL agent via agent arguments, format is {@code k1:v1,k2:v2}. Below is available configuration keys.
      *
-     * <h3>The log configuration</h3>
-     * The log of TTL Java Agent is config by key {@code ttl.agent.logger}.
-     *
-     * <ul>
-     * <li>{@code ttl.agent.logger : STDERR}<br>
-     * only log to {@code stderr} when error.
-     * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
-     * <li>{@code ttl.agent.logger : STDOUT}<br>
-     * Log to {@code stdout}, more info than {@code ttl.agent.logger:STDERR}; This is needed when developing.</li>
-     * </ul>
-     * <p>
-     * configuration example:
-     * <ul>
-     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar}</li>
-     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
-     * </ul>
-     *
      * <h3>Disable inheritable for thread pool</h3>
      * <p>
      * Enable "disable inheritable" for thread pool, config by key {@code ttl.agent.disable.inheritable.for.thread.pool}.
-     * When no configuration for this key, default does <b>not</b> enabled.
+     * When no configuration for this key, default does <b>not</b> enabled. Since version {@code 2.10.1}.
      *
      * <ul>
      * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
@@ -94,9 +79,26 @@ public final class TtlAgent {
      * Configuration example:<br>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
      *
+     * <h3>The log configuration</h3>
+     * The log of TTL Java Agent is config by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
+     *
+     * <ul>
+     * <li>{@code ttl.agent.logger : STDERR}<br>
+     * only log to {@code stderr} when error.
+     * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
+     * <li>{@code ttl.agent.logger : STDOUT}<br>
+     * Log to {@code stdout}, more info than {@code ttl.agent.logger:STDERR}; This is needed when developing.</li>
+     * </ul>
+     * <p>
+     * configuration example:
+     * <ul>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar}</li>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
+     * </ul>
+     *
      * <h3>Enable TimerTask class decoration</h3>
      * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
-     * When no configuration for this key, default does <b>not</b> enabled.
+     * When no configuration for this key, default does <b>not</b> enabled. Since version {@code 2.7.0}.
      * <p>
      * Configuration example:<br>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
