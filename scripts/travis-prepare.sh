@@ -14,6 +14,13 @@ switch_to_open_jdk9() {
     fi
 }
 
+switch_to_oracle_jdk11() {
+    export JAVA_HOME=$HOME/.jdk/oraclejdk11
+    if [ ! -d "$JAVA_HOME" ]; then
+        "$install_jdk_bin" --feature 11 --license BCL --target "$JAVA_HOME"
+    fi
+}
+
 switch_to_open_jdk10() {
     export JAVA_HOME=$HOME/.jdk/openjdk10
     if [ ! -d "$JAVA_HOME" ]; then
