@@ -280,6 +280,7 @@ Check available version at [search.maven.org](https://search.maven.org/search?q=
 
 - Jerry Lee \<oldratlee at gmail dot com> [@oldratlee](https://github.com/oldratlee)
 - Yang Fang \<snoop.fy at gmail dot com> [@driventokill](https://github.com/driventokill)
+- Zava Xu \<zava.kid at gmail dot com> [@zavakid](https://github.com/zavakid)
 - wuwen \<wuwen.55 at aliyun dot com> [@wuwen5](https://github.com/wuwen5)
 - Xiaowei Shi \<179969622 at qq dot com>  [@xwshiustc](https://github.com/xwshiustc)
 - David Dai \<351450944 at qq dot com> [@LNAmp](https://github.com/LNAmp)
