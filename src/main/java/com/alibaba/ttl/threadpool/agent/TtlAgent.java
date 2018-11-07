@@ -1,6 +1,5 @@
 package com.alibaba.ttl.threadpool.agent;
 
-
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
@@ -45,6 +44,7 @@ import java.util.logging.Level;
  * <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see com.alibaba.ttl.TransmittableThreadLocal
  * @see Instrumentation
  * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @see <a href="https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest">JAR File Specification - JAR Manifest</a>
@@ -69,12 +69,13 @@ public final class TtlAgent {
      * to {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}
      * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)}.
      * </li>
-     * <li>rewrite the {@link java.util.concurrent.ForkJoinPool} constructor parameter
+     * <li>rewrite the {@link java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory} constructor parameter
      * of {@link java.util.concurrent.ForkJoinPool}
      * to {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
      * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)}.
      * </li>
      * </ul>
+     * More info about "disable inheritable" see {@link com.alibaba.ttl.TransmittableThreadLocal}.
      * <p>
      * Configuration example:<br>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
@@ -106,7 +107,10 @@ public final class TtlAgent {
      * <h3>Multi key configuration example</h3>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
      *
-     * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+     * @see java.util.concurrent.ThreadPoolExecutor
+     * @see java.util.concurrent.ScheduledThreadPoolExecutor
+     * @see java.util.concurrent.ForkJoinPool
+     * @see java.util.TimerTask
      * @see Logger
      * @see Logger#TTL_AGENT_LOGGER_KEY
      * @see Logger#STDERR
@@ -165,12 +169,12 @@ public final class TtlAgent {
     /**
      * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
      *
-     * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
-     * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
      * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
-     * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
-     * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+     * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
      * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
+     * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
