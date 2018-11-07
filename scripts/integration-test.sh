@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "$(dirname "$(readlink -f "$0")")"
-source ./common.sh skipClean
+source ./common.sh "$1"
 
 # set multi-version java home env
 #   - JAVA6_HOME
@@ -23,13 +23,9 @@ else
 fi
 
 headInfo "test with Java 11"
-if [ "$1" = "skipClean "]; then
-    runCmd "${MVN_CMD[@]}" clean install
-    runCmd ./scripts/run-agent-test.sh
-else
-    runCmd "${MVN_CMD[@]}" install
-    runCmd ./scripts/run-agent-test.sh skipClean
-fi
+
+runCmd "${MVN_CMD[@]}" test
+runCmd ./scripts/run-agent-test.sh "$1"
 
 # Java 6
 if [ -n "$JAVA6_HOME" ]; then

@@ -42,9 +42,13 @@ yellowEcho() {
     colorEcho 33 "$@"
 }
 
+blueEcho() {
+    colorEcho 36 "$@"
+}
+
 runCmd() {
-    colorEcho "36" "Run under work directory $PWD :$nl$@"
-    "$@"
+    blueEcho "Run under work directory $PWD :$nl$@"
+    time "$@"
 }
 
 die() {
@@ -84,9 +88,9 @@ adjustPwdToProjectRootDir
 readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
 readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
 
-# set env variable TTL_DEBUG_ENABLE to enable java debug mode
+# set env variable ENABLE_JAVA_RUN_DEBUG to enable java debug mode
 readonly -a JAVA_CMD=(
-    "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -ea -Duser.language=en -Duser.country=US
+    "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -server -ea -Duser.language=en -Duser.country=US
     ${ENABLE_JAVA_RUN_DEBUG+
         -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
     }
