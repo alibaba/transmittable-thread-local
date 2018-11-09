@@ -54,7 +54,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final CtClass clazz = getCtClass(classFileBuffer, loader);
 
             for (CtMethod method : clazz.getDeclaredMethods()) {
-                updateMethodOfExecutorClass(clazz, method);
+                updateMethodOfExecutorClass(method);
             }
 
             if (disableInheritable) updateConstructorDisableInheritable(clazz);
@@ -64,9 +64,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         return null;
     }
 
-    private void updateMethodOfExecutorClass(final CtClass clazz, final CtMethod method) throws NotFoundException, CannotCompileException {
-        if (method.getDeclaringClass() != clazz) return;
-
+    private void updateMethodOfExecutorClass(final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
 
