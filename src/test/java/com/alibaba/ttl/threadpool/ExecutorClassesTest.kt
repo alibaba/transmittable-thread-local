@@ -46,7 +46,7 @@ class ExecutorClassesTest {
 
         val tag = "2"
         val task = Task(tag, ttlInstances)
-        val future = scheduledExecutorService.schedule(if (noTtlAgentRun()) TtlRunnable.get(task) else task, 100, TimeUnit.MILLISECONDS)
+        val future = scheduledExecutorService.schedule(if (noTtlAgentRun()) TtlRunnable.get(task) else task, 10, TimeUnit.MILLISECONDS)
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)

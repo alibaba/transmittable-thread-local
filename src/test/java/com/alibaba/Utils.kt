@@ -16,12 +16,13 @@ import java.util.concurrent.ThreadPoolExecutor
  * Expand thread pool, so as to pre-create and cache threads.
  */
 fun expandThreadPool(executor: ExecutorService) {
+    val cpuCountX2 = Runtime.getRuntime().availableProcessors() * 2
     val count = if (executor is ThreadPoolExecutor) {
-        Math.min(10, executor.maximumPoolSize)
-    } else 10
+        Math.min(executor.maximumPoolSize * 2, cpuCountX2)
+    } else cpuCountX2
 
     (0 until count).map {
-        executor.submit { sleep(100) }
+        executor.submit { sleep(10) }
     }.forEach { it.get() }
 }
 

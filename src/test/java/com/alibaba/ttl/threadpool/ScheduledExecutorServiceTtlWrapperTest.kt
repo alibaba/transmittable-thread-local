@@ -39,7 +39,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
 
 
         executorService.execute(task)
-        Thread.sleep(100)
+        Thread.sleep(10)
 
         // child Inheritable
         assertChildTtlValuesWithParentCreateAfterCreateChild("1", task.copied)
@@ -118,7 +118,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
+        val futures = executorService.invokeAll(Arrays.asList(call1, call2), 10, TimeUnit.MILLISECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -177,7 +177,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService.schedule(task, 1, TimeUnit.SECONDS)
+        val future = executorService.schedule(task, 10, TimeUnit.MILLISECONDS)
         assertNull(future.get())
 
         // child Inheritable
@@ -191,7 +191,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService.schedule(call, 1, TimeUnit.SECONDS)
+        val future = executorService.schedule(call, 10, TimeUnit.MILLISECONDS)
         assertEquals("ok", future.get())
 
         // child Inheritable
@@ -205,8 +205,8 @@ class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService.scheduleAtFixedRate(task, 0, 100, TimeUnit.SECONDS)
-        Thread.sleep(100)
+        val future = executorService.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS)
+        Thread.sleep(10)
         future.cancel(true)
 
         // child Inheritable
@@ -221,9 +221,9 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService.scheduleWithFixedDelay(task, 0, 50, TimeUnit.SECONDS)
+        val future = executorService.scheduleWithFixedDelay(task, 0, 10, TimeUnit.SECONDS)
 
-        Thread.sleep(100)
+        Thread.sleep(10)
         future.cancel(true)
 
         // child Inheritable
