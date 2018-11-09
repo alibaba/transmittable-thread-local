@@ -25,7 +25,7 @@ internal class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
     override fun compute(): Long =
             if (numbers.count() <= 16) {
                 // compute directly
-                numbers.asSequence().sum()
+                numbers.sum()
             } else {
                 // split task
                 val middle = numbers.start + numbers.count() / 2
