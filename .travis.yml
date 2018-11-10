@@ -28,7 +28,7 @@ before_install:
   - source ./scripts/travis-prepare.sh
 
   # output env info
-  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/*
+  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/* && ls $HOME/.jdk && ls $HOME/.jdk/*
   - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH\nSHELL=$SHELL"
 
 install:
@@ -37,8 +37,7 @@ install:
 script:
   # default oracle jdk 11, do build and test
   - switch_to_oracle_jdk11
-  - ./mvnw -V clean install
-  - ./scripts/run-agent-test.sh
+  - ./scripts/run-agent-test.sh # run junit test in run-agent-test.sh
   # open jdk 6
   - jdk_switcher use openjdk6
   - ./scripts/run-junit.sh skipClean

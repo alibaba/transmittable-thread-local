@@ -1,5 +1,7 @@
 #!/bin/bash
 cd "$(dirname "$(readlink -f "$0")")"
+
+export TTL_CI_TEST_MODE=true
 source ./common.sh "$1"
 
 # set multi-version java home env
@@ -24,7 +26,6 @@ fi
 
 headInfo "test with Java 11"
 
-runCmd "${MVN_CMD[@]}" test
 runCmd ./scripts/run-agent-test.sh "$1"
 
 # Java 6

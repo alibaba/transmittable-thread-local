@@ -22,7 +22,7 @@ trap 'error ${LINENO}' ERR
 ################################################################################
 
 # NOTE: $'foo' is the escape sequence syntax of bash
-readonly nl=$'\n' # escape end
+readonly nl=$'\n' # new line
 readonly ec=$'\033' # escape char
 readonly eend=$'\033[0m' # escape end
 
@@ -35,7 +35,7 @@ colorEcho() {
 }
 
 redEcho() {
-     colorEcho 31 "$@"
+    colorEcho 31 "$@"
 }
 
 yellowEcho() {
@@ -104,43 +104,56 @@ readonly -a MVN_CMD=(
 #################################################################################
 
 mvnClean() {
-    runCmd "${MVN_CMD[@]}" clean || die "fail to mvn clean!"
+    rm -rf target || die "fail to mvn clean!"
 }
 
+readonly ttl_jar="target/$aid-$version.jar"
+
 mvnBuildJar() {
-    runCmd "${MVN_CMD[@]}" install -Pgen-src+doc -Pgen-git-properties -Dmaven.test.skip || die "fail to build jar!"
+    if [ ! -e "$ttl_jar"  -o  "$ttl_jar" -ot src/ ]; then
+        if [ -n "${TTL_CI_TEST_MODE+YES}" ]; then
+            # Build jar action should have used package instead of install
+            # here use install intendedly to check release operations.
+            #
+            # De-activate a maven profile from command line
+            # https://stackoverflow.com/questions/25201430
+            runCmd "${MVN_CMD[@]}" install -DperformRelease -P '!gen-sign' || die "fail to build jar!"
+        else
+            runCmd "${MVN_CMD[@]}" package -Dmaven.test.skip=true || die "fail to build jar!"
+        fi
+    fi
 }
 
 mvnCompileTest() {
-    runCmd "${MVN_CMD[@]}" test-compile || die "fail to mvn test-compile!"
+    if [ ! -e "target/test-classes/"  -o  "target/test-classes/" -ot src/  ]; then
+        runCmd "${MVN_CMD[@]}" test-compile || die "fail to mvn test-compile!" || die "fail to compile test!"
+    fi
 }
 
 readonly dependencies_dir="target/dependency"
 
 mvnCopyDependencies() {
-    # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
-    # exclude repackaged and shaded javassist libs
-    runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305 || die "fail to mvn copy-dependencies!"
+    if [ ! -e "$dependencies_dir" ]; then
+        # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
+        # exclude repackaged and shaded javassist libs
+        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305 || die "fail to mvn copy-dependencies!"
+    fi
 }
 
 getClasspathOfDependencies() {
-    [ -e "$dependencies_dir" ] || mvnCopyDependencies 1>&2
+    mvnCopyDependencies 1>&2
 
     echo "$dependencies_dir"/*.jar | tr ' ' :
 }
 
 getClasspathWithoutTtlJar() {
-    [ ! -e "target/test-classes/"  -o  "target/test-classes/" -ot src/  ] &&
-        mvnCompileTest 1>&2
+    mvnCompileTest 1>&2
 
     echo "target/test-classes:$(getClasspathOfDependencies)"
 }
 
 getTtlJarPath() {
-    local -r ttl_jar="target/$aid-$version.jar"
-
-    [ ! -e "$ttl_jar"  -o  "$ttl_jar" -ot src/ ] &&
-        mvnBuildJar 1>&2
+    mvnBuildJar 1>&2
 
     echo "$ttl_jar"
 }
@@ -149,8 +162,10 @@ getClasspath() {
     echo "$(getTtlJarPath):$(getClasspathWithoutTtlJar)"
 }
 
-junit_test_case() {
+getJUnitTestCases() {
     (
+        mvnCompileTest 1>&2
+
         cd target/test-classes &&
         find . -iname '*Test.class' | sed '
                 s%^\./%%
