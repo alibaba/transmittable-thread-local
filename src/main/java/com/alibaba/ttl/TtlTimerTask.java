@@ -2,7 +2,7 @@ package com.alibaba.ttl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
@@ -81,7 +81,7 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
     }
 
     /**
-     * Factory method, wrap input {@link Runnable} to {@link TtlTimerTask}.
+     * Factory method, wrap input {@link TimerTask} to {@link TtlTimerTask}.
      * <p>
      * This method is idempotent.
      *
@@ -94,12 +94,12 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
     }
 
     /**
-     * Factory method, wrap input {@link Runnable} to {@link TtlTimerTask}.
+     * Factory method, wrap input {@link TimerTask} to {@link TtlTimerTask}.
      * <p>
      * This method is idempotent.
      *
      * @param timerTask                        input {@link TimerTask}
-     * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
+     * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlTimerTask} is referred.
      * @return Wrapped {@link TimerTask}
      */
     @Nullable
@@ -108,12 +108,12 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
     }
 
     /**
-     * Factory method, wrap input {@link Runnable} to {@link TtlTimerTask}.
+     * Factory method, wrap input {@link TimerTask} to {@link TtlTimerTask}.
      * <p>
      * This method is idempotent.
      *
      * @param timerTask                        input {@link TimerTask}
-     * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
+     * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlTimerTask} is referred.
      * @param idempotent                       is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link TimerTask}
      */
@@ -127,5 +127,41 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
             else throw new IllegalStateException("Already TtlTimerTask!");
         }
         return new TtlTimerTask(timerTask, releaseTtlValueReferenceAfterRun);
+    }
+
+    /**
+     * Unwrap {@link TtlTimerTask} to the original/underneath one.
+     * <p>
+     * this method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return {@code null};
+     * if input {@code TimerTask} parameter is not a {@link TtlTimerTask} just return input {@code TimerTask}.
+     *
+     * @since 2.10.2
+     */
+    @Nullable
+    public static TimerTask unwrap(@Nullable TimerTask timerTask) {
+        if (!(timerTask instanceof TtlTimerTask)) return timerTask;
+        else return ((TtlTimerTask) timerTask).getTimerTask();
+    }
+
+    /**
+     * Unwrap {@link TtlTimerTask} to the original/underneath one.
+     * <p>
+     * Invoke {@link #unwrap(TimerTask)} for each element in input collection.
+     * <p>
+     * This method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return a empty list.
+     *
+     * @see #unwrap(TimerTask)
+     * @since 2.10.2
+     */
+    @Nonnull
+    public static List<TimerTask> unwraps(@Nullable Collection<? extends TimerTask> tasks) {
+        if (null == tasks) return Collections.emptyList();
+
+        List<TimerTask> copy = new ArrayList<TimerTask>();
+        for (TimerTask task : tasks) {
+            if (!(task instanceof TtlTimerTask)) copy.add(task);
+            else copy.add(((TtlTimerTask) task).getTimerTask());
+        }
+        return copy;
     }
 }

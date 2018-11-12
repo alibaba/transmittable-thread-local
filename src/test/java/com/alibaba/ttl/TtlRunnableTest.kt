@@ -294,6 +294,24 @@ class TtlRunnableTest {
         assertThat(taskList[3], instanceOf(TtlRunnable::class.java))
     }
 
+    @Test
+    fun test_unwrap() {
+        assertNull(TtlRunnable.unwrap(null))
+
+        val runnable = Runnable {}
+        val ttlRunnable = TtlRunnable.get(runnable)
+
+
+        assertSame(runnable, TtlRunnable.unwrap(runnable))
+        assertSame(runnable, TtlRunnable.unwrap(ttlRunnable))
+
+
+        assertEquals(listOf(runnable), TtlRunnable.unwraps(listOf(runnable)))
+        assertEquals(listOf(runnable), TtlRunnable.unwraps(listOf(ttlRunnable)))
+        assertEquals(listOf(runnable, runnable), TtlRunnable.unwraps(listOf(ttlRunnable, runnable)))
+        assertEquals(listOf<Runnable>(), TtlRunnable.unwraps(null))
+    }
+
     companion object {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 

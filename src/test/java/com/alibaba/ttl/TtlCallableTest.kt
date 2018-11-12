@@ -168,6 +168,24 @@ class TtlCallableTest {
         assertThat(callList[3], instanceOf(TtlCallable::class.java))
     }
 
+    @Test
+    fun test_unwrap() {
+        assertNull(TtlCallable.unwrap<String>(null))
+
+        val callable = Callable { "hello" }
+        val ttlCallable = TtlCallable.get(callable)
+
+
+        assertSame(callable, TtlCallable.unwrap(callable))
+        assertSame(callable, TtlCallable.unwrap(ttlCallable))
+
+
+        assertEquals(listOf(callable), TtlCallable.unwraps(listOf(callable)))
+        assertEquals(listOf(callable), TtlCallable.unwraps(listOf(ttlCallable)))
+        assertEquals(listOf(callable, callable), TtlCallable.unwraps(listOf(ttlCallable, callable)))
+        assertEquals(listOf<Callable<String>>(), TtlCallable.unwraps<String>(null))
+    }
+
     companion object {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 

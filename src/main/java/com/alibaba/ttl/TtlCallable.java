@@ -172,4 +172,40 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
         }
         return copy;
     }
+
+    /**
+     * Unwrap {@link TtlCallable} to the original/underneath one.
+     * <p>
+     * this method is {@code null}-safe, when input {@code Callable} parameter is {@code null}, return {@code null};
+     * if input {@code Callable} parameter is not a {@link TtlCallable} just return input {@code Callable}.
+     *
+     * @since 2.10.2
+     */
+    @Nullable
+    public static <T> Callable<T> unwrap(@Nullable Callable<T> callable) {
+        if (!(callable instanceof TtlCallable)) return callable;
+        else return ((TtlCallable<T>) callable).getCallable();
+    }
+
+    /**
+     * Unwrap {@link TtlCallable} to the original/underneath one.
+     * <p>
+     * Invoke {@link #unwrap(Callable)} for each element in input collection.
+     * <p>
+     * This method is {@code null}-safe, when input {@code Callable} parameter is {@code null}, return a empty list.
+     *
+     * @see #unwrap(Callable)
+     * @since 2.10.2
+     */
+    @Nonnull
+    public static <T> List<Callable<T>> unwraps(@Nullable Collection<? extends Callable<T>> tasks) {
+        if (null == tasks) return Collections.emptyList();
+
+        List<Callable<T>> copy = new ArrayList<Callable<T>>();
+        for (Callable<T> task : tasks) {
+            if (!(task instanceof TtlCallable)) copy.add(task);
+            else copy.add(((TtlCallable<T>) task).getCallable());
+        }
+        return copy;
+    }
 }

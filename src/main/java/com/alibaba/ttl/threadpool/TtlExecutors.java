@@ -138,7 +138,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * check the {@link ThreadFactory} is  {@link DisableInheritableThreadFactory} or not.
+     * check the {@link ThreadFactory} is {@link DisableInheritableThreadFactory} or not.
      *
      * @see DisableInheritableThreadFactory
      * @since 2.10.0

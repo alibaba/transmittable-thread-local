@@ -176,4 +176,40 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
         }
         return copy;
     }
+
+    /**
+     * Unwrap {@link TtlRunnable} to the original/underneath one.
+     * <p>
+     * this method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return {@code null};
+     * if input {@code Runnable} parameter is not a {@link TtlRunnable} just return input {@code Runnable}.
+     *
+     * @since 2.10.2
+     */
+    @Nullable
+    public static Runnable unwrap(@Nullable Runnable runnable) {
+        if (!(runnable instanceof TtlRunnable)) return runnable;
+        else return ((TtlRunnable) runnable).getRunnable();
+    }
+
+    /**
+     * Unwrap {@link TtlRunnable} to the original/underneath one for collection.
+     * <p>
+     * Invoke {@link #unwrap(Runnable)} for each element in input collection.
+     * <p>
+     * This method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return a empty list.
+     *
+     * @see #unwrap(Runnable)
+     * @since 2.10.2
+     */
+    @Nonnull
+    public static List<Runnable> unwraps(@Nullable Collection<? extends Runnable> tasks) {
+        if (null == tasks) return Collections.emptyList();
+
+        List<Runnable> copy = new ArrayList<Runnable>();
+        for (Runnable task : tasks) {
+            if (!(task instanceof TtlRunnable)) copy.add(task);
+            else copy.add(((TtlRunnable) task).getRunnable());
+        }
+        return copy;
+    }
 }
