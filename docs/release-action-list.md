@@ -13,7 +13,7 @@
                 - `javadoc` badge 添加版本
             - 示例Maven依赖的版本
             - 更新JavaDoc链接到固定版本  
-                http://alibaba.github.io/transmittable-thread-local/apidocs/2.x.x/index.html
+                https://alibaba.github.io/transmittable-thread-local/apidocs/2.x.x/index.html
 2. 新建并Push Tag，如`v2.x.x`  
     - `git tag -m 'release v2.x.x' v2.x.x`
     - `git push origin v2.x.x`
