@@ -253,9 +253,9 @@
 								</relocation>
 							</relocations>
 							<artifactSet>
-								<excludes>
-									<exclude>com.google.code.findbugs:jsr305</exclude>
-								</excludes>
+								<includes>
+									<include>org.javassist:javassist</include>
+								</includes>
 							</artifactSet>
 						</configuration>
 					</execution>
