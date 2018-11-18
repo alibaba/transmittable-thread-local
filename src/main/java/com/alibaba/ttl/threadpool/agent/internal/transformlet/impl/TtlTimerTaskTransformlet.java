@@ -1,6 +1,5 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import com.alibaba.ttl.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
@@ -49,9 +48,9 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
     }
 
     private void updateTimerTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {
-        // add new field
         final String className = clazz.getName();
 
+        // add new field
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doCaptureWhenNotTtlEnhanced(this);");

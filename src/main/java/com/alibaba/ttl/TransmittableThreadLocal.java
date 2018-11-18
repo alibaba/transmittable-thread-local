@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * <p>
  * More discussion about "disable the <b>inheritable</b> ability"
  * see <a href="https://github.com/alibaba/transmittable-thread-local/issues/100">
- *     issue #100: disable Inheritable when it's not necessary and buggy</a>.
+ * issue #100: disable Inheritable when it's not necessary and buggy</a>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)

@@ -48,9 +48,9 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     }
 
     private void updateForkJoinTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {
-        // add new field
         final String className = clazz.getName();
 
+        // add new field
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doCaptureWhenNotTtlEnhanced(this);");
