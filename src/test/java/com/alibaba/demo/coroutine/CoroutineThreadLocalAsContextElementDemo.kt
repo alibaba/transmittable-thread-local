@@ -1,6 +1,6 @@
 import kotlinx.coroutines.*
 
-val threadLocal = ThreadLocal<String?>() // declare thread-local variable
+private val threadLocal = ThreadLocal<String?>() // declare thread-local variable
 
 /**
  * [Thread-local data - Coroutine Context and Dispatchers - Kotlin Programming Language](https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html#thread-local-data)

@@ -178,7 +178,10 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
      * <p>
      * this method is {@code null}-safe, when input {@code Callable} parameter is {@code null}, return {@code null};
      * if input {@code Callable} parameter is not a {@link TtlCallable} just return input {@code Callable}.
+     * <p>
+     * so {@code TtlCallable.unwrap(TtlCallable.get(callable))} will always return the same input {@code callable} object.
      *
+     * @see #get(Callable)
      * @since 2.10.2
      */
     @Nullable
@@ -194,6 +197,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
      * <p>
      * This method is {@code null}-safe, when input {@code Callable} parameter is {@code null}, return a empty list.
      *
+     * @see #gets(Collection)
      * @see #unwrap(Callable)
      * @since 2.10.2
      */

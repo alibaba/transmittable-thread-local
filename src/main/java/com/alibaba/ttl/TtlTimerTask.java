@@ -135,6 +135,7 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
      * this method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return {@code null};
      * if input {@code TimerTask} parameter is not a {@link TtlTimerTask} just return input {@code TimerTask}.
      *
+     * @see #get(TimerTask)
      * @since 2.10.2
      */
     @Nullable

@@ -182,7 +182,10 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
      * <p>
      * this method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return {@code null};
      * if input {@code Runnable} parameter is not a {@link TtlRunnable} just return input {@code Runnable}.
+     * <p>
+     * so {@code TtlRunnable.unwrap(TtlRunnable.get(runnable))} will always return the same input {@code runnable} object.
      *
+     * @see #get(Runnable)
      * @since 2.10.2
      */
     @Nullable
@@ -198,6 +201,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
      * <p>
      * This method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return a empty list.
      *
+     * @see #gets(Collection)
      * @see #unwrap(Runnable)
      * @since 2.10.2
      */
