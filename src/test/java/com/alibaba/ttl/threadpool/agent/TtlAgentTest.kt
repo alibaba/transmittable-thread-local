@@ -1,11 +1,20 @@
 package com.alibaba.ttl.threadpool.agent
 
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
+import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.threadpool.agent.TtlAgent.splitCommaColonStringToKV
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 
 class TtlAgentTest {
+    @Rule
+    @JvmField
+    val rule = ConditionalIgnoreRule()
+
     @Test
+    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_splitCommaColonStringToKV() {
         assertEquals(emptyMap<String, String>(), splitCommaColonStringToKV(null))
         assertEquals(emptyMap<String, String>(), splitCommaColonStringToKV(""))

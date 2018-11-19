@@ -12,14 +12,14 @@ blueEcho "Run unit test under ttl agent, include check for ExecutorService, Fork
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
     -Drun-ttl-test-under-agent=true \
-    org.junit.runner.JUnitCore $(getJUnitTestCases | grep -vE '\.TtlAgentTest$|\.JavassistTest$')
+    org.junit.runner.JUnitCore $(getJUnitTestCases)
 
 blueEcho "Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement"
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true" \
     -Drun-ttl-test-under-agent=true \
     -Drun-ttl-test-under-agent-with-disable-inheritable=true \
-    org.junit.runner.JUnitCore $(getJUnitTestCases | grep -vE '\.TtlAgentTest$|\.JavassistTest$')
+    org.junit.runner.JUnitCore $(getJUnitTestCases)
 
 blueEcho "Run agent check for Timer/TimerTask"
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
