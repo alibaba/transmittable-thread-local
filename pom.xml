@@ -91,6 +91,10 @@
 	</properties>
 
 	<dependencies>
+		<!--
+			javassist v3.23.1-GA is the last version support Java 6
+			DO NOT upgrade javassist version!
+		-->
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
@@ -125,6 +129,7 @@
 		<!--
 			commons-lang3 v3.5 is the last version support Java 6
 			http://commons.apache.org/proper/commons-lang/release-history.html
+			DO NOT upgrade commons-lang3 version!
 		-->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
