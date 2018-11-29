@@ -126,6 +126,18 @@
 			<version>${kotlin.coroutine.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>2.2.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxkotlin</artifactId>
+			<version>2.3.0</version>
+			<scope>test</scope>
+		</dependency>
 		<!--
 			commons-lang3 v3.5 is the last version support Java 6
 			http://commons.apache.org/proper/commons-lang/release-history.html
