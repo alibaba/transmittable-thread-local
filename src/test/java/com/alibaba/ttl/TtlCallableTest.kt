@@ -190,6 +190,7 @@ class TtlCallableTest {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 
         @AfterClass
+        @JvmStatic
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()

@@ -40,19 +40,6 @@ class TtlRecursiveActionTest {
     fun test_TtlRecursiveTask_asyncWithSingleThreadForkJoinPool_changeValue() {
         run_test_with_pool(singleThreadPool)
     }
-
-    companion object {
-        @AfterClass
-        @Suppress("unused")
-        fun afterClass() {
-            pool.shutdown()
-            if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
-
-            singleThreadPool.shutdown()
-            if (!singleThreadPool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
-        }
-
-    }
 }
 
 private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
