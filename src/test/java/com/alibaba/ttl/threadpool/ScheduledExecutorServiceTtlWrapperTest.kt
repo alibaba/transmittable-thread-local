@@ -238,6 +238,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         }!!
 
         @AfterClass
+        @JvmStatic
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()

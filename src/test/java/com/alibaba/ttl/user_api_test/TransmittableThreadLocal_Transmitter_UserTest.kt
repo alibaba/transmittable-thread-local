@@ -173,6 +173,7 @@ class TransmittableThreadLocal_Transmitter_UserTest {
         private val executorService: ExecutorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
 
         @AfterClass
+        @JvmStatic
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
