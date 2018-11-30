@@ -10,14 +10,14 @@ import java.util.concurrent.ThreadFactory;
  * @since 2.10.0
  */
 class DisableInheritableThreadFactoryWrapper implements DisableInheritableThreadFactory {
-    final ThreadFactory threadFactory;
+    private final ThreadFactory threadFactory;
 
-    public DisableInheritableThreadFactoryWrapper(@Nonnull ThreadFactory threadFactory) {
+    DisableInheritableThreadFactoryWrapper(@Nonnull ThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
     }
 
     @Override
-    public Thread newThread(Runnable r) {
+    public Thread newThread(@Nonnull Runnable r) {
         final Object backup = TransmittableThreadLocal.Transmitter.clear();
         try {
             return threadFactory.newThread(r);

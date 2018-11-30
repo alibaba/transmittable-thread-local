@@ -12,9 +12,9 @@ import java.util.concurrent.ForkJoinWorkerThread;
  * @since 2.10.1
  */
 class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements DisableInheritableForkJoinWorkerThreadFactory {
-    final ForkJoinWorkerThreadFactory threadFactory;
+    private final ForkJoinWorkerThreadFactory threadFactory;
 
-    public DisableInheritableForkJoinWorkerThreadFactoryWrapper(@Nonnull ForkJoinWorkerThreadFactory threadFactory) {
+    DisableInheritableForkJoinWorkerThreadFactoryWrapper(@Nonnull ForkJoinWorkerThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
     }
 
