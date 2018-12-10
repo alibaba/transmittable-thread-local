@@ -43,6 +43,7 @@
 
 	<modules>
 		<module>ttl-core</module>
+		<module>ttl-kotlin</module>
 		<module>ttl-agent</module>
 
 		<module>ttl2-compatible</module>
@@ -303,13 +304,13 @@
 
 	<build>
 		<plugins>
-			<!--
-				Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
-				https://kotlinlang.org/docs/reference/using-maven.html#compiling-kotlin-and-java-sources
-
-				Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
-			-->
 			<plugin>
+				<!--
+					Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
+					https://kotlinlang.org/docs/reference/using-maven.html#compiling-kotlin-and-java-sources
+
+					Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
+				-->
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<executions>
