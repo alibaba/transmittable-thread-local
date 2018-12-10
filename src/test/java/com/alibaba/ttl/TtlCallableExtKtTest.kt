@@ -5,15 +5,21 @@ import com.alibaba.assertParentTtlValues
 import com.alibaba.copyTtlValues
 import com.alibaba.createParentTtlInstances
 import com.alibaba.createParentTtlInstancesAfterCreateChild
+import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertThat
 import org.junit.Assert.fail
+import org.junit.Rule
 import org.junit.Test
 
 class TtlCallableExtKtTest {
+
+    @Rule
+    @JvmField
+    val rule = ConditionalIgnoreRule()
 
     @Test
     fun `callable wrap extension function `() {
