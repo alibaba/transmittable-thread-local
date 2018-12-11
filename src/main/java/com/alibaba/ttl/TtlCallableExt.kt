@@ -2,6 +2,12 @@ package com.alibaba.ttl
 
 import java.util.concurrent.Callable
 
+
+/**
+ * Invoke operator for [TtlCallable].
+ *
+ * @since 2.11.0
+ */
 @Throws(Exception::class)
 operator fun <V> TtlCallable<V>.invoke(): V = call()
 
@@ -15,7 +21,7 @@ operator fun <V> TtlCallable<V>.invoke(): V = call()
  *
  * @since 2.11.0
  */
-fun <V> Callable<V>.wrap(
+fun <V> Callable<V>.wrapTtl(
     releaseTtlValueReferenceAfterCall: Boolean = false,
     idempotent: Boolean = false
 ): TtlCallable<V> = TtlCallable.get(this, releaseTtlValueReferenceAfterCall, idempotent)!!
@@ -27,24 +33,24 @@ fun <V> Callable<V>.wrap(
  * @param idempotent                        is idempotent or not. `true` will cover up bugs! **DO NOT** set, only when you know why.
  * @return Wrapped list of [Callable]
  *
- * @see #Callable::wrap
+ * @see Callable.wrapTtl
  * @since 2.11.0
  */
-fun <V> List<Callable<V>>.wrap(
+fun <V> List<Callable<V>>.wrapTtl(
     releaseTtlValueReferenceAfterCall: Boolean = false,
     idempotent: Boolean = false
-): List<TtlCallable<V>> = map { it.wrap(releaseTtlValueReferenceAfterCall, idempotent) }
+): List<TtlCallable<V>> = map { it.wrapTtl(releaseTtlValueReferenceAfterCall, idempotent) }
 
 /**
  * Extension function to unwrap [TtlCallable] to the original/underneath one.
  * <p>
- * if input `Callable` parameter is not a [TtlCallable] just return input `Callable`.
+ * if input [Callable] parameter is not a [TtlCallable] just return input [Callable].
  * <p>
- * so `callable.wrap().unwrap()` will always return the same input `callable` object.
+ * so `callable.wrapTtl().unwrapTtl()` will always return the same input [Callable] object.
  *
  * @since 2.11.0
  */
-fun <V> Callable<V>.unwrap(): Callable<V> = when(this) {
+fun <V> Callable<V>.unwrapTtl(): Callable<V> = when(this) {
     is TtlCallable<V> -> getCallable()
     else -> this
 }
@@ -52,10 +58,10 @@ fun <V> Callable<V>.unwrap(): Callable<V> = when(this) {
 /**
  * Extension function to unwrap [TtlCallable] to the original/underneath one.
  * <p>
- * Invoke [unwrap] for each element in collection.
+ * Invoke [unwrapTtl] for each element in collection.
  * <p>
  *
- * @see #Callable::unwrap
+ * @see Callable.unwrapTtl
  * @since 2.11.0
  */
-fun <V> List<Callable<V>>.unwrap() : List<Callable<V>> = map { it.unwrap() }
+fun <V> List<Callable<V>>.unwrapTtl() : List<Callable<V>> = map { it.unwrapTtl() }
