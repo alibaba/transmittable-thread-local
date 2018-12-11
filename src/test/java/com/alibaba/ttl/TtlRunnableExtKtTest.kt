@@ -14,17 +14,17 @@ class TtlRunnableExtKtTest {
     val rule = ConditionalIgnoreRule()
 
     @Test
-    fun `runnable wrap extension function `() {
+    fun `runnable wrapTtl extension function `() {
         val task = Task("1")
-        val ttlRunnable = task.wrap()
+        val ttlRunnable = task.wrapTtl()
         Assert.assertSame(task, ttlRunnable.runnable)
     }
 
     @Test
-    fun `runnable wrap extension function multiple times`() {
-        val task = Task("1").wrap()
+    fun `runnable wrapTtl extension function multiple times`() {
+        val task = Task("1").wrapTtl()
         try {
-            task.wrap()
+            task.wrapTtl()
             Assert.fail()
         } catch (e: IllegalStateException) {
             Assert.assertThat<String>(e.message, CoreMatchers.containsString("Already TtlRunnable"))
@@ -33,8 +33,8 @@ class TtlRunnableExtKtTest {
     }
 
     @Test
-    fun `list of runnable wrap extension function`() {
-        val taskList = listOf(Task("1"), Task("2"), Task("3")).wrap()
+    fun `list of runnable wrapTtl extension function`() {
+        val taskList = listOf(Task("1"), Task("2"), Task("3")).wrapTtl()
 
         Assert.assertEquals(3, taskList.size)
         taskList.forEach {

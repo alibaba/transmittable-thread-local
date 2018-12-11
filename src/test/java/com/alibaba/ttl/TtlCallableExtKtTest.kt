@@ -22,17 +22,17 @@ class TtlCallableExtKtTest {
     val rule = ConditionalIgnoreRule()
 
     @Test
-    fun `callable wrap extension function `() {
+    fun `callable wrapTtl extension function `() {
         val call = Call("1")
-        val ttlCallable = call.wrap()
+        val ttlCallable = call.wrapTtl()
         assertSame(call, ttlCallable.callable)
     }
 
     @Test
-    fun `callable wrap extension function multiple times`() {
-        val call = Call("1").wrap()
+    fun `callable wrapTtl extension function multiple times`() {
+        val call = Call("1").wrapTtl()
         try {
-            call.wrap()
+            call.wrapTtl()
             fail()
         } catch (e: IllegalStateException) {
             assertThat<String>(e.message, CoreMatchers.containsString("Already TtlCallable"))
@@ -41,8 +41,8 @@ class TtlCallableExtKtTest {
     }
 
     @Test
-    fun `list of callable wrap extension function`() {
-        val callList = listOf(Call("1"), Call("2"), Call("3")).wrap()
+    fun `list of callable wrapTtl extension function`() {
+        val callList = listOf(Call("1"), Call("2"), Call("3")).wrapTtl()
 
         assertEquals(3, callList.size)
         callList.forEach {
@@ -57,7 +57,7 @@ class TtlCallableExtKtTest {
         val call = Call("1", ttlInstances)
 
 
-        val ttlCallable = call.wrap()
+        val ttlCallable = call.wrapTtl()
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)

@@ -11,7 +11,7 @@ package com.alibaba.ttl
  *
  * @since 2.11.0
  */
-fun Runnable.wrap(
+fun Runnable.wrapTtl(
     releaseTtlValueReferenceAfterRun: Boolean = false,
     idempotent: Boolean = false
 ): TtlRunnable = TtlRunnable.get(this, releaseTtlValueReferenceAfterRun, idempotent)!!
@@ -25,24 +25,24 @@ fun Runnable.wrap(
  *                                         **_Caution_**: `true` will cover up bugs! **DO NOT** set, only when you know why.
  * @return Wrapped list of [Runnable]
  *
- * @see Runnable.wrap
+ * @see Runnable.wrapTtl
  * @since 2.11.0
  */
-fun List<Runnable>.wrap(
+fun List<Runnable>.wrapTtl(
     releaseTtlValueReferenceAfterRun: Boolean = false,
     idempotent: Boolean = false
-): List<TtlRunnable> = map { it.wrap(releaseTtlValueReferenceAfterRun, idempotent) }
+): List<TtlRunnable> = map { it.wrapTtl(releaseTtlValueReferenceAfterRun, idempotent) }
 
 /**
  * Extension function to unwrap [TtlRunnable] to the original/underneath one.
  * <p>
  * if input `Runnable` parameter is not a [TtlRunnable] just return input `Runnable`.
  * <p>
- * so `Runnable.wrap().unwrap()` will always return the same input `Runnable` object.
+ * so `Runnable.wrapTtl().unwrapTtl()` will always return the same input `Runnable` object.
  *
  * @since 2.11.0
  */
-fun Runnable.unwrap(): Runnable = when (this) {
+fun Runnable.unwrapTtl(): Runnable = when (this) {
     is TtlRunnable -> runnable
     else -> this
 }
@@ -50,10 +50,10 @@ fun Runnable.unwrap(): Runnable = when (this) {
 /**
  * Extension function to unwrap [TtlRunnable] to the original/underneath one.
  * <p>
- * Invoke [Runnable.unwrap] for each element in collection.
+ * Invoke [Runnable.unwrapTtl] for each element in collection.
  * <p>
  *
- * @see Runnable.unwrap
+ * @see Runnable.unwrapTtl
  * @since 2.11.0
  */
-fun List<Runnable>.unwrap(): List<Runnable> = map { it.unwrap() }
+fun List<Runnable>.unwrapTtl(): List<Runnable> = map { it.unwrapTtl() }
