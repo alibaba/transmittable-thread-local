@@ -1,16 +1,15 @@
 package com.alibaba.ttl
 
 /**
- * Extension function wrap {@link Runnable} into {@link TtlRunnable}.
- * <p>
+ * Extension function wrap [Runnable] into [TtlRunnable].
  *
- * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
- * @param idempotent                       is idempotent mode or not. if {@code true}, just return input {@link Runnable} when it's {@link TtlRunnable},
- *                                         otherwise throw {@link IllegalStateException}.
- *                                         <B><I>Caution</I></B>: {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
- * @return Wrapped {@link Runnable}
+ * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if [TtlRunnable] is referred.
+ * @param idempotent                       is idempotent mode or not. if `true`, just return input [Runnable] when it's [TtlRunnable],
+ *                                         otherwise throw [IllegalStateException].
+ *                                         **_Caution_**: `true` will cover up bugs! **DO NOT** set, only when you know why.
+ * @return Wrapped [Runnable]
  *
- * * @since TODO
+ * @since 2.11.0
  */
 fun Runnable.wrap(
     releaseTtlValueReferenceAfterRun: Boolean = false,
@@ -18,16 +17,16 @@ fun Runnable.wrap(
 ): TtlRunnable = TtlRunnable.get(this, releaseTtlValueReferenceAfterRun, idempotent)!!
 
 /**
- * Extension function wrap input {@link Runnable} Collection to {@link TtlRunnable} Collection.
+ * Extension function wrap input [Runnable] Collection to [TtlRunnable] Collection.
  *
- * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
- * @param idempotent                       is idempotent mode or not. if {@code true}, just return input {@link Runnable} when it's {@link TtlRunnable},
- *                                         otherwise throw {@link IllegalStateException}.
- *                                         <B><I>Caution</I></B>: {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
- * @return Wrapped list of {@link Runnable}
+ * @param releaseTtlValueReferenceAfterRun release TTL value reference after run, avoid memory leak even if [TtlRunnable] is referred.
+ * @param idempotent                       is idempotent mode or not. if {@code true}, just return input Runnable when it's [TtlRunnable],
+ *                                         otherwise throw [IllegalStateException].
+ *                                         **_Caution_**: `true` will cover up bugs! **DO NOT** set, only when you know why.
+ * @return Wrapped list of [Runnable]
  *
- * @see #Runnable::wrap
- * @since TODO
+ * @see Runnable.wrap
+ * @since 2.11.0
  */
 fun List<Runnable>.wrap(
     releaseTtlValueReferenceAfterRun: Boolean = false,
@@ -35,13 +34,13 @@ fun List<Runnable>.wrap(
 ): List<TtlRunnable> = map { it.wrap(releaseTtlValueReferenceAfterRun, idempotent) }
 
 /**
- * Extension function to unwrap {@link TtlRunnable} to the original/underneath one.
+ * Extension function to unwrap [TtlRunnable] to the original/underneath one.
  * <p>
- * if input {@code Runnable} parameter is not a {@link TtlRunnable} just return input {@code Runnable}.
+ * if input `Runnable` parameter is not a [TtlRunnable] just return input `Runnable`.
  * <p>
- * so {@code Runnable.wrap().unwrap()} will always return the same input {@code Runnable} object.
+ * so `Runnable.wrap().unwrap()` will always return the same input `Runnable` object.
  *
- * @since TODO
+ * @since 2.11.0
  */
 fun Runnable.unwrap(): Runnable = when (this) {
     is TtlRunnable -> runnable
@@ -49,12 +48,12 @@ fun Runnable.unwrap(): Runnable = when (this) {
 }
 
 /**
- * Extension function to unwrap {@link TtlRunnable} to the original/underneath one.
+ * Extension function to unwrap [TtlRunnable] to the original/underneath one.
  * <p>
- * Invoke {@link #unwrap(Runnable)} for each element in collection.
+ * Invoke [Runnable.unwrap] for each element in collection.
  * <p>
  *
- * @see #Runnable::unwrap
- * @since TODO
+ * @see Runnable.unwrap
+ * @since 2.11.0
  */
 fun List<Runnable>.unwrap(): List<Runnable> = map { it.unwrap() }
