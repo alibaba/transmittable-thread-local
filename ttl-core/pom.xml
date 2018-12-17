@@ -111,7 +111,7 @@
 
 	<profiles>
 		<profile>
-			<id>gen-javadoc</id>
+			<id>gen-api-doc</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
