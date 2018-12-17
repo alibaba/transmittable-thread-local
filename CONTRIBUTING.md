@@ -155,7 +155,7 @@ All documentation is preferred to be in Java API doc standard documentation form
 To build the documentation locally:
 
 ```
-mvn -Pgen-javadoc javadoc:javadoc
+mvn -Pgen-api-doc javadoc:javadoc
 ```
 
 ## Creating commits and writing commit messages

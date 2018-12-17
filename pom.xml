@@ -66,6 +66,9 @@
 		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
+		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
+		<dokka.version>1.7.10</dokka.version>
+		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
 		<slf4j.version>1.7.36</slf4j.version>
 
@@ -432,6 +435,23 @@
 					<version>3.4.1</version>
 				</plugin>
 				<plugin>
+					<groupId>org.jetbrains.dokka</groupId>
+					<artifactId>dokka-maven-plugin</artifactId>
+					<version>${dokka.version}</version>
+					<executions>
+						<execution>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>javadocJar</goal>
+								<goal>dokka</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<jdkVersion>${dokka.link.jdk.version}</jdkVersion>
+					</configuration>
+				</plugin>
+				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
 					<version>3.0.1</version>
 				</plugin>
@@ -535,7 +555,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>gen-javadoc</id>
+			<id>gen-api-doc</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
