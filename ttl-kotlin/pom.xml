@@ -107,6 +107,10 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<!--
+					https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#skipMain
+					https://maven.apache.org/plugins/maven-compiler-plugin/testCompile-mojo.html#skip
+				-->
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<skipMain>true</skipMain>
@@ -115,4 +119,31 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>gen-api-doc</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- use dokka-maven-plugin to generate javadoc for kotlin project -->
+						<!-- see: https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
+						<groupId>org.jetbrains.dokka</groupId>
+						<artifactId>dokka-maven-plugin</artifactId>
+						<configuration>
+							<sourceDirectories>
+								<directory>${project.basedir}/src/main/kotlin</directory>
+							</sourceDirectories>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

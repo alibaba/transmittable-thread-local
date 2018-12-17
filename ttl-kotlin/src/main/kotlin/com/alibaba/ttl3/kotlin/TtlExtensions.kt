@@ -463,7 +463,7 @@ inline fun ForkJoinWorkerThreadFactory.ttlUnwrapDisableInheritableForkJoinWorker
 ////////////////////////////////////////
 
 /**
- * wrapper of `Comparator<Runnable>` which unwrap [com.alibaba.ttl3.TtlRunnable] before compare,
+ * wrapper of `Comparator<Runnable>` which unwrap [TtlRunnable] before compare,
  * aka `TtlRunnableUnwrapComparator`.
  *
  * @see TtlExecutors.getTtlRunnableUnwrapComparator
