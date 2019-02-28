@@ -125,6 +125,36 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         super.remove();
     }
 
+    /**
+     * Register a ThreadLocal to be transmitted.
+     *
+     * @param threadLocal ThreadLocal need to be transmitted.
+     * @return false if already been registered.
+     */
+    public static boolean register(ThreadLocal threadLocal) {
+        if (holder.get().containsKey(threadLocal)) {
+            return false;
+        } else {
+            holder.get().put(threadLocal, null);
+            return true;
+        }
+    }
+
+    /**
+     * Unregister ThreadLocal which will not be transmitted.
+     *
+     * @param threadLocal ThreadLocal not need to be transmitted.
+     * @return false if not registered or already been unregistered.
+     */
+    public static boolean unregister(ThreadLocal threadLocal) {
+        if (holder.get().containsKey(threadLocal)) {
+            holder.get().remove(threadLocal);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void superRemove() {
         super.remove();
     }
@@ -137,16 +167,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     // 1. The value of holder is type Map<TransmittableThreadLocal<?>, ?> (WeakHashMap implementation),
     //    but it is used as *set*.
     // 2. WeakHashMap support null value.
-    private static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
-            new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
+    private static InheritableThreadLocal<Map<ThreadLocal<?>, ?>> holder =
+            new InheritableThreadLocal<Map<ThreadLocal<?>, ?>>() {
                 @Override
-                protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
-                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>();
+                protected Map<ThreadLocal<?>, ?> initialValue() {
+                    return new WeakHashMap<ThreadLocal<?>, Object>();
                 }
 
                 @Override
-                protected Map<TransmittableThreadLocal<?>, ?> childValue(Map<TransmittableThreadLocal<?>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue);
+                protected Map<ThreadLocal<?>, ?> childValue(Map<ThreadLocal<?>, ?> parentValue) {
+                    return new WeakHashMap<ThreadLocal<?>, Object>(parentValue);
                 }
             };
 
@@ -160,13 +190,37 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         holder.get().remove(this);
     }
 
+    /**
+     * Remove ThreadLocal from ThreadLocalMap
+     * @param threadLocal ThreadLocal
+     */
+    private static void threadLocalRemove(ThreadLocal threadLocal) {
+        if (threadLocal instanceof TransmittableThreadLocal) {
+            ((TransmittableThreadLocal) threadLocal).superRemove();
+        } else {
+            threadLocal.remove();
+        }
+    }
+
+    private static void threadLocalSet(ThreadLocal threadLocal, Object value) {
+        if (threadLocal instanceof TransmittableThreadLocal) {
+            threadLocal.set(value);
+        } else {
+            threadLocal.set(value);
+            if (null == value) threadLocalRemove(threadLocal);
+            else register(threadLocal);
+        }
+    }
+
     private static void doExecuteCallback(boolean isBefore) {
-        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
-            TransmittableThreadLocal<?> threadLocal = entry.getKey();
+        for (Map.Entry<ThreadLocal<?>, ?> entry : holder.get().entrySet()) {
+            final ThreadLocal<?> threadLocal = entry.getKey();
 
             try {
-                if (isBefore) threadLocal.beforeExecute();
-                else threadLocal.afterExecute();
+                if (threadLocal instanceof TransmittableThreadLocal) {
+                    if (isBefore) ((TransmittableThreadLocal) threadLocal).beforeExecute();
+                    else ((TransmittableThreadLocal) threadLocal).afterExecute();
+                }
             } catch (Throwable t) {
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t.toString(), t);
@@ -185,8 +239,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             System.out.println("Start TransmittableThreadLocal Dump...");
         }
 
-        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
-            final TransmittableThreadLocal<?> key = entry.getKey();
+        for (Map.Entry<ThreadLocal<?>, ?> entry : holder.get().entrySet()) {
+            final ThreadLocal<?> key = entry.getKey();
             System.out.println(key.get());
         }
         System.out.println("TransmittableThreadLocal Dump end!");
@@ -283,9 +337,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         @Nonnull
         public static Object capture() {
-            Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<TransmittableThreadLocal<?>, Object>();
-            for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
-                captured.put(threadLocal, threadLocal.copyValue());
+            Map<ThreadLocal<?>, Object> captured = new HashMap<ThreadLocal<?>, Object>();
+            for (ThreadLocal<?> threadLocal : holder.get().keySet()) {
+                if (threadLocal instanceof TransmittableThreadLocal) {
+                    captured.put(threadLocal, ((TransmittableThreadLocal)threadLocal).copyValue());
+                } else {
+                    captured.put(threadLocal, threadLocal.get());
+                }
             }
             return captured;
         }
@@ -302,13 +360,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         @Nonnull
         public static Object replay(@Nonnull Object captured) {
             @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
-            Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
+            Map<ThreadLocal<?>, Object> capturedMap = (Map<ThreadLocal<?>, Object>) captured;
+            Map<ThreadLocal<?>, Object> backup = new HashMap<ThreadLocal<?>, Object>();
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+            for (Iterator<? extends Map.Entry<ThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
                  iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-                TransmittableThreadLocal<?> threadLocal = next.getKey();
+                Map.Entry<ThreadLocal<?>, ?> next = iterator.next();
+                ThreadLocal<?> threadLocal = next.getKey();
 
                 // backup
                 backup.put(threadLocal, threadLocal.get());
@@ -317,7 +375,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 // avoid the extra TTL values after replay when run task
                 if (!capturedMap.containsKey(threadLocal)) {
                     iterator.remove();
-                    threadLocal.superRemove();
+                    threadLocalRemove(threadLocal);
                 }
             }
 
@@ -352,20 +410,20 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         public static void restore(@Nonnull Object backup) {
             @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<?>, Object> backupMap = (Map<TransmittableThreadLocal<?>, Object>) backup;
+            Map<ThreadLocal<?>, Object> backupMap = (Map<ThreadLocal<?>, Object>) backup;
             // call afterExecute callback
             doExecuteCallback(false);
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+            for (Iterator<? extends Map.Entry<ThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
                  iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-                TransmittableThreadLocal<?> threadLocal = next.getKey();
+                Map.Entry<ThreadLocal<?>, ?> next = iterator.next();
+                ThreadLocal<?> threadLocal = next.getKey();
 
                 // clear the TTL values that is not in backup
                 // avoid the extra TTL values after restore
                 if (!backupMap.containsKey(threadLocal)) {
                     iterator.remove();
-                    threadLocal.superRemove();
+                    threadLocalRemove(threadLocal);
                 }
             }
 
@@ -373,11 +431,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             setTtlValuesTo(backupMap);
         }
 
-        private static void setTtlValuesTo(@Nonnull Map<TransmittableThreadLocal<?>, Object> ttlValues) {
-            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : ttlValues.entrySet()) {
+        private static void setTtlValuesTo(@Nonnull Map<ThreadLocal<?>, Object> ttlValues) {
+            for (Map.Entry<ThreadLocal<?>, Object> entry : ttlValues.entrySet()) {
                 @SuppressWarnings("unchecked")
-                TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
-                threadLocal.set(entry.getValue());
+                ThreadLocal<Object> threadLocal = (ThreadLocal<Object>) entry.getKey();
+                threadLocalSet(threadLocal, entry.getValue());
             }
         }
 

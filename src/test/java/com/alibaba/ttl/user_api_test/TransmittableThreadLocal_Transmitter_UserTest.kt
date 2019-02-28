@@ -5,6 +5,8 @@ import com.alibaba.support.junit.conditional.BelowJava8
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
+import com.alibaba.ttl.threadpool.TtlExecutors
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet
 import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Rule
@@ -162,6 +164,55 @@ class TransmittableThreadLocal_Transmitter_UserTest {
         assertEquals(PARENT, ttl.get())
 
         future.get(100, TimeUnit.MILLISECONDS)
+
+        assertEquals(PARENT, ttl.get())
+    }
+
+    @Test
+    fun test_registerThreadLocal() {
+        val ttl = ThreadLocal<String>()
+        ttl.set(PARENT)
+
+        TransmittableThreadLocal.register(ttl)
+
+        val capture = TransmittableThreadLocal.Transmitter.capture()
+
+
+        val future = TtlExecutors.getTtlExecutorService(executorService)!!.submit {
+            ttl.set(CHILD)
+
+            val backup = TransmittableThreadLocal.Transmitter.replay(capture)
+
+            assertEquals(PARENT, ttl.get())
+
+            TransmittableThreadLocal.Transmitter.restore(backup)
+
+            assertEquals(CHILD, ttl.get())
+        }
+
+        assertEquals(PARENT, ttl.get())
+
+        future.get(100, TimeUnit.MILLISECONDS)
+
+        assertEquals(PARENT, ttl.get())
+
+        TransmittableThreadLocal.unregister(ttl)
+
+        val capture1 = TransmittableThreadLocal.Transmitter.capture()
+
+        val future1 = TtlExecutors.getTtlExecutorService(executorService)!!.submit {
+            ttl.set(CHILD)
+
+            val backup = TransmittableThreadLocal.Transmitter.replay(capture1)
+
+            assertEquals(CHILD, ttl.get())
+
+            TransmittableThreadLocal.Transmitter.restore(backup)
+
+            assertEquals(CHILD, ttl.get())
+        }
+
+        future1.get(100, TimeUnit.MILLISECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
