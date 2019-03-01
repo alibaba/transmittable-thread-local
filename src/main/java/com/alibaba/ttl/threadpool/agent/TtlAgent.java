@@ -107,6 +107,9 @@ public final class TtlAgent {
      * <h3>Multi key configuration example</h3>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
      *
+     * @param agentArgs agent arguments
+     * @param inst      instrumentation
+     *
      * @see java.util.concurrent.ThreadPoolExecutor
      * @see java.util.concurrent.ScheduledThreadPoolExecutor
      * @see java.util.concurrent.ForkJoinPool
@@ -169,6 +172,8 @@ public final class TtlAgent {
     /**
      * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
      *
+     * @return if inheritable should be disabled
+     *
      * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
      * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
      * @see com.alibaba.ttl.threadpool.DisableInheritableThreadFactory
@@ -183,6 +188,8 @@ public final class TtlAgent {
 
     /**
      * Whether timer task is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     *
+     * @return if should enable timer task
      *
      * @since 2.10.1
      */
@@ -201,6 +208,9 @@ public final class TtlAgent {
 
     /**
      * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
+     *
+     * @param commaColonString comma colon string
+     * @return kv map by splitting string
      */
     @Nonnull
     static Map<String, String> splitCommaColonStringToKV(@Nullable String commaColonString) {

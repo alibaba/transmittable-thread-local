@@ -135,6 +135,9 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
      * this method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return {@code null};
      * if input {@code TimerTask} parameter is not a {@link TtlTimerTask} just return input {@code TimerTask}.
      *
+     * @param timerTask decorated timerTask
+     * @return original timerTask
+     *
      * @see #get(TimerTask)
      * @since 2.10.2
      */
@@ -150,6 +153,9 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
      * Invoke {@link #unwrap(TimerTask)} for each element in input collection.
      * <p>
      * This method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return a empty list.
+     *
+     * @param tasks decorated timerTask collection
+     * @return original timerTask list
      *
      * @see #unwrap(TimerTask)
      * @since 2.10.2

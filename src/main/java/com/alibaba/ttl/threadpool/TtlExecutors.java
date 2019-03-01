@@ -34,6 +34,9 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link Executor},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
+     *
+     * @param executor target {@link Executor} to be decorated.
+     * @return decorated {@link Executor}
      */
     @Nullable
     public static Executor getTtlExecutor(@Nullable Executor executor) {
@@ -47,6 +50,9 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link ExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
+     *
+     * @param executorService {@link ExecutorService} to be decorated
+     * @return decorated {@link ExecutorService}
      */
     @Nullable
     public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
@@ -60,6 +66,9 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link ScheduledExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
+     *
+     * @param scheduledExecutorService {@link ScheduledExecutorService} to be decorated
+     * @return decorated {@link ScheduledExecutorService}
      */
     @Nullable
     public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
@@ -78,6 +87,7 @@ public final class TtlExecutors {
      *
      * @param executor input executor
      * @param <T>      Executor type
+     * @return if it's a decorated Executor
      * @see #getTtlExecutor(Executor)
      * @see #getTtlExecutorService(ExecutorService)
      * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
@@ -98,6 +108,7 @@ public final class TtlExecutors {
      *
      * @param executor input executor
      * @param <T>      Executor type
+     * @return original Executor
      * @see #getTtlExecutor(Executor)
      * @see #getTtlExecutorService(ExecutorService)
      * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
@@ -116,6 +127,7 @@ public final class TtlExecutors {
      * Wrapper of  {@link ThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
+     * @return decorated ThreadFactory without inheritable feature
      * @see DisableInheritableThreadFactory
      * @since 2.10.0
      */
@@ -129,6 +141,7 @@ public final class TtlExecutors {
     /**
      * Wrapper of {@link Executors#defaultThreadFactory()}, disable inheritable.
      *
+     * @return default ThreadFactory without inheritable feature
      * @see #getDisableInheritableThreadFactory(ThreadFactory)
      * @since 2.10.0
      */
@@ -140,6 +153,8 @@ public final class TtlExecutors {
     /**
      * check the {@link ThreadFactory} is {@link DisableInheritableThreadFactory} or not.
      *
+     * @param threadFactory ThreadFactory to be check
+     * @return if decorated
      * @see DisableInheritableThreadFactory
      * @since 2.10.0
      */
@@ -150,6 +165,8 @@ public final class TtlExecutors {
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      *
+     * @param threadFactory ThreadFactory to be unwrapped
+     * @return original ThreadFactory before wrapped
      * @see DisableInheritableThreadFactory
      * @since 2.10.0
      */

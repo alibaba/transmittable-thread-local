@@ -55,7 +55,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
     }
 
     /**
-     * return original/unwrapped {@link Runnable}.
+     * @return original/unwrapped {@link Runnable}.
      */
     @Nonnull
     public Runnable getRunnable() {
@@ -185,6 +185,9 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
      * <p>
      * so {@code TtlRunnable.unwrap(TtlRunnable.get(runnable))} will always return the same input {@code runnable} object.
      *
+     * @param runnable decorated runnable
+     * @return original runnable
+     *
      * @see #get(Runnable)
      * @since 2.10.2
      */
@@ -200,6 +203,9 @@ public final class TtlRunnable implements Runnable, TtlEnhanced {
      * Invoke {@link #unwrap(Runnable)} for each element in input collection.
      * <p>
      * This method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return a empty list.
+     *
+     * @param tasks decorated runnable collection
+     * @return original runnable list
      *
      * @see #gets(Collection)
      * @see #unwrap(Runnable)

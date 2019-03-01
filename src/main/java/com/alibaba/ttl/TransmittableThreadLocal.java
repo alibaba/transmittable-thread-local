@@ -129,7 +129,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     /**
-     * Register a ThreadLocal to be transmittable.<br/>
+     * Register a ThreadLocal to be transmittable.
+     * <p>
      * Undo by {@link TransmittableThreadLocal#untransmit(ThreadLocal)}
      *
      * @param threadLocal ThreadLocal need to be transmitted.
