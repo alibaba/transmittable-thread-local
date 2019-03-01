@@ -63,6 +63,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * This method merely returns reference of its source thread value, and should be overridden
      * if a different behavior is desired.
      *
+     * @param parentValue parent value to be compute
+     * @return computed value
+     *
      * @since 1.0.0
      */
     protected T copy(T parentValue) {
@@ -126,12 +129,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     /**
-     * Register a ThreadLocal to be transmitted.
+     * Register a ThreadLocal to be transmittable.<br/>
+     * Undo by {@link TransmittableThreadLocal#untransmit(ThreadLocal)}
      *
      * @param threadLocal ThreadLocal need to be transmitted.
      * @return false if already been registered.
      */
-    public static boolean register(ThreadLocal threadLocal) {
+    public static boolean transmit(ThreadLocal threadLocal) {
         if (holder.get().containsKey(threadLocal)) {
             return false;
         } else {
@@ -141,12 +145,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     /**
-     * Unregister ThreadLocal which will not be transmitted.
+     * Unregister ThreadLocal which will not be transmittable.
      *
      * @param threadLocal ThreadLocal not need to be transmitted.
      * @return false if not registered or already been unregistered.
      */
-    public static boolean unregister(ThreadLocal threadLocal) {
+    public static boolean untransmit(ThreadLocal threadLocal) {
         if (holder.get().containsKey(threadLocal)) {
             holder.get().remove(threadLocal);
             return true;
@@ -208,7 +212,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         } else {
             threadLocal.set(value);
             if (null == value) threadLocalRemove(threadLocal);
-            else register(threadLocal);
+            else transmit(threadLocal);
         }
     }
 

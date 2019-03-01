@@ -6,7 +6,6 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.threadpool.TtlExecutors
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet
 import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Rule
@@ -169,11 +168,11 @@ class TransmittableThreadLocal_Transmitter_UserTest {
     }
 
     @Test
-    fun test_registerThreadLocal() {
+    fun test_transmitThreadLocal() {
         val ttl = ThreadLocal<String>()
         ttl.set(PARENT)
 
-        TransmittableThreadLocal.register(ttl)
+        TransmittableThreadLocal.transmit(ttl)
 
         val capture = TransmittableThreadLocal.Transmitter.capture()
 
@@ -196,7 +195,7 @@ class TransmittableThreadLocal_Transmitter_UserTest {
 
         assertEquals(PARENT, ttl.get())
 
-        TransmittableThreadLocal.unregister(ttl)
+        TransmittableThreadLocal.untransmit(ttl)
 
         val capture1 = TransmittableThreadLocal.Transmitter.capture()
 
