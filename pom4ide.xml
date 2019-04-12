@@ -331,7 +331,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -387,7 +387,6 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>attach-javadoc</id>
@@ -397,6 +396,7 @@
 							</execution>
 						</executions>
 						<configuration>
+							<source>8</source>
 							<show>protected</show>
 							<charset>UTF-8</charset>
 							<encoding>UTF-8</encoding>
@@ -404,24 +404,38 @@
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>*.internal.*</excludePackageNames>
 							<overview>src/api/overview.html</overview>
-							<additionalJOptions>
-								<additionalJOption>-quiet</additionalJOption>
-								<additionalJOption>-J-Duser.language=en</additionalJOption>
-								<additionalJOption>-J-Duser.country=US</additionalJOption>
+							<isOffline>true</isOffline>
+							<offlineLinks>
 								<!--
+									Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
+									https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
+
 									more infos about link setting:
 									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
 									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
 									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-									无法在Javadoc注释中链接到JDK10
-									http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
+									无法在Javadoc注释中链接到JDK10 http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
 								-->
-								<additionalJOption>-linkoffline</additionalJOption>
-								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
-								<additionalJOption>${project.basedir}/docs/package-list/jsr305/</additionalJOption>
-								<additionalJOption>-linkoffline</additionalJOption>
-								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
-								<additionalJOption>${project.basedir}/docs/package-list/java/</additionalJOption>
+								<offlineLink>
+									<url>https://docs.oracle.com/javase/10/docs/api/</url>
+									<location>${project.basedir}/docs/package-list/java/</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</url>
+									<location>${project.basedir}/docs/package-list/jsr305/</location>
+								</offlineLink>
+							</offlineLinks>
+							<additionalJOptions>
+								<!--
+									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
+									https://stackoverflow.com/questions/52326318
+								-->
+								<additionalJOption>--no-module-directories</additionalJOption>
+
+								<additionalJOption>-html5</additionalJOption>
+								<additionalJOption>-quiet</additionalJOption>
+								<additionalJOption>-J-Duser.language=en</additionalJOption>
+								<additionalJOption>-J-Duser.country=US</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -545,39 +559,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>above-jdk9</id>
-			<activation>
-				<jdk>[9,)</jdk>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<additionalJOptions>
-								<additionalJOption>-html5</additionalJOption>
-								<!-- additionalJOptions not support appending, must duplicate all options 0_o! -->
-								<additionalJOption>-quiet</additionalJOption>
-								<additionalJOption>-J-Duser.language=en</additionalJOption>
-								<additionalJOption>-J-Duser.country=US</additionalJOption>
-								<additionalJOption>-linkoffline</additionalJOption>
-								<additionalJOption>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</additionalJOption>
-								<additionalJOption>${project.basedir}/docs/package-list/jsr305/</additionalJOption>
-								<additionalJOption>-linkoffline</additionalJOption>
-								<additionalJOption>https://docs.oracle.com/javase/10/docs/api/</additionalJOption>
-								<additionalJOption>${project.basedir}/docs/package-list/java/</additionalJOption>
-							</additionalJOptions>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>force-jdk-10+when-do-release</id>
+			<id>force-jdk-11+when-do-release</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
