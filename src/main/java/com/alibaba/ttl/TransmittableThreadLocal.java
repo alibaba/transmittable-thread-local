@@ -321,7 +321,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
                 }
             }
 
-            // set values to captured TTL
+            // set TTL values to captured
             setTtlValuesTo(capturedMap);
 
             // call beforeExecute callback
