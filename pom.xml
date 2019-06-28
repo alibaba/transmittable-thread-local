@@ -314,6 +314,18 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<!--
+					config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074
+				-->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
