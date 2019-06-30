@@ -35,8 +35,8 @@ install:
   - pip install --user codecov
 
 script:
-  # default oracle jdk 11, do build and test
-  - switch_to_oracle_jdk11
+  # default jdk 11, do build and test
+  - switch_to_open_jdk11
   - ./scripts/run-agent-test.sh # run junit test in run-agent-test.sh
   # open jdk 6
   - jdk_switcher use openjdk6
@@ -64,10 +64,6 @@ script:
   - ./scripts/run-agent-test.sh skipClean
   #  open jdk 10
   - switch_to_open_jdk10
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 11
-  - switch_to_open_jdk11
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
   #  open jdk 12
