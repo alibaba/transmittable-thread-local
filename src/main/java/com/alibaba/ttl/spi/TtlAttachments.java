@@ -7,4 +7,6 @@ public interface TtlAttachments extends TtlEnhanced {
     void setTtlAttachment(String key, Object value);
 
     <T> T getTtlAttachment(String key);
+
+    String KEY_IS_AUTO_WRAPPER = "ttl.is.auto.wrapper";
 }

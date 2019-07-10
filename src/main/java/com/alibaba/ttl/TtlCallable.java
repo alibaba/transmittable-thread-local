@@ -1,5 +1,7 @@
 package com.alibaba.ttl;
 
+import com.alibaba.ttl.spi.TtlAttachments;
+import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
 import com.alibaba.ttl.spi.TtlEnhanced;
 
 import javax.annotation.Nonnull;
@@ -30,7 +32,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see java.util.concurrent.ExecutorCompletionService
  * @since 0.9.0
  */
-public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
+public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttachments {
     private final AtomicReference<Object> capturedRef;
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
@@ -213,5 +215,17 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced {
             else copy.add(((TtlCallable<T>) task).getCallable());
         }
         return copy;
+    }
+
+    private final TtlAttachmentsDelegate ttlAttachment = new TtlAttachmentsDelegate();
+
+    @Override
+    public void setTtlAttachment(String key, Object value) {
+        ttlAttachment.setTtlAttachment(key, value);
+    }
+
+    @Override
+    public <T> T getTtlAttachment(String key) {
+        return ttlAttachment.getTtlAttachment(key);
     }
 }

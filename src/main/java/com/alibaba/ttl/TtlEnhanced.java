@@ -1,9 +1,7 @@
 package com.alibaba.ttl;
 
-import com.alibaba.ttl.spi.TtlAttachments;
-
 /**
- * @see TtlAttachments
+ * @see com.alibaba.ttl.spi.TtlAttachments
  * @deprecated Use {@link com.alibaba.ttl.spi.TtlEnhanced} instead.
  */
 @Deprecated
