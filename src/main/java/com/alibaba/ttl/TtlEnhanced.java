@@ -1,7 +1,11 @@
 package com.alibaba.ttl;
 
+import com.alibaba.ttl.spi.TtlAttachments;
+
 /**
- * a Ttl marker/tag interface, for ttl enhanced class, for example {@code TTL wrapper}.
+ * @see TtlAttachments
+ * @deprecated Use {@link com.alibaba.ttl.spi.TtlEnhanced} instead.
  */
+@Deprecated
 public interface TtlEnhanced {
 }

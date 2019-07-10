@@ -1,7 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.alibaba.ttl.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
 
 import javax.annotation.Nullable;

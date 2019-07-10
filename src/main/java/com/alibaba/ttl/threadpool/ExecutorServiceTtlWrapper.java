@@ -2,7 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlCallable;
-import com.alibaba.ttl.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.TtlRunnable;
 
 import javax.annotation.Nonnull;

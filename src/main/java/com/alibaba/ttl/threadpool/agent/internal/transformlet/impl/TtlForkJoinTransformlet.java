@@ -1,6 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import com.alibaba.ttl.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
