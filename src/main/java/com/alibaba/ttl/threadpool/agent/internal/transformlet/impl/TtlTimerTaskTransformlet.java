@@ -47,6 +47,9 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
         return clazz.toBytecode();
     }
 
+    /**
+     * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
+     */
     private void updateTimerTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
 

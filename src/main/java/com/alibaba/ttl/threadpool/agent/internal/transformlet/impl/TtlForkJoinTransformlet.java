@@ -47,6 +47,9 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         return null;
     }
 
+    /**
+     * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
+     */
     private void updateForkJoinTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
 

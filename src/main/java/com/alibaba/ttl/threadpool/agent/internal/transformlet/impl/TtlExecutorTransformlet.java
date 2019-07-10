@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
@@ -32,11 +34,14 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     private static Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
     private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<String, String>();
 
+    private static final String THREAD_POOL_EXECUTOR_CLASS_NAME = "java.util.concurrent.ThreadPoolExecutor";
+    private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";
+
     static {
-        EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ThreadPoolExecutor");
+        EXECUTOR_CLASS_NAMES.add(THREAD_POOL_EXECUTOR_CLASS_NAME);
         EXECUTOR_CLASS_NAMES.add("java.util.concurrent.ScheduledThreadPoolExecutor");
 
-        PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put("java.lang.Runnable", "com.alibaba.ttl.TtlRunnable");
+        PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put(RUNNABLE_CLASS_NAME, "com.alibaba.ttl.TtlRunnable");
         PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put("java.util.concurrent.Callable", "com.alibaba.ttl.TtlCallable");
     }
 
@@ -54,17 +59,34 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final CtClass clazz = getCtClass(classFileBuffer, loader);
 
             for (CtMethod method : clazz.getDeclaredMethods()) {
-                updateMethodOfExecutorClass(method);
+                updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(method);
             }
 
             if (disableInheritable) updateConstructorDisableInheritable(clazz);
 
             return clazz.toBytecode();
+        } else {
+            final CtClass clazz = getCtClass(classFileBuffer, loader);
+
+            if (clazz.isPrimitive() || clazz.isArray() || clazz.isInterface() || clazz.isAnnotation()) {
+                return null;
+            }
+            if (!clazz.subclassOf(clazz.getClassPool().get(THREAD_POOL_EXECUTOR_CLASS_NAME))) return null;
+
+            logger.info("Transforming class " + className);
+
+            final boolean updated = updateBeforeAndAfterExecuteMethodOfExecutorSubclass(clazz);
+            if (updated) return clazz.toBytecode();
+            else return null;
         }
-        return null;
     }
 
-    private void updateMethodOfExecutorClass(final CtMethod method) throws NotFoundException, CannotCompileException {
+    /**
+     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
+     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
+     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapper(Object)
+     */
+    private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
 
@@ -73,7 +95,12 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         for (int i = 0; i < parameterTypes.length; i++) {
             final String paramTypeName = parameterTypes[i].getName();
             if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
-                String code = String.format("$%d = %s.get($%d, false, true);", i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
+                String code = String.format(
+                        // decorate to TTL wrapper,
+                        // and then set AutoWrapper attachment/Tag
+                        "$%d = %s.get($%d, false, true);"
+                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapper($%<d);",
+                        i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
@@ -81,6 +108,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         if (insertCode.length() > 0) method.insertBefore(insertCode.toString());
     }
 
+    /**
+     * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+     */
     private void updateConstructorDisableInheritable(final CtClass clazz) throws NotFoundException, CannotCompileException {
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
             final CtClass[] parameterTypes = constructor.getParameterTypes();
@@ -95,5 +125,39 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             }
             if (insertCode.length() > 0) constructor.insertBefore(insertCode.toString());
         }
+    }
+
+    /**
+     * @see Utils#unwrapIfIsAutoWrapper(Runnable)
+     */
+    private boolean updateBeforeAndAfterExecuteMethodOfExecutorSubclass(final CtClass clazz) throws NotFoundException, CannotCompileException {
+        final CtClass runnableClass = clazz.getClassPool().get(RUNNABLE_CLASS_NAME);
+        final CtClass threadClass = clazz.getClassPool().get("java.lang.Thread");
+        final CtClass throwableClass = clazz.getClassPool().get("java.lang.Throwable");
+        boolean updated = false;
+
+        try {
+            final CtMethod beforeExecute = clazz.getDeclaredMethod("beforeExecute", new CtClass[]{threadClass, runnableClass});
+            // unwrap runnable if IsAutoWrapper
+            String code = "$2 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($2);";
+            logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " + beforeExecute.getDeclaringClass().getName() + ": " + code);
+            beforeExecute.insertBefore(code);
+            updated = true;
+        } catch (NotFoundException e) {
+            // clazz does not override beforeExecute method, do nothing.
+        }
+
+        try {
+            final CtMethod afterExecute = clazz.getDeclaredMethod("afterExecute", new CtClass[]{runnableClass, throwableClass});
+            // unwrap runnable if IsAutoWrapper
+            String code = "$1 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($1);";
+            logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " + afterExecute.getDeclaringClass().getName() + ": " + code);
+            afterExecute.insertBefore(code);
+            updated = true;
+        } catch (NotFoundException e) {
+            // clazz does not override afterExecute method, do nothing.
+        }
+
+        return updated;
     }
 }

@@ -1,6 +1,8 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import javassist.*;
@@ -90,10 +92,27 @@ public class Utils {
         logger.info("insert code around method " + signatureOfMethod(method) + " of class " + clazz.getName() + ": " + code);
     }
 
-    @SuppressWarnings("unused")
     public static Object doCaptureWhenNotTtlEnhanced(Object obj) {
         if (obj instanceof TtlEnhanced) return null;
         else return TransmittableThreadLocal.Transmitter.capture();
     }
 
+    public static void setAutoWrapper(Object ttlAttachment) {
+        if (notTtlAttachments(ttlAttachment)) return;
+        ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
+    }
+
+    public static Runnable unwrapIfIsAutoWrapper(Runnable runnable) {
+        if (notTtlAttachments(runnable)) return runnable;
+        else if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
+        else return runnable;
+    }
+
+    private static boolean notTtlAttachments(Object ttlAttachment) {
+        return !(ttlAttachment instanceof TtlAttachments);
+    }
+
+    private static boolean isAutoWrapper(Runnable ttlAttachments) {
+        return ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
+    }
 }
