@@ -274,6 +274,7 @@
 									<include>org.javassist:javassist</include>
 								</includes>
 							</artifactSet>
+							<shadeSourcesContent>true</shadeSourcesContent>
 						</configuration>
 					</execution>
 				</executions>
