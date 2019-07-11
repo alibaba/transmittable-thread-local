@@ -285,7 +285,7 @@ class TtlRunnableTest {
         val task2 = Task("2")
         val task3 = Task("3")
 
-        val taskList = TtlRunnable.gets(Arrays.asList<Runnable>(task1, task2, null, task3))
+        val taskList = TtlRunnable.gets(listOf<Runnable?>(task1, task2, null, task3))
 
         assertEquals(4, taskList.size.toLong())
         assertThat(taskList[0], instanceOf(TtlRunnable::class.java))

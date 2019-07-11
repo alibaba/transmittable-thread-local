@@ -159,7 +159,7 @@ class TtlCallableTest {
         val call3 = Call("3")
 
         val callList = TtlCallable.gets(
-                Arrays.asList<Callable<String>>(call1, call2, null, call3))
+                listOf<Callable<String>?>(call1, call2, null, call3))
 
         assertEquals(4, callList.size.toLong())
         assertThat(callList[0], instanceOf(TtlCallable::class.java))

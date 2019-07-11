@@ -99,7 +99,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(Arrays.asList(call1, call2))
+        val futures = executorService.invokeAll(listOf(call1, call2))
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -118,7 +118,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(Arrays.asList(call1, call2), 10, TimeUnit.MILLISECONDS)
+        val futures = executorService.invokeAll(listOf(call1, call2), 10, TimeUnit.MILLISECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -137,7 +137,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val s = executorService.invokeAny(Arrays.asList(call1, call2))
+        val s = executorService.invokeAny(listOf(call1, call2))
         assertEquals("ok", s)
 
         assertTrue(call1.isCopied || call2.isCopied)
@@ -157,7 +157,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val s = executorService.invokeAny(Arrays.asList(call1, call2), 10, TimeUnit.SECONDS)
+        val s = executorService.invokeAny(listOf(call1, call2), 10, TimeUnit.SECONDS)
         assertEquals("ok", s)
 
         assertTrue(call1.isCopied || call2.isCopied)
