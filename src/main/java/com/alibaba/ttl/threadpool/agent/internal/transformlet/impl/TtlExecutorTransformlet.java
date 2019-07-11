@@ -47,10 +47,10 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
 
     private static final String THREAD_FACTORY_CLASS_NAME = "java.util.concurrent.ThreadFactory";
 
-    private final boolean disableInheritable;
+    private final boolean disableInheritableForThreadPool;
 
-    public TtlExecutorTransformlet(boolean disableInheritable) {
-        this.disableInheritable = disableInheritable;
+    public TtlExecutorTransformlet(boolean disableInheritableForThreadPool) {
+        this.disableInheritableForThreadPool = disableInheritableForThreadPool;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
                 updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(method);
             }
 
-            if (disableInheritable) updateConstructorDisableInheritable(clazz);
+            if (disableInheritableForThreadPool) updateConstructorDisableInheritable(clazz);
 
             classInfo.setModified();
         } else {

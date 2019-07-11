@@ -26,10 +26,10 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     private static final String FORK_JOIN_POOL_CLASS_NAME = "java.util.concurrent.ForkJoinPool";
     private static final String FORK_JOIN_WORKER_THREAD_FACTORY_CLASS_NAME = "java.util.concurrent.ForkJoinPool$ForkJoinWorkerThreadFactory";
 
-    private final boolean disableInheritable;
+    private final boolean disableInheritableForThreadPool;
 
-    public TtlForkJoinTransformlet(boolean disableInheritable) {
-        this.disableInheritable = disableInheritable;
+    public TtlForkJoinTransformlet(boolean disableInheritableForThreadPool) {
+        this.disableInheritableForThreadPool = disableInheritableForThreadPool;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         if (FORK_JOIN_TASK_CLASS_NAME.equals(classInfo.getClassName())) {
             updateForkJoinTaskClass(classInfo.getCtClass());
             classInfo.setModified();
-        } else if (disableInheritable && FORK_JOIN_POOL_CLASS_NAME.equals(classInfo.getClassName())) {
+        } else if (disableInheritableForThreadPool && FORK_JOIN_POOL_CLASS_NAME.equals(classInfo.getClassName())) {
             updateConstructorDisableInheritable(classInfo.getCtClass());
             classInfo.setModified();
         }
