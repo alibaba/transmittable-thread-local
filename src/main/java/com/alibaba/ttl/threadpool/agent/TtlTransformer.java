@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 
 import javax.annotation.Nonnull;
@@ -41,9 +42,12 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classFile == null) return EMPTY_BYTE_ARRAY;
 
             final String className = toClassName(classFile);
+
+            ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
+
             for (JavassistTransformlet transformlet : transformletList) {
-                final byte[] bytes = transformlet.doTransform(className, classFileBuffer, loader);
-                if (bytes != null) return bytes;
+                transformlet.doTransform(classInfo);
+                if (classInfo.isModified()) return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {
             String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();

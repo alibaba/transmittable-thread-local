@@ -1,12 +1,13 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
 import java.io.IOException;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doTryFinallyForMethod;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.TimerTask}.
@@ -24,27 +25,27 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
     private static final String RUN_METHOD_NAME = "run";
 
     @Override
-    public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
-        if (TIMER_TASK_CLASS_NAME.equals(className)) return null; // No need transform TimerTask class
+    public void doTransform(final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+        if (TIMER_TASK_CLASS_NAME.equals(classInfo.getClassName())) return; // No need transform TimerTask class
 
-        final CtClass clazz = getCtClass(classFileBuffer, loader);
+        final CtClass clazz = classInfo.getCtClass();
 
         if (clazz.isPrimitive() || clazz.isArray() || clazz.isInterface() || clazz.isAnnotation()) {
-            return null;
+            return;
         }
         // class contains method `void run()` ?
         try {
             final CtMethod runMethod = clazz.getDeclaredMethod(RUN_METHOD_NAME, new CtClass[0]);
-            if (!CtClass.voidType.equals(runMethod.getReturnType())) return null;
+            if (!CtClass.voidType.equals(runMethod.getReturnType())) return;
         } catch (NotFoundException e) {
-            return null;
+            return;
         }
-        if (!clazz.subclassOf(clazz.getClassPool().get(TIMER_TASK_CLASS_NAME))) return null;
+        if (!clazz.subclassOf(clazz.getClassPool().get(TIMER_TASK_CLASS_NAME))) return;
 
-        logger.info("Transforming class " + className);
+        logger.info("Transforming class " + classInfo.getClassName());
 
         updateTimerTaskClass(clazz);
-        return clazz.toBytecode();
+        classInfo.setModified();
     }
 
     /**

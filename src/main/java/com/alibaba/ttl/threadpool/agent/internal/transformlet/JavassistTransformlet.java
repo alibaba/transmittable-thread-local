@@ -12,5 +12,5 @@ import java.io.IOException;
  * @since 2.5.1
  */
 public interface JavassistTransformlet {
-    byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException;
+    void doTransform(ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException;
 }

@@ -46,20 +46,6 @@ public class Utils {
         return stringBuilder.toString();
     }
 
-    static CtClass getCtClass(final byte[] classFileBuffer, final ClassLoader classLoader) throws IOException {
-        final ClassPool classPool = new ClassPool(true);
-        if (classLoader == null) {
-            classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
-        } else {
-            classPool.appendClassPath(new LoaderClassPath(classLoader));
-        }
-
-        final CtClass clazz = classPool.makeClass(new ByteArrayInputStream(classFileBuffer), false);
-        clazz.defrost();
-        return clazz;
-    }
-
-
     static String renamedMethodNameByTtl(CtMethod method) {
         return "original$" + method.getName() + "$method$renamed$by$ttl";
     }

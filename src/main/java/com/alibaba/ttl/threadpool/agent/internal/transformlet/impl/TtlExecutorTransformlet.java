@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.getCtClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
@@ -54,9 +54,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     @Override
-    public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
-        if (EXECUTOR_CLASS_NAMES.contains(className)) {
-            final CtClass clazz = getCtClass(classFileBuffer, loader);
+    public void doTransform(final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+        if (EXECUTOR_CLASS_NAMES.contains(classInfo.getClassName())) {
+            final CtClass clazz = classInfo.getCtClass();
 
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(method);
@@ -64,20 +64,19 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
 
             if (disableInheritable) updateConstructorDisableInheritable(clazz);
 
-            return clazz.toBytecode();
+            classInfo.setModified();
         } else {
-            final CtClass clazz = getCtClass(classFileBuffer, loader);
+            final CtClass clazz = classInfo.getCtClass();
 
             if (clazz.isPrimitive() || clazz.isArray() || clazz.isInterface() || clazz.isAnnotation()) {
-                return null;
+                return;
             }
-            if (!clazz.subclassOf(clazz.getClassPool().get(THREAD_POOL_EXECUTOR_CLASS_NAME))) return null;
+            if (!clazz.subclassOf(clazz.getClassPool().get(THREAD_POOL_EXECUTOR_CLASS_NAME))) return;
 
-            logger.info("Transforming class " + className);
+            logger.info("Transforming class " + classInfo.getClassName());
 
-            final boolean updated = updateBeforeAndAfterExecuteMethodOfExecutorSubclass(clazz);
-            if (updated) return clazz.toBytecode();
-            else return null;
+            final boolean modified = updateBeforeAndAfterExecuteMethodOfExecutorSubclass(clazz);
+            if (modified) classInfo.setModified();
         }
     }
 
@@ -134,7 +133,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         final CtClass runnableClass = clazz.getClassPool().get(RUNNABLE_CLASS_NAME);
         final CtClass threadClass = clazz.getClassPool().get("java.lang.Thread");
         final CtClass throwableClass = clazz.getClassPool().get("java.lang.Throwable");
-        boolean updated = false;
+        boolean modified = false;
 
         try {
             final CtMethod beforeExecute = clazz.getDeclaredMethod("beforeExecute", new CtClass[]{threadClass, runnableClass});
@@ -142,7 +141,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             String code = "$2 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($2);";
             logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " + beforeExecute.getDeclaringClass().getName() + ": " + code);
             beforeExecute.insertBefore(code);
-            updated = true;
+            modified = true;
         } catch (NotFoundException e) {
             // clazz does not override beforeExecute method, do nothing.
         }
@@ -153,11 +152,11 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             String code = "$1 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($1);";
             logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " + afterExecute.getDeclaringClass().getName() + ": " + code);
             afterExecute.insertBefore(code);
-            updated = true;
+            modified = true;
         } catch (NotFoundException e) {
             // clazz does not override afterExecute method, do nothing.
         }
 
-        return updated;
+        return modified;
     }
 }

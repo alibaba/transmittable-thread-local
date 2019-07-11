@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
@@ -32,19 +33,14 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     }
 
     @Override
-    public byte[] doTransform(String className, byte[] classFileBuffer, ClassLoader loader) throws IOException, NotFoundException, CannotCompileException {
-        if (FORK_JOIN_TASK_CLASS_NAME.equals(className)) {
-            final CtClass clazz = getCtClass(classFileBuffer, loader);
-
-            updateForkJoinTaskClass(clazz);
-            return clazz.toBytecode();
-        } else if (disableInheritable && FORK_JOIN_POOL_CLASS_NAME.equals(className)) {
-            final CtClass clazz = getCtClass(classFileBuffer, loader);
-            updateConstructorDisableInheritable(clazz);
-            return clazz.toBytecode();
+    public void doTransform(final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+        if (FORK_JOIN_TASK_CLASS_NAME.equals(classInfo.getClassName())) {
+            updateForkJoinTaskClass(classInfo.getCtClass());
+            classInfo.setModified();
+        } else if (disableInheritable && FORK_JOIN_POOL_CLASS_NAME.equals(classInfo.getClassName())) {
+            updateConstructorDisableInheritable(classInfo.getCtClass());
+            classInfo.setModified();
         }
-
-        return null;
     }
 
     /**
