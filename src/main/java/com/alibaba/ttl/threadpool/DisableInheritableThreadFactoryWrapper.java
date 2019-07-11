@@ -1,9 +1,10 @@
 package com.alibaba.ttl.threadpool;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
-
 import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadFactory;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.clear;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -18,11 +19,11 @@ class DisableInheritableThreadFactoryWrapper implements DisableInheritableThread
 
     @Override
     public Thread newThread(@Nonnull Runnable r) {
-        final Object backup = TransmittableThreadLocal.Transmitter.clear();
+        final Object backup = clear();
         try {
             return threadFactory.newThread(r);
         } finally {
-            TransmittableThreadLocal.Transmitter.restore(backup);
+            restore(backup);
         }
     }
 

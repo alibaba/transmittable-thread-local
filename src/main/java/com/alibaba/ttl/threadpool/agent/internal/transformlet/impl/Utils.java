@@ -1,15 +1,14 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import javassist.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.reflect.Modifier;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -80,7 +79,7 @@ public class Utils {
 
     public static Object doCaptureWhenNotTtlEnhanced(Object obj) {
         if (obj instanceof TtlEnhanced) return null;
-        else return TransmittableThreadLocal.Transmitter.capture();
+        else return capture();
     }
 
     public static void setAutoWrapper(Object ttlAttachment) {

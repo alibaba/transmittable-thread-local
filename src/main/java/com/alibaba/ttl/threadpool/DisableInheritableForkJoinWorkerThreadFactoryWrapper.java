@@ -1,11 +1,12 @@
 package com.alibaba.ttl.threadpool;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
-
 import javax.annotation.Nonnull;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinWorkerThread;
+
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.clear;
+import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -20,11 +21,11 @@ class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements DisableInh
 
     @Override
     public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
-        final Object backup = TransmittableThreadLocal.Transmitter.clear();
+        final Object backup = clear();
         try {
             return threadFactory.newThread(pool);
         } finally {
-            TransmittableThreadLocal.Transmitter.restore(backup);
+            restore(backup);
         }
     }
 
