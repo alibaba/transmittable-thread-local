@@ -7,8 +7,8 @@
     <!-- config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074 -->
     <ignoreVersions>
         <ignoreVersion type="regex">.*-[Aa]lpha-\d+</ignoreVersion>
-        <!-- ignore like junit 4.13-beta-3, rxkotlin 2.4.0-beta.1 -->
-        <ignoreVersion type="regex">.*-[Bb]eta([-.]\d+)?</ignoreVersion>
+        <!-- ignore like junit 4.13-beta-3, rxkotlin 2.4.0-beta.1, spotbugs-annotations 4.0.0-beta3 -->
+        <ignoreVersion type="regex">.*-[Bb]eta([-.]?\d+)?</ignoreVersion>
         <ignoreVersion type="regex">(?i).*-eap-\d+</ignoreVersion>
         <!-- ignore like kotlinx-coroutines-core 1.3.0-M1 -->
         <ignoreVersion type="regex">.*-M\d+(-.*)?</ignoreVersion>
