@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.LoaderClassPath;
@@ -18,7 +19,11 @@ public class ClassInfo {
     private final byte[] classFileBuffer;
     private final ClassLoader loader;
 
-    public ClassInfo(@Nonnull String className, @Nonnull byte[] classFileBuffer, @Nullable ClassLoader loader) {
+    // SuppressFBWarnings for classFileBuffer parameter:
+    //   [ERROR] new com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo(String, byte[], ClassLoader)
+    //   may expose internal representation by storing an externally mutable object
+    //   into ClassInfo.classFileBuffer
+    public ClassInfo(@Nonnull String className, @Nonnull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
         this.className = className;
         this.classFileBuffer = classFileBuffer;
         this.loader = loader;

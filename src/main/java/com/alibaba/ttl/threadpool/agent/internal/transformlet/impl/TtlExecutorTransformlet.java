@@ -4,6 +4,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.*;
 
 import javax.annotation.Nonnull;
@@ -86,6 +87,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
      * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
      * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapperAttachment(Object)
      */
+    @SuppressFBWarnings("VA_FORMAT_STRING_USES_NEWLINE") // [ERROR] Format string should use %n rather than \n
     private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@Nonnull final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;

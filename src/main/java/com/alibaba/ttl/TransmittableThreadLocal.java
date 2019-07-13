@@ -180,7 +180,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      */
     static void dump(@Nullable String title) {
         if (title != null && title.length() > 0) {
-            System.out.printf("Start TransmittableThreadLocal[%s] Dump...\n", title);
+            System.out.printf("Start TransmittableThreadLocal[%s] Dump...%n", title);
         } else {
             System.out.println("Start TransmittableThreadLocal Dump...");
         }
