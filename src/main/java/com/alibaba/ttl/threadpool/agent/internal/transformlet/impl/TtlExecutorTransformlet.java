@@ -6,6 +6,7 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     @Override
-    public void doTransform(final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+    public void doTransform(@Nonnull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
         if (EXECUTOR_CLASS_NAMES.contains(classInfo.getClassName())) {
             final CtClass clazz = classInfo.getCtClass();
 
@@ -85,7 +86,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
      * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
      * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapperAttachment(Object)
      */
-    private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(final CtMethod method) throws NotFoundException, CannotCompileException {
+    private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@Nonnull final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
 
@@ -110,7 +111,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     /**
      * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
      */
-    private void updateConstructorDisableInheritable(final CtClass clazz) throws NotFoundException, CannotCompileException {
+    private void updateConstructorDisableInheritable(@Nonnull final CtClass clazz) throws NotFoundException, CannotCompileException {
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
             final CtClass[] parameterTypes = constructor.getParameterTypes();
             final StringBuilder insertCode = new StringBuilder();
@@ -129,7 +130,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     /**
      * @see Utils#unwrapIfIsAutoWrapper(Runnable)
      */
-    private boolean updateBeforeAndAfterExecuteMethodOfExecutorSubclass(final CtClass clazz) throws NotFoundException, CannotCompileException {
+    private boolean updateBeforeAndAfterExecuteMethodOfExecutorSubclass(@Nonnull final CtClass clazz) throws NotFoundException, CannotCompileException {
         final CtClass runnableClass = clazz.getClassPool().get(RUNNABLE_CLASS_NAME);
         final CtClass threadClass = clazz.getClassPool().get("java.lang.Thread");
         final CtClass throwableClass = clazz.getClassPool().get("java.lang.Throwable");

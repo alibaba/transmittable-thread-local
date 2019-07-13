@@ -3,6 +3,7 @@ package com.alibaba.ttl.threadpool.agent.internal.transformlet;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -12,5 +13,5 @@ import java.io.IOException;
  * @since 2.5.1
  */
 public interface JavassistTransformlet {
-    void doTransform(ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException;
+    void doTransform(@Nonnull ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException;
 }

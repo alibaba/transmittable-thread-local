@@ -229,7 +229,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @since 2.11.0
      */
     @Override
-    public void setTtlAttachment(String key, Object value) {
+    public void setTtlAttachment(@Nonnull String key, Object value) {
         ttlAttachment.setTtlAttachment(key, value);
     }
 
@@ -239,7 +239,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @since 2.11.0
      */
     @Override
-    public <T> T getTtlAttachment(String key) {
+    public <T> T getTtlAttachment(@Nonnull String key) {
         return ttlAttachment.getTtlAttachment(key);
     }
 }

@@ -6,6 +6,8 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import javassist.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Modifier;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
@@ -24,7 +26,8 @@ public class Utils {
      * @param method method object
      * @return method signature string
      */
-    static String signatureOfMethod(final CtBehavior method) throws NotFoundException {
+    @Nonnull
+    static String signatureOfMethod(@Nonnull final CtBehavior method) throws NotFoundException {
         final StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(Modifier.toString(method.getModifiers()));
@@ -45,15 +48,16 @@ public class Utils {
         return stringBuilder.toString();
     }
 
-    static String renamedMethodNameByTtl(CtMethod method) {
+    @Nonnull
+    static String renamedMethodNameByTtl(@Nonnull CtMethod method) {
         return "original$" + method.getName() + "$method$renamed$by$ttl";
     }
 
-    static void doTryFinallyForMethod(CtMethod method, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
+    static void doTryFinallyForMethod(@Nonnull CtMethod method, @Nonnull String beforeCode, @Nonnull String finallyCode) throws CannotCompileException, NotFoundException {
         doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
     }
 
-    static void doTryFinallyForMethod(CtMethod method, String renamedMethodName, String beforeCode, String finallyCode) throws CannotCompileException, NotFoundException {
+    static void doTryFinallyForMethod(@Nonnull CtMethod method, @Nonnull String renamedMethodName, @Nonnull String beforeCode, @Nonnull String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
         final CtMethod new_method = CtNewMethod.copy(method, clazz, null);
 
@@ -77,26 +81,29 @@ public class Utils {
         logger.info("insert code around method " + signatureOfMethod(method) + " of class " + clazz.getName() + ": " + code);
     }
 
-    public static Object doCaptureWhenNotTtlEnhanced(Object obj) {
+    @Nullable
+    public static Object doCaptureWhenNotTtlEnhanced(@Nullable Object obj) {
         if (obj instanceof TtlEnhanced) return null;
         else return capture();
     }
 
-    public static void setAutoWrapperAttachment(Object ttlAttachment) {
+    @Nullable
+    public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
         if (notTtlAttachments(ttlAttachment)) return;
         ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
     }
 
-    public static Runnable unwrapIfIsAutoWrapper(Runnable runnable) {
+    @Nullable
+    public static Runnable unwrapIfIsAutoWrapper(@Nullable Runnable runnable) {
         if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
         else return runnable;
     }
 
-    private static boolean notTtlAttachments(Object ttlAttachment) {
+    private static boolean notTtlAttachments(@Nullable Object ttlAttachment) {
         return !(ttlAttachment instanceof TtlAttachments);
     }
 
-    private static boolean isAutoWrapper(Runnable ttlAttachments) {
+    private static boolean isAutoWrapper(@Nullable Runnable ttlAttachments) {
         if (notTtlAttachments(ttlAttachments)) return false;
 
         final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);

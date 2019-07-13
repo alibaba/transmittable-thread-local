@@ -35,8 +35,8 @@ public class TtlTransformer implements ClassFileTransformer {
     }
 
     @Override
-    public final byte[] transform(@Nonnull final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
-                                  final ProtectionDomain protectionDomain, final byte[] classFileBuffer) {
+    public final byte[] transform(@Nullable final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
+                                  final ProtectionDomain protectionDomain, @Nonnull final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
             if (classFile == null) return EMPTY_BYTE_ARRAY;
@@ -58,7 +58,7 @@ public class TtlTransformer implements ClassFileTransformer {
         return EMPTY_BYTE_ARRAY;
     }
 
-    private static String toClassName(final String classFile) {
+    private static String toClassName(@Nonnull final String classFile) {
         return classFile.replace('/', '.');
     }
 }

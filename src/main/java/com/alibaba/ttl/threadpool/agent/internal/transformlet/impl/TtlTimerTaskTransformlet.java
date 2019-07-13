@@ -5,6 +5,7 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import javassist.*;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doTryFinallyForMethod;
@@ -25,7 +26,7 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
     private static final String RUN_METHOD_NAME = "run";
 
     @Override
-    public void doTransform(final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+    public void doTransform(@Nonnull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
         if (TIMER_TASK_CLASS_NAME.equals(classInfo.getClassName())) return; // No need transform TimerTask class
 
         final CtClass clazz = classInfo.getCtClass();
@@ -51,7 +52,7 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
     /**
      * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
      */
-    private void updateTimerTaskClass(final CtClass clazz) throws CannotCompileException, NotFoundException {
+    private void updateTimerTaskClass(@Nonnull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
 
         // add new field

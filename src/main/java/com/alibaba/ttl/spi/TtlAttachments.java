@@ -1,5 +1,7 @@
 package com.alibaba.ttl.spi;
 
+import javax.annotation.Nonnull;
+
 /**
  * The TTL attachments for TTL tasks, eg: {@link com.alibaba.ttl.TtlRunnable}, {@link com.alibaba.ttl.TtlCallable}.
  *
@@ -14,7 +16,7 @@ public interface TtlAttachments extends TtlEnhanced {
      * @param value attachment value
      * @since 2.11.0
      */
-    void setTtlAttachment(String key, Object value);
+    void setTtlAttachment(@Nonnull String key, Object value);
 
     /**
      * get the TTL attachment for TTL tasks
@@ -22,7 +24,7 @@ public interface TtlAttachments extends TtlEnhanced {
      * @param key attachment key
      * @since 2.11.0
      */
-    <T> T getTtlAttachment(String key);
+    <T> T getTtlAttachment(@Nonnull String key);
 
     /**
      * The attachment key of TTL task, weather this task is a auto wrapper task.

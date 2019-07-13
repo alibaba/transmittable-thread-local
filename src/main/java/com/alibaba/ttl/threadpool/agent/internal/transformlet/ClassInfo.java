@@ -4,6 +4,8 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.LoaderClassPath;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -16,18 +18,20 @@ public class ClassInfo {
     private final byte[] classFileBuffer;
     private final ClassLoader loader;
 
-    public ClassInfo(String className, byte[] classFileBuffer, ClassLoader loader) {
+    public ClassInfo(@Nonnull String className, @Nonnull byte[] classFileBuffer, @Nullable ClassLoader loader) {
         this.className = className;
         this.classFileBuffer = classFileBuffer;
         this.loader = loader;
     }
 
+    @Nonnull
     public String getClassName() {
         return className;
     }
 
     private CtClass ctClass;
 
+    @Nonnull
     public CtClass getCtClass() throws IOException {
         if (ctClass != null) return ctClass;
 
