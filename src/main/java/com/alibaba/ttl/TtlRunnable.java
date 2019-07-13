@@ -223,11 +223,21 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
 
     private final TtlAttachmentsDelegate ttlAttachment = new TtlAttachmentsDelegate();
 
+    /**
+     * see {@link TtlAttachments#setTtlAttachment(String, Object)}
+     *
+     * @since 2.11.0
+     */
     @Override
     public void setTtlAttachment(String key, Object value) {
         ttlAttachment.setTtlAttachment(key, value);
     }
 
+    /**
+     * see {@link TtlAttachments#getTtlAttachment(String)}
+     *
+     * @since 2.11.0
+     */
     @Override
     public <T> T getTtlAttachment(String key) {
         return ttlAttachment.getTtlAttachment(key);

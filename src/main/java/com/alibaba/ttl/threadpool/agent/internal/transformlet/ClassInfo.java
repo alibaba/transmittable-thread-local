@@ -7,6 +7,10 @@ import javassist.LoaderClassPath;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+/**
+ * @author Jerry Lee (oldratlee at gmail dot com)
+ * @since 2.11.0
+ */
 public class ClassInfo {
     private final String className;
     private final byte[] classFileBuffer;
