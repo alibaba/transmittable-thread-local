@@ -1,6 +1,7 @@
 package com.alibaba.ttl.spi;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -16,13 +17,13 @@ public class TtlAttachmentsDelegate implements TtlAttachments {
     private volatile ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<String, Object>();
 
     @Override
-    public void setTtlAttachment(@Nonnull String key, Object value) {
+    public void setTtlAttachment(@NonNull String key, Object value) {
         attachments.put(key, value);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getTtlAttachment(@Nonnull String key) {
+    public <T> T getTtlAttachment(@NonNull String key) {
         return (T) attachments.get(key);
     }
 }

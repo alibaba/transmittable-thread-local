@@ -4,9 +4,9 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
@@ -34,7 +34,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     }
 
     @Override
-    public void doTransform(@Nonnull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+    public void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
         if (FORK_JOIN_TASK_CLASS_NAME.equals(classInfo.getClassName())) {
             updateForkJoinTaskClass(classInfo.getCtClass());
             classInfo.setModified();
@@ -47,7 +47,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     /**
      * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
      */
-    private void updateForkJoinTaskClass(@Nonnull final CtClass clazz) throws CannotCompileException, NotFoundException {
+    private void updateForkJoinTaskClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
 
         // add new field
@@ -69,7 +69,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         doTryFinallyForMethod(doExecMethod, doExec_renamed_method_rename, beforeCode, finallyCode);
     }
 
-    private void updateConstructorDisableInheritable(@Nonnull final CtClass clazz) throws NotFoundException, CannotCompileException {
+    private void updateConstructorDisableInheritable(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
             final CtClass[] parameterTypes = constructor.getParameterTypes();
             final StringBuilder insertCode = new StringBuilder();

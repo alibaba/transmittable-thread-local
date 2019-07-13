@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinWorkerThread;
@@ -15,7 +16,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements DisableInheritableForkJoinWorkerThreadFactory {
     private final ForkJoinWorkerThreadFactory threadFactory;
 
-    DisableInheritableForkJoinWorkerThreadFactoryWrapper(@Nonnull ForkJoinWorkerThreadFactory threadFactory) {
+    DisableInheritableForkJoinWorkerThreadFactoryWrapper(@NonNull ForkJoinWorkerThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
     }
 
@@ -29,8 +30,8 @@ class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements DisableInh
         }
     }
 
-    @Nonnull
     @Override
+    @NonNull
     public ForkJoinWorkerThreadFactory unwrap() {
         return threadFactory;
     }

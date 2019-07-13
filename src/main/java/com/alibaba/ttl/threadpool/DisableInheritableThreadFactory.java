@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -14,6 +15,6 @@ public interface DisableInheritableThreadFactory extends ThreadFactory {
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      */
-    @Nonnull
+    @NonNull
     ThreadFactory unwrap();
 }

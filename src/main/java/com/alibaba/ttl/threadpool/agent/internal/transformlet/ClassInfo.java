@@ -1,12 +1,12 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.LoaderClassPath;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -23,20 +23,20 @@ public class ClassInfo {
     //   [ERROR] new com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo(String, byte[], ClassLoader)
     //   may expose internal representation by storing an externally mutable object
     //   into ClassInfo.classFileBuffer
-    public ClassInfo(@Nonnull String className, @Nonnull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
+    public ClassInfo(@NonNull String className, @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
         this.className = className;
         this.classFileBuffer = classFileBuffer;
         this.loader = loader;
     }
 
-    @Nonnull
+    @NonNull
     public String getClassName() {
         return className;
     }
 
     private CtClass ctClass;
 
-    @Nonnull
+    @NonNull
     public CtClass getCtClass() throws IOException {
         if (ctClass != null) return ctClass;
 

@@ -3,9 +3,9 @@ package com.alibaba.ttl;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
 import com.alibaba.ttl.spi.TtlEnhanced;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
     private final Runnable runnable;
     private final boolean releaseTtlValueReferenceAfterRun;
 
-    private TtlRunnable(@Nonnull Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
+    private TtlRunnable(@NonNull Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
@@ -61,7 +61,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
     /**
      * return original/unwrapped {@link Runnable}.
      */
-    @Nonnull
+    @NonNull
     public Runnable getRunnable() {
         return runnable;
     }
@@ -141,7 +141,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    @Nonnull
+    @NonNull
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks) {
         return gets(tasks, false, false);
     }
@@ -154,7 +154,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
-    @Nonnull
+    @NonNull
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun) {
         return gets(tasks, releaseTtlValueReferenceAfterRun, false);
     }
@@ -170,7 +170,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @return wrapped tasks
      * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
-    @Nonnull
+    @NonNull
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == tasks) return Collections.emptyList();
 
@@ -209,7 +209,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @see #unwrap(Runnable)
      * @since 2.10.2
      */
-    @Nonnull
+    @NonNull
     public static List<Runnable> unwraps(@Nullable Collection<? extends Runnable> tasks) {
         if (null == tasks) return Collections.emptyList();
 
@@ -229,7 +229,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @since 2.11.0
      */
     @Override
-    public void setTtlAttachment(@Nonnull String key, Object value) {
+    public void setTtlAttachment(@NonNull String key, Object value) {
         ttlAttachment.setTtlAttachment(key, value);
     }
 
@@ -239,7 +239,7 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      * @since 2.11.0
      */
     @Override
-    public <T> T getTtlAttachment(@Nonnull String key) {
+    public <T> T getTtlAttachment(@NonNull String key) {
         return ttlAttachment.getTtlAttachment(key);
     }
 }

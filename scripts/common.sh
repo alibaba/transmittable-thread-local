@@ -136,7 +136,7 @@ mvnCopyDependencies() {
     if [ ! -e "$dependencies_dir" ]; then
         # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
         # exclude repackaged and shaded javassist libs
-        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305 || die "fail to mvn copy-dependencies!"
+        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations || die "fail to mvn copy-dependencies!"
     fi
 }
 

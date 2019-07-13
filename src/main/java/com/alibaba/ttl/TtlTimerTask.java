@@ -1,9 +1,9 @@
 package com.alibaba.ttl;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,7 +32,7 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;
 
-    private TtlTimerTask(@Nonnull TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
+    private TtlTimerTask(@NonNull TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
@@ -62,7 +62,7 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
         return super.cancel();
     }
 
-    @Nonnull
+    @NonNull
     public TimerTask getTimerTask() {
         return timerTask;
     }
@@ -156,7 +156,7 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
      * @see #unwrap(TimerTask)
      * @since 2.10.2
      */
-    @Nonnull
+    @NonNull
     public static List<TimerTask> unwraps(@Nullable Collection<? extends TimerTask> tasks) {
         if (null == tasks) return Collections.emptyList();
 

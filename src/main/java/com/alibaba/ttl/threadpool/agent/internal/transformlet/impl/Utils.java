@@ -4,10 +4,10 @@ import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import javassist.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Modifier;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
@@ -26,8 +26,8 @@ public class Utils {
      * @param method method object
      * @return method signature string
      */
-    @Nonnull
-    static String signatureOfMethod(@Nonnull final CtBehavior method) throws NotFoundException {
+    @NonNull
+    static String signatureOfMethod(@NonNull final CtBehavior method) throws NotFoundException {
         final StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(Modifier.toString(method.getModifiers()));
@@ -48,16 +48,16 @@ public class Utils {
         return stringBuilder.toString();
     }
 
-    @Nonnull
-    static String renamedMethodNameByTtl(@Nonnull CtMethod method) {
+    @NonNull
+    static String renamedMethodNameByTtl(@NonNull CtMethod method) {
         return "original$" + method.getName() + "$method$renamed$by$ttl";
     }
 
-    static void doTryFinallyForMethod(@Nonnull CtMethod method, @Nonnull String beforeCode, @Nonnull String finallyCode) throws CannotCompileException, NotFoundException {
+    static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
     }
 
-    static void doTryFinallyForMethod(@Nonnull CtMethod method, @Nonnull String renamedMethodName, @Nonnull String beforeCode, @Nonnull String finallyCode) throws CannotCompileException, NotFoundException {
+    static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String renamedMethodName, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
         final CtMethod new_method = CtNewMethod.copy(method, clazz, null);
 

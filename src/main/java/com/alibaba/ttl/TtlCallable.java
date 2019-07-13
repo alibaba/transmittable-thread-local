@@ -3,9 +3,9 @@ package com.alibaba.ttl;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
 import com.alibaba.ttl.spi.TtlEnhanced;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
 
-    private TtlCallable(@Nonnull Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
+    private TtlCallable(@NonNull Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
         this.capturedRef = new AtomicReference<Object>(capture());
         this.callable = callable;
         this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
@@ -61,7 +61,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
         }
     }
 
-    @Nonnull
+    @NonNull
     public Callable<V> getCallable() {
         return callable;
     }
@@ -141,7 +141,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @param tasks task to be wrapped
      * @return Wrapped {@link Callable}
      */
-    @Nonnull
+    @NonNull
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks) {
         return gets(tasks, false, false);
     }
@@ -153,7 +153,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @param releaseTtlValueReferenceAfterCall release TTL value reference after run, avoid memory leak even if {@link TtlRunnable} is referred.
      * @return Wrapped {@link Callable}
      */
-    @Nonnull
+    @NonNull
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall) {
         return gets(tasks, releaseTtlValueReferenceAfterCall, false);
     }
@@ -166,7 +166,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @param idempotent                        is idempotent or not. {@code true} will cover up bugs! <b>DO NOT</b> set, only when you know why.
      * @return Wrapped {@link Callable}
      */
-    @Nonnull
+    @NonNull
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
         if (null == tasks) return Collections.emptyList();
 
@@ -205,7 +205,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @see #unwrap(Callable)
      * @since 2.10.2
      */
-    @Nonnull
+    @NonNull
     public static <T> List<Callable<T>> unwraps(@Nullable Collection<? extends Callable<T>> tasks) {
         if (null == tasks) return Collections.emptyList();
 
@@ -225,7 +225,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @since 2.11.0
      */
     @Override
-    public void setTtlAttachment(@Nonnull String key, Object value) {
+    public void setTtlAttachment(@NonNull String key, Object value) {
         ttlAttachment.setTtlAttachment(key, value);
     }
 
@@ -235,7 +235,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @since 2.11.0
      */
     @Override
-    public <T> T getTtlAttachment(@Nonnull String key) {
+    public <T> T getTtlAttachment(@NonNull String key) {
         return ttlAttachment.getTtlAttachment(key);
     }
 }

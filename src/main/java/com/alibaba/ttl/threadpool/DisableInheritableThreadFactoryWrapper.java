@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import java.util.concurrent.ThreadFactory;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.clear;
@@ -13,12 +14,12 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore;
 class DisableInheritableThreadFactoryWrapper implements DisableInheritableThreadFactory {
     private final ThreadFactory threadFactory;
 
-    DisableInheritableThreadFactoryWrapper(@Nonnull ThreadFactory threadFactory) {
+    DisableInheritableThreadFactoryWrapper(@NonNull ThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
     }
 
     @Override
-    public Thread newThread(@Nonnull Runnable r) {
+    public Thread newThread(@NonNull Runnable r) {
         final Object backup = clear();
         try {
             return threadFactory.newThread(r);
@@ -27,7 +28,7 @@ class DisableInheritableThreadFactoryWrapper implements DisableInheritableThread
         }
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public ThreadFactory unwrap() {
         return threadFactory;

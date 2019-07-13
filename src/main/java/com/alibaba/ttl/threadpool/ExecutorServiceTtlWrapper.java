@@ -2,10 +2,10 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlCallable;
-import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.spi.TtlEnhanced;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService, TtlEnhanced {
     private final ExecutorService executorService;
 
-    ExecutorServiceTtlWrapper(@Nonnull ExecutorService executorService) {
+    ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService) {
         super(executorService);
         this.executorService = executorService;
     }
@@ -31,7 +31,7 @@ class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorSe
         executorService.shutdown();
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public List<Runnable> shutdownNow() {
         return executorService.shutdownNow();
@@ -48,52 +48,52 @@ class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorSe
     }
 
     @Override
-    public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+    public boolean awaitTermination(long timeout, @NonNull TimeUnit unit) throws InterruptedException {
         return executorService.awaitTermination(timeout, unit);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> Future<T> submit(@Nonnull Callable<T> task) {
+    public <T> Future<T> submit(@NonNull Callable<T> task) {
         return executorService.submit(TtlCallable.get(task));
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> Future<T> submit(@Nonnull Runnable task, T result) {
+    public <T> Future<T> submit(@NonNull Runnable task, T result) {
         return executorService.submit(TtlRunnable.get(task), result);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public Future<?> submit(@Nonnull Runnable task) {
+    public Future<?> submit(@NonNull Runnable task) {
         return executorService.submit(TtlRunnable.get(task));
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(@NonNull Collection<? extends Callable<T>> tasks) throws InterruptedException {
         return executorService.invokeAll(TtlCallable.gets(tasks));
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(@NonNull Collection<? extends Callable<T>> tasks, long timeout, @NonNull TimeUnit unit) throws InterruptedException {
         return executorService.invokeAll(TtlCallable.gets(tasks), timeout, unit);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+    public <T> T invokeAny(@NonNull Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
         return executorService.invokeAny(TtlCallable.gets(tasks));
     }
 
     @Override
-    public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public <T> T invokeAny(@NonNull Collection<? extends Callable<T>> tasks, long timeout, @NonNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return executorService.invokeAny(TtlCallable.gets(tasks), timeout, unit);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public ExecutorService unwrap() {
         return executorService;

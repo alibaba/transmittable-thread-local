@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 
 /**
@@ -13,6 +14,6 @@ public interface DisableInheritableForkJoinWorkerThreadFactory extends ForkJoinW
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      */
-    @Nonnull
+    @NonNull
     ForkJoinWorkerThreadFactory unwrap();
 }

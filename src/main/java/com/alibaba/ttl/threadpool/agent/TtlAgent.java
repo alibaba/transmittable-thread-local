@@ -6,8 +6,8 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTr
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public final class TtlAgent {
      * @see Logger#STDERR
      * @see Logger#STDOUT
      */
-    public static void premain(String agentArgs, @Nonnull Instrumentation inst) {
+    public static void premain(String agentArgs, @NonNull Instrumentation inst) {
         kvs = splitCommaColonStringToKV(agentArgs);
 
         Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
@@ -145,7 +145,7 @@ public final class TtlAgent {
         }
     }
 
-    private static String getLogImplTypeFromAgentArgs(@Nonnull final Map<String, String> kvs) {
+    private static String getLogImplTypeFromAgentArgs(@NonNull final Map<String, String> kvs) {
         return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
     }
 
@@ -190,7 +190,7 @@ public final class TtlAgent {
         return isOptionSet(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
     }
 
-    private static boolean isOptionSet(@Nullable final Map<String, String> kvs, @Nonnull String key) {
+    private static boolean isOptionSet(@Nullable final Map<String, String> kvs, @NonNull String key) {
         if (null == kvs) return false;
 
         final boolean hasEnableKey = kvs.containsKey(key);
@@ -202,7 +202,7 @@ public final class TtlAgent {
     /**
      * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
      */
-    @Nonnull
+    @NonNull
     static Map<String, String> splitCommaColonStringToKV(@Nullable String commaColonString) {
         Map<String, String> ret = new HashMap<String, String>();
         if (commaColonString == null || commaColonString.trim().length() == 0) return ret;

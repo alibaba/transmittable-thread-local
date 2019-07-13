@@ -1,10 +1,10 @@
 package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.spi.TtlEnhanced;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 
 /**
@@ -18,16 +18,16 @@ import java.util.concurrent.Executor;
 class ExecutorTtlWrapper implements Executor, TtlEnhanced {
     private final Executor executor;
 
-    ExecutorTtlWrapper(@Nonnull Executor executor) {
+    ExecutorTtlWrapper(@NonNull Executor executor) {
         this.executor = executor;
     }
 
     @Override
-    public void execute(@Nonnull Runnable command) {
+    public void execute(@NonNull Runnable command) {
         executor.execute(TtlRunnable.get(command));
     }
 
-    @Nonnull
+    @NonNull
     public Executor unwrap() {
         return executor;
     }
