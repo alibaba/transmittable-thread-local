@@ -82,14 +82,13 @@ public class Utils {
         else return capture();
     }
 
-    public static void setAutoWrapper(Object ttlAttachment) {
+    public static void setAutoWrapperAttachment(Object ttlAttachment) {
         if (notTtlAttachments(ttlAttachment)) return;
         ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
     }
 
     public static Runnable unwrapIfIsAutoWrapper(Runnable runnable) {
-        if (notTtlAttachments(runnable)) return runnable;
-        else if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
+        if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
         else return runnable;
     }
 
@@ -98,6 +97,11 @@ public class Utils {
     }
 
     private static boolean isAutoWrapper(Runnable ttlAttachments) {
-        return ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
+        if (notTtlAttachments(ttlAttachments)) return false;
+
+        final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
+        if (value == null) return false;
+
+        return value;
     }
 }

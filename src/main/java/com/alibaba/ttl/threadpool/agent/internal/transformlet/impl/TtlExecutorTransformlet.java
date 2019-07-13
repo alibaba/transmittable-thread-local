@@ -59,7 +59,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final CtClass clazz = classInfo.getCtClass();
 
             for (CtMethod method : clazz.getDeclaredMethods()) {
-                updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(method);
+                updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(method);
             }
 
             if (disableInheritableForThreadPool) updateConstructorDisableInheritable(clazz);
@@ -83,9 +83,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     /**
      * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
      * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
-     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapper(Object)
+     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapperAttachment(Object)
      */
-    private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapper(final CtMethod method) throws NotFoundException, CannotCompileException {
+    private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
         if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
 
@@ -98,7 +98,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
                         // decorate to TTL wrapper,
                         // and then set AutoWrapper attachment/Tag
                         "$%d = %s.get($%d, false, true);"
-                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapper($%<d);",
+                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%<d);",
                         i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
