@@ -55,7 +55,7 @@ public final class TtlAgent {
     /**
      * Entrance method of TTL Java Agent.
      *
-     * <h2>TTL Agent configuration</h2>
+     * <h3>TTL Agent configuration</h3>
      * Configure TTL agent via agent arguments, format is {@code k1:v1,k2:v2}. Below is available configuration keys.
      *
      * <h3>Disable inheritable for thread pool</h3>
