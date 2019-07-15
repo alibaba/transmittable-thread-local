@@ -439,6 +439,10 @@
 							<docencoding>UTF-8</docencoding>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>*.internal.*</excludePackageNames>
+							<sourceFileExcludes>
+								<!-- exclude deprecated TtlEnhanced from javadoc -->
+								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
+							</sourceFileExcludes>
 							<overview>src/api/overview.html</overview>
 							<isOffline>true</isOffline>
 							<offlineLinks>
@@ -451,14 +455,21 @@
 									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
 									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
 									无法在Javadoc注释中链接到JDK10 http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
+
+									About package-list vs.element-list
+									- Can't link to JDK10 in Javadoc comments
+									  https://stackoverflow.com/a/49498219/922688
+									- Missing javadoc/package-list for release 5.1
+									  https://github.com/gradle/gradle/issues/8183
+									  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
 								-->
 								<offlineLink>
 									<url>https://docs.oracle.com/javase/10/docs/api/</url>
 									<location>${project.basedir}/docs/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.2/</url>
-									<location>${project.basedir}/docs/package-list/jsr305/</location>
+									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
+									<location>${project.basedir}/docs/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
 							<additionalJOptions>
