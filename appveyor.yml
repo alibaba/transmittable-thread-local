@@ -1,7 +1,7 @@
 version: '{build}'
 os: Windows Server 2012
 build: off
-clone_depth: 5
+clone_depth: 50
 branches:
   except:
     - travis-ci.*
