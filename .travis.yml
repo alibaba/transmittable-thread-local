@@ -15,8 +15,12 @@ addons:
 jdk:
   - oraclejdk8
 
+branches:
+  except:
+    - appveyor
+
 before_install:
-  # workaroud for "buffer overflow detected" problem of openjdk:
+  # workaround for "buffer overflow detected" problem of openjdk:
   #     https://github.com/travis-ci/travis-ci/issues/5227
   # borrow from https://github.com/miguno/kafka-storm-starter/blob/01dd534263eb867304c06cd2a72f640da1bd9367/.travis.yml
   - cat /etc/hosts # optionally check the content *before*
