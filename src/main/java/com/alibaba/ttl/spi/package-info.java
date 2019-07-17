@@ -1,5 +1,5 @@
 /**
- * TTL {@code Transformlet} SPI
+ * TTL SPI
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.spi.TtlEnhanced
