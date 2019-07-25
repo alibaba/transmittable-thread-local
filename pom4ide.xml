@@ -531,6 +531,10 @@
 			</activation>
 			<build>
 				<plugins>
+					<!--
+						Spotbugs support @SuppressWarnings
+						https://github.com/spotbugs/spotbugs/issues/737#issuecomment-416118033
+					-->
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
@@ -560,9 +564,6 @@
 						Maven plugin which includes build-time git repository information into an POJO / *.properties).
 						Make your apps tell you which version exactly they were built from! Priceless in large distributed deployments.
 							https://github.com/ktoso/maven-git-commit-id-plugin
-
-						Spotbugs support @SuppressWarnings
-						https://github.com/spotbugs/spotbugs/issues/737#issuecomment-416118033
 					-->
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
