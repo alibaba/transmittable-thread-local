@@ -39,7 +39,7 @@ public class TtlTransformer implements ClassFileTransformer {
                                   final ProtectionDomain protectionDomain, @NonNull final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
-            if (classFile == null) return EMPTY_BYTE_ARRAY;
+            if (classFile == null) return null;
 
             final String className = toClassName(classFile);
 
@@ -55,7 +55,7 @@ public class TtlTransformer implements ClassFileTransformer {
             throw new IllegalStateException(msg, t);
         }
 
-        return EMPTY_BYTE_ARRAY;
+        return null;
     }
 
     private static String toClassName(@NonNull final String classFile) {
