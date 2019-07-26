@@ -34,8 +34,6 @@
 - [🗿 More documentation](#-more-documentation)
 - [📚 Related resources](#-related-resources)
     - [JDK core classes](#jdk-core-classes)
-    - [Java Agent](#java-agent)
-    - [Javassist](#javassist)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -264,17 +262,6 @@ Check available version at [search.maven.org](https://search.maven.org/search?q=
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
-
-## Java Agent
-
-- [Java Agent规范](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
-- [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
-- [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
-- [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
-
-## Javassist
-
-- [Getting Started with Javassist](http://www.csg.ci.i.u-tokyo.ac.jp/~chiba/javassist/tutorial/tutorial.html)
 
 # 👷 Contributors
 

@@ -7,6 +7,11 @@
 
 
 - [📌 Framework/Middleware integration to `TTL` transmittance](#-frameworkmiddleware-integration-to-ttl-transmittance)
+- [📚 Related material](#-related-material)
+    - [Jdk core classes](#jdk-core-classes)
+    - [Java Agent](#java-agent)
+    - [Javassist](#javassist)
+    - [Shade Maven Plugin](#shade-maven-plugin)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -52,3 +57,22 @@ try {
 ```
 
 For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+
+# 📚 Related material
+
+## Jdk core classes
+
+- [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
+
+## Java Agent
+
+- [Java Agent Specification](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
+
+## Javassist
+
+- [Getting Started with Javassist](https://www.javassist.org/tutorial/tutorial.html)
+
+## Shade Maven Plugin
+
+- [`Maven` Shade doc](http://maven.apache.org/plugins/maven-shade-plugin/)
