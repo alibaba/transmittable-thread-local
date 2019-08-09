@@ -7,6 +7,7 @@ language: java
 # - Customizing the Build / Build Matrix
 #   https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix
 
+dist: trusty
 addons:
   apt:
     packages:
