@@ -135,25 +135,26 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     // Note about holder:
-    // 1. The value of holder is type Map<TransmittableThreadLocal<?>, ?> (WeakHashMap implementation),
+    // 1. The value of holder is type Map<TransmittableThreadLocal<Object>, ?> (WeakHashMap implementation),
     //    but it is used as *set*.
     // 2. WeakHashMap support null value.
-    private static InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>> holder =
-            new InheritableThreadLocal<Map<TransmittableThreadLocal<?>, ?>>() {
+    private static InheritableThreadLocal<Map<TransmittableThreadLocal<Object>, ?>> holder =
+            new InheritableThreadLocal<Map<TransmittableThreadLocal<Object>, ?>>() {
                 @Override
-                protected Map<TransmittableThreadLocal<?>, ?> initialValue() {
-                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>();
+                protected Map<TransmittableThreadLocal<Object>, ?> initialValue() {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
                 }
 
                 @Override
-                protected Map<TransmittableThreadLocal<?>, ?> childValue(Map<TransmittableThreadLocal<?>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<?>, Object>(parentValue);
+                protected Map<TransmittableThreadLocal<Object>, ?> childValue(Map<TransmittableThreadLocal<Object>, ?> parentValue) {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
                 }
             };
 
+    @SuppressWarnings("unchecked")
     private void addValue() {
         if (!holder.get().containsKey(this)) {
-            holder.get().put(this, null); // WeakHashMap supports null value.
+            holder.get().put((TransmittableThreadLocal<Object>) this, null); // WeakHashMap supports null value.
         }
     }
 
@@ -162,8 +163,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     }
 
     private static void doExecuteCallback(boolean isBefore) {
-        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
-            TransmittableThreadLocal<?> threadLocal = entry.getKey();
+        for (Map.Entry<TransmittableThreadLocal<Object>, ?> entry : holder.get().entrySet()) {
+            TransmittableThreadLocal<Object> threadLocal = entry.getKey();
 
             try {
                 if (isBefore) threadLocal.beforeExecute();
@@ -186,8 +187,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             System.out.println("Start TransmittableThreadLocal Dump...");
         }
 
-        for (Map.Entry<TransmittableThreadLocal<?>, ?> entry : holder.get().entrySet()) {
-            final TransmittableThreadLocal<?> key = entry.getKey();
+        for (Map.Entry<TransmittableThreadLocal<Object>, ?> entry : holder.get().entrySet()) {
+            final TransmittableThreadLocal<Object> key = entry.getKey();
             System.out.println(key.get());
         }
         System.out.println("TransmittableThreadLocal Dump end!");
@@ -284,8 +285,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         @NonNull
         public static Object capture() {
-            Map<TransmittableThreadLocal<?>, Object> captured = new HashMap<TransmittableThreadLocal<?>, Object>();
-            for (TransmittableThreadLocal<?> threadLocal : holder.get().keySet()) {
+            Map<TransmittableThreadLocal<Object>, Object> captured = new HashMap<TransmittableThreadLocal<Object>, Object>();
+            for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 captured.put(threadLocal, threadLocal.copyValue());
             }
             return captured;
@@ -303,13 +304,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         @NonNull
         public static Object replay(@NonNull Object captured) {
             @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<?>, Object> capturedMap = (Map<TransmittableThreadLocal<?>, Object>) captured;
-            Map<TransmittableThreadLocal<?>, Object> backup = new HashMap<TransmittableThreadLocal<?>, Object>();
+            Map<TransmittableThreadLocal<Object>, Object> capturedMap = (Map<TransmittableThreadLocal<Object>, Object>) captured;
+            Map<TransmittableThreadLocal<Object>, Object> backup = new HashMap<TransmittableThreadLocal<Object>, Object>();
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<Object>, ?>> iterator = holder.get().entrySet().iterator();
                  iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-                TransmittableThreadLocal<?> threadLocal = next.getKey();
+                Map.Entry<TransmittableThreadLocal<Object>, ?> next = iterator.next();
+                TransmittableThreadLocal<Object> threadLocal = next.getKey();
 
                 // backup
                 backup.put(threadLocal, threadLocal.get());
@@ -353,14 +354,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         public static void restore(@NonNull Object backup) {
             @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<?>, Object> backupMap = (Map<TransmittableThreadLocal<?>, Object>) backup;
+            Map<TransmittableThreadLocal<Object>, Object> backupMap = (Map<TransmittableThreadLocal<Object>, Object>) backup;
             // call afterExecute callback
             doExecuteCallback(false);
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<?>, ?>> iterator = holder.get().entrySet().iterator();
+            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<Object>, ?>> iterator = holder.get().entrySet().iterator();
                  iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<?>, ?> next = iterator.next();
-                TransmittableThreadLocal<?> threadLocal = next.getKey();
+                Map.Entry<TransmittableThreadLocal<Object>, ?> next = iterator.next();
+                TransmittableThreadLocal<Object> threadLocal = next.getKey();
 
                 // clear the TTL values that is not in backup
                 // avoid the extra TTL values after restore
@@ -374,10 +375,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
             setTtlValuesTo(backupMap);
         }
 
-        private static void setTtlValuesTo(@NonNull Map<TransmittableThreadLocal<?>, Object> ttlValues) {
-            for (Map.Entry<TransmittableThreadLocal<?>, Object> entry : ttlValues.entrySet()) {
-                @SuppressWarnings("unchecked")
-                TransmittableThreadLocal<Object> threadLocal = (TransmittableThreadLocal<Object>) entry.getKey();
+        private static void setTtlValuesTo(@NonNull Map<TransmittableThreadLocal<Object>, Object> ttlValues) {
+            for (Map.Entry<TransmittableThreadLocal<Object>, Object> entry : ttlValues.entrySet()) {
+                TransmittableThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal.set(entry.getValue());
             }
         }
