@@ -11,7 +11,9 @@ import org.junit.Test
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 class ThreadLocalIntegrationTest {
     @Test
@@ -101,9 +103,7 @@ class ThreadLocalIntegrationTest {
         val initValue = "init"
 
         val threadLocal = object : ThreadLocal<String>() {
-            override fun initialValue(): String {
-                return initValue
-            }
+            override fun initialValue(): String = initValue
         }
         assertEquals(initValue, threadLocal.get())
         threadLocal.set(PARENT)
@@ -121,6 +121,40 @@ class ThreadLocalIntegrationTest {
         }
 
         assertEquals(PARENT, threadLocal.get())
+    }
+
+    @Test
+    fun register_ThreadLocal_can_NOT_Inheritable() {
+        val initValue = "init"
+        val threadLocal = object : ThreadLocal<String>() {
+            override fun initialValue(): String? = initValue
+        }
+        threadLocal.set(PARENT)
+        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+
+        val blockingQueue = LinkedBlockingQueue<String>(1)
+        thread {
+            blockingQueue.add(threadLocal.get())
+        }
+
+        assertEquals(initValue, blockingQueue.take())
+    }
+
+    @Test
+    fun register_InheritableThreadLocal_can_Inheritable() {
+        val initValue = "init"
+        val threadLocal = object : InheritableThreadLocal<String>() {
+            override fun initialValue(): String? = initValue
+        }
+        threadLocal.set(PARENT)
+        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+
+        val blockingQueue = LinkedBlockingQueue<String>(1)
+        thread {
+            blockingQueue.add(threadLocal.get())
+        }
+
+        assertEquals(PARENT, blockingQueue.take())
     }
 
     companion object {

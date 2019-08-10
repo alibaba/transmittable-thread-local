@@ -142,16 +142,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     // 2. WeakHashMap support *null* value.
     private static InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
         new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
-                @Override
-                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
-                }
+            @Override
+            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
+                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
+            }
 
-                @Override
-                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
-                }
-            };
+            @Override
+            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
+                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+            }
+        };
 
     @SuppressWarnings("unchecked")
     private void addValue() {
@@ -269,8 +269,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * If you need the different {@code throws Exception} type,
      * you can define your own util method(function interface({@code lambda})) with your own {@code throws Exception} type.
      *
+     * <br>
      * <hr>
-     *
+     * <br>
+     * <p>
      * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
      * register the {@link ThreadLocal} instances via the methods {@link #registerThreadLocal(ThreadLocal, TtlCopier)}/{@link #registerThreadLocalWithShadowCopier(ThreadLocal)}
      * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
@@ -284,6 +286,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
      * Transmitter.unregisterThreadLocal(aThreadLocal);
      * </code></pre>
+     *
+     * <B><I>Caution:</I></B>
+     * <p>
+     * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal}, can NOT <B><I>{@code inherit}</I></B> value from parent thread!
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
      * @author Jerry Lee (oldratlee at gmail dot com)
@@ -547,7 +553,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
-         * @param copier the {@link TtlCopier}
+         * @param copier      the {@link TtlCopier}
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier, boolean)
          * @since 2.11.0
@@ -580,9 +586,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
-         * @param copier the {@link TtlCopier}
-         * @param force if {@code true}, update {@code copier} to {@link ThreadLocal} instance
-         *              when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
+         * @param copier      the {@link TtlCopier}
+         * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
+         *                    when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
          * @since 2.11.0
@@ -613,8 +619,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * if a different behavior is desired.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
-         * @param force if {@code true}, update {@code copier} to {@link ThreadLocal} instance
-         *              when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
+         * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
+         *                    when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
          * @see #registerThreadLocal(ThreadLocal, TtlCopier, boolean)
