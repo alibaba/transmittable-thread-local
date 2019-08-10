@@ -137,18 +137,18 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     // Note about holder:
-    // 1. The value of holder is type Map<TransmittableThreadLocal<Object>, ?> (WeakHashMap implementation),
-    //    but it is used as *set*.
-    // 2. WeakHashMap support null value.
-    private static InheritableThreadLocal<Map<TransmittableThreadLocal<Object>, ?>> holder =
-            new InheritableThreadLocal<Map<TransmittableThreadLocal<Object>, ?>>() {
+    // 1. The value of holder is type WeakHashMap<TransmittableThreadLocal<Object>, ?>,
+    //    but it is used as *Set* (aka. do NOT use about value, always null).
+    // 2. WeakHashMap support *null* value.
+    private static InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
+        new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
                 @Override
-                protected Map<TransmittableThreadLocal<Object>, ?> initialValue() {
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
                     return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
                 }
 
                 @Override
-                protected Map<TransmittableThreadLocal<Object>, ?> childValue(Map<TransmittableThreadLocal<Object>, ?> parentValue) {
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
                     return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
                 }
             };
@@ -165,9 +165,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     private static void doExecuteCallback(boolean isBefore) {
-        for (Map.Entry<TransmittableThreadLocal<Object>, ?> entry : holder.get().entrySet()) {
-            TransmittableThreadLocal<Object> threadLocal = entry.getKey();
-
+        for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
             try {
                 if (isBefore) threadLocal.beforeExecute();
                 else threadLocal.afterExecute();
@@ -189,9 +187,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             System.out.println("Start TransmittableThreadLocal Dump...");
         }
 
-        for (Map.Entry<TransmittableThreadLocal<Object>, ?> entry : holder.get().entrySet()) {
-            final TransmittableThreadLocal<Object> key = entry.getKey();
-            System.out.println(key.get());
+        for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
+            System.out.println(threadLocal.get());
         }
         System.out.println("TransmittableThreadLocal Dump end!");
     }
@@ -344,10 +341,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         private static Map<TransmittableThreadLocal<Object>, Object> replayTtlValues(@NonNull Map<TransmittableThreadLocal<Object>, Object> captured) {
             Map<TransmittableThreadLocal<Object>, Object> backup = new HashMap<TransmittableThreadLocal<Object>, Object>();
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<Object>, ?>> iterator = holder.get().entrySet().iterator();
-                 iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<Object>, ?> next = iterator.next();
-                TransmittableThreadLocal<Object> threadLocal = next.getKey();
+            for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
+                TransmittableThreadLocal<Object> threadLocal = iterator.next();
 
                 // backup
                 backup.put(threadLocal, threadLocal.get());
@@ -422,10 +417,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             // call afterExecute callback
             doExecuteCallback(false);
 
-            for (Iterator<? extends Map.Entry<TransmittableThreadLocal<Object>, ?>> iterator = holder.get().entrySet().iterator();
-                 iterator.hasNext(); ) {
-                Map.Entry<TransmittableThreadLocal<Object>, ?> next = iterator.next();
-                TransmittableThreadLocal<Object> threadLocal = next.getKey();
+            for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
+                TransmittableThreadLocal<Object> threadLocal = iterator.next();
 
                 // clear the TTL values that is not in backup
                 // avoid the extra TTL values after restore
@@ -545,7 +538,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             }
         }
 
-        private static volatile Map<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>();
+        private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>();
         private static final Object threadLocalHolderUpdateLock = new Object();
         private static final Object threadLocalClearMark = new Object();
 
@@ -604,7 +597,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             synchronized (threadLocalHolderUpdateLock) {
                 if (!force && threadLocalHolder.containsKey(threadLocal)) return false;
 
-                Map<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
+                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
                 newHolder.put((ThreadLocal<Object>) threadLocal, (TtlCopier<Object>) copier);
                 threadLocalHolder = newHolder;
                 return true;
@@ -649,7 +642,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             synchronized (threadLocalHolderUpdateLock) {
                 if (!threadLocalHolder.containsKey(threadLocal)) return false;
 
-                Map<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
+                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
                 newHolder.remove(threadLocal);
                 threadLocalHolder = newHolder;
                 return true;
