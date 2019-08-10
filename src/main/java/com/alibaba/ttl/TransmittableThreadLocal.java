@@ -285,6 +285,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          */
         @NonNull
         public static Object capture() {
+            return captureTtl();
+        }
+
+        private static Object captureTtl() {
             Map<TransmittableThreadLocal<Object>, Object> captured = new HashMap<TransmittableThreadLocal<Object>, Object>();
             for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 captured.put(threadLocal, threadLocal.copyValue());
@@ -301,10 +305,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #capture()
          * @since 2.3.0
          */
+        @SuppressWarnings("unchecked")
         @NonNull
         public static Object replay(@NonNull Object captured) {
-            @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<Object>, Object> capturedMap = (Map<TransmittableThreadLocal<Object>, Object>) captured;
+            return replayTtl((Map<TransmittableThreadLocal<Object>, Object>) captured);
+        }
+
+        private static Object replayTtl(@NonNull Map<TransmittableThreadLocal<Object>, Object> captured) {
+            Map<TransmittableThreadLocal<Object>, Object> capturedMap = captured;
             Map<TransmittableThreadLocal<Object>, Object> backup = new HashMap<TransmittableThreadLocal<Object>, Object>();
 
             for (Iterator<? extends Map.Entry<TransmittableThreadLocal<Object>, ?>> iterator = holder.get().entrySet().iterator();
@@ -352,9 +360,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
          * @see #clear()
          * @since 2.3.0
          */
+        @SuppressWarnings("unchecked")
         public static void restore(@NonNull Object backup) {
-            @SuppressWarnings("unchecked")
-            Map<TransmittableThreadLocal<Object>, Object> backupMap = (Map<TransmittableThreadLocal<Object>, Object>) backup;
+            restoreTtl((Map<TransmittableThreadLocal<Object>, Object>) backup);
+        }
+
+        private static void restoreTtl(@NonNull Map<TransmittableThreadLocal<Object>, Object> backup) {
+            Map<TransmittableThreadLocal<Object>, Object> backupMap = backup;
             // call afterExecute callback
             doExecuteCallback(false);
 
