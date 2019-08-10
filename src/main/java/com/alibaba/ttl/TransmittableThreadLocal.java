@@ -303,16 +303,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             return new Snapshot(captureTtlValues(), captureThreadLocalValues());
         }
 
-        private static Map<TransmittableThreadLocal<Object>, Object> captureTtlValues() {
-            Map<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<TransmittableThreadLocal<Object>, Object>();
+        private static WeakHashMap<TransmittableThreadLocal<Object>, Object> captureTtlValues() {
+            WeakHashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
             for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 ttl2Value.put(threadLocal, threadLocal.copyValue());
             }
             return ttl2Value;
         }
 
-        private static Map<ThreadLocal<Object>, Object> captureThreadLocalValues() {
-            final Map<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
+        private static WeakHashMap<ThreadLocal<Object>, Object> captureThreadLocalValues() {
+            final WeakHashMap<ThreadLocal<Object>, Object> threadLocal2Value = new WeakHashMap<ThreadLocal<Object>, Object>();
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 final TtlCopier<Object> copier = entry.getValue();
@@ -338,8 +338,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         @NonNull
-        private static Map<TransmittableThreadLocal<Object>, Object> replayTtlValues(@NonNull Map<TransmittableThreadLocal<Object>, Object> captured) {
-            Map<TransmittableThreadLocal<Object>, Object> backup = new HashMap<TransmittableThreadLocal<Object>, Object>();
+        private static WeakHashMap<TransmittableThreadLocal<Object>, Object> replayTtlValues(@NonNull WeakHashMap<TransmittableThreadLocal<Object>, Object> captured) {
+            WeakHashMap<TransmittableThreadLocal<Object>, Object> backup = new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
 
             for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                 TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -364,8 +364,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             return backup;
         }
 
-        private static Map<ThreadLocal<Object>, Object> replayThreadLocalValues(@NonNull Map<ThreadLocal<Object>, Object> captured) {
-            final Map<ThreadLocal<Object>, Object> backup = new HashMap<ThreadLocal<Object>, Object>();
+        private static WeakHashMap<ThreadLocal<Object>, Object> replayThreadLocalValues(@NonNull WeakHashMap<ThreadLocal<Object>, Object> captured) {
+            final WeakHashMap<ThreadLocal<Object>, Object> backup = new WeakHashMap<ThreadLocal<Object>, Object>();
 
             for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -388,9 +388,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object clear() {
-            final Map<TransmittableThreadLocal<Object>, Object> ttl2Value = Collections.emptyMap();
+            final WeakHashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
 
-            final Map<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
+            final WeakHashMap<ThreadLocal<Object>, Object> threadLocal2Value = new WeakHashMap<ThreadLocal<Object>, Object>();
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal2Value.put(threadLocal, threadLocalClearMark);
@@ -413,7 +413,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             restoreThreadLocalValues(backupSnapshot.threadLocal2Value);
         }
 
-        private static void restoreTtlValues(@NonNull Map<TransmittableThreadLocal<Object>, Object> backup) {
+        private static void restoreTtlValues(@NonNull WeakHashMap<TransmittableThreadLocal<Object>, Object> backup) {
             // call afterExecute callback
             doExecuteCallback(false);
 
@@ -432,14 +432,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             setTtlValuesTo(backup);
         }
 
-        private static void setTtlValuesTo(@NonNull Map<TransmittableThreadLocal<Object>, Object> ttlValues) {
+        private static void setTtlValuesTo(@NonNull WeakHashMap<TransmittableThreadLocal<Object>, Object> ttlValues) {
             for (Map.Entry<TransmittableThreadLocal<Object>, Object> entry : ttlValues.entrySet()) {
                 TransmittableThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal.set(entry.getValue());
             }
         }
 
-        private static void restoreThreadLocalValues(@NonNull Map<ThreadLocal<Object>, Object> backup) {
+        private static void restoreThreadLocalValues(@NonNull WeakHashMap<ThreadLocal<Object>, Object> backup) {
             for (Map.Entry<ThreadLocal<Object>, Object> entry : backup.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal.set(entry.getValue());
@@ -447,10 +447,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         private static class Snapshot {
-            final Map<TransmittableThreadLocal<Object>, Object> ttl2Value;
-            final Map<ThreadLocal<Object>, Object> threadLocal2Value;
+            final WeakHashMap<TransmittableThreadLocal<Object>, Object> ttl2Value;
+            final WeakHashMap<ThreadLocal<Object>, Object> threadLocal2Value;
 
-            private Snapshot(Map<TransmittableThreadLocal<Object>, Object> ttl2Value, Map<ThreadLocal<Object>, Object> threadLocal2Value) {
+            private Snapshot(WeakHashMap<TransmittableThreadLocal<Object>, Object> ttl2Value, WeakHashMap<ThreadLocal<Object>, Object> threadLocal2Value) {
                 this.ttl2Value = ttl2Value;
                 this.threadLocal2Value = threadLocal2Value;
             }
