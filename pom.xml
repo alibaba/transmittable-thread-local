@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
-		📌 The missing std Java™ lib(simple &amp; 0-dependency) for framework/middleware,
+		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
 		provide an enhanced InheritableThreadLocal that transmits ThreadLocal value between threads even using thread pooling components.
 	</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
