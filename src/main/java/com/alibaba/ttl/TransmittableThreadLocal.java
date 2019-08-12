@@ -3,7 +3,9 @@ package com.alibaba.ttl;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -206,7 +208,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
-     * <p>
+     *
+     * <h2>Framework/Middleware integration to TTL transmittance</h2>
      * Below is the example code:
      *
      * <pre><code>
@@ -269,10 +272,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * If you need the different {@code throws Exception} type,
      * you can define your own util method(function interface({@code lambda})) with your own {@code throws Exception} type.
      *
-     * <br>
-     * <hr>
-     * <br>
-     * <p>
+     * <h2>ThreadLocal Integration</h2>
      * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
      * register the {@link ThreadLocal} instances via the methods {@link #registerThreadLocal(ThreadLocal, TtlCopier)}/{@link #registerThreadLocalWithShadowCopier(ThreadLocal)}
      * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
@@ -287,9 +287,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * Transmitter.unregisterThreadLocal(aThreadLocal);
      * </code></pre>
      *
-     * <B><I>Caution:</I></B>
-     * <p>
-     * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal}, can NOT <B><I>{@code inherit}</I></B> value from parent thread!
+     * <B><I>Caution:</I></B><br>
+     * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
+     * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
      *
      * @author Yang Fang (snoop dot fy at gmail dot com)
      * @author Jerry Lee (oldratlee at gmail dot com)
@@ -549,8 +549,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         private static final Object threadLocalClearMark = new Object();
 
         /**
-         * Register the {@link ThreadLocal} instances
+         * Register the {@link ThreadLocal}(including subclass {@link InheritableThreadLocal}) instances
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
+         * <p>
+         * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
+         * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
+         * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param copier      the {@link TtlCopier}
@@ -563,12 +567,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Register the {@link ThreadLocal} instances
+         * Register the {@link ThreadLocal}(including subclass {@link InheritableThreadLocal}) instances
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          * <p>
          * Use the shadow copier(transmit the reference directly),
          * and should use {@link #registerThreadLocal(ThreadLocal, TtlCopier)} to pass a {@link TtlCopier} explicitly
          * if a different behavior is desired.
+         * <p>
+         * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
+         * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
+         * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
@@ -582,8 +590,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Register the {@link ThreadLocal} instances
+         * Register the {@link ThreadLocal}(including subclass {@link InheritableThreadLocal}) instances
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
+         * <p>
+         * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
+         * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
+         * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param copier      the {@link TtlCopier}
@@ -611,12 +623,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Register the {@link ThreadLocal} instances
+         * Register the {@link ThreadLocal}(including subclass {@link InheritableThreadLocal}) instances
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          * <p>
          * Use the shadow copier(transmit the reference directly),
          * and should use {@link #registerThreadLocal(ThreadLocal, TtlCopier, boolean)} to pass a {@link TtlCopier} explicitly
          * if a different behavior is desired.
+         * <p>
+         * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
+         * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
+         * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
@@ -634,6 +650,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         /**
          * Unregister the {@link ThreadLocal} instances
          * to remove the <b>Transmittable</b> ability for the {@link ThreadLocal} instances.
+         * <p>
+         * If the {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
          *
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
          * @see #registerThreadLocalWithShadowCopier(ThreadLocal)
