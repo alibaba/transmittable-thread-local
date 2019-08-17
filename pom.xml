@@ -45,6 +45,7 @@
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<url>https://github.com/oldratlee</url>
 			<organization>Alibaba</organization>
 			<organizationUrl>http://www.alibaba.com</organizationUrl>
 		</developer>
@@ -56,17 +57,19 @@
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<url>https://github.com/driventokill</url>
 			<organization>Alibaba</organization>
 			<organizationUrl>http://www.alibaba.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>wuwen</name>
-			<id>wuwen</id>
+			<id>wuwen5</id>
 			<email>wuwen.55(AT)aliyun(DOT)com</email>
 			<roles>
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<url>https://github.com/wuwen5</url>
 			<organization>ofpay</organization>
 			<organizationUrl>http://www.ofpay.com</organizationUrl>
 		</developer>
@@ -78,6 +81,7 @@
 				<role>Developer</role>
 			</roles>
 			<timezone>+8</timezone>
+			<url>https://github.com/LNAmp</url>
 			<organization>Alibaba</organization>
 			<organizationUrl>http://www.alibaba.com</organizationUrl>
 		</developer>
