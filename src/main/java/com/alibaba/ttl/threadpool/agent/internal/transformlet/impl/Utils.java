@@ -87,7 +87,6 @@ public class Utils {
         else return capture();
     }
 
-    @Nullable
     public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
         if (notTtlAttachments(ttlAttachment)) return;
         ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
