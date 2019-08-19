@@ -9,6 +9,7 @@ package com.alibaba.ttl;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.11.0
  */
+@FunctionalInterface
 public interface TtlCopier<T> {
     /**
      * Computes the value for {@link TransmittableThreadLocal}
