@@ -87,3 +87,13 @@ if [ -n "$JAVA12_HOME" ]; then
 else
     headInfo "skip Java 12 test"
 fi
+
+# Java 13
+if [ -n "$JAVA13_HOME" ]; then
+    headInfo "test with Java 13"
+    export JAVA_HOME="${JAVA13_HOME}"
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
+else
+    headInfo "skip Java 13 test"
+fi
