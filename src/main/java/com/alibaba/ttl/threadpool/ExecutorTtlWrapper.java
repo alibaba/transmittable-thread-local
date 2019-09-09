@@ -24,11 +24,16 @@ class ExecutorTtlWrapper implements Executor, TtlEnhanced {
 
     @Override
     public void execute(@NonNull Runnable command) {
-        executor.execute(TtlRunnable.get(command));
+        executor.execute(TtlRunnable.get(command,false,flag));
     }
 
     @NonNull
     public Executor unwrap() {
         return executor;
+    }
+    
+    private boolean flag = false;
+    public boolean setFlag(boolean flag){
+        this.flag = flag;
     }
 }
