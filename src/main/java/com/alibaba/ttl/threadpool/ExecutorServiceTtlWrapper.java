@@ -20,8 +20,17 @@ import java.util.concurrent.*;
  */
 class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService, TtlEnhanced {
     private final ExecutorService executorService;
+    private boolean idempotent = false;
 
-    ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService) {
+    public boolean isIdempotent() {
+		return idempotent;
+	}
+
+	public void setIdempotent(boolean idempotent) {
+		this.idempotent = idempotent;
+	}
+
+	ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService) {
         super(executorService);
         this.executorService = executorService;
     }
@@ -55,42 +64,42 @@ class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorSe
     @NonNull
     @Override
     public <T> Future<T> submit(@NonNull Callable<T> task) {
-        return executorService.submit(TtlCallable.get(task));
+        return executorService.submit(TtlCallable.get(task, false, idempotent));
     }
 
     @NonNull
     @Override
     public <T> Future<T> submit(@NonNull Runnable task, T result) {
-        return executorService.submit(TtlRunnable.get(task), result);
+        return executorService.submit(TtlRunnable.get(task, false, idempotent), result);
     }
 
     @NonNull
     @Override
     public Future<?> submit(@NonNull Runnable task) {
-        return executorService.submit(TtlRunnable.get(task));
+        return executorService.submit(TtlRunnable.get(task, false, idempotent));
     }
 
     @NonNull
     @Override
     public <T> List<Future<T>> invokeAll(@NonNull Collection<? extends Callable<T>> tasks) throws InterruptedException {
-        return executorService.invokeAll(TtlCallable.gets(tasks));
+        return executorService.invokeAll(TtlCallable.gets(tasks, false, idempotent));
     }
 
     @NonNull
     @Override
     public <T> List<Future<T>> invokeAll(@NonNull Collection<? extends Callable<T>> tasks, long timeout, @NonNull TimeUnit unit) throws InterruptedException {
-        return executorService.invokeAll(TtlCallable.gets(tasks), timeout, unit);
+        return executorService.invokeAll(TtlCallable.gets(tasks, false, idempotent), timeout, unit);
     }
 
     @NonNull
     @Override
     public <T> T invokeAny(@NonNull Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-        return executorService.invokeAny(TtlCallable.gets(tasks));
+        return executorService.invokeAny(TtlCallable.gets(tasks, false, idempotent));
     }
 
     @Override
     public <T> T invokeAny(@NonNull Collection<? extends Callable<T>> tasks, long timeout, @NonNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        return executorService.invokeAny(TtlCallable.gets(tasks), timeout, unit);
+        return executorService.invokeAny(TtlCallable.gets(tasks, false, idempotent), timeout, unit);
     }
 
     @NonNull
