@@ -17,6 +17,15 @@ import java.util.concurrent.Executor;
  */
 class ExecutorTtlWrapper implements Executor, TtlEnhanced {
     private final Executor executor;
+    private boolean idempotent = false;
+
+    public boolean isIdempotent() {
+		return idempotent;
+	}
+
+	public void setIdempotent(boolean idempotent) {
+		this.idempotent = idempotent;
+	}
 
     ExecutorTtlWrapper(@NonNull Executor executor) {
         this.executor = executor;
@@ -24,16 +33,11 @@ class ExecutorTtlWrapper implements Executor, TtlEnhanced {
 
     @Override
     public void execute(@NonNull Runnable command) {
-        executor.execute(TtlRunnable.get(command,false,flag));
+        executor.execute(TtlRunnable.get(command, false, idempotent));
     }
 
     @NonNull
     public Executor unwrap() {
         return executor;
-    }
-    
-    private boolean flag = false;
-    public boolean setFlag(boolean flag){
-        this.flag = flag;
     }
 }
