@@ -30,6 +30,7 @@ import java.util.concurrent.*;
  * @since 0.9.0
  */
 public final class TtlExecutors {
+	public static boolean idempotent = false;
     /**
      * {@link TransmittableThreadLocal} Wrapper of {@link Executor},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
@@ -40,7 +41,7 @@ public final class TtlExecutors {
         if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
             return executor;
         }
-        return new ExecutorTtlWrapper(executor);
+        return new ExecutorTtlWrapper(executor, idempotent);
     }
 
     /**
@@ -53,7 +54,7 @@ public final class TtlExecutors {
         if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
             return executorService;
         }
-        return new ExecutorServiceTtlWrapper(executorService);
+        return new ExecutorServiceTtlWrapper(executorService, idempotent);
     }
 
     /**
