@@ -20,21 +20,16 @@ import java.util.concurrent.*;
  */
 class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService, TtlEnhanced {
     private final ExecutorService executorService;
-    private boolean idempotent = false;
-
-    public boolean isIdempotent() {
-		return idempotent;
-	}
-
-	public void setIdempotent(boolean idempotent) {
-		this.idempotent = idempotent;
-	}
 
 	ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService) {
         super(executorService);
         this.executorService = executorService;
     }
-
+	ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService, boolean idempotent) {
+        super(executorService, idempotent);
+        this.executorService = executorService;
+    }
+	
     @Override
     public void shutdown() {
         executorService.shutdown();
