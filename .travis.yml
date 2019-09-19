@@ -75,7 +75,7 @@ script:
   - switch_to_open_jdk12
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 12
+  #  open jdk 13
   - switch_to_open_jdk13
   - ./scripts/run-junit.sh skipClean
   - ./scripts/run-agent-test.sh skipClean
