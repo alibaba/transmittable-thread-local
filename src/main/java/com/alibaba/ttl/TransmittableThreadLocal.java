@@ -562,7 +562,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @see #registerThreadLocal(ThreadLocal, TtlCopier, boolean)
          * @since 2.11.0
          */
-        public static <T> boolean registerThreadLocal(ThreadLocal<T> threadLocal, TtlCopier<T> copier) {
+        public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier) {
             return registerThreadLocal(threadLocal, copier, false);
         }
 
@@ -585,7 +585,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.11.0
          */
         @SuppressWarnings("unchecked")
-        public static <T> boolean registerThreadLocalWithShadowCopier(ThreadLocal<T> threadLocal) {
+        public static <T> boolean registerThreadLocalWithShadowCopier(@NonNull ThreadLocal<T> threadLocal) {
             return registerThreadLocal(threadLocal, (TtlCopier<T>) shadowCopier, false);
         }
 
@@ -606,7 +606,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.11.0
          */
         @SuppressWarnings("unchecked")
-        public static <T> boolean registerThreadLocal(ThreadLocal<T> threadLocal, TtlCopier<T> copier, boolean force) {
+        public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier, boolean force) {
             if (threadLocal instanceof TransmittableThreadLocal) {
                 logger.warning("register a TransmittableThreadLocal instance, this is unnecessary!");
                 return true;
@@ -643,7 +643,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.11.0
          */
         @SuppressWarnings("unchecked")
-        public static <T> boolean registerThreadLocalWithShadowCopier(ThreadLocal<T> threadLocal, boolean force) {
+        public static <T> boolean registerThreadLocalWithShadowCopier(@NonNull ThreadLocal<T> threadLocal, boolean force) {
             return registerThreadLocal(threadLocal, (TtlCopier<T>) shadowCopier, force);
         }
 
@@ -657,7 +657,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @see #registerThreadLocalWithShadowCopier(ThreadLocal)
          * @since 2.11.0
          */
-        public static <T> boolean unregisterThreadLocal(ThreadLocal<T> threadLocal) {
+        public static <T> boolean unregisterThreadLocal(@NonNull ThreadLocal<T> threadLocal) {
             if (threadLocal instanceof TransmittableThreadLocal) {
                 logger.warning("unregister a TransmittableThreadLocal instance, this is unnecessary!");
                 return true;
