@@ -48,10 +48,16 @@ import java.util.logging.Logger;
  * @author Yang Fang (snoop dot fy at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
+ * @see com.alibaba.ttl.threadpool.TtlExecutors
+ * @see com.alibaba.ttl.threadpool.TtlExecutors#getTtlExecutor(java.util.concurrent.Executor)
+ * @see com.alibaba.ttl.threadpool.TtlExecutors#getTtlExecutorService(java.util.concurrent.ExecutorService)
+ * @see com.alibaba.ttl.threadpool.TtlExecutors#getTtlScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
  * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
  * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+ * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper
  * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
  * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+ * @see com.alibaba.ttl.threadpool.agent.TtlAgent
  * @since 0.10.0
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> implements TtlCopier<T> {

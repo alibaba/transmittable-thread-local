@@ -8,9 +8,15 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
  * A recursive resultless {@link ForkJoinTask} enhanced by {@link TransmittableThreadLocal}.
+ * <p>
+ * Recommend to use {@link com.alibaba.ttl.threadpool.agent.TtlAgent};
+ * Specially for {@code Java 8} {@link java.util.stream.Stream} and {@link java.util.concurrent.CompletableFuture},
+ * these async task are executed by {@link java.util.concurrent.ForkJoinPool} via {@link ForkJoinTask} at the bottom.
  *
  * @author LNAmp
  * @see java.util.concurrent.RecursiveAction
+ * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper
+ * @see com.alibaba.ttl.threadpool.agent.TtlAgent
  * @since 2.4.0
  */
 public abstract class TtlRecursiveAction extends ForkJoinTask<Void> implements TtlEnhanced {
