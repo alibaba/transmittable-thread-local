@@ -77,7 +77,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     /**
      * Callback method before task object({@link TtlRunnable}/{@link TtlCallable}) execute.
      * <p>
-     * Default behavior is do nothing, and should be overridden
+     * Default behavior is to do nothing, and should be overridden
      * if a different behavior is desired.
      * <p>
      * Do not throw any exception, just ignored.
@@ -90,7 +90,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     /**
      * Callback method after task object({@link TtlRunnable}/{@link TtlCallable}) execute.
      * <p>
-     * Default behavior is do nothing, and should be overridden
+     * Default behavior is to do nothing, and should be overridden
      * if a different behavior is desired.
      * <p>
      * Do not throw any exception, just ignored.

@@ -59,8 +59,8 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
         final String doExec_renamed_method_rename = renamedMethodNameByTtl(doExecMethod);
 
-        final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" +
-                "    return " + doExec_renamed_method_rename + "($$);\n" + // do nothing/directly return, if is TTL ForkJoinTask instance
+        final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" + // if the class is already TTL enhanced(eg: com.alibaba.ttl.TtlRecursiveTask)
+                "    return " + doExec_renamed_method_rename + "($$);\n" +                         // return directly/do nothing
                 "}\n" +
                 "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
 
