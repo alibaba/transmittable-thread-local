@@ -5,6 +5,7 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
@@ -23,7 +24,15 @@ import java.util.logging.Level;
 public class TtlTransformer implements ClassFileTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class);
 
-    private static final byte[] EMPTY_BYTE_ARRAY = {};
+    /**
+     * "<code>null</code> if no transform is performed",
+     * see {@code @return} of {@link ClassFileTransformer#transform(ClassLoader, String, Class, ProtectionDomain, byte[])}
+     */
+    @SuppressFBWarnings({"EI_EXPOSE_REP"})
+    // [ERROR] com.alibaba.ttl.threadpool.agent.TtlTransformer.transform(ClassLoader, String, Class, ProtectionDomain, byte[])
+    //         may expose internal representation by returning TtlTransformer.NO_TRANSFORM
+    // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
+    private static final byte[] NO_TRANSFORM = null;
 
     private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
 
@@ -39,7 +48,7 @@ public class TtlTransformer implements ClassFileTransformer {
                                   final ProtectionDomain protectionDomain, @NonNull final byte[] classFileBuffer) {
         try {
             // Lambda has no class file, no need to transform, just return.
-            if (classFile == null) return EMPTY_BYTE_ARRAY;
+            if (classFile == null) return NO_TRANSFORM;
 
             final String className = toClassName(classFile);
 
@@ -55,7 +64,7 @@ public class TtlTransformer implements ClassFileTransformer {
             throw new IllegalStateException(msg, t);
         }
 
-        return EMPTY_BYTE_ARRAY;
+        return NO_TRANSFORM;
     }
 
     private static String toClassName(@NonNull final String classFile) {
