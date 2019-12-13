@@ -97,12 +97,18 @@ public final class TtlAgent {
      * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
      * </ul>
      *
-     * <h3>Enable TimerTask class decoration</h3>
-     * Enable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
-     * When no configuration for this key, default does <b>not</b> enabled. Since version {@code 2.7.0}.
+     * <h3>Enable/disable TimerTask class decoration</h3>
+     * Enable/disable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
+     * Since version {@code 2.7.0}.
      * <p>
-     * Configuration example:<br>
-     * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}
+     * When no configuration for this key, default is <b>enabled</b>.<br>
+     * <b><i>Note</i></b>: The default value is changed to {@code true} since version {@code 2.12.0}.
+     * <p>
+     * Configuration example:
+     * <ul>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}</li>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false}</li>
+     * </ul>
      *
      * <h3>Multi key configuration example</h3>
      * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
@@ -187,11 +193,15 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
-        return isOptionSetOrFalse(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+        return isOptionSetOrTrue(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
     }
 
     private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key) {
         return isOptionSetOrFalse(kvs, key, false);
+    }
+
+    private static boolean isOptionSetOrTrue(@Nullable final Map<String, String> kvs, @NonNull String key) {
+        return isOptionSetOrFalse(kvs, key, true);
     }
 
     private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
