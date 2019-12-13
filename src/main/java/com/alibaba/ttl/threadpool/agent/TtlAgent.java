@@ -178,7 +178,7 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
-        return isOptionSet(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL);
+        return isOptionSetOrFalse(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL);
     }
 
     /**
@@ -187,14 +187,18 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
-        return isOptionSet(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+        return isOptionSetOrFalse(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
     }
 
-    private static boolean isOptionSet(@Nullable final Map<String, String> kvs, @NonNull String key) {
-        if (null == kvs) return false;
+    private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key) {
+        return isOptionSetOrFalse(kvs, key, false);
+    }
+
+    private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
+        if (null == kvs) return defaultValue;
 
         final boolean hasEnableKey = kvs.containsKey(key);
-        if (!hasEnableKey) return false;
+        if (!hasEnableKey) return defaultValue;
 
         return !"false".equalsIgnoreCase(kvs.get(key));
     }
