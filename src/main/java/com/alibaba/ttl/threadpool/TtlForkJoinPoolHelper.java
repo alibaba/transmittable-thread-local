@@ -6,7 +6,9 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 
 /**
- * Factory Utils for getting TTL wrapper of {@link ForkJoinWorkerThreadFactory}.
+ * Util methods to wrap/unwrap/check methods to disable Inheritable for {@link ForkJoinWorkerThreadFactory}.
+ * <p>
+ * <b><i>Note:</i></b>
  * <p>
  * all method is {@code null}-safe, when input parameter(eg: {@link ForkJoinWorkerThreadFactory}) is {@code null}, return {@code null}.
  *

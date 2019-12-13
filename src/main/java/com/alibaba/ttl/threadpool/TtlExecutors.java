@@ -8,13 +8,19 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import java.util.concurrent.*;
 
 /**
- * Factory Utils for getting TTL wrapper of jdk executors.
+ * Util methods for TTL wrapper of jdk executors.
+ *
+ * <ol>
+ *     <li>Factory methods to get TTL wrapper from jdk executors.</li>
+ *     <li>unwrap/check methods for TTL wrapper of jdk executors.</li>
+ *     <li>wrap/unwrap/check methods to disable Inheritable for {@link ThreadFactory}.</li>
+ * </ol>
  * <p>
  * <b><i>Note:</i></b>
  * <ul>
  * <li>all method is {@code null}-safe, when input {@code executor} parameter is {@code null}, return {@code null}.</li>
- * <li>skip decorating thread pool/{@code executor}(aka. just return input {@code executor})
- * when ttl agent is loaded, Or when input {@code executor} is already decorated.</li>
+ * <li>skip wrap/decoration thread pool/{@code executor}(aka. just return input {@code executor})
+ * when ttl agent is loaded, Or when input {@code executor} is already wrapped/decorated.</li>
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)

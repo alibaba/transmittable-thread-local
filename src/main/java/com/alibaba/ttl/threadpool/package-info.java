@@ -1,5 +1,5 @@
 /**
- * Thread pool decoration utils.
+ * Thread pool wrap/decoration utils.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
