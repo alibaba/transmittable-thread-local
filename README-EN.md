@@ -182,16 +182,20 @@ String value = parent.get();
 
 See demo [`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt).
 
-At present, `TTL` agent has decorated below `JDK` thread pool implementation:
+At present, `TTL` agent has decorated below `JDK` execution components(aka. thread pool) implementation:
 
-- `java.util.concurrent.ThreadPoolExecutor` and `java.util.concurrent.ScheduledThreadPoolExecutor`  
-    decoration implemetation code is in [`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)
-- `java.util.concurrent.ForkJoinTask`（corresponding thread pool is `java.util.concurrent.ForkJoinPool`）  
-    decoration implemetation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)
-- `java.util.TimerTask`（corresponding thread pool is `java.util.Timer`）  
-    decoration implemetation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)  
-    **_NOTE_**: decoration for `TimerTask` default is disable, enabled by agent argument `ttl.agent.enable.timer.task`: `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`.  
-    more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
+- `java.util.concurrent.ThreadPoolExecutor` and `java.util.concurrent.ScheduledThreadPoolExecutor`
+    - decoration implementation code is in [`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java).
+- `java.util.concurrent.ForkJoinTask`（corresponding execution component is `java.util.concurrent.ForkJoinPool`）
+    - decoration implementation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java), supports since version **_`2.5.1`_**.
+    - **_NOTE_**: [**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html) and (parallel) [**_`Stream`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html) introduced in Java 8 is executed through `ForkJoinPool` underneath, so after supporting `ForkJoinPool`, `TTL` also supports `CompletableFuture` and `Stream` transparently. 🎉
+- `java.util.TimerTask`（corresponding execution component is `java.util.Timer`）
+    - decoration implementation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java), supports since version **_`2.7.0`_**.
+    - **_NOTE_**: Since version `2.11.2` decoration for `TimerTask` default is enable (because correctness is first concern, not the best practice like "It is not recommended to use `TimerTask`" :); before version `2.11.1` default is disable.
+    - enabled/disable by agent argument `ttl.agent.enable.timer.task`:
+        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
+    - more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
 
 Add start options on Java command:
 
@@ -228,6 +232,8 @@ java -javaagent:transmittable-thread-local-2.x.x.jar \
 or
 
 ```bash
+# if changed the TTL jar file name or the TTL version is before 2.6.0,
+# should set argument -Xbootclasspath explicitly.
 java -javaagent:path/to/ttl-foo-name-changed.jar \
     -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
     -cp classes \
