@@ -291,7 +291,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.11.0</version>
+    <version>2.11.1</version>
 </dependency>
 ```
 
