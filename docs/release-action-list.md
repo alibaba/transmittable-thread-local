@@ -10,10 +10,10 @@
         - 更新README
             - 更新badge的引用，由master分支名改成Tag名  
                 - `sed 's/master/v2.x.x/g' -i README*`
-                - `javadoc` badge 添加版本
+                - `javadoc` badge的JavaDoc链接到固定版本  
+                    https://alibaba.github.io/transmittable-thread-local/apidocs/2.x.x/index.html
             - 示例Maven依赖的版本
-            - 更新JavaDoc链接到固定版本  
-                https://alibaba.github.io/transmittable-thread-local/apidocs/2.x.x/index.html
+            - 更新JavaDoc链接到固定版本
 2. 新建并Push Tag，如`v2.x.x`  
     - `git tag -m 'release v2.x.x' v2.x.x`
     - `git push origin v2.x.x`
