@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     val pool = ForkJoinPool()
 
     val result = pool.invoke(SumTask(1L..100000L))

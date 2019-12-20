@@ -6,7 +6,7 @@ import java.util.*
 /**
  * @see [Java Timer TimerTask Example](https://www.journaldev.com/1050/java-timer-timertask-example)
  */
-fun main(args: Array<String>) {
+fun main() {
     val timerTask = MyTimerTask()
 
     // running timer task as daemon thread

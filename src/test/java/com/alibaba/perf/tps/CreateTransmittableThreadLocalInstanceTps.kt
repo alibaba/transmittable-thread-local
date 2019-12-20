@@ -8,7 +8,7 @@ import com.alibaba.perf.getRandomString
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     val tpsCounter = TpsCounter(2)
 
     tpsCounter.setAction(Runnable {

@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
  *      - [Kotlin coroutines in Spring - Code for glory](http://blog.alexnesterov.com/post/kotlin-coroutines-in-spring/)
  *      - [Kotlin coroutines and Spring 5 - Code for glory](http://blog.alexnesterov.com/post/kotlin-coroutines-and-spring-5/)
  */
-fun main(args: Array<String>): Unit = runBlocking {
+fun main(): Unit = runBlocking {
     println("[${Thread.currentThread().name}] main")
 
     val deferred = async(Dispatchers.IO) {

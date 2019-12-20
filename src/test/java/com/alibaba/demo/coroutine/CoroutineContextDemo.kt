@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
  *      - [How to use code that relies on ThreadLocal with Kotlin coroutines - Stack Overflow](https://stackoverflow.com/questions/46227462/how-to-use-code-that-relies-on-threadlocal-with-kotlin-coroutines/46227463)
  * - [README.md of Module kotlinx-coroutines-slf4j - Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/integration/kotlinx-coroutines-slf4j/README.md)
  */
-fun main(args: Array<String>): Unit = runBlocking {
+fun main(): Unit = runBlocking {
     myThreadLocal.set(MyData("main value"))
 
     async(Dispatchers.IO) {

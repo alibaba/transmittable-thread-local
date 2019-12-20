@@ -2,7 +2,7 @@ package com.alibaba.demo.forkjoinpool
 
 import java.util.concurrent.ConcurrentSkipListSet
 
-fun main(args: Array<String>) {
+fun main() {
     println("availableProcessors: ${Runtime.getRuntime().availableProcessors()}")
 
     val threadNames: MutableSet<String> = ConcurrentSkipListSet()

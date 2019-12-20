@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet
  */
-fun main(args: Array<String>) {
+fun main() {
     val timer = Timer(true)
 
     printHead("TimerAgentCheck")

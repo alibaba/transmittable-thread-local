@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     val executorService = Executors.newFixedThreadPool(3)
     expandThreadPool(executorService)
 

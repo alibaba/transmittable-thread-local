@@ -8,7 +8,7 @@ import com.alibaba.perf.getRandomString
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     var counter: Long = 0
     while (true) {
         val threadLocal = TransmittableThreadLocal<String>()

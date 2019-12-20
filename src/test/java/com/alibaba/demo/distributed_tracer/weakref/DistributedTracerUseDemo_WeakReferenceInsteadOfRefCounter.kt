@@ -24,7 +24,7 @@ private val executorService: ExecutorService = Executors.newFixedThreadPool(1) {
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     for (i in 0..42) {
         rpcInvokeIn()
     }

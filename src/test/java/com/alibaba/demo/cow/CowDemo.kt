@@ -6,7 +6,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-fun main(args: Array<String>) {
+fun main() {
     val threadPool = Executors.newCachedThreadPool().let {
         expandThreadPool(it)
         TtlExecutors.getTtlExecutorService(it)

@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-fun main(args: Array<String>) {
+fun main() {
     rpcInvokeIn()
 
     sleep(100)
