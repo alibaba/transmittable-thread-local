@@ -31,7 +31,7 @@ class TtlCallableTest {
         val call = Call("1", ttlInstances)
 
 
-        val ttlCallable = TtlCallable.get(call)
+        val ttlCallable = TtlCallable.get(call)!!
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
@@ -130,7 +130,7 @@ class TtlCallableTest {
     @Test
     fun test_get_same() {
         val call = Call("1")
-        val ttlCallable = TtlCallable.get(call)
+        val ttlCallable = TtlCallable.get(call)!!
         assertSame(call, ttlCallable.callable)
     }
 

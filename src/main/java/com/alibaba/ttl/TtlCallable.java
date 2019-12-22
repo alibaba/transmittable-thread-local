@@ -94,7 +94,8 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
      * @param callable input {@link Callable}
      * @return Wrapped {@link Callable}
      */
-    public static <T> TtlCallable<T> get(Callable<T> callable) {
+    @Nullable
+    public static <T> TtlCallable<T> get(@Nullable Callable<T> callable) {
         return get(callable, false);
     }
 
