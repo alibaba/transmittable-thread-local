@@ -5,8 +5,8 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability)](https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability)  
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3D9970)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=6B5B95)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
+[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3d7c47)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=2d545e)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
 [![Chat at gitter.im](https://badges.gitter.im/alibaba/transmittable-thread-local.svg)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
@@ -97,14 +97,16 @@
 
 ```java
 // 在父线程中设置
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
+ttlContext.set("value-set-in-parent");
 
 // =====================================================
 
 // 在子线程中可以读取，值是"value-set-in-parent"
-String value = parent.get();
+String value = ttlContext.get();
 ```
+
+\# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
 
 这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
@@ -121,10 +123,10 @@ String value = parent.get();
 示例代码：
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
+ttlContext.set("value-set-in-parent");
 
-Runnable task = new Task("1");
+Runnable task = new RunnableTask();
 // 额外的处理，生成修饰了的对象ttlRunnable
 Runnable ttlRunnable = TtlRunnable.get(task);
 executorService.submit(ttlRunnable);
@@ -132,16 +134,16 @@ executorService.submit(ttlRunnable);
 // =====================================================
 
 // Task中可以读取，值是"value-set-in-parent"
-String value = parent.get();
+String value = ttlContext.get();
 ```
 
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
+ttlContext.set("value-set-in-parent");
 
-Callable call = new Call("1");
+Callable call = new CallableTask();
 // 额外的处理，生成修饰了的对象ttlCallable
 Callable ttlCallable = TtlCallable.get(call);
 executorService.submit(ttlCallable);
@@ -149,8 +151,10 @@ executorService.submit(ttlCallable);
 // =====================================================
 
 // Call中可以读取，值是"value-set-in-parent"
-String value = parent.get();
+String value = ttlContext.get();
 ```
+
+\# 完整可运行的Demo代码参见[`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt)。
 
 #### 整个过程的完整时序图
 
@@ -173,19 +177,21 @@ ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
+ttlContext.set("value-set-in-parent");
 
-Runnable task = new Task("1");
-Callable call = new Call("2");
+Runnable task = new RunnableTask();
+Callable call = new CallableTask();
 executorService.submit(task);
 executorService.submit(call);
 
 // =====================================================
 
 // Task或是Call中可以读取，值是"value-set-in-parent"
-String value = parent.get();
+String value = ttlContext.get();
 ```
+
+\# 完整可运行的Demo代码参见[`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt)。
 
 ### 2.3 使用`Java Agent`来修饰`JDK`线程池实现类
 
@@ -202,8 +208,8 @@ context.set("value-set-in-parent");
 // ## 2. 应用逻辑，后续流程业务调用框架下层逻辑 ##
 ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-Runnable task = new Task("1");
-Callable call = new Call("2");
+Runnable task = new RunnableTask();
+Callable call = new CallableTask();
 executorService.submit(task);
 executorService.submit(call);
 
@@ -212,7 +218,7 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
+Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
 
 目前`TTL Agent`中，修饰了的`JDK`执行器组件（即如线程池）如下：
 
@@ -270,7 +276,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt)。
 ```bash
 java -javaagent:path/to/transmittable-thread-local-2.x.x.jar \
     -cp classes \
-    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+    com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
 或是
@@ -281,7 +287,7 @@ java -javaagent:path/to/transmittable-thread-local-2.x.x.jar \
 java -javaagent:path/to/ttl-foo-name-changed.jar \
     -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
     -cp classes \
-    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+    com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
 # 🔌 Java API Docs

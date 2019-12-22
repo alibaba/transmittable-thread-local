@@ -124,7 +124,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 这样可以减少`Java`启动命令行上的`Agent`的配置。
 
-在自己的`Agent`中加上`TTL Agent`的逻辑，示例代码如下（[`YourXxxAgent.java`](../src/test/java/com/alibaba/demo/agent/YourXxxAgent.java)）：
+在自己的`Agent`中加上`TTL Agent`的逻辑，示例代码如下（[`YourXxxAgent.java`](../src/test/java/com/alibaba/demo/ttl/agent/YourXxxAgent.java)）：
 
 ```java
 import com.alibaba.ttl.threadpool.agent.TtlAgent;

@@ -5,8 +5,8 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability)](https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability)  
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3D9970)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=6B5B95)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
+[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3d7c47)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=2d545e)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
 [![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
 [![Chat at gitter.im](https://badges.gitter.im/alibaba/transmittable-thread-local.svg)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
@@ -68,14 +68,16 @@ The Requirements listed below is also why I sort out `TTL` in my work.
 
 ```java
 // set in parent thread
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
+ttlContext.set("value-set-in-parent");
 
 // =====================================================
 
 // read in child thread, value is "value-set-in-parent"
-String value = parent.get();
+String value = ttlContext.get();
 ```
+
+\# See the executable demo [`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt) with full source code.
 
 This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
@@ -97,7 +99,7 @@ Sample code:
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
-Runnable task = new Task("1");
+Runnable task = new RunnableTask();
 // extra work, create decorated ttlRunnable object
 Runnable ttlRunnable = TtlRunnable.get(task);
 executorService.submit(ttlRunnable);
@@ -114,7 +116,7 @@ above code show how to dealing with `Runnable`, `Callable` is similar:
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
-Callable call = new Call("1");
+Callable call = new CallableTask();
 // extra work, create decorated ttlCallable object
 Callable ttlCallable = TtlCallable.get(call);
 executorService.submit(ttlCallable);
@@ -124,6 +126,8 @@ executorService.submit(ttlCallable);
 // read in call, value is "value-set-in-parent"
 String value = parent.get();
 ```
+
+\# See the executable demo [`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt) with full source code.
 
 ### 2.2 Decorate thread pool
 
@@ -149,8 +153,8 @@ executorService = TtlExecutors.getTtlExecutorService(executorService);
 TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
 parent.set("value-set-in-parent");
 
-Runnable task = new Task("1");
-Callable call = new Call("2");
+Runnable task = new RunnableTask();
+Callable call = new CallableTask();
 executorService.submit(task);
 executorService.submit(call);
 
@@ -159,6 +163,8 @@ executorService.submit(call);
 // read in Task or Callable, value is "value-set-in-parent"
 String value = parent.get();
 ```
+
+\# See the executable demo [`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt) with full source code.
 
 ### 2.3 Use Java Agent to decorate thread pool implementation class
 
@@ -167,20 +173,24 @@ In this usage, transmission is transparent\(no decoration operation\).
 Sample code:
 
 ```java
+// ## 1. upper layer logic of framework ##
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
+
+// ## 2. biz logic ##
 ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-Runnable task = new Task("1");
-Callable call = new Call("2");
+Runnable task = new RunnableTask();
+Callable call = new CallableTask();
 executorService.submit(task);
 executorService.submit(call);
 
-// =====================================================
-
+// ## 3. underlayer logic of framework ##
 // read in Task or Callable, value is "value-set-in-parent"
-String value = parent.get();
+String value = context.get();
 ```
 
-See demo [`AgentDemo.kt`](src/test/java/com/alibaba/demo/agent/AgentDemo.kt).
+\# See the executable demo [`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt) with full source code, run demo by the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh).
 
 At present, `TTL` agent has decorated below `JDK` execution components(aka. thread pool) implementation:
 
@@ -226,7 +236,7 @@ Java command example:
 ```bash
 java -javaagent:transmittable-thread-local-2.x.x.jar \
     -cp classes \
-    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+    com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
 or
@@ -237,7 +247,7 @@ or
 java -javaagent:path/to/ttl-foo-name-changed.jar \
     -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
     -cp classes \
-    com.alibaba.ttl.threadpool.agent.demo.AgentDemo
+    com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
 Run the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)

@@ -1,11 +1,10 @@
 @file:JvmName("AgentDemo")
 
-package com.alibaba.demo.agent
+package com.alibaba.demo.ttl.agent
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -32,9 +31,6 @@ fun main() {
     printTtlInstancesInfo("Main - After execution of thread pool")
 
     executorService.shutdown()
-    if (!executorService.awaitTermination(3, TimeUnit.SECONDS)) {
-        throw IllegalStateException("Fail to shutdown executorService!")
-    }
 }
 
 private data class Person(var name: String = "unnamed", var age: Int = -1)

@@ -5,4 +5,4 @@ source ./common.sh
 
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
-    com.alibaba.demo.agent.AgentDemo
+    com.alibaba.demo.ttl.agent.AgentDemo
