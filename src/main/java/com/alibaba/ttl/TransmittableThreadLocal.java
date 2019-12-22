@@ -145,9 +145,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     // Note about holder:
-    // 1. The value of holder is type WeakHashMap<TransmittableThreadLocal<Object>, ?>,
-    //    but it is used as *Set* (aka. do NOT use about value, always null).
-    // 2. WeakHashMap support *null* value.
+    // 1. holder self is a InheritableThreadLocal(a *ThreadLocal*).
+    // 2. The type of value in holder is WeakHashMap<TransmittableThreadLocal<Object>, ?>.
+    //    2.1 but the WeakHashMap is used as a *Set*:
+    //        - the value of WeakHashMap is *always null,
+    //        - and never be used.
+    //    2.2 WeakHashMap support *null* value.
     private static InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
         new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
             @Override
