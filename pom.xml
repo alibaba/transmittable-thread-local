@@ -475,11 +475,11 @@
 								-->
 								<offlineLink>
 									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${project.basedir}/docs/package-list/java/</location>
+									<location>${project.basedir}/src/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
 									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
-									<location>${project.basedir}/docs/package-list/spotbugs-annotations/</location>
+									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
 							<additionalJOptions>
