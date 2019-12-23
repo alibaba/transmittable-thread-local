@@ -103,7 +103,7 @@ public final class TtlAgent {
      * <p>
      * When no configuration for this key, default is <b>enabled</b>.<br>
      * <b><i>Note</i></b>: Since version {@code 2.11.2} the default value is {@code true}(enable TimerTask class decoration);
-     * Before version `2.11.1` default value is {@code false}.
+     * Before version {@code 2.11.1} default value is {@code false}.
      * <p>
      * Configuration example:
      * <ul>
