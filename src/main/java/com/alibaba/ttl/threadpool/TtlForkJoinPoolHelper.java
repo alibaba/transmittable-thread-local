@@ -65,7 +65,7 @@ public class TtlForkJoinPoolHelper {
     public static ForkJoinWorkerThreadFactory unwrap(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (!isDisableInheritableForkJoinWorkerThreadFactory(threadFactory)) return threadFactory;
 
-        return ((DisableInheritableForkJoinWorkerThreadFactoryWrapper) threadFactory).unwrap();
+        return ((DisableInheritableForkJoinWorkerThreadFactory) threadFactory).unwrap();
     }
 
     private TtlForkJoinPoolHelper() {
