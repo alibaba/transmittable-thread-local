@@ -13,22 +13,22 @@ fun main() {
         // return TTL wrapper from normal ExecutorService
         TtlExecutors.getTtlExecutorService(it)
     }!!
-    val ttlContext = TransmittableThreadLocal<String>()
+    val context = TransmittableThreadLocal<String>()
 
-    ttlContext.set("value-set-in-parent")
-    println("[parent thread] set ${ttlContext.get()}")
+    context.set("value-set-in-parent")
+    println("[parent thread] set ${context.get()}")
 
     /////////////////////////////////////
     // Runnable
     /////////////////////////////////////
-    val task = Runnable { println("[child thread] get ${ttlContext.get()} in Runnable") }
+    val task = Runnable { println("[child thread] get ${context.get()} in Runnable") }
     ttlExecutorService.submit(task).get()
 
     /////////////////////////////////////
     // Callable
     /////////////////////////////////////
     val call = Callable {
-        println("[child thread] get ${ttlContext.get()} in Callable")
+        println("[child thread] get ${context.get()} in Callable")
         42
     }
     ttlExecutorService.submit(call).get()

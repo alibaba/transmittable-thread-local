@@ -11,15 +11,15 @@ import java.util.concurrent.Executors
  */
 fun main() {
     val executorService = Executors.newCachedThreadPool()
-    val ttlContext = TransmittableThreadLocal<String>()
+    val context = TransmittableThreadLocal<String>()
 
-    ttlContext.set("value-set-in-parent")
-    println("[parent thread] set ${ttlContext.get()}")
+    context.set("value-set-in-parent")
+    println("[parent thread] set ${context.get()}")
 
     /////////////////////////////////////
     // Runnable / TtlRunnable
     /////////////////////////////////////
-    val task = Runnable { println("[child thread] get ${ttlContext.get()} in Runnable") }
+    val task = Runnable { println("[child thread] get ${context.get()} in Runnable") }
     val ttlRunnable = TtlRunnable.get(task)!!
 
     executorService.submit(ttlRunnable).get()
@@ -28,7 +28,7 @@ fun main() {
     // Callable / TtlCallable
     /////////////////////////////////////
     val call = Callable {
-        println("[child thread] get ${ttlContext.get()} in Callable")
+        println("[child thread] get ${context.get()} in Callable")
         42
     }
     val ttlCallable = TtlCallable.get(call)!!

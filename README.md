@@ -54,7 +54,7 @@
 
 本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
-整个库包含`TTL`核心功能（核心用户`API`与框架/中间件的集成`API`）、线程池修饰（`ExecutorService`/`ForkJoinPool`/`TimerTask`）及其`Java Agent`支持，只有不到 **_1000 `SLOC`代码行_**，非常精小。
+整个`TTL`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有不到 **_1000 `SLOC`代码行_**，非常精小。
 
 欢迎 👏
 
@@ -97,13 +97,13 @@
 
 ```java
 // 在父线程中设置
-TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
-ttlContext.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 // =====================================================
 
 // 在子线程中可以读取，值是"value-set-in-parent"
-String value = ttlContext.get();
+String value = context.get();
 ```
 
 \# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
@@ -123,8 +123,8 @@ String value = ttlContext.get();
 示例代码：
 
 ```java
-TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
-ttlContext.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
 // 额外的处理，生成修饰了的对象ttlRunnable
@@ -134,14 +134,14 @@ executorService.submit(ttlRunnable);
 // =====================================================
 
 // Task中可以读取，值是"value-set-in-parent"
-String value = ttlContext.get();
+String value = context.get();
 ```
 
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
-ttlContext.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 Callable call = new CallableTask();
 // 额外的处理，生成修饰了的对象ttlCallable
@@ -151,7 +151,7 @@ executorService.submit(ttlCallable);
 // =====================================================
 
 // Call中可以读取，值是"value-set-in-parent"
-String value = ttlContext.get();
+String value = context.get();
 ```
 
 \# 完整可运行的Demo代码参见[`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt)。
@@ -177,8 +177,8 @@ ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
-ttlContext.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
 Callable call = new CallableTask();
@@ -188,7 +188,7 @@ executorService.submit(call);
 // =====================================================
 
 // Task或是Call中可以读取，值是"value-set-in-parent"
-String value = ttlContext.get();
+String value = context.get();
 ```
 
 \# 完整可运行的Demo代码参见[`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt)。

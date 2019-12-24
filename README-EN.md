@@ -68,13 +68,13 @@ The Requirements listed below is also why I sort out `TTL` in my work.
 
 ```java
 // set in parent thread
-TransmittableThreadLocal<String> ttlContext = new TransmittableThreadLocal<String>();
-ttlContext.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 // =====================================================
 
 // read in child thread, value is "value-set-in-parent"
-String value = ttlContext.get();
+String value = context.get();
 ```
 
 \# See the executable demo [`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt) with full source code.

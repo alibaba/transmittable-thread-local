@@ -7,18 +7,18 @@ import kotlin.concurrent.thread
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 fun main() {
-    val ttlContext = TransmittableThreadLocal<String>()
+    val context = TransmittableThreadLocal<String>()
 
-    ttlContext.set("value-set-in-parent")
-    println("[parent thread] set ${ttlContext.get()}")
+    context.set("value-set-in-parent")
+    println("[parent thread] set ${context.get()}")
 
     /////////////////////////////////////
     // create sub-thread
     /////////////////////////////////////
     thread {
-        val value = ttlContext.get()
+        val value = context.get()
         println("[child thread] get $value")
     }.join()
 
-    println("[parent thread] get ${ttlContext.get()}")
+    println("[parent thread] get ${context.get()}")
 }
