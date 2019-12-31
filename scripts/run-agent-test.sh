@@ -21,7 +21,12 @@ runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     -Drun-ttl-test-under-agent-with-disable-inheritable=true \
     org.junit.runner.JUnitCore $(getJUnitTestCases)
 
-blueEcho "Run agent check for Timer/TimerTask"
+blueEcho 'Run agent check for Timer/TimerTask, default "ttl.agent.enable.timer.task"'
+runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+    "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
+    com.alibaba.ttl.threadpool.agent.check.timer.TimerAgentCheck
+
+blueEcho "Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task""
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT,ttl.agent.enable.timer.task:true" \
     com.alibaba.ttl.threadpool.agent.check.timer.TimerAgentCheck

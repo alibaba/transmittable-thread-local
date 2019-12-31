@@ -107,8 +107,8 @@ public final class TtlAgent {
      * <p>
      * Configuration example:
      * <ul>
-     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}</li>
      * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false}</li>
+     * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}</li>
      * </ul>
      *
      * <h3>Multi key configuration example</h3>
