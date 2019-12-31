@@ -63,6 +63,42 @@ import java.util.logging.Logger;
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> implements TtlCopier<T> {
     private static final Logger logger = Logger.getLogger(TransmittableThreadLocal.class.getName());
 
+    private final boolean disableIgnoreNullValueSemantics;
+
+    /**
+     * @see #TransmittableThreadLocal(boolean)
+     */
+    public TransmittableThreadLocal() {
+        this(false);
+    }
+
+    /**
+     * "Ignore-Null-Value Semantics":
+     *
+     * <ol>
+     *     <li>If value is {@code null}(check by {@link #get()} method), do NOT transmit this {@code ThreadLocal}.</li>
+     *     <li>If set {@code null} value, also remove value(invoke {@link #remove()} method).</li>
+     * </ol>
+     * <p>
+     * This is a pragmatic design decision:
+     * <ol>
+     * <li>use explicit value type rather than {@code null} to biz intent.</li>
+     * <li>more safe(avoid {@code NPE}) and gc friendly.</li>
+     * </ol>
+     * <p>
+     * So it's not recommended to use {@code null} value.
+     * <p>
+     * But the behave of "Ignore-Null-Value Semantics" is NOT compatible with {@link ThreadLocal} and {@link InheritableThreadLocal},
+     * you can set parameter {@code disableIgnoreNullValueSemantics}.
+     * <p>
+     * More info see <a href="https://github.com/alibaba/transmittable-thread-local/issues/157">Issue #157</a>.
+     *
+     * @param disableIgnoreNullValueSemantics disable "Ignore-Null-Value Semantics"
+     */
+    public TransmittableThreadLocal(boolean disableIgnoreNullValueSemantics) {
+        this.disableIgnoreNullValueSemantics = disableIgnoreNullValueSemantics;
+    }
+
     /**
      * Computes the value for this transmittable thread-local variable
      * as a function of the source thread's value at the time the task
@@ -112,7 +148,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     @Override
     public final T get() {
         T value = super.get();
-        if (null != value) addValue();
+        if (disableIgnoreNullValueSemantics || null != value) addValue();
         return value;
     }
 
@@ -121,10 +157,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @Override
     public final void set(T value) {
-        super.set(value);
-        // may set null to remove value
-        if (null == value) removeValue();
-        else addValue();
+        if (!disableIgnoreNullValueSemantics && null == value) {
+            // may set null to remove value
+            remove();
+        } else {
+            super.set(value);
+            addValue();
+        }
     }
 
     /**
@@ -152,17 +191,17 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     //        - and never be used.
     //    2.2 WeakHashMap support *null* value.
     private static InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
-        new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
-            @Override
-            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
-                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
-            }
+            new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
+                @Override
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
+                }
 
-            @Override
-            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
-            }
-        };
+                @Override
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+                }
+            };
 
     @SuppressWarnings("unchecked")
     private void addValue() {
