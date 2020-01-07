@@ -28,8 +28,8 @@ import java.util.logging.Logger;
  * because threads in thread pooling components is pre-created and pooled, these threads is neutral for biz logic/data.
  * <br>
  * You can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
- * so as to wrap thread factory for thread pooling components
- * ({@link java.util.concurrent.ThreadPoolExecutor}, {@link java.util.concurrent.ForkJoinPool}) automatically and transparently.
+ * so as to wrap thread factory for thread pooling components ({@link java.util.concurrent.ThreadPoolExecutor},
+ * {@link java.util.concurrent.ForkJoinPool}) automatically and transparently.
  * <p>
  * ❷ or by overriding method {@link #childValue(Object)}.
  * Whether the value should be inheritable or not can be controlled by the data owner,
@@ -66,15 +66,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     private final boolean disableIgnoreNullValueSemantics;
 
     /**
-     * @see #TransmittableThreadLocal(boolean)
-     */
-    public TransmittableThreadLocal() {
-        this(false);
-    }
-
-    /**
-     * "Ignore-Null-Value Semantics":
-     *
+     * Default constructor.
+     * <p>
+     * Create a {@link TransmittableThreadLocal} instance with "Ignore-Null-Value Semantics".
+     * About "Ignore-Null-Value Semantics":
+     * <p>
      * <ol>
      *     <li>If value is {@code null}(check by {@link #get()} method), do NOT transmit this {@code ThreadLocal}.</li>
      *     <li>If set {@code null} value, also remove value(invoke {@link #remove()} method).</li>
@@ -88,12 +84,26 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * So it's not recommended to use {@code null} value.
      * <p>
-     * But the behave of "Ignore-Null-Value Semantics" is NOT compatible with {@link ThreadLocal} and {@link InheritableThreadLocal},
-     * you can set parameter {@code disableIgnoreNullValueSemantics}.
+     * But the behavior of "Ignore-Null-Value Semantics" is NOT compatible with
+     * {@link ThreadLocal} and {@link InheritableThreadLocal},
+     * you can disable this behavior/semantics via using constructor {@link #TransmittableThreadLocal(boolean)}
+     * and set parameter {@code disableIgnoreNullValueSemantics} instead.
      * <p>
      * More info see <a href="https://github.com/alibaba/transmittable-thread-local/issues/157">Issue #157</a>.
      *
+     * @see #TransmittableThreadLocal(boolean)
+     */
+    public TransmittableThreadLocal() {
+        this(false);
+    }
+
+    /**
+     * Constructor, create a {@link TransmittableThreadLocal} with parameter {@code disableIgnoreNullValueSemantics}
+     * to control "Ignore-Null-Value Semantics".
+     *
      * @param disableIgnoreNullValueSemantics disable "Ignore-Null-Value Semantics"
+     * @see #TransmittableThreadLocal()
+     * @since 2.11.3
      */
     public TransmittableThreadLocal(boolean disableIgnoreNullValueSemantics) {
         this.disableIgnoreNullValueSemantics = disableIgnoreNullValueSemantics;
@@ -251,8 +261,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * {@link Transmitter} transmit all {@link TransmittableThreadLocal} and registered {@link ThreadLocal}(registered by {@link Transmitter#registerThreadLocal})
-     * values of the current thread to other thread by static methods {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
+     * {@link Transmitter} transmit all {@link TransmittableThreadLocal}
+     * and registered {@link ThreadLocal}(registered by {@link Transmitter#registerThreadLocal})
+     * values of the current thread to other thread by static methods
+     * {@link #capture()} =&gt; {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation).
      * <p>
      * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application code</i>!
@@ -286,8 +298,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
      * <p>
-     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified
-     * by util methods {@link #runCallableWithCaptured(Object, Callable)} or {@link #runSupplierWithCaptured(Object, Supplier)}
+     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified by util methods
+     * {@link #runCallableWithCaptured(Object, Callable)} or {@link #runSupplierWithCaptured(Object, Supplier)}
      * and the adorable {@code Java 8 lambda syntax}.
      * <p>
      * Below is the example code:
@@ -311,7 +323,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * }); // (2) + (3)
      * </code></pre>
      * <p>
-     * The reason of providing 2 util methods is the different {@code throws Exception} type so as to satisfy your biz logic({@code lambda}):
+     * The reason of providing 2 util methods is the different {@code throws Exception} type
+     * so as to satisfy your biz logic({@code lambda}):
      * <ol>
      * <li>{@link #runCallableWithCaptured(Object, Callable)}: {@code throws Exception}</li>
      * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: No {@code throws}</li>
@@ -322,7 +335,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *
      * <h2>ThreadLocal Integration</h2>
      * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
-     * register the {@link ThreadLocal} instances via the methods {@link #registerThreadLocal(ThreadLocal, TtlCopier)}/{@link #registerThreadLocalWithShadowCopier(ThreadLocal)}
+     * register the {@link ThreadLocal} instances via the methods
+     * {@link #registerThreadLocal(ThreadLocal, TtlCopier)}/{@link #registerThreadLocalWithShadowCopier(ThreadLocal)}
      * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
      * <p>
      * Below is the example code:
@@ -454,7 +468,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Restore the backup {@link TransmittableThreadLocal} and registered {@link ThreadLocal} values from {@link #replay(Object)}/{@link #clear()}.
+         * Restore the backup {@link TransmittableThreadLocal} and
+         * registered {@link ThreadLocal} values from {@link #replay(Object)}/{@link #clear()}.
          *
          * @param backup the backup {@link TransmittableThreadLocal} values from {@link #replay(Object)}/{@link #clear()}
          * @see #replay(Object)
