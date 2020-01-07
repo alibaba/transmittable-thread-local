@@ -92,7 +92,6 @@
 
 		<kotlin.version>1.3.61</kotlin.version>
 		<kotlin.coroutine.version>1.3.3</kotlin.coroutine.version>
-		<spotbugs.version>3.1.12</spotbugs.version>
 	</properties>
 
 	<dependencies>
@@ -115,7 +114,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>${spotbugs.version}</version>
+			<version>3.1.12</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -321,7 +320,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>${spotbugs.version}</version>
+				<version>3.1.12.2</version>
 			</plugin>
 			<!--
 					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
