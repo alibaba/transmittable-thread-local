@@ -158,7 +158,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     @Override
     public final T get() {
         T value = super.get();
-        if (disableIgnoreNullValueSemantics || null != value) addValue();
+        if (disableIgnoreNullValueSemantics || null != value) addThisToHolder();
         return value;
     }
 
@@ -172,7 +172,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             remove();
         } else {
             super.set(value);
-            addValue();
+            addThisToHolder();
         }
     }
 
@@ -181,7 +181,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @Override
     public final void remove() {
-        removeValue();
+        removeThisFromHolder();
         super.remove();
     }
 
@@ -214,13 +214,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             };
 
     @SuppressWarnings("unchecked")
-    private void addValue() {
+    private void addThisToHolder() {
         if (!holder.get().containsKey(this)) {
             holder.get().put((TransmittableThreadLocal<Object>) this, null); // WeakHashMap supports null value.
         }
     }
 
-    private void removeValue() {
+    private void removeThisFromHolder() {
         holder.get().remove(this);
     }
 
