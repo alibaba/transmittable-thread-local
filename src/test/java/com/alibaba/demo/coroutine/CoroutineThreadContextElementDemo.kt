@@ -5,7 +5,7 @@ private val threadLocal = ThreadLocal<String?>() // declare thread-local variabl
 /**
  * [Thread-local data - Coroutine Context and Dispatchers - Kotlin Programming Language](https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html#thread-local-data)
  */
-fun main() = runBlocking<Unit> {
+fun main() = runBlocking {
     threadLocal.set("main")
     println("Pre-main, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
 

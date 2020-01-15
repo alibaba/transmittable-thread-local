@@ -24,7 +24,7 @@ fun main(): Unit = runBlocking {
         println("Hello ${await()}!")
     }
 
-    async(MyContext(myThreadLocal.get(), Dispatchers.IO)) {
+    async(MyThreadLocalContextContinuationInterceptor(myThreadLocal.get(), Dispatchers.IO)) {
         "world(${myThreadLocal.get().data})"
     }.run {
         println("Hello ${await()}!")
@@ -37,7 +37,7 @@ private val myThreadLocal = object : ThreadLocal<MyData>() {
     }
 }
 
-private class MyContext(
+private class MyThreadLocalContextContinuationInterceptor(
         private var myData: MyData,
         private val dispatcher: ContinuationInterceptor
 ) : AbstractCoroutineContextElement(ContinuationInterceptor), ContinuationInterceptor {

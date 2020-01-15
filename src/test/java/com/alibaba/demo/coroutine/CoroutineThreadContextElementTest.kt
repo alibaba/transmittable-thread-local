@@ -4,14 +4,15 @@ import kotlinx.coroutines.*
 import org.junit.Assert.*
 import org.junit.Test
 
-class CoroutineThreadLocalAsContextElementTest {
+class CoroutineThreadContextElementTest {
     @Test
-    fun oneThreadContextElement(): Unit = runBlocking {
+    fun threadContextElement_passByValue(): Unit = runBlocking {
         val mainValue = "main-${System.currentTimeMillis()}"
         val launchValue = "launch-${System.currentTimeMillis()}"
         val testThread = Thread.currentThread()
 
-        val threadLocal = ThreadLocal<String?>() // declare thread-local variable
+        // String ThreadLocal, String is immutable value, can only be passed by value
+        val threadLocal = ThreadLocal<String?>()
         threadLocal.set(mainValue)
         println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
 
@@ -36,6 +37,45 @@ class CoroutineThreadLocalAsContextElementTest {
             // !!! After suspended delay function, reset ThreadLocal value is lost !!!
             // assertEquals(reset, threadLocal.get())
             assertEquals(launchValue, threadLocal.get())
+            assertNotEquals(testThread, Thread.currentThread())
+        }
+        job.join()
+
+        println("after launch, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        assertEquals(mainValue, threadLocal.get())
+    }
+
+    @Test
+    fun threadContextElement_passByReference(): Unit = runBlocking {
+        data class Reference(var data: Int = 42)
+
+        val mainValue = Reference()
+        val launchValue = Reference(4242)
+        val testThread = Thread.currentThread()
+
+        // Reference ThreadLocal, mutable value, pass by reference
+        val threadLocal = ThreadLocal<Reference>() // declare thread-local variable
+        threadLocal.set(mainValue)
+        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+
+        val job = launch(Dispatchers.Default + threadLocal.asContextElement(value = launchValue)) {
+            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            assertEquals(launchValue, threadLocal.get())
+            assertNotEquals(testThread, Thread.currentThread())
+
+            delay(5)
+
+            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            assertEquals(launchValue, threadLocal.get())
+            assertNotEquals(testThread, Thread.currentThread())
+
+            val reset = -42
+            threadLocal.get().data = reset
+
+            delay(5)
+
+            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            assertEquals(Reference(reset), threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
         }
         job.join()
