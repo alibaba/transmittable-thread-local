@@ -85,8 +85,8 @@ adjustPwdToProjectRootDir
 # project common info
 #################################################################################
 
-readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
-readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
+readonly version=`grep '<version>.*</version>' library/pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
+readonly aid=`grep '<artifactId>.*</artifactId>' library/pom.xml | awk -F'</?artifactId>' 'NR==2{print $2}'`
 
 # set env variable ENABLE_JAVA_RUN_DEBUG to enable java debug mode
 readonly -a JAVA_CMD=(
@@ -104,10 +104,10 @@ readonly -a MVN_CMD=(
 #################################################################################
 
 mvnClean() {
-    rm -rf target || die "fail to mvn clean!"
+    mvn clean
 }
 
-readonly ttl_jar="target/$aid-$version.jar"
+readonly ttl_jar="library/target/$aid-$version.jar"
 
 mvnBuildJar() {
     if [ ! -e "$ttl_jar"  -o  "$ttl_jar" -ot src/ ]; then
@@ -125,12 +125,12 @@ mvnBuildJar() {
 }
 
 mvnCompileTest() {
-    if [ ! -e "target/test-classes/"  -o  "target/test-classes/" -ot src/  ]; then
+    if [ ! -e "library/target/test-classes/"  -o  "library/target/test-classes/" -ot src/  ]; then
         runCmd "${MVN_CMD[@]}" test-compile || die "fail to mvn test-compile!" || die "fail to compile test!"
     fi
 }
 
-readonly dependencies_dir="target/dependency"
+readonly dependencies_dir="library/target/dependency"
 
 mvnCopyDependencies() {
     if [ ! -e "$dependencies_dir" ]; then
@@ -149,7 +149,7 @@ getClasspathOfDependencies() {
 getClasspathWithoutTtlJar() {
     mvnCompileTest 1>&2
 
-    echo "target/test-classes:$(getClasspathOfDependencies)"
+    echo "library/target/test-classes:$(getClasspathOfDependencies)"
 }
 
 getTtlJarPath() {
@@ -166,7 +166,7 @@ getJUnitTestCases() {
     (
         mvnCompileTest 1>&2
 
-        cd target/test-classes &&
+        cd library/target/test-classes &&
         find . -iname '*Test.class' | sed '
                 s%^\./%%
                 s/\.class$//

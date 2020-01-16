@@ -23,10 +23,10 @@
 
 # 📌 框架/中间件集成`TTL`传递
 
-框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)
+框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)
 抓取当前线程的所有`TTL`值并在其他线程进行回放；在回放线程执行完业务操作后，恢复为回放线程原来的`TTL`值。
 
-[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
+[`TransmittableThreadLocal.Transmitter`](../library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
 
 1. `capture`方法：抓取线程（线程A）的所有`TTL`值。
 2. `replay`方法：在另一个线程（线程B）中，回放在`capture`方法中抓取的`TTL`值，并返回 回放前`TTL`值的备份
@@ -64,7 +64,7 @@ try {
 }
 ```
 
-`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../library/src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../library/src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 当然可以使用`TransmittableThreadLocal.Transmitter`的工具方法`runSupplierWithCaptured`和`runCallableWithCaptured`和可爱的`Java 8 Lambda`语法
 来简化`replay`和`restore`操作，示例代码：
@@ -93,7 +93,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 }); // (2) + (3)
 ```
 
-更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)的`JavaDoc`。
+更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)的`JavaDoc`。
 
 # 📟 关于`Java Agent`
 
@@ -124,7 +124,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 
 这样可以减少`Java`启动命令行上的`Agent`的配置。
 
-在自己的`Agent`中加上`TTL Agent`的逻辑，示例代码如下（[`YourXxxAgent.java`](../src/test/java/com/alibaba/demo/ttl/agent/YourXxxAgent.java)）：
+在自己的`Agent`中加上`TTL Agent`的逻辑，示例代码如下（[`YourXxxAgent.java`](../library/src/test/java/com/alibaba/demo/ttl/agent/YourXxxAgent.java)）：
 
 ```java
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
@@ -146,7 +146,7 @@ public final class YourXxxAgent {
 }
 ```
 
-关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
+关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](../library/src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](../library/src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
 
 注意在`bootclasspath`上，还是要加上`TTL`依赖的Jar：
 

@@ -13,7 +13,7 @@ set -u
 ttl_jar_path="$(readlink -f "$(getTtlJarPath)")"
 JCC="$(readlink -f "$(which japi-compliance-checker.pl)")"
 
-work_dir="target/japi-compliance-checker"
+work_dir="target/target/japi-compliance-checker"
 mkdir -p $work_dir
 cd $work_dir
 rm -rf compat_reports

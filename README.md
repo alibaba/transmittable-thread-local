@@ -52,7 +52,7 @@
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
+本库提供的[`TransmittableThreadLocal`](library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
 整个`TTL`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有不到 **_1000 `SLOC`代码行_**，非常精小。
 
@@ -76,9 +76,9 @@
 
 # 👥 User Guide
 
-使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
+使用类[`TransmittableThreadLocal`](library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
+[`TransmittableThreadLocal`](library/src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
 
 相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
@@ -106,7 +106,7 @@ context.set("value-set-in-parent");
 String value = context.get();
 ```
 
-\# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
+\# 完整可运行的Demo代码参见[`SimpleDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
 
 这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)来完成。
 
@@ -118,7 +118,7 @@ String value = context.get();
 
 ### 2.1 修饰`Runnable`和`Callable`
 
-使用[`TtlRunnable`](src/main/java/com/alibaba/ttl/TtlRunnable.java)和[`TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
+使用[`TtlRunnable`](library/src/main/java/com/alibaba/ttl/TtlRunnable.java)和[`TtlCallable`](library/src/main/java/com/alibaba/ttl/TtlCallable.java)来修饰传入线程池的`Runnable`和`Callable`。
 
 示例代码：
 
@@ -154,7 +154,7 @@ executorService.submit(ttlCallable);
 String value = context.get();
 ```
 
-\# 完整可运行的Demo代码参见[`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt)。
+\# 完整可运行的Demo代码参见[`TtlWrapperDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt)。
 
 #### 整个过程的完整时序图
 
@@ -164,7 +164,7 @@ String value = context.get();
 
 省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
+通过工具类[`com.alibaba.ttl.threadpool.TtlExecutors`](library/src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
 
 - `getTtlExecutor`：修饰接口`Executor`
 - `getTtlExecutorService`：修饰接口`ExecutorService`
@@ -191,7 +191,7 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-\# 完整可运行的Demo代码参见[`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt)。
+\# 完整可运行的Demo代码参见[`TtlExecutorWrapperDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt)。
 
 ### 2.3 使用`Java Agent`来修饰`JDK`线程池实现类
 
@@ -218,22 +218,22 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
+Demo参见[`AgentDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt)。执行工程下的脚本[`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)即可运行Demo。
 
 目前`TTL Agent`中，修饰了的`JDK`执行器组件（即如线程池）如下：
 
 1. `java.util.concurrent.ThreadPoolExecutor` 和 `java.util.concurrent.ScheduledThreadPoolExecutor`
-    - 修饰实现代码在[`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)。
+    - 修饰实现代码在[`TtlExecutorTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java)。
 1. `java.util.concurrent.ForkJoinTask`（对应的执行器组件是`java.util.concurrent.ForkJoinPool`）
-    - 修饰实现代码在[`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)。从版本 **_`2.5.1`_** 开始支持。
+    - 修饰实现代码在[`TtlForkJoinTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java)。从版本 **_`2.5.1`_** 开始支持。
     - **_注意_**：`Java 8`引入的[**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html)与（并行执行的）[**_`Stream`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html)底层是通过`ForkJoinPool`来执行，所以支持`ForkJoinPool`后，`TTL`也就透明支持了`CompletableFuture`与`Stream`。🎉
 1. `java.util.TimerTask`的子类（对应的执行器组件是`java.util.Timer`）
-    - 修饰实现代码在[`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
+    - 修饰实现代码在[`TtlTimerTaskTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
     - **_注意_**：从`2.11.2`版本开始缺省开启`TimerTask`的修饰（因为保证正确性是第一位，而不是最佳实践『不推荐使用`TimerTask`』:）；`2.11.1`版本及其之前的版本没有缺省开启`TimerTask`的修饰。
     - 使用`Agent`参数`ttl.agent.enable.timer.task`开启/关闭`TimerTask`的修饰：
         - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
         - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
-    - 更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
+    - 更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](library/src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
 
 > **关于`java.util.TimerTask`/`java.util.Timer`**
 >

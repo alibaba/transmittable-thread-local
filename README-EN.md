@@ -77,7 +77,7 @@ context.set("value-set-in-parent");
 String value = context.get();
 ```
 
-\# See the executable demo [`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt) with full source code.
+\# See the executable demo [`SimpleDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt) with full source code.
 
 This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) instead.
 
@@ -90,8 +90,8 @@ The solution is below usage.
 
 ### 2.1 Decorate `Runnable` and `Callable`
 
-Decorate input `Runnable` and `Callable` by [`TtlRunnable`](/src/main/java/com/alibaba/ttl/TtlRunnable.java)
-and [`TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java).
+Decorate input `Runnable` and `Callable` by [`TtlRunnable`](library/src/main/java/com/alibaba/ttl/TtlRunnable.java)
+and [`TtlCallable`](library/src/main/java/com/alibaba/ttl/TtlCallable.java).
 
 Sample code:
 
@@ -127,14 +127,14 @@ executorService.submit(ttlCallable);
 String value = parent.get();
 ```
 
-\# See the executable demo [`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt) with full source code.
+\# See the executable demo [`TtlWrapperDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt) with full source code.
 
 ### 2.2 Decorate thread pool
 
 Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can completed in the thread pool.
 
 Use util class
-[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
+[`com.alibaba.ttl.threadpool.TtlExecutors`](library/src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
 to decorate thread pool.
 
 Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
@@ -164,7 +164,7 @@ executorService.submit(call);
 String value = parent.get();
 ```
 
-\# See the executable demo [`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt) with full source code.
+\# See the executable demo [`TtlExecutorWrapperDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt) with full source code.
 
 ### 2.3 Use Java Agent to decorate thread pool implementation class
 
@@ -190,22 +190,22 @@ executorService.submit(call);
 String value = context.get();
 ```
 
-\# See the executable demo [`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt) with full source code, run demo by the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh).
+\# See the executable demo [`AgentDemo.kt`](library/src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt) with full source code, run demo by the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh).
 
 At present, `TTL` agent has decorated below `JDK` execution components(aka. thread pool) implementation:
 
 - `java.util.concurrent.ThreadPoolExecutor` and `java.util.concurrent.ScheduledThreadPoolExecutor`
-    - decoration implementation code is in [`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java).
+    - decoration implementation code is in [`TtlExecutorTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlExecutorTransformlet.java).
 - `java.util.concurrent.ForkJoinTask`（corresponding execution component is `java.util.concurrent.ForkJoinPool`）
-    - decoration implementation code is in [`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java), supports since version **_`2.5.1`_**.
+    - decoration implementation code is in [`TtlForkJoinTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlForkJoinTransformlet.java), supports since version **_`2.5.1`_**.
     - **_NOTE_**: [**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html) and (parallel) [**_`Stream`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html) introduced in Java 8 is executed through `ForkJoinPool` underneath, so after supporting `ForkJoinPool`, `TTL` also supports `CompletableFuture` and `Stream` transparently. 🎉
 - `java.util.TimerTask`（corresponding execution component is `java.util.Timer`）
-    - decoration implementation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java), supports since version **_`2.7.0`_**.
+    - decoration implementation code is in [`TtlTimerTaskTransformlet.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java), supports since version **_`2.7.0`_**.
     - **_NOTE_**: Since version `2.11.2` decoration for `TimerTask` default is enable (because correctness is first concern, not the best practice like "It is not recommended to use `TimerTask`" :); before version `2.11.1` default is disable.
     - enabled/disable by agent argument `ttl.agent.enable.timer.task`:
         - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
         - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
-    - more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
+    - more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](library/src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
 
 Add start options on Java command:
 
