@@ -1,19 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.alibaba</groupId>
-	<artifactId>transmittable-thread-local</artifactId>
+	<artifactId>transmittable-thread-local-parent</artifactId>
 	<version>2.12.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>TransmittableThreadLocal(TTL)</name>
+	<packaging>pom</packaging>
+	<name>TransmittableThreadLocal(TTL) parent</name>
 	<description>
 		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
 		provide an enhanced InheritableThreadLocal that transmits ThreadLocal value between threads even using thread pooling components.
 	</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
+
+	<modules>
+		<module>library</module>
+	</modules>
 
 	<licenses>
 		<license>
@@ -36,56 +40,6 @@
 		<name>Alibaba</name>
 		<url>http://www.alibaba.com</url>
 	</organization>
-	<developers>
-		<developer>
-			<name>Jerry Lee</name>
-			<id>oldratlee</id>
-			<email>oldratlee(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/oldratlee</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Yang Fang</name>
-			<id>driventokill</id>
-			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/driventokill</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>wuwen</name>
-			<id>wuwen5</id>
-			<email>wuwen.55(AT)aliyun(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/wuwen5</url>
-			<organization>ofpay</organization>
-			<organizationUrl>http://www.ofpay.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>David Dai</name>
-			<id>LNAmp</id>
-			<email>351450944(AT)qq(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/LNAmp</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
-		</developer>
-	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,16 +50,6 @@
 
 	<dependencies>
 		<!--
-			javassist v3.23 is the last version support Java 6
-			DO NOT upgrade javassist version!
-		-->
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.23.2-GA</version>
-			<optional>true</optional>
-		</dependency>
-		<!--
 			JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
 			Please continue using findbugs’ one.
 			depend on spotbugs-annotations instead.
@@ -114,7 +58,6 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>3.1.12</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -125,53 +68,107 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.2</version>
 			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib</artifactId>
-			<version>${kotlin.version}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>${kotlin.coroutine.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxjava</artifactId>
-			<version>2.2.16</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxkotlin</artifactId>
-			<version>2.4.0</version>
-			<scope>test</scope>
-		</dependency>
-		<!--
-			commons-lang3 v3.5 is the last version support Java 6
-			http://commons.apache.org/proper/commons-lang/release-history.html
-			DO NOT upgrade commons-lang3 version!
-		-->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.5</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+				javassist v3.23 is the last version support Java 6
+				DO NOT upgrade javassist version!
+			-->
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>3.23.2-GA</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>io.reactivex.rxjava2</groupId>
+				<artifactId>rxjava</artifactId>
+				<version>2.2.16</version>
+			</dependency>
+			<dependency>
+				<groupId>io.reactivex.rxjava2</groupId>
+				<artifactId>rxkotlin</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.5</version>
+			</dependency>
+
+			<!--
+				Kotlin lang dependencies
+			-->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-stdlib</artifactId>
+				<version>${kotlin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-stdlib-common</artifactId>
+				<version>${kotlin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-reflect</artifactId>
+				<version>${kotlin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kotlinx-coroutines-core</artifactId>
+				<version>${kotlin.coroutine.version}</version>
+			</dependency>
+
+			<!--
+				QA libs
+			-->
+			<!--
+				JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
+				Please continue using findbugs’ one.
+				depend on spotbugs-annotations instead.
+				https://spotbugs.readthedocs.io/en/stable/migration.html
+			-->
+			<dependency>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-annotations</artifactId>
+				<version>3.1.12</version>
+				<optional>true</optional>
+			</dependency>
+			<!--
+				make other qa libs
+					- optional, 0-dependency and smaller deployment
+					- runtime scope(no compile dependent), ensure no code usage
+			-->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>3.0.2</version>
+				<optional>true</optional>
+			</dependency>
+
+			<!--
+				Testing libs
+			-->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -219,10 +216,9 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 				<executions>
@@ -253,58 +249,8 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.2</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<!--
-								Instrumentation Specification
-									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html (this doc for java 8)
-									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
-								JAR Manifest - JAR File Specification
-									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
-							-->
-							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
-							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
-							<Can-Redefine-Classes>false</Can-Redefine-Classes>
-							<Can-Retransform-Classes>true</Can-Retransform-Classes>
-							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>shade-when-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<relocations>
-								<relocation>
-									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.internal.javassist</shadedPattern>
-								</relocation>
-							</relocations>
-							<artifactSet>
-								<includes>
-									<include>org.javassist:javassist</include>
-								</includes>
-							</artifactSet>
-							<shadeSourcesContent>true</shadeSourcesContent>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -312,15 +258,9 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-			<!--
-				https://spotbugs.github.io/
-				https://spotbugs.readthedocs.io/en/latest/introduction.html
-				https://spotbugs.readthedocs.io/en/latest/maven.html
-			-->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
 			</plugin>
 			<!--
 					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -330,7 +270,6 @@
 				-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -350,12 +289,14 @@
 			<plugin>
 				<!--
 					config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074
+
+					Finding the root directory of a multi module maven reactor project - Stack Overflow
+					https://stackoverflow.com/questions/3084629
 				-->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.7</version>
 				<configuration>
-					<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
+					<rulesUri>file://${maven.multiModuleProjectDirectory}/library/src/versions-rules.xml</rulesUri>
 					<generateBackupPoms>false</generateBackupPoms>
 				</configuration>
 			</plugin>
@@ -375,8 +316,16 @@
 					<version>3.1.0</version>
 				</plugin>
 				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -393,6 +342,51 @@
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.0.0-M2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.8</version>
+				</plugin>
+				<!--
+					https://spotbugs.github.io/
+					https://spotbugs.readthedocs.io/en/latest/introduction.html
+					https://spotbugs.readthedocs.io/en/latest/maven.html
+				-->
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>3.1.12.2</version>
+				</plugin>
+				<plugin>
+					<groupId>pl.project13.maven</groupId>
+					<artifactId>git-commit-id-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				<plugin>
+					<!-- for codecov.io -->
+					<!-- config example: https://github.com/codecov/example-java -->
+					<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.4</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -440,60 +434,6 @@
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
-							<source>8</source>
-							<show>protected</show>
-							<charset>UTF-8</charset>
-							<encoding>UTF-8</encoding>
-							<docencoding>UTF-8</docencoding>
-							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
-							<excludePackageNames>*.internal.*</excludePackageNames>
-							<sourceFileExcludes>
-								<!-- exclude deprecated TtlEnhanced from javadoc -->
-								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
-							</sourceFileExcludes>
-							<overview>src/api/overview.html</overview>
-							<isOffline>true</isOffline>
-							<offlineLinks>
-								<!--
-									Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
-									https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
-
-									more infos about link setting:
-									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
-									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
-									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-									无法在Javadoc注释中链接到JDK10 http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
-
-									About package-list vs.element-list
-									- Can't link to JDK10 in Javadoc comments
-									  https://stackoverflow.com/a/49498219/922688
-									- Missing javadoc/package-list for release 5.1
-									  https://github.com/gradle/gradle/issues/8183
-									  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
-								-->
-								<offlineLink>
-									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${project.basedir}/src/package-list/java/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
-									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
-								</offlineLink>
-							</offlineLinks>
-							<additionalJOptions>
-								<!--
-									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
-									https://stackoverflow.com/questions/52326318
-								-->
-								<additionalJOption>--no-module-directories</additionalJOption>
-
-								<additionalJOption>-html5</additionalJOption>
-								<additionalJOption>-quiet</additionalJOption>
-								<additionalJOption>-J-Duser.language=en</additionalJOption>
-								<additionalJOption>-J-Duser.country=US</additionalJOption>
-							</additionalJOptions>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -510,7 +450,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -571,7 +510,6 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>3.0.0</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
@@ -596,7 +534,9 @@
 								</validationProperty>
 							</validationProperties>
 							<generateGitPropertiesFile>true</generateGitPropertiesFile>
-							<generateGitPropertiesFilename>${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties</generateGitPropertiesFilename>
+							<generateGitPropertiesFilename>
+								${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties
+							</generateGitPropertiesFilename>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -618,7 +558,6 @@
 						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.4</version>
 						<executions>
 							<execution>
 								<goals>
@@ -631,12 +570,6 @@
 								<goals>
 									<goal>report</goal>
 								</goals>
-								<configuration>
-									<excludes>
-										<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
-										<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
-									</excludes>
-								</configuration>
 							</execution>
 						</executions>
 					</plugin>
