@@ -382,11 +382,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
         private static HashMap<ThreadLocal<Object>, Object> captureThreadLocalValues() {
             final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
-            for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
+            for (Map.Entry<ThreadLocal<Object>, ThreadLocalRegistry> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
-                final TtlCopier<Object> copier = entry.getValue();
+                final ThreadLocalRegistry registry = entry.getValue();
 
-                threadLocal2Value.put(threadLocal, copier.copy(threadLocal.get()));
+                threadLocal2Value.put(threadLocal, registry.copier.copy(threadLocal.get()));
             }
             return threadLocal2Value;
         }
@@ -460,7 +460,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<TransmittableThreadLocal<Object>, Object>();
 
             final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
-            for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
+            for (Map.Entry<ThreadLocal<Object>, ThreadLocalRegistry> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal2Value.put(threadLocal, threadLocalClearMark);
             }
@@ -608,7 +608,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             }
         }
 
-        private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>();
+        private static volatile WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry> threadLocalHolder = new WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry>();
         private static final Object threadLocalHolderUpdateLock = new Object();
         private static final Object threadLocalClearMark = new Object();
 
@@ -683,19 +683,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @SuppressWarnings("unchecked")
         public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier, boolean force) {
-            if (threadLocal instanceof TransmittableThreadLocal) {
-                logger.warning("register a TransmittableThreadLocal instance, this is unnecessary!");
-                return true;
-            }
-
-            synchronized (threadLocalHolderUpdateLock) {
-                if (!force && threadLocalHolder.containsKey(threadLocal)) return false;
-
-                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
-                newHolder.put((ThreadLocal<Object>) threadLocal, (TtlCopier<Object>) copier);
-                threadLocalHolder = newHolder;
-                return true;
-            }
+            return registerThreadLocal(threadLocal, copier, (TtlCopier<T>) shadowCopier, force);
         }
 
         /**
@@ -728,6 +716,42 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
+         * Register the {@link ThreadLocal}(including subclass {@link InheritableThreadLocal}) instances
+         * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
+         * <p>
+         * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
+         * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
+         * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
+         *
+         * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
+         * @param copier      the {@link TtlCopier}
+         * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
+         *                    when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
+         * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
+         * @see #registerThreadLocal(ThreadLocal, TtlCopier)
+         * @since 2.11.0
+         */
+        @SuppressWarnings("unchecked")
+        public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal,
+                                                      @NonNull TtlCopier<T> copier, @NonNull TtlCopier<T> childValueCopier,
+                                                      boolean force) {
+            if (threadLocal instanceof TransmittableThreadLocal) {
+                logger.warning("register a TransmittableThreadLocal instance, this is unnecessary!");
+                return true;
+            }
+
+            synchronized (threadLocalHolderUpdateLock) {
+                if (!force && threadLocalHolder.containsKey(threadLocal)) return false;
+
+                WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry> newHolder = new WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry>(threadLocalHolder);
+                newHolder.put((ThreadLocal<Object>) threadLocal, new ThreadLocalRegistry(
+                        (ThreadLocal<Object>) threadLocal, (TtlCopier<Object>) copier, (TtlCopier<Object>) childValueCopier));
+                threadLocalHolder = newHolder;
+                return true;
+            }
+        }
+
+        /**
          * Unregister the {@link ThreadLocal} instances
          * to remove the <b>Transmittable</b> ability for the {@link ThreadLocal} instances.
          * <p>
@@ -746,7 +770,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             synchronized (threadLocalHolderUpdateLock) {
                 if (!threadLocalHolder.containsKey(threadLocal)) return false;
 
-                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
+                WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry> newHolder = new WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry>(threadLocalHolder);
                 newHolder.remove(threadLocal);
                 threadLocalHolder = newHolder;
                 return true;
@@ -759,6 +783,32 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                 return parentValue;
             }
         };
+
+        private static class ThreadLocalRegistry {
+            final ThreadLocal<Object> threadLocal;
+            final boolean isInheritableThreadLocal;
+
+            final TtlCopier<Object> copier;
+            final TtlCopier<Object> childValueCopier;
+
+            ThreadLocalRegistry(@NonNull ThreadLocal<Object> threadLocal,
+                                @NonNull TtlCopier<Object> copier, @NonNull TtlCopier<Object> childValueCopier) {
+                this.threadLocal = threadLocal;
+                this.copier = copier;
+                this.childValueCopier = childValueCopier;
+                this.isInheritableThreadLocal = threadLocal instanceof InheritableThreadLocal;
+            }
+        }
+
+        static void compensateInheritableForRegisterThreadLocal() {
+            final WeakHashMap<ThreadLocal<Object>, ThreadLocalRegistry> localHolder = Transmitter.threadLocalHolder;
+            for (Map.Entry<ThreadLocal<Object>, ThreadLocalRegistry> entry : localHolder.entrySet()) {
+                final ThreadLocal<Object> threadLocal = entry.getKey();
+                if (threadLocal instanceof InheritableThreadLocal) continue;
+
+                System.out.println("TODO");
+            }
+        }
 
         private Transmitter() {
             throw new InstantiationError("Must not instantiate this class");
