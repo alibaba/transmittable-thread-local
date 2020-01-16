@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alibaba</groupId>
+		<artifactId>transmittable-thread-local-parent</artifactId>
+		<version>2.12.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ttl-kotlin</artifactId>
+	<name>Kotlin support and coroutines integration of TTL</name>
+	<description>Kotlin support and coroutines integration of TransmittableThreadLocal(TTL)</description>
+	<url>https://github.com/alibaba/transmittable-thread-local</url>
+	<inceptionYear>2020</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</connection>
+		<developerConnection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</developerConnection>
+		<url>git@github.com:alibaba/transmittable-thread-local.git</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<organization>
+		<name>Alibaba</name>
+		<url>http://www.alibaba.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Jerry Lee</name>
+			<id>oldratlee</id>
+			<email>oldratlee(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/oldratlee</url>
+			<organization>Alibaba</organization>
+			<organizationUrl>http://www.alibaba.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>transmittable-thread-local</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- kotlin coroutines lib -->
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlinx</groupId>
+			<artifactId>kotlinx-coroutines-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>

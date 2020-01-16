@@ -1,6 +1,6 @@
-package com.alibaba.demo.coroutine.ttl_intergration.usage
+package com.alibaba.ttl.kotlin.coroutine.usage
 
-import com.alibaba.demo.coroutine.ttl_intergration.ttlContext
+import com.alibaba.ttl.kotlin.coroutine.ttlContext
 import com.alibaba.ttl.TransmittableThreadLocal
 import kotlinx.coroutines.*
 
@@ -45,3 +45,4 @@ fun main(): Unit = runBlocking {
     launch(Dispatchers.Default + ttlContext(), block = block).join()
     println("Post-main, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
 }
+

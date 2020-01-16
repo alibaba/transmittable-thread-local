@@ -1,4 +1,4 @@
-package com.alibaba.demo.coroutine.ttl_intergration
+package com.alibaba.ttl.kotlin.coroutine
 
 import com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*
 import com.alibaba.ttl.threadpool.agent.TtlAgent
@@ -30,7 +30,9 @@ internal class TtlElement : ThreadContextElement<Any> {
             replay(captured)
 
     override fun restoreThreadContext(context: CoroutineContext, oldState: Any) {
-        captured = capture() // FIXME This capture operation is a MUST, WHY? This operation is too expensive?!
+        // FIXME This capture operation is a MUST, WHY? This operation is too expensive?!
+        captured = capture()
+
         restore(oldState)
     }
 
