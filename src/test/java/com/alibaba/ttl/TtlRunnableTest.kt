@@ -1,7 +1,6 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.testmodel.DeepCopyFooTransmittableThreadLocal
 import com.alibaba.ttl.testmodel.FooPojo
 import com.alibaba.ttl.testmodel.FooTask
@@ -10,9 +9,7 @@ import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.AfterClass
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -24,10 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlRunnableTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
-
     @Test
     fun test_ttlRunnable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
@@ -304,6 +297,9 @@ class TtlRunnableTest {
 
         assertSame(runnable, TtlRunnable.unwrap(runnable))
         assertSame(runnable, TtlRunnable.unwrap(ttlRunnable))
+
+        assertSame(runnable, TtlWrappers.unwrap(runnable))
+        assertSame(runnable, TtlWrappers.unwrap(ttlRunnable))
 
 
         assertEquals(listOf(runnable), TtlRunnable.unwraps(listOf(runnable)))

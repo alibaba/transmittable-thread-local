@@ -1,15 +1,12 @@
 package com.alibaba.ttl
 
 import com.alibaba.*
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.AfterClass
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -20,10 +17,6 @@ import java.util.concurrent.TimeUnit
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 class TtlCallableTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
-
     @Test
     fun test_TtlCallable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
@@ -178,6 +171,9 @@ class TtlCallableTest {
 
         assertSame(callable, TtlCallable.unwrap(callable))
         assertSame(callable, TtlCallable.unwrap(ttlCallable))
+
+        assertSame(callable, TtlWrappers.unwrap(callable))
+        assertSame(callable, TtlWrappers.unwrap(ttlCallable))
 
 
         assertEquals(listOf(callable), TtlCallable.unwraps(listOf(callable)))
