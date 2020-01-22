@@ -18,6 +18,7 @@
     - `git tag -m 'release v2.x.x' v2.x.x`
     - `git push origin v2.x.x`
 3. 等待Tag的CI通过 <https://travis-ci.org/alibaba/transmittable-thread-local/builds>
+3. 执行`scripts/checke-japi-compliance.sh`，检查`API`兼容性
 4. 发布版本到`Maven`中央库  
     `./mvnw clean && ./mvnw deploy -DperformRelease`
 5. 更新`JavaDoc`

@@ -12,7 +12,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/fork)
 [![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/issues)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/alibaba/transmittable-thread-local.svg)](http://isitmaintained.com/project/alibaba/transmittable-thread-local "Percentage of issues still open")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/issues "Percentage of issues still open")
 
 [📖 English Documentation](README-EN.md) | 📖 中文文档
 
@@ -302,7 +302,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.11.3</version>
+    <version>2.11.4</version>
 </dependency>
 ```
 
