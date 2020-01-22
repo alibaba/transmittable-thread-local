@@ -20,9 +20,12 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * and transmit it to the time of {@link Callable} execution, needed when use {@link Callable} to thread pool.
  * <p>
  * Use factory method {@link #get(Callable)} to get decorated instance.
+ * <p>
+ * Other TTL Wrapper for common {@code Functional Interface} see {@link TtlWrappers}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.threadpool.TtlExecutors
+ * @see TtlWrappers
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor
