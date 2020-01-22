@@ -1,13 +1,13 @@
 package com.alibaba.ttl.spi;
 
-import com.alibaba.ttl.TtlWrappers;
+import com.alibaba.ttl.TtlUnwrap;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Ttl Wrapper interface.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see TtlWrappers#unwrap
+ * @see TtlUnwrap#unwrap
  * @since 2.11.4
  */
 public interface TtlWrapper<T> extends TtlEnhanced {
@@ -19,7 +19,7 @@ public interface TtlWrapper<T> extends TtlEnhanced {
      * <p>
      * so {@code unwrap} will always return the same input object.
      *
-     * @see TtlWrappers#unwrap(Object)
+     * @see TtlUnwrap#unwrap(Object)
      */
     @NonNull
     T unwrap();

@@ -3,7 +3,7 @@ package com.alibaba.ttl.threadpool
 import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.ttl.TtlWrappers
+import com.alibaba.ttl.TtlUnwrap
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -22,7 +22,7 @@ class TtlForkJoinPoolHelperTest {
             assertTrue(TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(it))
 
             assertSame(ForkJoinPool.defaultForkJoinWorkerThreadFactory, TtlForkJoinPoolHelper.unwrap(it))
-            assertSame(ForkJoinPool.defaultForkJoinWorkerThreadFactory, TtlWrappers.unwrap(it))
+            assertSame(ForkJoinPool.defaultForkJoinWorkerThreadFactory, TtlUnwrap.unwrap(it))
         }
     }
 

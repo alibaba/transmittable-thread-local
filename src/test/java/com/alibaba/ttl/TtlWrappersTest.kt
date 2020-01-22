@@ -3,6 +3,8 @@ package com.alibaba.ttl
 import com.alibaba.expandThreadPool
 import com.alibaba.support.junit.conditional.BelowJava8
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
+import com.alibaba.ttl.TtlUnwrap.unwrap
+import com.alibaba.ttl.TtlWrappers.wrap
 import org.junit.AfterClass
 import org.junit.Assert
 import org.junit.Assert.*
@@ -22,53 +24,53 @@ class TtlWrappersTest {
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_null() {
         val supplier: Supplier<String>? = null
-        assertNull(TtlWrappers.wrap(supplier))
-        assertNull(TtlWrappers.unwrap(supplier))
+        assertNull(wrap(supplier))
+        assertNull(unwrap(supplier))
 
         val consumer: Consumer<String>? = null
-        assertNull(TtlWrappers.unwrap(consumer))
-        assertNull(TtlWrappers.wrap(consumer))
+        assertNull(unwrap(consumer))
+        assertNull(wrap(consumer))
 
         val biConsumer: BiConsumer<String, String>? = null
-        assertNull(TtlWrappers.wrap(biConsumer))
-        assertNull(TtlWrappers.unwrap(biConsumer))
+        assertNull(wrap(biConsumer))
+        assertNull(unwrap(biConsumer))
 
         val function: Function<String, String>? = null
-        assertNull(TtlWrappers.wrap(function))
-        assertNull(TtlWrappers.unwrap(function))
+        assertNull(wrap(function))
+        assertNull(unwrap(function))
 
         val biFunction: BiFunction<String, String, String>? = null
-        assertNull(TtlWrappers.wrap(biFunction))
-        assertNull(TtlWrappers.unwrap(biFunction))
+        assertNull(wrap(biFunction))
+        assertNull(unwrap(biFunction))
     }
 
     @Test
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun wrap_ReWrap_Unwrap_same() {
         val supplier = Supplier { 42 }
-        val ttlSupplier = TtlWrappers.wrap(supplier)
-        assertSame(ttlSupplier, TtlWrappers.wrap(ttlSupplier))
-        assertSame(supplier, TtlWrappers.unwrap(ttlSupplier))
+        val ttlSupplier = wrap(supplier)
+        assertSame(ttlSupplier, wrap(ttlSupplier))
+        assertSame(supplier, unwrap(ttlSupplier))
 
         val consumer = Consumer<String> {}
-        val ttlConsumer = TtlWrappers.wrap(consumer)
-        assertSame(ttlConsumer, TtlWrappers.wrap(ttlConsumer))
-        assertSame(consumer, TtlWrappers.unwrap(ttlConsumer))
+        val ttlConsumer = wrap(consumer)
+        assertSame(ttlConsumer, wrap(ttlConsumer))
+        assertSame(consumer, unwrap(ttlConsumer))
 
         val biConsumer = BiConsumer<String, String> { _, _ -> }
-        val ttlBiConsumer = TtlWrappers.wrap(biConsumer)
-        assertSame(ttlBiConsumer, TtlWrappers.wrap(ttlBiConsumer))
-        assertSame(biConsumer, TtlWrappers.unwrap(ttlBiConsumer))
+        val ttlBiConsumer = wrap(biConsumer)
+        assertSame(ttlBiConsumer, wrap(ttlBiConsumer))
+        assertSame(biConsumer, unwrap(ttlBiConsumer))
 
         val function = Function<String, String> { "" }
-        val ttlFunction = TtlWrappers.wrap(function)
-        assertSame(ttlFunction, TtlWrappers.wrap(ttlFunction))
-        assertSame(function, TtlWrappers.unwrap(ttlFunction))
+        val ttlFunction = wrap(function)
+        assertSame(ttlFunction, wrap(ttlFunction))
+        assertSame(function, unwrap(ttlFunction))
 
         val biFunction = BiFunction<String, String, String> { _, _ -> "" }
-        val ttlBiFunction = TtlWrappers.wrap(biFunction)
-        assertSame(ttlBiFunction, TtlWrappers.wrap(ttlBiFunction))
-        assertSame(biFunction, TtlWrappers.unwrap(ttlBiFunction))
+        val ttlBiFunction = wrap(biFunction)
+        assertSame(ttlBiFunction, wrap(ttlBiFunction))
+        assertSame(biFunction, unwrap(ttlBiFunction))
     }
 
     @Test
@@ -77,7 +79,7 @@ class TtlWrappersTest {
         val ttl = TransmittableThreadLocal<String>()
 
         fun Supplier<String>.ttlWrapThenAsRunnable(): Runnable {
-            val wrap = TtlWrappers.wrap(this)!!
+            val wrap = wrap(this)!!
             return Runnable { wrap.get() }
         }
 
@@ -108,7 +110,7 @@ class TtlWrappersTest {
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_Consumer() {
         fun Consumer<String>.ttlWrapThenAsRunnable(): Runnable {
-            val wrap = TtlWrappers.wrap(this)!!
+            val wrap = wrap(this)!!
             return Runnable { wrap.accept("hello ${System.nanoTime()}") }
         }
 
@@ -139,7 +141,7 @@ class TtlWrappersTest {
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_BiConsumer() {
         fun BiConsumer<String, String>.ttlWrapThenAsRunnable(): Runnable {
-            val wrap = TtlWrappers.wrap(this)!!
+            val wrap = wrap(this)!!
             return Runnable { wrap.accept("hello ${System.nanoTime()}", "world ${System.nanoTime()}") }
         }
 
@@ -170,7 +172,7 @@ class TtlWrappersTest {
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_Function() {
         fun Function<String, String>.ttlWrapThenAsRunnable(): Runnable {
-            val wrap = TtlWrappers.wrap(this)!!
+            val wrap = wrap(this)!!
             return Runnable { wrap.apply("hello ${System.nanoTime()}") }
         }
 
@@ -203,7 +205,7 @@ class TtlWrappersTest {
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_BiFunction() {
         fun BiFunction<String, String, String>.ttlWrapThenAsRunnable(): Runnable {
-            val wrap = TtlWrappers.wrap(this)!!
+            val wrap = wrap(this)!!
             return Runnable { wrap.apply("hello ${System.nanoTime()}", "world") }
         }
 

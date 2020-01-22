@@ -298,8 +298,8 @@ class TtlRunnableTest {
         assertSame(runnable, TtlRunnable.unwrap(runnable))
         assertSame(runnable, TtlRunnable.unwrap(ttlRunnable))
 
-        assertSame(runnable, TtlWrappers.unwrap(runnable))
-        assertSame(runnable, TtlWrappers.unwrap(ttlRunnable))
+        assertSame(runnable, TtlUnwrap.unwrap(runnable))
+        assertSame(runnable, TtlUnwrap.unwrap(ttlRunnable))
 
 
         assertEquals(listOf(runnable), TtlRunnable.unwraps(listOf(runnable)))

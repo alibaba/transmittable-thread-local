@@ -172,8 +172,8 @@ class TtlCallableTest {
         assertSame(callable, TtlCallable.unwrap(callable))
         assertSame(callable, TtlCallable.unwrap(ttlCallable))
 
-        assertSame(callable, TtlWrappers.unwrap(callable))
-        assertSame(callable, TtlWrappers.unwrap(ttlCallable))
+        assertSame(callable, TtlUnwrap.unwrap(callable))
+        assertSame(callable, TtlUnwrap.unwrap(ttlCallable))
 
 
         assertEquals(listOf(callable), TtlCallable.unwraps(listOf(callable)))

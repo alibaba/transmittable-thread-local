@@ -1,7 +1,7 @@
 package com.alibaba.ttl.threadpool
 
 import com.alibaba.noTtlAgentRun
-import com.alibaba.ttl.TtlWrappers
+import com.alibaba.ttl.TtlUnwrap
 import com.alibaba.ttl.threadpool.TtlExecutors.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -23,21 +23,21 @@ class TtlExecutorsTest {
             assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
-            assertSame(newScheduledThreadPool, TtlWrappers.unwrap(it))
+            assertSame(newScheduledThreadPool, TtlUnwrap.unwrap(it))
         }
         getTtlExecutorService(newScheduledThreadPool).let {
             if (noTtlAgentRun()) assertTrue(it is ExecutorServiceTtlWrapper)
             assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
-            assertSame(newScheduledThreadPool, TtlWrappers.unwrap(it))
+            assertSame(newScheduledThreadPool, TtlUnwrap.unwrap(it))
         }
         getTtlScheduledExecutorService(newScheduledThreadPool).let {
             if (noTtlAgentRun()) assertTrue(it is ScheduledExecutorServiceTtlWrapper)
             assertEquals(noTtlAgentRun(), isTtlWrapper(it))
 
             assertSame(newScheduledThreadPool, unwrap(it))
-            assertSame(newScheduledThreadPool, TtlWrappers.unwrap(it))
+            assertSame(newScheduledThreadPool, TtlUnwrap.unwrap(it))
         }
 
         val threadFactory = ThreadFactory { Thread(it) }
@@ -46,7 +46,7 @@ class TtlExecutorsTest {
             assertTrue(isDisableInheritableThreadFactory(it))
 
             assertSame(threadFactory, unwrap(it))
-            assertSame(threadFactory, TtlWrappers.unwrap(it))
+            assertSame(threadFactory, TtlUnwrap.unwrap(it))
         }
     }
 
