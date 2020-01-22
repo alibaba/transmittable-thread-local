@@ -3,6 +3,7 @@ package com.alibaba.ttl;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -35,7 +36,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see java.util.concurrent.ExecutorCompletionService
  * @since 0.9.0
  */
-public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttachments {
+public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>>, TtlEnhanced, TtlAttachments {
     private final AtomicReference<Object> capturedRef;
     private final Callable<V> callable;
     private final boolean releaseTtlValueReferenceAfterCall;
@@ -64,8 +65,23 @@ public final class TtlCallable<V> implements Callable<V>, TtlEnhanced, TtlAttach
         }
     }
 
+    /**
+     * return the original/underneath {@link Callable}.
+     */
     @NonNull
     public Callable<V> getCallable() {
+        return unwrap();
+    }
+
+    /**
+     * unwrap to the original/underneath {@link Callable}.
+     *
+     * @see TtlWrappers#unwrap(Object)
+     * @since 2.11.4
+     */
+    @NonNull
+    @Override
+    public Callable<V> unwrap() {
         return callable;
     }
 

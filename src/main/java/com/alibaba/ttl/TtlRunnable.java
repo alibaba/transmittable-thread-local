@@ -3,6 +3,7 @@ package com.alibaba.ttl;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -32,7 +33,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see java.util.concurrent.Executors
  * @since 0.9.0
  */
-public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments {
+public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnhanced, TtlAttachments {
     private final AtomicReference<Object> capturedRef;
     private final Runnable runnable;
     private final boolean releaseTtlValueReferenceAfterRun;
@@ -66,6 +67,18 @@ public final class TtlRunnable implements Runnable, TtlEnhanced, TtlAttachments 
      */
     @NonNull
     public Runnable getRunnable() {
+        return unwrap();
+    }
+
+    /**
+     * unwrap to original/unwrapped {@link Runnable}.
+     *
+     * @see TtlWrappers#unwrap(Object)
+     * @since 2.11.4
+     */
+    @NonNull
+    @Override
+    public Runnable unwrap() {
         return runnable;
     }
 

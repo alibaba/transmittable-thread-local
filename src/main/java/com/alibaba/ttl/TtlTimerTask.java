@@ -1,6 +1,7 @@
 package com.alibaba.ttl;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -28,7 +29,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @deprecated Use {@link TtlRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link java.util.Timer}, {@link java.util.TimerTask}.
  */
 @Deprecated
-public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
+public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTask>, TtlEnhanced {
     private final AtomicReference<Object> capturedRef;
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;
@@ -63,8 +64,23 @@ public final class TtlTimerTask extends TimerTask implements TtlEnhanced {
         return super.cancel();
     }
 
+    /**
+     * return original/unwrapped {@link TimerTask}.
+     */
     @NonNull
     public TimerTask getTimerTask() {
+        return unwrap();
+    }
+
+    /**
+     * unwrap to original/unwrapped {@link TimerTask}.
+     *
+     * @see TtlWrappers#unwrap(Object)
+     * @since 2.11.4
+     */
+    @NonNull
+    @Override
+    public TimerTask unwrap() {
         return timerTask;
     }
 

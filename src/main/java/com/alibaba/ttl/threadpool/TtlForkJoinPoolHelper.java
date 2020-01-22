@@ -46,7 +46,7 @@ public class TtlForkJoinPoolHelper {
     }
 
     /**
-     * check the {@link ForkJoinWorkerThreadFactory} is  {@link DisableInheritableForkJoinWorkerThreadFactory} or not.
+     * check the {@link ForkJoinWorkerThreadFactory} is {@link DisableInheritableForkJoinWorkerThreadFactory} or not.
      *
      * @see DisableInheritableForkJoinWorkerThreadFactory
      * @since 2.10.1
