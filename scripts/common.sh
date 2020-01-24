@@ -130,26 +130,41 @@ mvnCompileTest() {
     fi
 }
 
-readonly dependencies_dir="library/target/dependency"
+readonly core_module_dependencies_dir="library/target/dependency"
+readonly kotlin_support_module_dependencies_dir="kotlin-support/target/dependency"
 
 mvnCopyDependencies() {
-    if [ ! -e "$dependencies_dir" ]; then
+    if [ ! -e "$core_module_dependencies_dir" ]; then
         # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
         # exclude repackaged and shaded javassist libs
-        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations || die "fail to mvn copy-dependencies!"
+        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test \
+          -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations,transmittable-thread-local \
+          || die "fail to mvn copy-dependencies!"
     fi
 }
 
-getClasspathOfDependencies() {
+getCoreModuleClasspathOfDependencies() {
     mvnCopyDependencies 1>&2
 
-    echo "$dependencies_dir"/*.jar | tr ' ' :
+    echo "$core_module_dependencies_dir"/*.jar | tr ' ' :
 }
 
-getClasspathWithoutTtlJar() {
+getKotlinSupportModuleClasspathOfDependencies() {
+    mvnCopyDependencies 1>&2
+
+    echo "$kotlin_support_module_dependencies_dir"/*.jar | tr ' ' :
+}
+
+getCoreModuleClasspathWithoutTtlJar() {
     mvnCompileTest 1>&2
 
-    echo "library/target/test-classes:$(getClasspathOfDependencies)"
+    echo "library/target/test-classes:$(getCoreModuleClasspathOfDependencies)"
+}
+
+getKotlinSupportModuleClasspathWithoutTtlJar() {
+    mvnCompileTest 1>&2
+
+    echo "kotlin-support/target/test-classes:library/target/test-classes:$(getCoreModuleClasspathOfDependencies)"
 }
 
 getTtlJarPath() {
@@ -158,15 +173,32 @@ getTtlJarPath() {
     echo "$ttl_jar"
 }
 
-getClasspath() {
-    echo "$(getTtlJarPath):$(getClasspathWithoutTtlJar)"
+getCoreModuleClasspath() {
+    echo "$(getTtlJarPath):$(getCoreModuleClasspathWithoutTtlJar)"
 }
 
-getJUnitTestCases() {
+getKotlinSupportModuleClasspath() {
+    echo "$(getTtlJarPath):$(getKotlinSupportModuleClasspathWithoutTtlJar)"
+}
+
+getCoreModuleJUnitTestCases() {
     (
         mvnCompileTest 1>&2
 
         cd library/target/test-classes &&
+        find . -iname '*Test.class' | sed '
+                s%^\./%%
+                s/\.class$//
+                s%/%.%g
+            '
+    )
+}
+
+getKotlinSupportModuleJUnitTestCases() {
+    (
+        mvnCompileTest 1>&2
+
+        cd kotlin-support/target/test-classes &&
         find . -iname '*Test.class' | sed '
                 s%^\./%%
                 s/\.class$//
