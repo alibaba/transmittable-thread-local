@@ -91,12 +91,17 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
 
         TtlTimerTask that = (TtlTimerTask) o;
 
-        return timerTask != null ? timerTask.equals(that.timerTask) : that.timerTask == null;
+        return timerTask.equals(that.timerTask);
     }
 
     @Override
     public int hashCode() {
         return timerTask != null ? timerTask.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + " - " + timerTask.toString();
     }
 
     /**

@@ -5,6 +5,7 @@ import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.concurrent.*;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
+@SuppressFBWarnings({"EQ_DOESNT_OVERRIDE_EQUALS"})
 class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService, TtlEnhanced {
     private final ExecutorService executorService;
 

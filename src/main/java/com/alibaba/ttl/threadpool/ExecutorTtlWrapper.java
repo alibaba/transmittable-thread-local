@@ -32,4 +32,24 @@ class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced 
     public Executor unwrap() {
         return executor;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExecutorTtlWrapper that = (ExecutorTtlWrapper) o;
+
+        return executor.equals(that.executor);
+    }
+
+    @Override
+    public int hashCode() {
+        return executor.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + " - " + executor.toString();
+    }
 }

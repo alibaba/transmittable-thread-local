@@ -43,16 +43,16 @@ public class TtlWrappers {
 
     private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>>, TtlEnhanced {
         final Supplier<T> supplier;
-        final Object capture;
+        final Object captured;
 
         TtlSupplier(@NonNull Supplier<T> supplier) {
             this.supplier = supplier;
-            this.capture = capture();
+            this.captured = capture();
         }
 
         @Override
         public T get() {
-            final Object backup = replay(capture);
+            final Object backup = replay(captured);
             try {
                 return supplier.get();
             } finally {
@@ -65,7 +65,28 @@ public class TtlWrappers {
         public Supplier<T> unwrap() {
             return supplier;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TtlSupplier<?> that = (TtlSupplier<?>) o;
+
+            return supplier.equals(that.supplier);
+        }
+
+        @Override
+        public int hashCode() {
+            return supplier.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getName() + " - " + supplier.toString();
+        }
     }
+
 
     /**
      * wrap input {@link Consumer} to TTL wrapper.
@@ -84,16 +105,16 @@ public class TtlWrappers {
 
     private static class TtlConsumer<T> implements Consumer<T>, TtlWrapper<Consumer<T>>, TtlEnhanced {
         final Consumer<T> consumer;
-        final Object capture;
+        final Object captured;
 
         TtlConsumer(@NonNull Consumer<T> consumer) {
             this.consumer = consumer;
-            this.capture = capture();
+            this.captured = capture();
         }
 
         @Override
         public void accept(T t) {
-            final Object backup = replay(capture);
+            final Object backup = replay(captured);
             try {
                 consumer.accept(t);
             } finally {
@@ -105,6 +126,26 @@ public class TtlWrappers {
         @Override
         public Consumer<T> unwrap() {
             return consumer;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TtlConsumer<?> that = (TtlConsumer<?>) o;
+
+            return consumer.equals(that.consumer);
+        }
+
+        @Override
+        public int hashCode() {
+            return consumer.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getName() + " - " + consumer.toString();
         }
     }
 
@@ -126,16 +167,16 @@ public class TtlWrappers {
 
     private static class TtlBiConsumer<T, U> implements BiConsumer<T, U>, TtlWrapper<BiConsumer<T, U>>, TtlEnhanced {
         final BiConsumer<T, U> consumer;
-        final Object capture;
+        final Object captured;
 
         TtlBiConsumer(@NonNull BiConsumer<T, U> consumer) {
             this.consumer = consumer;
-            this.capture = capture();
+            this.captured = capture();
         }
 
         @Override
         public void accept(T t, U u) {
-            final Object backup = replay(capture);
+            final Object backup = replay(captured);
             try {
                 consumer.accept(t, u);
             } finally {
@@ -148,7 +189,28 @@ public class TtlWrappers {
         public BiConsumer<T, U> unwrap() {
             return consumer;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TtlBiConsumer<?, ?> that = (TtlBiConsumer<?, ?>) o;
+
+            return consumer.equals(that.consumer);
+        }
+
+        @Override
+        public int hashCode() {
+            return consumer.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getName() + " - " + consumer.toString();
+        }
     }
+
 
     /**
      * wrap input {@link Function} to TTL wrapper.
@@ -167,16 +229,16 @@ public class TtlWrappers {
 
     private static class TtlFunction<T, R> implements Function<T, R>, TtlWrapper<Function<T, R>>, TtlEnhanced {
         final Function<T, R> fn;
-        final Object capture;
+        final Object captured;
 
         TtlFunction(@NonNull Function<T, R> fn) {
             this.fn = fn;
-            this.capture = capture();
+            this.captured = capture();
         }
 
         @Override
         public R apply(T t) {
-            final Object backup = replay(capture);
+            final Object backup = replay(captured);
             try {
                 return fn.apply(t);
             } finally {
@@ -188,6 +250,26 @@ public class TtlWrappers {
         @Override
         public Function<T, R> unwrap() {
             return fn;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TtlFunction<?, ?> that = (TtlFunction<?, ?>) o;
+
+            return fn.equals(that.fn);
+        }
+
+        @Override
+        public int hashCode() {
+            return fn.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getName() + " - " + fn.toString();
         }
     }
 
@@ -209,16 +291,16 @@ public class TtlWrappers {
 
     private static class TtlBiFunction<T, U, R> implements BiFunction<T, U, R>, TtlWrapper<BiFunction<T, U, R>>, TtlEnhanced {
         final BiFunction<T, U, R> fn;
-        final Object capture;
+        final Object captured;
 
         TtlBiFunction(@NonNull BiFunction<T, U, R> fn) {
             this.fn = fn;
-            this.capture = capture();
+            this.captured = capture();
         }
 
         @Override
         public R apply(T t, U u) {
-            final Object backup = replay(capture);
+            final Object backup = replay(captured);
             try {
                 return fn.apply(t, u);
             } finally {
@@ -231,7 +313,28 @@ public class TtlWrappers {
         public BiFunction<T, U, R> unwrap() {
             return fn;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TtlBiFunction<?, ?, ?> that = (TtlBiFunction<?, ?, ?>) o;
+
+            return fn.equals(that.fn);
+        }
+
+        @Override
+        public int hashCode() {
+            return fn.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getName() + " - " + fn.toString();
+        }
     }
+
 
     private TtlWrappers() {
         throw new InstantiationError("Must not instantiate this class");
