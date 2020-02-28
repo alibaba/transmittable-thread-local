@@ -59,7 +59,7 @@ public class Utils {
 
     static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String renamedMethodName, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
-        final CtMethod new_method = CtNewMethod.copy(method, clazz, null);
+        final CtMethod newMethod = CtNewMethod.copy(method, clazz, null);
 
         // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
         method.setName(renamedMethodName);
@@ -76,9 +76,9 @@ public class Utils {
                 "} finally {\n" +
                 "    " + finallyCode + "\n" +
                 "} }";
-        new_method.setBody(code);
-        clazz.addMethod(new_method);
-        logger.info("insert code around method " + signatureOfMethod(method) + " of class " + clazz.getName() + ": " + code);
+        newMethod.setBody(code);
+        clazz.addMethod(newMethod);
+        logger.info("insert code around method " + signatureOfMethod(newMethod) + " of class " + clazz.getName() + ": " + code);
     }
 
     @Nullable
