@@ -57,16 +57,16 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
-        final String doExec_renamed_method_rename = renamedMethodNameByTtl(doExecMethod);
+        final String doExec_renamed_method_name = renamedMethodNameByTtl(doExecMethod);
 
         final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" + // if the class is already TTL enhanced(eg: com.alibaba.ttl.TtlRecursiveTask)
-                "    return " + doExec_renamed_method_rename + "($$);\n" +                         // return directly/do nothing
+                "    return " + doExec_renamed_method_name + "($$);\n" +                           // return directly/do nothing
                 "}\n" +
                 "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
 
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        doTryFinallyForMethod(doExecMethod, doExec_renamed_method_rename, beforeCode, finallyCode);
+        doTryFinallyForMethod(doExecMethod, doExec_renamed_method_name, beforeCode, finallyCode);
     }
 
     private void updateConstructorDisableInheritable(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {

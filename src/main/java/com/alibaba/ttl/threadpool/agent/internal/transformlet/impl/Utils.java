@@ -68,11 +68,17 @@ public class Utils {
                 & ~Modifier.PROTECTED /* remove protected */
                 | Modifier.PRIVATE /* add private */);
 
+        final String returnOp;
+        if (method.getReturnType() == CtClass.voidType) {
+            returnOp = "";
+        } else {
+            returnOp = "return ";
+        }
         // set new method implementation
         final String code = "{\n" +
                 beforeCode + "\n" +
                 "try {\n" +
-                "    return " + renamedMethodName + "($$);\n" +
+                "    " + returnOp + renamedMethodName + "($$);\n" +
                 "} finally {\n" +
                 "    " + finallyCode + "\n" +
                 "} }";

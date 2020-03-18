@@ -82,9 +82,9 @@
 
 相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，添加了
 
-1. `protected`方法`copy`  
+1. `copy`方法  
     用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。
-1. `protected`方法`beforeExecute`/`afterExecute`  
+1. `protected`的`beforeExecute`/`afterExecute`方法  
     执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
 
 具体使用方式见下面的说明。
