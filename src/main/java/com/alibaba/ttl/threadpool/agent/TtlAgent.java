@@ -152,6 +152,13 @@ public final class TtlAgent {
         }
     }
 
+    /**
+     * add entry to support attaching agent dynamically
+     */
+    public static void agentmain(String agentArgs, @NonNull Instrumentation inst){
+        premain(agentArgs, inst);
+    }
+
     private static String getLogImplTypeFromAgentArgs(@NonNull final Map<String, String> kvs) {
         return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
     }
