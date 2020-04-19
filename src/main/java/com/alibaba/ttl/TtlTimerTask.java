@@ -17,7 +17,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * Use factory method {@link #get(TimerTask)} to create instance.
  * <p>
  * <b>NOTE:</b>
- * The {@link TtlTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} in
+ * The {@link TtlTimerTask} make the method {@link TimerTask#scheduledExecutionTime()} in
  * the origin {@link TimerTask} lose effectiveness! Use {@link com.alibaba.ttl.threadpool.agent.TtlAgent} instead.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)

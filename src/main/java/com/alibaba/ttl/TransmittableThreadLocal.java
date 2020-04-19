@@ -193,12 +193,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         return copy(get());
     }
 
-    // Note about holder:
+    // Note about the holder:
     // 1. holder self is a InheritableThreadLocal(a *ThreadLocal*).
-    // 2. The type of value in holder is WeakHashMap<TransmittableThreadLocal<Object>, ?>.
+    // 2. The type of value in the holder is WeakHashMap<TransmittableThreadLocal<Object>, ?>.
     //    2.1 but the WeakHashMap is used as a *Set*:
     //        - the value of WeakHashMap is *always null,
-    //        - and never be used.
+    //        - and be never used.
     //    2.2 WeakHashMap support *null* value.
     private static InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
             new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
@@ -663,7 +663,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param copier      the {@link TtlCopier}
          * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
-         *                    when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
+         *                    when a {@link ThreadLocal} instance is already registered; otherwise, ignore.
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
          * @since 2.11.0
@@ -699,7 +699,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
-         *                    when the {@link ThreadLocal} instance is already registered; otherwise, ignore.
+         *                    when a {@link ThreadLocal} instance is already registered; otherwise, ignore.
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
          * @see #registerThreadLocal(ThreadLocal, TtlCopier, boolean)
