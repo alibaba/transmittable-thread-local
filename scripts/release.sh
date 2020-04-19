@@ -1,8 +1,8 @@
 #!/bin/bash
-
+set -eEo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
-readonly BASE=`pwd`
-. ./common.sh
+readonly BASE="$(pwd)"
+. ./common_build.sh
 
 update_version=false
 deploy_maven=false

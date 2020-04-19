@@ -2,11 +2,11 @@
 # Java API Compliance Checker (JAPICC),
 # a tool for checking backward binary and source-level compatibility of a Java library API.
 #   https://github.com/lvc/japi-compliance-checker
-
+set -eEo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
-source ./common.sh skipClean
+source ./common_build.sh skipClean
 
 set -u
 

@@ -1,7 +1,8 @@
 #!/bin/bash
-
+set -eEo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
-source ../common.sh
+
+source ../common_build.sh
 
 runCmd "${JAVA_CMD[@]}" -cp "$(getClasspath)" \
     com.alibaba.perf.memoryleak.NoMemoryLeak_TransmittableThreadLocal_NoRemove

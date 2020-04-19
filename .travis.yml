@@ -13,9 +13,6 @@ addons:
     packages:
       - openjdk-6-jdk
 
-jdk:
-  - oraclejdk8
-
 branches:
   except:
     - appveyor
@@ -30,62 +27,20 @@ before_install:
   - sudo mv /tmp/hosts /etc/hosts
   - cat /etc/hosts # optionally check the content *after*
 
-  - source ./scripts/travis-prepare.sh
-
   # output env info
-  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/* && ls $HOME/.jdk && ls $HOME/.jdk/*
+  - ls -la
+  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/*
   - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH\nSHELL=$SHELL"
 
 install:
   - pip install --user codecov
 
 script:
-  # default jdk 11, do build and test
-  - switch_to_open_jdk11
-  - ./scripts/run-agent-test.sh # run junit test in run-agent-test.sh
-  # open jdk 6
-  - jdk_switcher use openjdk6
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  # open jdk 7
-  - jdk_switcher use openjdk7
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  # oracle jdk 8
-  - jdk_switcher use oraclejdk8
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  # open jdk 8
-  - jdk_switcher use openjdk8
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  # oracle jdk 9
-  - jdk_switcher use oraclejdk9
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  # open jdk 9
-  - switch_to_open_jdk9
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 10
-  - switch_to_open_jdk10
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 12
-  - switch_to_open_jdk12
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
-  #  open jdk 13
-  - switch_to_open_jdk13
-  - ./scripts/run-junit.sh skipClean
-  - ./scripts/run-agent-test.sh skipClean
+  - ./scripts/integration-test.sh
 
 after_success:
   # codecov
-  - jdk_switcher use oraclejdk8
-  - ./mvnw clean -V
-  - ./mvnw cobertura:cobertura
-  - codecov
+  - ./scripts/codecov.sh
   - git status --ignored
 
 # Caching Dependencies and Directories
@@ -93,7 +48,7 @@ after_success:
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.jdk
+    - $HOME/.sdkman
     - $HOME/.cache/pip
 before_cache:
   # clear TTL maven self install

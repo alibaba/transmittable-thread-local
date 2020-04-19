@@ -1,36 +1,32 @@
 #!/bin/bash
+set -eEo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
-source ./common.sh "$1"
 
-# Java 11
-if [ -n "$JAVA11_HOME" ]; then
-    export JAVA_HOME="${JAVA11_HOME}"
-else
-    current_java_version=$("${MVN_CMD[@]}" -v | awk -F'[ ,]' '/^Java version/{print $3}')
-    if [[ default_java_version != 11.* ]]; then
-        echo "Fail to get java 11 home!"
-        exit 1
-    fi
-fi
+source ./prepare-jdk.sh
+source ./common_build.sh "$1"
 
+
+# default jdk 11, do build and test
+switch_to_jdk 11
 headInfo "test with Java 11: $JAVA_HOME"
+# run junit test in run-agent-test.sh
 runCmd ./scripts/run-agent-test.sh "$1"
 
 
 java_home_var_names=(
-    JAVA6_HOME
-    JAVA7_HOME
-    JAVA8_HOME
+    JDK6_HOME
+    JDK7_HOME
+    JDK8_HOME
 
-    JAVA9_HOME
-    JAVA10_HOME
+    JDK9_HOME
+    JDK10_HOME
 
-    JAVA12_HOME
-    JAVA13_HOME
-    JAVA14_HOME
-    JAVA15_HOME
+    JDK12_HOME
+    JDK13_HOME
+    JDK14_HOME
+    JDK15_HOME
 )
 
 # test multi-version java home env

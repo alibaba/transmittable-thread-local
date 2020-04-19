@@ -1,9 +1,9 @@
 #!/bin/bash
-
+set -eEo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
-source ./common.sh
+source ./common_build.sh
 
 # do heavy operation first, descrease mvn operation count.
 runCmd mvnBuildJar
