@@ -1,7 +1,7 @@
 #!/bin/bash
-set -eEo pipefail
+set -eEuo pipefail
 
-[ -z "$1" ] && die "need class name argument!"
+[ -z "${1:-}" ] && die "need class name argument!"
 readonly run_class_name="$1"
 shift 1
 

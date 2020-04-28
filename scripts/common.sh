@@ -3,7 +3,16 @@
 _source_mark_of_common=true
 
 
-set -eEo pipefail
+set -eEuo pipefail
+
+################################################################################
+# constants
+################################################################################
+
+# NOTE: $'foo' is the escape sequence syntax of bash
+readonly nl=$'\n' # new line
+readonly ec=$'\033' # escape char
+readonly eend=$'\033[0m' # escape end
 
 ################################################################################
 # trap error setting
@@ -18,28 +27,23 @@ set -eEo pipefail
 # https://shapeshed.com/unix-exit-codes/#how-to-suppress-exit-statuses
 # https://stackoverflow.com/questions/30078281/raise-error-in-a-bash-script/50265513#50265513
 __error_trapper() {
-  local parent_lineno="$1"
+  local file_line_info="$1"
   local code="$2"
   local commands="$3"
-  echo "error exit status $code, at file ${BASH_SOURCE[*]} on or near line $parent_lineno: $commands"
+  echo "Trap error! Exit status: $code${nl}File/(near) line info:$nl  $file_line_info${nl}Error code line:$nl  $commands"
 }
-trap '__error_trapper "${LINENO}/${BASH_LINENO}" "$?" "$BASH_COMMAND"' ERR
+trap '__error_trapper "${BASH_SOURCE[*]} / $LINENO ${BASH_LINENO[*]}" "$?" "$BASH_COMMAND"' ERR
 
 
 ################################################################################
 # util functions
 ################################################################################
 
-# NOTE: $'foo' is the escape sequence syntax of bash
-readonly nl=$'\n' # new line
-readonly ec=$'\033' # escape char
-readonly eend=$'\033[0m' # escape end
-
 colorEcho() {
     local color=$1
     shift
 
-    # if stdout is console, turn on color output.
+    # if stdout is the console, turn on color output.
     [ -t 1 ] && echo "${ec}[1;${color}m$*${eend}" || echo "$@"
 }
 

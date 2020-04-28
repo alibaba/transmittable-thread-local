@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eEo pipefail
+set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true

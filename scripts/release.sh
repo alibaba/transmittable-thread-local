@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eEo pipefail
+set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 readonly BASE="$(pwd)"
 . ./common_build.sh

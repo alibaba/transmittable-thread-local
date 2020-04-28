@@ -1,18 +1,18 @@
 #!/bin/bash
-set -eEo pipefail
+set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
 
 source ./prepare-jdk.sh
-source ./common_build.sh "$1"
+source ./common_build.sh "${1:-}"
 
 
 # default jdk 11, do build and test
 switch_to_jdk 11
 headInfo "test with Java 11: $JAVA_HOME"
 # run junit test in run-agent-test.sh
-runCmd ./scripts/run-agent-test.sh "$1"
+runCmd ./scripts/run-agent-test.sh "${1:-}"
 
 
 java_home_var_names=(

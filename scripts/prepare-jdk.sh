@@ -1,7 +1,7 @@
 #!/bin/bash
 # SDKMAN! with Travis
 # https://objectcomputing.com/news/2019/01/07/sdkman-travis
-set -eEo pipefail
+set -eEuo pipefail
 
 [ -z "${_source_mark_of_prepare_jdk:+dummy}" ] || return 0
 export _source_mark_of_prepare_jdk=true
@@ -16,9 +16,10 @@ if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
     curl -s get.sdkman.io | bash || exit 2
     echo sdkman_auto_answer=true > "$HOME/.sdkman/etc/config"
 fi
+set +u
 # shellcheck disable=SC1090
 source "$HOME/.sdkman/bin/sdkman-init.sh"
-
+set -u
 
 jdks_install_by_sdkman=(
     7.0.262-zulu

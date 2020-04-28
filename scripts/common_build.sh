@@ -122,6 +122,6 @@ getJUnitTestCases() {
 # maven actions
 #################################################################################
 
-if [ "$1" != "skipClean" ]; then 
+if [ "${1:-}" != "skipClean" ]; then
     mvnClean
 fi
