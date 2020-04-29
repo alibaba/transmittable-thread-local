@@ -26,13 +26,13 @@ readonly eend=$'\033[0m' # escape end
 # https://unix.stackexchange.com/questions/365113/how-to-avoid-error-message-during-the-execution-of-a-bash-script
 # https://shapeshed.com/unix-exit-codes/#how-to-suppress-exit-statuses
 # https://stackoverflow.com/questions/30078281/raise-error-in-a-bash-script/50265513#50265513
-__error_trapper() {
+__error_trap_handler_() {
   local file_line_info="$1"
   local code="$2"
   local commands="$3"
   echo "Trap error! Exit status: $code${nl}File/(near) line info:$nl  $file_line_info${nl}Error code line:$nl  $commands"
 }
-trap '__error_trapper "${BASH_SOURCE[*]} / $LINENO ${BASH_LINENO[*]}" "$?" "$BASH_COMMAND"' ERR
+trap '__error_trap_handler_ "${BASH_SOURCE[*]} / $LINENO ${BASH_LINENO[*]}" "$?" "$BASH_COMMAND"' ERR
 
 
 ################################################################################
@@ -44,7 +44,7 @@ colorEcho() {
     shift
 
     # if stdout is the console, turn on color output.
-    [ -t 1 ] && echo "${ec}[1;${color}m$*${eend}" || echo "$@"
+    [ -t 1 ] && echo "${ec}[1;${color}m$*${eend}" || echo "$*"
 }
 
 redEcho() {
@@ -61,7 +61,7 @@ blueEcho() {
 
 headInfo() {
     colorEcho "0;34;46" ================================================================================
-    echo "$@"
+    echo "$*"
     colorEcho "0;34;46" ================================================================================
     echo
 }

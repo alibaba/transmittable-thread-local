@@ -13,8 +13,8 @@ source "$(dirname "$(readlink -f "$BASH_SOURCE")")/common.sh"
 
 if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
     [ -d "$HOME/.sdkman" ] && rm -rf "$HOME/.sdkman"
-    curl -s get.sdkman.io | bash || exit 2
-    echo sdkman_auto_answer=true > "$HOME/.sdkman/etc/config"
+    curl -s get.sdkman.io | bash || die "fail to install sdkman"
+    echo sdkman_auto_answer=true >> "$HOME/.sdkman/etc/config"
 fi
 set +u
 # shellcheck disable=SC1090
@@ -24,9 +24,11 @@ set -u
 jdks_install_by_sdkman=(
     7.0.262-zulu
     8.0.252-zulu
+
     9.0.7-zulu
     10.0.2-zulu
     11.0.7-zulu
+
     12.0.2-open
     13.0.3-zulu
     14.0.1-zulu
@@ -49,13 +51,15 @@ switch_to_jdk() {
     local javaHome="JDK${1}_HOME"
     export JAVA_HOME=${!javaHome}
 
-    [ -n "$JAVA_HOME" ] || return 2
+    [ -n "$JAVA_HOME" ] || die "jdk $1 env not found: $javaHome"
+    [ -e "$JAVA_HOME" ] || die "jdk $1 not existed: $JAVA_HOME"
+    [ -d "$JAVA_HOME" ] || die "jdk $1 is not directory: $JAVA_HOME"
 }
 
 
 for _jdk__ in "${jdks_install_by_sdkman[@]}"; do
     if [ ! -d "$SDKMAN_CANDIDATES_DIR/java/$_jdk__" ]; then
-        runCmd sdk install java "$_jdk__" || exit 2
+        runCmd sdk install java "$_jdk__" || die "fail to install jdk $_jdk__"
     fi
 done
 

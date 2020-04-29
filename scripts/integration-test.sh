@@ -31,7 +31,7 @@ java_home_var_names=(
 
 # test multi-version java home env
 for jhm_var_name in "${java_home_var_names[@]}"; do
-   export JAVA_HOME="${!jhm_var_name}"
+    export JAVA_HOME="${!jhm_var_name}"
 
     if [ -n "$JAVA_HOME" ]; then
         headInfo "test with $jhm_var_name: $JAVA_HOME"
