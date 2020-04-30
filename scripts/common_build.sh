@@ -15,7 +15,7 @@ adjustPwdToProjectRootDir() {
 
         [ -f pom.xml ] && {
             readonly PROJECT_ROOT_DIR="$PWD"
-            yellowEcho "Find project root dir: $PWD"
+            yellowEcho "Find project root dir and change dir to $PWD"
             break
         }
         cd ..
