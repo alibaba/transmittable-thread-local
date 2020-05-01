@@ -34,33 +34,40 @@ jdks_install_by_sdkman=(
     14.0.1-zulu
     15.ea.20-open
 )
+java_home_var_names=()
 
-export JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
-export JDK7_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[0]}"
-export JDK8_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[1]}"
-export JDK9_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[2]}"
-export JDK10_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[3]}"
-export JDK11_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[4]}"
-export JDK12_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[5]}"
-export JDK13_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[6]}"
-export JDK14_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[7]}"
-export JDK15_HOME="$SDKMAN_CANDIDATES_DIR/java/${jdks_install_by_sdkman[8]}"
+exportJdkVarAndInstall() {
+    JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
+    java_home_var_names=(JDK6_HOME)
+
+    local i
+    for (( i = 0; i < ${#jdks_install_by_sdkman[@]}; i++ )); do
+        local jdkVersion=$((i + 7))
+        local jdkNameOfSdkman="${jdks_install_by_sdkman[i]}"
+        local jdkHomePath="$SDKMAN_CANDIDATES_DIR/java/$jdkNameOfSdkman"
+
+        # export JDK7_HOME ~ JDK1x_HOME
+        local jdkHomeVarName="JDK${jdkVersion}_HOME"
+        eval "$jdkHomeVarName='${jdkHomePath}'"
+        java_home_var_names=("${java_home_var_names[@]}" "$jdkHomeVarName")
+
+        # install jdk by sdkman
+        if [ ! -d "$jdkHomePath" ]; then
+            runCmd sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
+        fi
+    done
+
+    echo "prepare jdks: ${java_home_var_names[*]}"
+    ls -la "$SDKMAN_CANDIDATES_DIR/java/"
+}
+exportJdkVarAndInstall
 
 
 switch_to_jdk() {
-    local javaHome="JDK${1}_HOME"
-    export JAVA_HOME=${!javaHome}
+    local javaHomeVarName="JDK${1}_HOME"
+    export JAVA_HOME="${!javaHomeVarName}"
 
-    [ -n "$JAVA_HOME" ] || die "jdk $1 env not found: $javaHome"
+    [ -n "$JAVA_HOME" ] || die "jdk $1 env not found: $javaHomeVarName"
     [ -e "$JAVA_HOME" ] || die "jdk $1 not existed: $JAVA_HOME"
     [ -d "$JAVA_HOME" ] || die "jdk $1 is not directory: $JAVA_HOME"
 }
-
-
-for _jdk__ in "${jdks_install_by_sdkman[@]}"; do
-    if [ ! -d "$SDKMAN_CANDIDATES_DIR/java/$_jdk__" ]; then
-        runCmd sdk install java "$_jdk__" || die "fail to install jdk $_jdk__"
-    fi
-done
-
-ls -la "$SDKMAN_CANDIDATES_DIR/java/"
