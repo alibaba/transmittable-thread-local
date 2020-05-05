@@ -603,7 +603,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>travis</id>
+			<id>gen-code-cov</id>
 			<activation>
 				<property>
 					<name>env.TRAVIS</name>
