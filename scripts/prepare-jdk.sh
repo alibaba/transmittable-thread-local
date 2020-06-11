@@ -32,7 +32,7 @@ jdks_install_by_sdkman=(
     12.0.2-open
     13.0.3-zulu
     14.0.1-zulu
-    15.ea.20-open
+    15.ea.26-open
 )
 java_home_var_names=()
 
@@ -53,7 +53,9 @@ exportJdkVarAndInstall() {
 
         # install jdk by sdkman
         if [ ! -d "$jdkHomePath" ]; then
+            set +u
             runCmd sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
+            set -u
         fi
     done
 
