@@ -91,7 +91,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<kotlin.version>1.3.72</kotlin.version>
-		<kotlin.coroutine.version>1.3.5</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.3.7</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.0.2</version>
+			<version>4.0.6</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -276,7 +276,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.3</version>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<id>shade-when-package</id>
@@ -320,7 +320,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.0.0</version>
+				<version>4.0.4</version>
 			</plugin>
 			<!--
 					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -330,7 +330,7 @@
 				-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
+				<version>3.0.0-M3</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -340,7 +340,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.5.4</version>
+									<version>3.3.9</version>
 								</requireMavenVersion>
 							</rules>
 						</configuration>
@@ -384,7 +384,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.9.0</version>
+					<version>3.9.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
