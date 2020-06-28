@@ -102,7 +102,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.23.2-GA</version>
+			<version>3.27.0-GA</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
