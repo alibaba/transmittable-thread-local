@@ -32,6 +32,9 @@
         - [2.3 Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven Dependency](#-maven-dependency)
+- [🔨 About compilation, build and dev](#-about-compilation-build-and-dev)
+    - [How to compile and build](#how-to-compile-and-build)
+    - [How to development by `IDE`](#how-to-development-by-ide)
 - [🗿 More Documentation](#-more-documentation)
 - [📚 Related Resources](#-related-resources)
     - [JDK Core Classes](#jdk-core-classes)
@@ -268,6 +271,39 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 ```
 
 Check available version at [search.maven.org](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav).
+
+# 🔨 About compilation, build and dev
+
+## How to compile and build
+
+Compilation/build environment require **_`JDK 8+`_**; Compilation can be performed in the normal way of `Maven`.
+
+\# The project already contains `Maven` that satisfied the required version, directly run **_`mvnw` in the project root directory_**; there is no need to manually install `Maven` by yourself.
+
+```bash
+# Run test case
+./mvnw test
+
+# Compile and package
+./mvnw package
+
+# Run test case, compile and package, install TTL library to local Maven
+./mvnw install
+
+##################################################
+# If you use `Maven` installed by yourself, the version requirement: maven 3.3.9+
+
+mvn install
+```
+
+## How to development by `IDE`
+
+If you use `IDE` to develop (such as `IntelliJ IDEA`), note that:
+open **_the `pom4ide.xml` file in the root directory of the project_** instead of `pom.xml` via `IDE`;
+To avoid `IDE` complain using `JDK 8` standard library classes not found.
+
+The reason that `IDE` support is not good / have to change a `POM` file, is:  
+The code implementation of `TTL` uses the `JDK 8` standard library class, but it is compiled into a `Java 6` version class files.
 
 # 🗿 More Documentation
 
