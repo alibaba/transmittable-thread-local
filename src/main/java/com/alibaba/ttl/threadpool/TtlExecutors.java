@@ -108,6 +108,7 @@ public final class TtlExecutors {
      * @see #getTtlExecutorService(ExecutorService)
      * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
      * @see #isTtlWrapper(Executor)
+     * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      * @since 2.8.0
      */
     @Nullable
@@ -156,6 +157,7 @@ public final class TtlExecutors {
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      *
+     * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      * @see DisableInheritableThreadFactory
      * @since 2.10.0
      */
