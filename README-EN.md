@@ -1,4 +1,4 @@
-# 📌 Transmittable ThreadLocal(TTL) 📌
+# 📌 TransmittableThreadLocal(TTL) 📌
 
 [![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=windows%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
@@ -60,7 +60,7 @@ If you have problem or question, please [submit Issue](https://github.com/alibab
 
 # 🎨 Requirements
 
-The Requirements listed below is also why I sort out `TTL` in my work.
+The Requirements listed below is also why I sort out `TransmittableThreadLocal` in my work.
 
 - Application container or high layer framework transmit information to low layer sdk.
 - Transmit context to logging without application code aware.
