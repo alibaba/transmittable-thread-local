@@ -220,7 +220,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
      * <p>
      * Invoke {@link #unwrap(Callable)} for each element in input collection.
      * <p>
-     * This method is {@code null}-safe, when input {@code Callable} parameter is {@code null}, return a empty list.
+     * This method is {@code null}-safe, when input {@code Callable} collection parameter is {@code null}, return a empty list.
      *
      * @see #gets(Collection)
      * @see #unwrap(Callable)
