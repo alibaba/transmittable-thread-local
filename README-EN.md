@@ -276,7 +276,7 @@ Check available version at [search.maven.org](https://search.maven.org/search?q=
 
 ## How to compile and build
 
-Compilation/build environment require **_`JDK 8+`_**; Compilation can be performed in the normal way of `Maven`.
+Compilation/build environment require **_`JDK 8~11`_**; Compilation can be performed in the normal way of `Maven`.
 
 \# The project already contains `Maven` that satisfied the required version, directly run **_`mvnw` in the project root directory_**; there is no need to manually install `Maven` by yourself.
 

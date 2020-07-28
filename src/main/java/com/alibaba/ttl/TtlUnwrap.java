@@ -30,8 +30,6 @@ public class TtlUnwrap {
      * <p>
      * this method is {@code null}-safe, when input parameter is {@code null}, return {@code null};
      * if input parameter is not a {@link TtlWrapper} just return input.
-     * <p>
-     * so {@code unwrap} will always return the same input object.
      *
      * @see TtlRunnable#unwrap(Runnable)
      * @see TtlCallable#unwrap(java.util.concurrent.Callable)

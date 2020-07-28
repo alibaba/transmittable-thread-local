@@ -220,7 +220,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * <p>
      * Invoke {@link #unwrap(Runnable)} for each element in input collection.
      * <p>
-     * This method is {@code null}-safe, when input {@code Runnable} parameter is {@code null}, return a empty list.
+     * This method is {@code null}-safe, when input {@code Runnable} parameter collection is {@code null}, return a empty list.
      *
      * @see #gets(Collection)
      * @see #unwrap(Runnable)
