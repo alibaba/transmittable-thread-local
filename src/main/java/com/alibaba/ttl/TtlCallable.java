@@ -52,12 +52,12 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
      */
     @Override
     public V call() throws Exception {
-        Object captured = capturedRef.get();
+        final Object captured = capturedRef.get();
         if (captured == null || releaseTtlValueReferenceAfterCall && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after call!");
         }
 
-        Object backup = replay(captured);
+        final Object backup = replay(captured);
         try {
             return callable.call();
         } finally {

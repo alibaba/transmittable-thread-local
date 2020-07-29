@@ -122,7 +122,7 @@ public final class TtlAgent {
      * @see Logger#STDERR
      * @see Logger#STDOUT
      */
-    public static void premain(String agentArgs, @NonNull Instrumentation inst) {
+    public static void premain(final String agentArgs, @NonNull final Instrumentation inst) {
         kvs = splitCommaColonStringToKV(agentArgs);
 
         Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
@@ -184,7 +184,7 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
-        return isOptionSetOrFalse(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL);
+        return isBooleanOptionSet(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL, false);
     }
 
     /**
@@ -193,22 +193,14 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
-        return isOptionSetOrTrue(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY);
+        return isBooleanOptionSet(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY, true);
     }
 
-    private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key) {
-        return isOptionSetOrFalse(kvs, key, false);
-    }
-
-    private static boolean isOptionSetOrTrue(@Nullable final Map<String, String> kvs, @NonNull String key) {
-        return isOptionSetOrFalse(kvs, key, true);
-    }
-
-    private static boolean isOptionSetOrFalse(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
+    private static boolean isBooleanOptionSet(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
         if (null == kvs) return defaultValue;
 
-        final boolean hasEnableKey = kvs.containsKey(key);
-        if (!hasEnableKey) return defaultValue;
+        final boolean containsKey = kvs.containsKey(key);
+        if (!containsKey) return defaultValue;
 
         return !"false".equalsIgnoreCase(kvs.get(key));
     }
@@ -217,8 +209,8 @@ public final class TtlAgent {
      * Split to {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
      */
     @NonNull
-    static Map<String, String> splitCommaColonStringToKV(@Nullable String commaColonString) {
-        Map<String, String> ret = new HashMap<String, String>();
+    static Map<String, String> splitCommaColonStringToKV(@Nullable final String commaColonString) {
+        final Map<String, String> ret = new HashMap<String, String>();
         if (commaColonString == null || commaColonString.trim().length() == 0) return ret;
 
         final String[] splitKvArray = commaColonString.trim().split("\\s*,\\s*");
