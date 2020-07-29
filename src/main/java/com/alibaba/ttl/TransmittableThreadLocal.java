@@ -538,7 +538,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.3.1
          */
         public static <R> R runSupplierWithCaptured(@NonNull Object captured, @NonNull Supplier<R> bizLogic) {
-            Object backup = replay(captured);
+            final Object backup = replay(captured);
             try {
                 return bizLogic.get();
             } finally {
@@ -557,7 +557,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.9.0
          */
         public static <R> R runSupplierWithClear(@NonNull Supplier<R> bizLogic) {
-            Object backup = clear();
+            final Object backup = clear();
             try {
                 return bizLogic.get();
             } finally {
@@ -579,7 +579,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.3.1
          */
         public static <R> R runCallableWithCaptured(@NonNull Object captured, @NonNull Callable<R> bizLogic) throws Exception {
-            Object backup = replay(captured);
+            final Object backup = replay(captured);
             try {
                 return bizLogic.call();
             } finally {
@@ -599,7 +599,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.9.0
          */
         public static <R> R runCallableWithClear(@NonNull Callable<R> bizLogic) throws Exception {
-            Object backup = clear();
+            final Object backup = clear();
             try {
                 return bizLogic.call();
             } finally {
