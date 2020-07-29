@@ -58,7 +58,7 @@ public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> implements Ttl
      * Implements execution conventions for RecursiveTask.
      */
     protected final boolean exec() {
-        Object backup = replay(captured);
+        final Object backup = replay(captured);
         try {
             result = compute();
             return true;

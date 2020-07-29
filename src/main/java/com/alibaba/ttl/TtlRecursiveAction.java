@@ -50,7 +50,7 @@ public abstract class TtlRecursiveAction extends ForkJoinTask<Void> implements T
      * Implements execution conventions for RecursiveActions.
      */
     protected final boolean exec() {
-        Object backup = replay(captured);
+        final Object backup = replay(captured);
         try {
             compute();
             return true;

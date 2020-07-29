@@ -49,12 +49,12 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      */
     @Override
     public void run() {
-        Object captured = capturedRef.get();
+        final Object captured = capturedRef.get();
         if (captured == null || releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Object backup = replay(captured);
+        final Object backup = replay(captured);
         try {
             runnable.run();
         } finally {
