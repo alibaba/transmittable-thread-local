@@ -97,9 +97,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
                 String code = String.format(
                         // decorate to TTL wrapper,
                         // and then set AutoWrapper attachment/Tag
-                        "$%d = %s.get($%d, false, true);"
-                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%<d);",
-                        i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName), i + 1);
+                        "$%d = %s.get($%1$d, false, true);"
+                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%1$d);",
+                        i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName));
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
