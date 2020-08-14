@@ -19,12 +19,12 @@
 
 # 📌 Framework/Middleware integration to `TTL` transmittance
 
-[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240) to capture all `TTL` values of current thread and replay them in other thread.
+[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240) to capture all `TTL` values of current thread and replay them in another thread.
 
 There are following methods：
 
 - `capture`: capture all `TTL` values in current thread
-- `replay`: replay the captured `TTL` values in current thread, and return the backup `TTL` values before replay
+- `replay`: replay the captured `TTL` values in the current thread, and return the backup `TTL` values before replay
 - `restore`: restore `TTL` values before replay
 
 Sample code：
