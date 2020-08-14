@@ -323,11 +323,11 @@
 				<version>4.0.4</version>
 			</plugin>
 			<!--
-					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
+				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
 
-					add maven-enforce-plugin to make sure the right jdk is used
-					https://stackoverflow.com/a/18420462/922688
-				-->
+				add maven-enforce-plugin to make sure the right jdk is used
+				https://stackoverflow.com/a/18420462/922688
+			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<version>3.0.0-M3</version>
@@ -644,7 +644,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>force-jdk-11+when-do-release</id>
+			<id>force-jdk11-when-release</id>
 			<activation>
 				<property>
 					<name>performRelease</name>

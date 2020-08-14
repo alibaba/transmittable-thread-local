@@ -10,7 +10,12 @@
 - [📟 关于`Java Agent`](#-%E5%85%B3%E4%BA%8Ejava-agent)
     - [`Java Agent`方式对应用代码无侵入](#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)
     - [已有`Java Agent`中嵌入`TTL Agent`](#%E5%B7%B2%E6%9C%89java-agent%E4%B8%AD%E5%B5%8C%E5%85%A5ttl-agent)
-- [👢 Bootstrap上添加通用库的`Jar`的问题及解决方法](#-bootstrap%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93%E7%9A%84jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法](#-bootstrap-classpath%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
+    - [如何编译构建](#%E5%A6%82%E4%BD%95%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)
+    - [如何用`IDE`开发](#%E5%A6%82%E4%BD%95%E7%94%A8ide%E5%BC%80%E5%8F%91)
+        - [`IntelliJ IDEA`关闭检查的方法](#intellij-idea%E5%85%B3%E9%97%AD%E6%A3%80%E6%9F%A5%E7%9A%84%E6%96%B9%E6%B3%95)
+        - [其它`IDE`的解决方法](#%E5%85%B6%E5%AE%83ide%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [Jdk core classes](#jdk-core-classes)
     - [Java Agent](#java-agent)
@@ -148,23 +153,73 @@ public final class YourXxxAgent {
 
 关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
 
-注意在`bootclasspath`上，还是要加上`TTL`依赖的Jar：
+注意，在`bootclasspath`上，还是要加上`TTL Jar`：
 
 ```bash
 -Xbootclasspath/a:/path/to/transmittable-thread-local-2.0.0.jar:/path/to/your/agent/jar/files
 ```
 
-# 👢 Bootstrap上添加通用库的`Jar`的问题及解决方法
+# 👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法
 
 通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
 
-`TTL`在`Bootstrap` `ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist`和`TTL`的`Javassist`有兼容性的风险。
+`TTL`在`Bootstrap ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist` 和 `TTL`用的`Javassist` 会有兼容性的风险。
 
-可以通过`repackage`（重新命名包名）来解决这个问题。
+可以通过`repackage`依赖（重命名/改写依赖的包名）来解决这个问题。
 
-`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成`repackage`操作，并把`Javassist`的类加到`TTL`的`Jar`中。
+`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成`repackage`操作，并把`Javassist`类文件加到`TTL`的`Jar`中。
 
 这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
+
+# 🔨 关于编译构建与`IDE`开发
+
+## 如何编译构建
+
+编译构建的环境要求： **_`JDK 8~11`_**；用`Maven`常规的方式执行编译构建即可：  
+\# 在工程中已经包含了符合版本要求的`Maven`，直接运行 **_工程根目录下的`mvnw`_**；并不需要先手动自己安装好`Maven`。
+
+```bash
+# 运行测试Case
+./mvnw test
+# 编译打包
+./mvnw package
+# 运行测试Case、编译打包、安装TTL库到Maven本地
+./mvnw install
+
+#####################################################
+# 如果使用你自己安装的`Maven`，版本要求：maven 3.3.9+
+mvn install
+```
+
+## 如何用`IDE`开发
+
+`TTL`的代码实现使用了`JDK 8`的标准库类，但编译成`Java 6`版本的类文件。即
+
+- 编译`Java`文件的`Java`语言版本 是 `Java 6`。
+- 而编译依赖的`Java API`/标准库（由`JVM`提供） 需要是 `Java 8`/`JVM 8`；高于`Java`语言版本。
+
+现代的`IDE`（如`IntelliJ IDEA`）一般会缺省做 语言版本 与 `API`版本 的检查：
+
+- 如何使用了高于语言版本的标准库类，`IDE`会报错。
+- 以避免在语言版本`JVM`运行时，可能会出`API`/标准类找不到的风险。
+
+可以在`IDE`设置中，关闭这个『语言版本 与 `API`版本』检查。
+
+### `IntelliJ IDEA`关闭检查的方法
+
+在设置中关闭【`Inspections` - `Usages of API which isn't available at the configured language level`】：  
+![1-preferences-setting](https://user-images.githubusercontent.com/1063891/90236020-c57acd00-de54-11ea-8984-695adaf08a67.png)
+
+当然通过【`Find Actions...` <kbd>cmd + shift + A</kbd>】，可以更方便快速完成设置：  
+![2-action-setting](https://user-images.githubusercontent.com/1063891/90236035-c875bd80-de54-11ea-8a9a-f55c42093798.png)
+
+### 其它`IDE`的解决方法
+
+其它`IDE`（如`Eclipse`、`NetBeans`）可以找一下设置方法，以关闭这个『语言版本 与 `API`版本』检查。
+
+如果没有找到`IDE`的设置方法，也可以用下面的方法来 **`workaround`**： 😂
+
+打开 **_工程根目录下的`pom4ide.xml`文件_**（修改了`Java`文件的语言版本），而不是`pom.xml`。
 
 # 📚 相关资料
 

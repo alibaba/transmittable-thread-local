@@ -283,10 +283,8 @@ Compilation/build environment require **_`JDK 8~11`_**; Compilation can be perfo
 ```bash
 # Run test case
 ./mvnw test
-
 # Compile and package
 ./mvnw package
-
 # Run test case, compile and package, install TTL library to local Maven
 ./mvnw install
 
