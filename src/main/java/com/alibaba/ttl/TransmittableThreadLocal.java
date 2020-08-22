@@ -21,25 +21,27 @@ import java.util.logging.Logger;
  * If the <b>inheritable</b> ability from {@link InheritableThreadLocal} has <b>potential leaking problem</b>,
  * you can disable the <b>inheritable</b> ability:
  * <p>
- * ❶ by wrapping thread factory using method
- * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)} /
- * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()}
- * for thread pooling components({@link java.util.concurrent.ThreadPoolExecutor}, {@link java.util.concurrent.ForkJoinPool}).
- * Inheritable feature in thread pooling components should <b>never</b> happen,
- * because threads in thread pooling components is pre-created and pooled, these threads is neutral for biz logic/data.
+ * ❶ For thread pooling components({@link java.util.concurrent.ThreadPoolExecutor},
+ * {@link java.util.concurrent.ForkJoinPool}), Inheritable feature <b>should never</b> happen,
+ * since threads in thread pooling components is pre-created and pooled, these threads is <b>neutral</b> to biz logic/data.
  * <br>
- * You can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
- * so as to wrap thread factory for thread pooling components ({@link java.util.concurrent.ThreadPoolExecutor},
- * {@link java.util.concurrent.ForkJoinPool}) automatically and transparently.
+ * Disable inheritable for thread pooling components by wrapping thread factories using method
+ * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)} /
+ * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()}.
+ * <br>
+ * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
+ * so as to wrap thread factories for thread pooling components automatically and transparently.
  * <p>
- * ❷ or by overriding method {@link #childValue(Object)}.
+ * ❷ In other cases, disable inheritable by overriding method {@link #childValue(Object)}.
+ * <br>
  * Whether the value should be inheritable or not can be controlled by the data owner,
  * disable it <b>carefully</b> when data owner have a clear idea.
- * <pre> {@code TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>() {
+ * <pre><code>
+ * TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<>() {
  *     protected String childValue(String parentValue) {
  *         return initialValue();
  *     }
- * }}</pre>
+ * }</code></pre>
  * <p>
  * More discussion about "disable the <b>inheritable</b> ability"
  * see <a href="https://github.com/alibaba/transmittable-thread-local/issues/100">
@@ -67,9 +69,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     private final boolean disableIgnoreNullValueSemantics;
 
     /**
-     * Default constructor.
+     * Default constructor. Create a {@link TransmittableThreadLocal} instance with "Ignore-Null-Value Semantics".
      * <p>
-     * Create a {@link TransmittableThreadLocal} instance with "Ignore-Null-Value Semantics".
      * About "Ignore-Null-Value Semantics":
      * <p>
      * <ol>
@@ -79,18 +80,19 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * This is a pragmatic design decision:
      * <ol>
-     * <li>use explicit value type rather than {@code null} to biz intent.</li>
-     * <li>more safe(avoid {@code NPE}) and gc friendly.</li>
+     * <li>use explicit value type rather than {@code null} value to express biz intent.</li>
+     * <li>safer and more robust code(avoid {@code NPE} risk).</li>
      * </ol>
      * <p>
-     * So it's not recommended to use {@code null} value.
+     * So it's strongly not recommended to use {@code null} value.
      * <p>
      * But the behavior of "Ignore-Null-Value Semantics" is NOT compatible with
      * {@link ThreadLocal} and {@link InheritableThreadLocal},
      * you can disable this behavior/semantics via using constructor {@link #TransmittableThreadLocal(boolean)}
-     * and set parameter {@code disableIgnoreNullValueSemantics} instead.
+     * and setting parameter {@code disableIgnoreNullValueSemantics} to {@code true}.
      * <p>
-     * More info see <a href="https://github.com/alibaba/transmittable-thread-local/issues/157">Issue #157</a>.
+     * More discussion about "Ignore-Null-Value Semantics" see
+     * <a href="https://github.com/alibaba/transmittable-thread-local/issues/157">Issue #157</a>.
      *
      * @see #TransmittableThreadLocal(boolean)
      */
@@ -99,8 +101,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * Constructor, create a {@link TransmittableThreadLocal} with parameter {@code disableIgnoreNullValueSemantics}
-     * to control "Ignore-Null-Value Semantics".
+     * Constructor, create a {@link TransmittableThreadLocal} instance
+     * with parameter {@code disableIgnoreNullValueSemantics} to control "Ignore-Null-Value Semantics".
      *
      * @param disableIgnoreNullValueSemantics disable "Ignore-Null-Value Semantics"
      * @see #TransmittableThreadLocal()
@@ -320,8 +322,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *      System.out.println("Hello");
      *      ...
      *      return "World";
-     * }); // (2) + (3)
-     * </code></pre>
+     * }); // (2) + (3)</code></pre>
      * <p>
      * The reason of providing 2 util methods is the different {@code throws Exception} type
      * so as to satisfy your biz logic({@code lambda}):
@@ -331,7 +332,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * </ol>
      * <p>
      * If you need the different {@code throws Exception} type,
-     * you can define your own util method(function interface({@code lambda})) with your own {@code throws Exception} type.
+     * you can define your own util method(function interface({@code lambda}))
+     * with your own {@code throws Exception} type.
      *
      * <h2>ThreadLocal Integration</h2>
      * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
@@ -346,8 +348,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * Transmitter.registerThreadLocal(aThreadLocal, copyLambda);
      *
      * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
-     * Transmitter.unregisterThreadLocal(aThreadLocal);
-     * </code></pre>
+     * Transmitter.unregisterThreadLocal(aThreadLocal);</code></pre>
      *
      * <B><I>Caution:</I></B><br>
      * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},

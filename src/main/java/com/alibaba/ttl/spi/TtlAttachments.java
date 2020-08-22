@@ -3,7 +3,8 @@ package com.alibaba.ttl.spi;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The TTL attachments for TTL tasks, eg: {@link com.alibaba.ttl.TtlRunnable}, {@link com.alibaba.ttl.TtlCallable}.
+ * The TTL attachments for TTL tasks,
+ * eg: {@link com.alibaba.ttl.TtlRunnable}, {@link com.alibaba.ttl.TtlCallable}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.11.0
