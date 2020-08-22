@@ -1,4 +1,7 @@
 language: java
+# Building a Java project
+#   https://docs.travis-ci.com/user/languages/java
+#
 # how to install and set jdk on travis:
 # - Testing Against Multiple JDKs
 #   https://docs.travis-ci.com/user/languages/java/#Testing-Against-Multiple-JDKs
@@ -8,6 +11,7 @@ language: java
 #   https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix
 
 dist: trusty
+
 addons:
   apt:
     packages:
@@ -16,6 +20,9 @@ addons:
 branches:
   except:
     - appveyor
+
+# Job Lifecycle
+#   https://docs.travis-ci.com/user/job-lifecycle/
 
 before_install:
   # workaround for "buffer overflow detected" problem of openjdk:
@@ -41,15 +48,18 @@ script:
 after_success:
   # codecov
   - ./scripts/codecov.sh
+
+after_script:
   - git status --ignored
 
-# Caching Dependencies and Directories
-# https://docs.travis-ci.com/user/caching/
-cache:
-  directories:
-    - $HOME/.m2
-    - $HOME/.sdkman
-    - $HOME/.cache/pip
 before_cache:
   # clear TTL maven self install
   - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local
+# Caching Dependencies and Directories
+# https://docs.travis-ci.com/user/caching/
+cache:
+  - pip
+  - directories:
+    - $HOME/.m2
+    - $HOME/.sdkman
+    - $HOME/.cache/pip
