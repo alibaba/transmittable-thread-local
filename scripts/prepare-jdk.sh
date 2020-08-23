@@ -66,6 +66,8 @@ exportJdkVarAndInstall
 
 
 switch_to_jdk() {
+    [ $# == 1 ] || die "switch_to_jdk need 1 argument! But provided: $*"
+
     local javaHomeVarName="JDK${1}_HOME"
     export JAVA_HOME="${!javaHomeVarName}"
 

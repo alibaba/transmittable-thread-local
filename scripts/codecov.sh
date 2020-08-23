@@ -2,9 +2,10 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
+source ./prepare-jdk.sh
 source ./common_build.sh
 
-export JAVA_HOME="$JDK8_HOME"
+switch_to_jdk 8
 runCmd ./mvnw clean -V
 runCmd ./mvnw cobertura:cobertura
 runCmd codecov
