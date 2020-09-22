@@ -15,24 +15,28 @@ if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
     [ -d "$HOME/.sdkman" ] && rm -rf "$HOME/.sdkman"
     curl -s get.sdkman.io | bash || die "fail to install sdkman"
     echo sdkman_auto_answer=true >> "$HOME/.sdkman/etc/config"
+
+    this_time_install_sdk_man=true
 fi
 set +u
 # shellcheck disable=SC1090
 source "$HOME/.sdkman/bin/sdkman-init.sh"
+[ -n "$this_time_install_sdk_man" ] && runCmd sdk ls java
 set -u
 
 jdks_install_by_sdkman=(
     7.0.262-zulu
-    8.0.252-zulu
+    8.0.265-zulu
 
     9.0.7-zulu
     10.0.2-zulu
-    11.0.7-zulu
+    11.0.8-zulu
 
     12.0.2-open
-    13.0.3-zulu
-    14.0.1-zulu
-    15.ea.26-open
+    13.0.4-zulu
+    14.0.2-zulu
+    15.0.0-zulu
+    16.ea.16-open
 )
 java_home_var_names=()
 
