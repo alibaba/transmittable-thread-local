@@ -18,11 +18,7 @@ runCmd ./scripts/run-agent-test.sh "${1:-}"
 for jhm_var_name in "${java_home_var_names[@]}"; do
     export JAVA_HOME="${!jhm_var_name}"
 
-    if [ -n "$JAVA_HOME" ]; then
-        headInfo "test with $jhm_var_name: $JAVA_HOME"
-        runCmd ./scripts/run-junit.sh skipClean
-        runCmd ./scripts/run-agent-test.sh skipClean
-    else
-        headInfo "skip $jhm_var_name: $JAVA_HOME"
-    fi
+    headInfo "test with $jhm_var_name: $JAVA_HOME"
+    runCmd ./scripts/run-junit.sh skipClean
+    runCmd ./scripts/run-agent-test.sh skipClean
 done
