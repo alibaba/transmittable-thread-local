@@ -40,7 +40,7 @@ jdks_install_by_sdkman=(
 )
 java_home_var_names=()
 
-exportJdkVarAndInstall() {
+setJdkHomeVarsAndInstallJdk() {
     JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
     java_home_var_names=(JDK6_HOME)
 
@@ -50,7 +50,7 @@ exportJdkVarAndInstall() {
         local jdkNameOfSdkman="${jdks_install_by_sdkman[i]}"
         local jdkHomePath="$SDKMAN_CANDIDATES_DIR/java/$jdkNameOfSdkman"
 
-        # export JDK7_HOME ~ JDK1x_HOME
+        # set JDK7_HOME ~ JDK1x_HOME to global var java_home_var_names
         local jdkHomeVarName="JDK${jdkVersion}_HOME"
         eval "$jdkHomeVarName='${jdkHomePath}'"
         java_home_var_names=("${java_home_var_names[@]}" "$jdkHomeVarName")
@@ -66,7 +66,7 @@ exportJdkVarAndInstall() {
     echo "prepare jdks: ${java_home_var_names[*]}"
     ls -la "$SDKMAN_CANDIDATES_DIR/java/"
 }
-exportJdkVarAndInstall
+setJdkHomeVarsAndInstallJdk
 
 
 switch_to_jdk() {

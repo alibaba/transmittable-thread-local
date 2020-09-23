@@ -39,7 +39,7 @@ readonly -a JAVA_CMD=(
     }
 )
 readonly -a MVN_CMD=(
-    ./mvnw -V
+    ./mvnw -V --no-transfer-progress
 )
 
 #################################################################################
