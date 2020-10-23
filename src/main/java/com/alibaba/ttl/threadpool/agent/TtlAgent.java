@@ -32,12 +32,12 @@ import java.util.logging.Level;
  * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ThreadPoolExecutor}
  * to {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}
- * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)}.
+ * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory}.
  * </li>
  * <li>rewrite the {@link java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ForkJoinPool}
  * to {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
- * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)}.
+ * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory) getDisableInheritableForkJoinWorkerThreadFactory}.
  * </li>
  * </ul>
  * More info about "disable inheritable" see {@link com.alibaba.ttl.TransmittableThreadLocal}.

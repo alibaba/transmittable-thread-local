@@ -25,9 +25,9 @@ import java.util.logging.Logger;
  * {@link java.util.concurrent.ForkJoinPool}), Inheritable feature <b>should never</b> happen,
  * since threads in thread pooling components is pre-created and pooled, these threads is <b>neutral</b> to biz logic/data.
  * <br>
- * Disable inheritable for thread pooling components by wrapping thread factories using method
- * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)} /
- * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()}.
+ * Disable inheritable for thread pooling components by wrapping thread factories using methods
+ * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory} /
+ * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
  * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
  * so as to wrap thread factories for thread pooling components automatically and transparently.
