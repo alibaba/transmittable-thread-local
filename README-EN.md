@@ -70,8 +70,11 @@ The Requirements listed below is also why I sort out `TransmittableThreadLocal` 
 ## 1. Simple usage
 
 ```java
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
 // set in parent thread
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
 context.set("value-set-in-parent");
 
 // =====================================================
@@ -99,7 +102,11 @@ and [`TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java).
 Sample code:
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// set in parent thread
 parent.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -116,7 +123,11 @@ String value = parent.get();
 above code show how to dealing with `Runnable`, `Callable` is similar:
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// set in parent thread
 parent.set("value-set-in-parent");
 
 Callable call = new CallableTask();
@@ -153,7 +164,11 @@ ExecutorService executorService = ...
 // extra work, create decorated executorService object
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// set in parent thread
 parent.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -177,7 +192,7 @@ Sample code:
 
 ```java
 // ## 1. upper layer logic of framework ##
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 context.set("value-set-in-parent");
 
 // ## 2. biz logic ##

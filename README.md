@@ -98,8 +98,11 @@
 示例代码：
 
 ```java
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
 // 在父线程中设置
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
 context.set("value-set-in-parent");
 
 // =====================================================
@@ -125,7 +128,11 @@ String value = context.get();
 示例代码：
 
 ```java
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -142,7 +149,11 @@ String value = context.get();
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Callable call = new CallableTask();
@@ -179,7 +190,11 @@ ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -204,7 +219,7 @@ String value = context.get();
 
 ```java
 // ## 1. 框架上层逻辑，后续流程框架调用业务 ##
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 context.set("value-set-in-parent");
 
 // ## 2. 应用逻辑，后续流程业务调用框架下层逻辑 ##
