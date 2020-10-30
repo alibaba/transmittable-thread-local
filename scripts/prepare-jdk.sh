@@ -25,18 +25,18 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 set -u
 
 jdks_install_by_sdkman=(
-    7.0.262-zulu
-    8.0.265-zulu
+    7.0.282-zulu
+    8.0.272-zulu
 
     9.0.7-zulu
     10.0.2-zulu
-    11.0.8-zulu
+    11.0.9-zulu
 
     12.0.2-open
-    13.0.4-zulu
+    13.0.5-zulu
     14.0.2-zulu
-    15.0.0-zulu
-    16.ea.16-open
+    15.0.1-zulu
+    16.ea.21-open
 )
 java_home_var_names=()
 

@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3d7c47)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
 [![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=2d545e)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
-[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
+[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg) ![JDK support](https://img.shields.io/badge/JDK-6+-green.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
 [![Chat at gitter.im](https://badges.gitter.im/alibaba/transmittable-thread-local.svg)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/fork)
