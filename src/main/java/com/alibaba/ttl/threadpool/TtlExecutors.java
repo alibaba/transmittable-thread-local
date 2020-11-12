@@ -46,7 +46,7 @@ public final class TtlExecutors {
         if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
             return executor;
         }
-        return new ExecutorTtlWrapper(executor);
+        return new ExecutorTtlWrapper(executor, false);
     }
 
     /**
@@ -59,7 +59,7 @@ public final class TtlExecutors {
         if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
             return executorService;
         }
-        return new ExecutorServiceTtlWrapper(executorService);
+        return new ExecutorServiceTtlWrapper(executorService, false);
     }
 
     /**
@@ -72,7 +72,7 @@ public final class TtlExecutors {
         if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof TtlEnhanced) {
             return scheduledExecutorService;
         }
-        return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService);
+        return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService, false);
     }
 
     /**
