@@ -7,6 +7,7 @@ import com.alibaba.ttl.testmodel.FooTask
 import com.alibaba.ttl.testmodel.Task
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Test
@@ -15,7 +16,6 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)

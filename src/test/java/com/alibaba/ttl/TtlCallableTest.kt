@@ -4,6 +4,7 @@ import com.alibaba.*
 import com.alibaba.ttl.testmodel.Call
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Test
@@ -11,7 +12,6 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -152,7 +152,7 @@ class TtlCallableTest {
         val call3 = Call("3")
 
         val callList = TtlCallable.gets(
-                listOf<Callable<String>?>(call1, call2, null, call3))
+            listOf<Callable<String>?>(call1, call2, null, call3))
 
         assertEquals(4, callList.size.toLong())
         assertThat(callList[0], instanceOf(TtlCallable::class.java))

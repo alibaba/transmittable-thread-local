@@ -6,7 +6,9 @@ import com.alibaba.support.junit.conditional.IsAgentRun
 import javassist.ClassPool
 import javassist.CtClass
 import org.hamcrest.CoreMatchers.containsString
-import org.junit.Assert.*
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 
