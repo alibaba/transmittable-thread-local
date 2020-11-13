@@ -47,6 +47,7 @@ readonly -a MVN_CMD=(
 #################################################################################
 
 mvnClean() {
+    yellowEcho "clean maven"
     rm -rf target || die "fail to mvn clean!"
 }
 
@@ -123,5 +124,5 @@ getJUnitTestCases() {
 #################################################################################
 
 if [ "${1:-}" != "skipClean" ]; then
-    mvnClean
+    runCmd mvnClean
 fi

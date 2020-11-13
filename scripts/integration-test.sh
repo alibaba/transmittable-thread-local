@@ -11,7 +11,7 @@ source ./common_build.sh "${1:-}"
 switch_to_jdk 11
 headInfo "test with Java 11: $JAVA_HOME"
 # run junit test in run-agent-test.sh
-runCmd ./scripts/run-agent-test.sh "${1:-}"
+runCmd ./scripts/run-agent-test.sh skipClean
 
 # test multi-version java home env
 # shellcheck disable=SC2154
