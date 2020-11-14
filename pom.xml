@@ -288,7 +288,7 @@
 							<relocations>
 								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.internal.javassist</shadedPattern>
+									<shadedPattern>com.alibaba.ttl.threadpool.agent.internal.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>
