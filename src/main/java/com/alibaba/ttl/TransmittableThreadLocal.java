@@ -316,7 +316,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * // in thread B
      * ///////////////////////////////////////////////////////////////////////////
      *
-     * String result = runSupplierWithCaptured(captured, () -&gt; {
+     * String result = runSupplierWithCaptured(captured, () -> {
      *      // your biz logic, run with the TransmittableThreadLocal values of thread A
      *      System.out.println("Hello");
      *      ...
