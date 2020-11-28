@@ -319,7 +319,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.11.5</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
