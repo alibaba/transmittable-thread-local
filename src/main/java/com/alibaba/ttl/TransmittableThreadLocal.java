@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
+ * {@link TransmittableThreadLocal}({@code TTL}) can transmit value from the thread of submitting task to the thread of executing task.
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link InheritableThreadLocal},

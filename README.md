@@ -248,8 +248,8 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
     - 修饰实现代码在[`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
     - **_注意_**：从`2.11.2`版本开始缺省开启`TimerTask`的修饰（因为保证正确性是第一位，而不是最佳实践『不推荐使用`TimerTask`』:）；`2.11.1`版本及其之前的版本没有缺省开启`TimerTask`的修饰。
     - 使用`Agent`参数`ttl.agent.enable.timer.task`开启/关闭`TimerTask`的修饰：
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false`
     - 更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
 
 > **关于`java.util.TimerTask`/`java.util.Timer`**
@@ -265,7 +265,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 因为修饰了`JDK`标准库的类，标准库由`bootstrap class loader`加载；修饰后的`JDK`类引用了`TTL`的代码，所以`Java Agent`使用方式下`TTL Jar`文件需要配置到`boot class path`上。
 
 `TTL`从`v2.6.0`开始，加载`TTL Agent`时会自动设置`TTL Jar`到`boot class path`上。  
-**_注意_**：不能修改从`Maven`库下载的`TTL Jar`文件名（形如`transmittable-thread-local-2.x.x.jar`）。
+**_注意_**：不能修改从`Maven`库下载的`TTL Jar`文件名（形如`transmittable-thread-local-2.x.y.jar`）。
 如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。
 
 自动设置`TTL Jar`到`boot class path`的实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
@@ -283,15 +283,15 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 
 #### `Java`的启动参数配置
 
-在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar`。
+在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.y.jar`。
 
-如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.x.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
+如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.y.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
 比如修改文件名成`ttl-foo-name-changed.jar`，则还加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
 
 `Java`命令行示例如下：
 
 ```bash
-java -javaagent:path/to/transmittable-thread-local-2.x.x.jar \
+java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
     -cp classes \
     com.alibaba.demo.ttl.agent.AgentDemo
 ```

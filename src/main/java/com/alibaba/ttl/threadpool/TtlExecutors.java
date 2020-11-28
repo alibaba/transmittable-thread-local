@@ -41,11 +41,11 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
      * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapper Executor is changed to true,
-     * so the wrapper Executor can be cooperation the usage of "Decorate Runnable and Callable".
+     * NOTE: sine v2.12.0 the idempotency of return wrapped Executor is changed to true,
+     * so the wrapped Executor can be cooperated with the usage of "Decorate Runnable and Callable".
      * <p>
-     * about idempotency: if is idempotent,
-     * allowed submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapper Executor;
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped Executor;
      * otherwise throw {@link IllegalStateException}.
      *
      * @param executor input Executor
@@ -66,11 +66,11 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapper ExecutorService is changed to true,
-     * so the wrapper ExecutorService can be cooperation the usage of "Decorate Runnable and Callable".
+     * NOTE: sine v2.12.0 the idempotency of return wrapped ExecutorService is changed to true,
+     * so the wrapped ExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
      * <p>
-     * about idempotency: if is idempotent,
-     * allowed submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapper ExecutorService;
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped ExecutorService;
      * otherwise throw {@link IllegalStateException}.
      *
      * @param executorService input ExecutorService
@@ -92,11 +92,11 @@ public final class TtlExecutors {
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
      * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapper ScheduledExecutorService is changed to true,
-     * so the wrapper ScheduledExecutorService can be cooperation the usage of "Decorate Runnable and Callable".
+     * NOTE: sine v2.12.0 the idempotency of return wrapped ScheduledExecutorService is changed to true,
+     * so the wrapped ScheduledExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
      * <p>
-     * about idempotency:if is idempotent,
-     * allowed submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapper scheduledExecutorService;
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped ScheduledExecutorService;
      * otherwise throw {@link IllegalStateException}.
      *
      * @param scheduledExecutorService input scheduledExecutorService
@@ -113,7 +113,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * check the executor is TTL wrapper executor or not.
+     * check the executor is a TTL executor wrapper or not.
      * <p>
      * if the parameter executor is TTL wrapper, return {@code true}, otherwise {@code false}.
      * <p>
@@ -132,7 +132,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * Unwrap TTL wrapper executor to the original/underneath one.
+     * Unwrap TTL executor wrapper to the original/underneath one.
      * <p>
      * if the parameter executor is TTL wrapper, return the original/underneath executor;
      * otherwise, just return the input parameter executor.
@@ -157,7 +157,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * Wrapper of  {@link ThreadFactory}, disable inheritable.
+     * Wrapper of {@link ThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
      * @see DisableInheritableThreadFactory

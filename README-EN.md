@@ -221,18 +221,18 @@ At present, `TTL` agent has decorated below `JDK` execution components(aka. thre
     - decoration implementation code is in [`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java), supports since version **_`2.7.0`_**.
     - **_NOTE_**: Since version `2.11.2` decoration for `TimerTask` default is enable (because correctness is first concern, not the best practice like "It is not recommended to use `TimerTask`" :); before version `2.11.1` default is disable.
     - enabled/disable by agent argument `ttl.agent.enable.timer.task`:
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false`
     - more info about `TTL` agent arguments, see [the javadoc of `TtlAgent.java`](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java).
 
 Add start options on Java command:
 
-- `-javaagent:path/to/transmittable-thread-local-2.x.x.jar`
+- `-javaagent:path/to/transmittable-thread-local-2.x.y.jar`
 
 **NOTE**：
 
 - Because TTL agent modified the `JDK` std lib classes, make code refer from std lib class to the TTL classes, so the TTL Agent jar must be added to `boot classpath`.
-- Since `v2.6.0`, TTL agent jar will auto add self to `boot classpath`. But you **should _NOT_** modify the downloaded TTL jar file name in the maven repo(eg: `transmittable-thread-local-2.x.x.jar`).
+- Since `v2.6.0`, TTL agent jar will auto add self to `boot classpath`. But you **should _NOT_** modify the downloaded TTL jar file name in the maven repo(eg: `transmittable-thread-local-2.x.y.jar`).
     - if you modified the downloaded TTL jar file name(eg: `ttl-foo-name-changed.jar`),
         you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
 
@@ -252,7 +252,7 @@ More info:
 Java command example:
 
 ```bash
-java -javaagent:transmittable-thread-local-2.x.x.jar \
+java -javaagent:transmittable-thread-local-2.x.y.jar \
     -cp classes \
     com.alibaba.demo.ttl.agent.AgentDemo
 ```
