@@ -90,8 +90,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.4.10</kotlin.version>
-		<kotlin.coroutine.version>1.4.0</kotlin.coroutine.version>
+		<kotlin.version>1.4.20</kotlin.version>
+		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.1.4</version>
+			<version>4.2.0</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -585,7 +585,7 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.2</version>
+						<version>4.0.3</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
