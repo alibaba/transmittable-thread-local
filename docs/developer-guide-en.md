@@ -8,10 +8,10 @@
 
 - [📌 Framework/Middleware integration to `TTL` transmittance](#-frameworkmiddleware-integration-to-ttl-transmittance)
 - [📚 Related material](#-related-material)
-    - [Jdk core classes](#jdk-core-classes)
-    - [Java Agent](#java-agent)
-    - [Javassist](#javassist)
-    - [Shade Maven Plugin](#shade-maven-plugin)
+    - [`Jdk` core classes](#jdk-core-classes)
+    - [`Java` Agent](#java-agent)
+    - [`Javassist`](#javassist)
+    - [`Maven Shade plugin`](#maven-shade-plugin)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -62,19 +62,19 @@ try {
 
 # 📚 Related material
 
-## Jdk core classes
+## `Jdk` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-## Java Agent
+## `Java` Agent
 
 - [Java Agent Specification](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
 
-## Javassist
+## `Javassist`
 
 - [Getting Started with Javassist](https://www.javassist.org/tutorial/tutorial.html)
 
-## Shade Maven Plugin
+## `Maven Shade plugin`
 
-- [`Maven` Shade doc](http://maven.apache.org/plugins/maven-shade-plugin/)
+- [`Maven Shade plugin` doc](http://maven.apache.org/plugins/maven-shade-plugin/)

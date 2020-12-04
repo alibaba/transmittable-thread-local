@@ -17,10 +17,10 @@
         - [`IntelliJ IDEA`关闭检查的方法](#intellij-idea%E5%85%B3%E9%97%AD%E6%A3%80%E6%9F%A5%E7%9A%84%E6%96%B9%E6%B3%95)
         - [其它`IDE`的解决方法](#%E5%85%B6%E5%AE%83ide%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-    - [Jdk core classes](#jdk-core-classes)
-    - [Java Agent](#java-agent)
-    - [Javassist](#javassist)
-    - [Shade插件](#shade%E6%8F%92%E4%BB%B6)
+    - [`Jdk` core classes](#jdk-core-classes)
+    - [`Java Agent`](#java-agent)
+    - [`Javassist`](#javassist)
+    - [`Shade`插件](#shade%E6%8F%92%E4%BB%B6)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -157,14 +157,14 @@ public final class YourXxxAgent {
 注意，在`bootclasspath`上，还是要加上`TTL Jar`：
 
 ```bash
--Xbootclasspath/a:/path/to/transmittable-thread-local-2.0.0.jar:/path/to/your/agent/jar/files
+-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.y.jar:/path/to/your/agent/jar/files
 ```
 
 # 👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法
 
 通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
 
-`TTL`在`Bootstrap ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist` 和 `TTL`用的`Javassist` 会有兼容性的风险。
+`TTL`在`Bootstrap ClassPath`上添加了`Javassist`的依赖，如果应用中使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist` 和 `TTL`用的`Javassist` 会有兼容性的风险。
 
 可以通过`repackage`依赖（重命名/改写依赖的包名）来解决这个问题。
 
@@ -201,8 +201,8 @@ mvn install
 
 现代的`IDE`（如`IntelliJ IDEA`）一般会缺省做 语言版本 与 `API`版本 的检查：
 
-- 如何使用了高于语言版本的标准库类，`IDE`会报错。
-- 以避免在语言版本`JVM`运行时，可能会出`API`/标准类找不到的风险。
+- 如果使用了高于语言版本的标准库类，`IDE`会报错。
+- 以避免在语言版本`JVM`运行时`API`/标准类找不到的风险。
 
 可以在`IDE`设置中，关闭这个『语言版本 与 `API`版本』检查。
 
@@ -224,25 +224,25 @@ mvn install
 
 # 📚 相关资料
 
-## Jdk core classes
+## `Jdk` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-## Java Agent
+## `Java Agent`
 
 - 官方文档
     - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
     - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
-    - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
+    - [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 - [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 - [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 - [JavaAgent加载机制分析](https://www.iteye.com/blog/nijiaben-1847212/)
 
-## Javassist
+## `Javassist`
 
 - [Getting Started with Javassist](https://www.javassist.org/tutorial/tutorial.html)
 
-## Shade插件
+## `Maven Shade`插件
 
-- `Maven`的[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件
+- [`Maven Shade`插件文档](http://maven.apache.org/plugins/maven-shade-plugin/)
