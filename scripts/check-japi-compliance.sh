@@ -23,7 +23,7 @@ for base_version in 2.5.0 2.6.0 2.7.0 2.10.2; do
         runCmd wget --quiet "$url"
     fi
 
-    "$JCC" -show-packages -check-annotations -skip-internal-packages '\.(javassist|utils?|internal)\.?' \
+    "$JCC" -show-packages -check-annotations -skip-internal-packages '\.(javassist|utils?|internal)(\.|$)' \
         "$base_jar" \
         "$ttl_jar_path" || true
 done
