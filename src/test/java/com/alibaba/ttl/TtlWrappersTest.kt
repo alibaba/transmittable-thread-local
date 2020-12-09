@@ -6,7 +6,6 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.TtlUnwrap.unwrap
 import com.alibaba.ttl.TtlWrappers.wrap
 import org.junit.AfterClass
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test

@@ -19,7 +19,7 @@ class DisableIgnoreNullValueSemanticsTest {
                 return "init"
             }
 
-            override fun childValue(parentValue: String?): String? {
+            override fun childValue(parentValue: String?): String {
                 return "$parentValue + child"
             }
         }
@@ -82,7 +82,7 @@ class DisableIgnoreNullValueSemanticsTest {
                 return "init"
             }
 
-            override fun childValue(parentValue: String?): String? {
+            override fun childValue(parentValue: String?): String {
                 return "$parentValue + child"
             }
         }
@@ -117,7 +117,7 @@ class DisableIgnoreNullValueSemanticsTest {
                 return "init"
             }
 
-            override fun childValue(parentValue: String?): String? {
+            override fun childValue(parentValue: String?): String {
                 return "$parentValue + child"
             }
         }
