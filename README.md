@@ -53,7 +53,7 @@
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
 整个`TransmittableThreadLocal`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有 **_~1000 `SLOC`代码行_**，非常精小。
 
@@ -79,9 +79,7 @@
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
-
-相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，添加了
+`TransmittableThreadLocal`继承`InheritableThreadLocal`，使用方式也类似。相比`InheritableThreadLocal`，添加了
 
 1. `copy`方法  
     用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。  
@@ -113,7 +111,7 @@ String value = context.get();
 
 \# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
 
-这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+这是其实是`InheritableThreadLocal`的功能，应该使用`InheritableThreadLocal`来完成。
 
 但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -128,7 +126,7 @@ String value = context.get();
 示例代码：
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 
 // =====================================================
 
@@ -149,7 +147,7 @@ String value = context.get();
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 
 // =====================================================
 
@@ -286,7 +284,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.y.jar`。
 
 如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.y.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
-比如修改文件名成`ttl-foo-name-changed.jar`，则还加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
+比如修改文件名成`ttl-foo-name-changed.jar`，则还需要加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
 
 `Java`命令行示例如下：
 
@@ -339,7 +337,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 ./mvnw install
 
 #####################################################
-# 如果使用你自己安装的`Maven`，版本要求：maven 3.3.9+
+# 如果使用你自己安装的 maven，版本要求：maven 3.3.9+
 mvn install
 ```
 

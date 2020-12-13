@@ -34,8 +34,8 @@ Sample code：
 // Thread A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 // 1. capture all TTL values in current thread
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -48,7 +48,7 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
 try {
     // Your biz code, you can get the TTL value from here
-    String value = parent.get();
+    String value = context.get();
     ...
 } finally {
     // 3. restore TTL values before replay
@@ -57,7 +57,7 @@ try {
 ```
 
 
-- For more info about `TransmittableThreadLocal.Transmitter`, see its Javadoc.
+- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362).
 - For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java).
 
 # 📚 Related material

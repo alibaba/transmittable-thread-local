@@ -44,8 +44,8 @@
 // 线程 A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+context.set("value-set-in-parent");
 
 // (1) 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -58,7 +58,7 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
 try {
     // 你的业务逻辑，这里你可以获取到外面设置的TTL值
-    String value = parent.get();
+    String value = context.get();
 
     System.out.println("Hello: " + value);
     ...
@@ -69,7 +69,7 @@ try {
 }
 ```
 
-`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+更多`TTL`传递的代码实现示例，参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 当然可以使用`TransmittableThreadLocal.Transmitter`的工具方法`runSupplierWithCaptured`和`runCallableWithCaptured`和可爱的`Java 8 Lambda`语法
 来简化`replay`和`restore`操作，示例代码：
@@ -79,8 +79,8 @@ try {
 // 线程 A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+context.set("value-set-in-parent");
 
 // (1) 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -91,15 +91,15 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 
 String result = runSupplierWithCaptured(captured, () -> {
     // 你的业务逻辑，这里你可以获取到外面设置的TTL值
-    String value = parent.get();
+    String value = context.get();
     System.out.println("Hello: " + value);
     ...
     return "World: " + value;
 }); // (2) + (3)
 ```
 
-- 更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362)的`JavaDoc`。
-- 更多实现`TTL`传递参见[`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+- 更多`TTL`传递的说明，详见[`TransmittableThreadLocal.Transmitter`的`JavaDoc`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362)。
+- 更多`TTL`传递的代码实现，参见[`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 # 📟 关于`Java Agent`
 
@@ -188,7 +188,7 @@ public final class YourXxxAgent {
 ./mvnw install
 
 #####################################################
-# 如果使用你自己安装的`Maven`，版本要求：maven 3.3.9+
+# 如果使用你自己安装的 maven，版本要求：maven 3.3.9+
 mvn install
 ```
 
@@ -202,7 +202,7 @@ mvn install
 现代的`IDE`（如`IntelliJ IDEA`）一般会缺省做 语言版本 与 `API`版本 的检查：
 
 - 如果使用了高于语言版本的标准库类，`IDE`会报错。
-- 以避免在语言版本`JVM`运行时`API`/标准类找不到的风险。
+- 以避免 在低语言版本`JVM`运行时使用高版本`API`/标准类找不到 的风险。
 
 可以在`IDE`设置中，关闭这个『语言版本 与 `API`版本』检查。
 

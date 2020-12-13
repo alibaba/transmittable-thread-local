@@ -85,7 +85,7 @@ String value = context.get();
 
 \# See the executable demo [`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt) with full source code.
 
-This is the function of class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html), should use class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) instead.
+This is the function of class `InheritableThreadLocal`, should use class `InheritableThreadLocal` instead.
 
 But when use thread pool, thread is cached up and used repeatedly. Transmitting value from parent thread to child thread has no meaning.
 Application need transmit value from the time task is created to the point task is executed.
@@ -102,12 +102,12 @@ and [`TtlCallable`](src/main/java/com/alibaba/ttl/TtlCallable.java).
 Sample code:
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 
 // =====================================================
 
 // set in parent thread
-parent.set("value-set-in-parent");
+context("value-set-in-parent");
 
 Runnable task = new RunnableTask();
 // extra work, create decorated ttlRunnable object
@@ -117,18 +117,18 @@ executorService.submit(ttlRunnable);
 // =====================================================
 
 // read in task, value is "value-set-in-parent"
-String value = parent.get();
+String value = context.get();
 ```
 
 above code show how to dealing with `Runnable`, `Callable` is similar:
 
 ```java
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 
 // =====================================================
 
 // set in parent thread
-parent.set("value-set-in-parent");
+context.set("value-set-in-parent");
 
 Callable call = new CallableTask();
 // extra work, create decorated ttlCallable object
@@ -138,7 +138,7 @@ executorService.submit(ttlCallable);
 // =====================================================
 
 // read in call, value is "value-set-in-parent"
-String value = parent.get();
+String value = context.get();
 ```
 
 \# See the executable demo [`TtlWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlWrapperDemo.kt) with full source code.
@@ -164,12 +164,12 @@ ExecutorService executorService = ...
 // extra work, create decorated executorService object
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 
 // =====================================================
 
 // set in parent thread
-parent.set("value-set-in-parent");
+context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
 Callable call = new CallableTask();
@@ -179,7 +179,7 @@ executorService.submit(call);
 // =====================================================
 
 // read in Task or Callable, value is "value-set-in-parent"
-String value = parent.get();
+String value = context.get();
 ```
 
 \# See the executable demo [`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt) with full source code.
@@ -304,7 +304,7 @@ Compilation/build environment require **_`JDK 8~11`_**; Compilation can be perfo
 ./mvnw install
 
 ##################################################
-# If you use `Maven` installed by yourself, the version requirement: maven 3.3.9+
+# If you use maven installed by yourself, the version requirement: maven 3.3.9+
 
 mvn install
 ```
