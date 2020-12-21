@@ -16,11 +16,12 @@
     - [如何用`IDE`开发](#%E5%A6%82%E4%BD%95%E7%94%A8ide%E5%BC%80%E5%8F%91)
         - [`IntelliJ IDEA`关闭检查的方法](#intellij-idea%E5%85%B3%E9%97%AD%E6%A3%80%E6%9F%A5%E7%9A%84%E6%96%B9%E6%B3%95)
         - [其它`IDE`的解决方法](#%E5%85%B6%E5%AE%83ide%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [发布操作列表](#%E5%8F%91%E5%B8%83%E6%93%8D%E4%BD%9C%E5%88%97%E8%A1%A8)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [`Jdk` core classes](#jdk-core-classes)
     - [`Java Agent`](#java-agent)
     - [`Javassist`](#javassist)
-    - [`Shade`插件](#shade%E6%8F%92%E4%BB%B6)
+    - [`Maven Shade`插件](#maven-shade%E6%8F%92%E4%BB%B6)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -98,7 +99,7 @@ String result = runSupplierWithCaptured(captured, () -> {
 }); // (2) + (3)
 ```
 
-- 更多`TTL`传递的说明，详见[`TransmittableThreadLocal.Transmitter`的`JavaDoc`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362)。
+- 更多`TTL`传递的说明，详见[`TransmittableThreadLocal.Transmitter`的`JavaDoc`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L266-L362)。
 - 更多`TTL`传递的代码实现，参见[`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 # 📟 关于`Java Agent`
@@ -162,15 +163,19 @@ public final class YourXxxAgent {
 
 # 👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法
 
-通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
+`TTL Agent`的使用方式，需要将`TTL Jar`加到`Bootstrap ClassPath`上（通过`Java`命令行参数`-Xbootclasspath`）；这样`TTL`的类与`JDK`的标准库的类（如`java.lang.String`）的`ClassLoader`是一样的，都在`Bootstrap ClassPath`上。
 
-`TTL`在`Bootstrap ClassPath`上添加了`Javassist`的依赖，如果应用中使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist` 和 `TTL`用的`Javassist` 会有兼容性的风险。
+`Bootstrap ClassPath`上的类会优先于应用`ClassPath`的`Jar`被加载，并且加载`ClassLoader`不能被改。  
+\# 当然技术上严格地说，通过`Bootstrap ClassPath`上的类（如标准库的类）是可以改`ClassLoader`的，但这样做一般只会带来各种麻烦的问题。关于`ClassLoader`及其使用注意的介绍说明 可以参见[ClassLoader委托关系的完备配置](https://github.com/oldratlee/classloader-playground#1-classloader%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%8C%E5%A4%87%E9%85%8D%E7%BD%AE)。
 
-可以通过`repackage`依赖（重命名/改写依赖的包名）来解决这个问题。
+`TTL Agent`自己内部实现使用了`Javassist`，即在`Bootstrap ClassPath`上也需要添加`Javassist`。如果应用中也使用了`Javassist`，由于运行时会优先使用`TTL Agent`配置`Bootstrap ClassPath`上的`Javassist`，应用逻辑运行时实际不能选择/指定应用自己的`Javassist`的版本，带来了 应用需要的`Javassist`与`TTL Agent`用的`Javassist`之间的兼容性风险。
 
-`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成`repackage`操作，并把`Javassist`类文件加到`TTL`的`Jar`中。
+可以通过 `repackage`依赖（即 重命名/改写 依赖类的包名）来解决这个问题。`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成下面的操作：
 
-这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
+- `repackage` `Javassist`的类文件
+- 添加`repackage`过的`Javassist`到`TTL Jar`中
+
+这样操作后，`TTL Agent`不需要依赖外部的`Javassist`依赖，效果上这样的`shade`过的`TTL Jar`是自包含的、在使用上是编译/运行时0依赖的，自然也规避了依赖冲突的问题。
 
 # 🔨 关于编译构建与`IDE`开发
 
@@ -221,6 +226,10 @@ mvn install
 如果没有找到`IDE`的设置方法，也可以用下面的方法来 **`workaround`**： 😂
 
 打开 **_工程根目录下的`pom4ide.xml`文件_**（修改了`Java`文件的语言版本），而不是`pom.xml`。
+
+# 发布操作列表
+
+详见独立文档 [发布操作列表](release-action-list.md)。
 
 # 📚 相关资料
 

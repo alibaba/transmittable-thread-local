@@ -57,7 +57,7 @@ try {
 ```
 
 
-- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362).
+- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L266-L362).
 - For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java).
 
 # 📚 Related material
