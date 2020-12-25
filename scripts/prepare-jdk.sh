@@ -42,29 +42,39 @@ jdks_install_by_sdkman=(
 java_home_var_names=()
 
 setJdkHomeVarsAndInstallJdk() {
+    blueEcho "prepared jdks:"
+
     JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
     java_home_var_names=(JDK6_HOME)
+    printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
 
     local i
     for (( i = 0; i < ${#jdks_install_by_sdkman[@]}; i++ )); do
         local jdkVersion=$((i + 7))
-        local jdkNameOfSdkman="${jdks_install_by_sdkman[i]}"
-        local jdkHomePath="$SDKMAN_CANDIDATES_DIR/java/$jdkNameOfSdkman"
-
-        # set JDK7_HOME ~ JDK1x_HOME to global var java_home_var_names
+        # jdkHomeVarName like JDK7_HOME, JDK11_HOME
         local jdkHomeVarName="JDK${jdkVersion}_HOME"
-        eval "$jdkHomeVarName='${jdkHomePath}'"
-        java_home_var_names=("${java_home_var_names[@]}" "$jdkHomeVarName")
+        local jdkNameOfSdkman="${jdks_install_by_sdkman[i]}"
 
-        # install jdk by sdkman
-        if [ ! -d "$jdkHomePath" ]; then
-            set +u
-            runCmd sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
-            set -u
+        if [ ! -d "${!jdkHomeVarName:-}" ]; then
+            local jdkHomePath="$SDKMAN_CANDIDATES_DIR/java/$jdkNameOfSdkman"
+
+            # set JDK7_HOME ~ JDK1x_HOME to global var java_home_var_names
+            eval "$jdkHomeVarName='${jdkHomePath}'"
+
+            # install jdk by sdkman
+            [ ! -d "$jdkHomePath" ] && {
+                set +u
+                runCmd sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
+                set -u
+            }
         fi
+
+        java_home_var_names=("${java_home_var_names[@]}" "$jdkHomeVarName")
+        printf '%s :\n\t%s\n\tspecified is %s\n' "$jdkHomeVarName" "${!jdkHomeVarName}" "$jdkNameOfSdkman"
     done
 
-    echo "prepare jdks: ${java_home_var_names[*]}"
+    echo
+    blueEcho "ls $SDKMAN_CANDIDATES_DIR/java/ :"
     ls -la "$SDKMAN_CANDIDATES_DIR/java/"
 }
 setJdkHomeVarsAndInstallJdk
