@@ -26,7 +26,7 @@ set -u
 
 jdks_install_by_sdkman=(
     7.0.282-zulu
-    8.0.272-zulu
+    8.0.275-amzn
 
     9.0.7-zulu
     10.0.2-zulu
@@ -36,7 +36,8 @@ jdks_install_by_sdkman=(
     13.0.5-zulu
     14.0.2-zulu
     15.0.1-zulu
-    16.ea.21-open
+    16.ea.29-open
+    17.ea.2-open
 )
 java_home_var_names=()
 
