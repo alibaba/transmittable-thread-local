@@ -166,7 +166,7 @@ public final class YourXxxAgent {
 `TTL Agent`的使用方式，需要将`TTL Jar`加到`Bootstrap ClassPath`上（通过`Java`命令行参数`-Xbootclasspath`）；这样`TTL`的类与`JDK`的标准库的类（如`java.lang.String`）的`ClassLoader`是一样的，都在`Bootstrap ClassPath`上。
 
 `Bootstrap ClassPath`上的类会优先于应用`ClassPath`的`Jar`被加载，并且加载`ClassLoader`不能被改。  
-\# 当然技术上严格地说，通过`Bootstrap ClassPath`上的类（如标准库的类）是可以改`ClassLoader`的，但这样做一般只会带来各种麻烦的问题。关于`ClassLoader`及其使用注意的介绍说明 可以参见[ClassLoader委托关系的完备配置](https://github.com/oldratlee/classloader-playground#1-classloader%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%8C%E5%A4%87%E9%85%8D%E7%BD%AE)。
+\# 当然技术上严格地说，通过`Bootstrap ClassPath`上的类（如标准库的类）是可以改`ClassLoader`的，但这样做一般只会带来各种麻烦的问题。关于`ClassLoader`及其使用注意的介绍说明 可以参见[ClassLoader委托关系的完备配置](https://github.com/oldratlee/land#1-classloader%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%8C%E5%A4%87%E9%85%8D%E7%BD%AE)。
 
 `TTL Agent`自己内部实现使用了`Javassist`，即在`Bootstrap ClassPath`上也需要添加`Javassist`。如果应用中也使用了`Javassist`，由于运行时会优先使用`TTL Agent`配置`Bootstrap ClassPath`上的`Javassist`，应用逻辑运行时实际不能选择/指定应用自己的`Javassist`的版本，带来了 应用需要的`Javassist`与`TTL Agent`用的`Javassist`之间的兼容性风险。
 

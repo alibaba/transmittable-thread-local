@@ -294,7 +294,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *     return "World";
      * } finally {
      *     // restore the TransmittableThreadLocal of thread B when replay
-     *     Transmitter.restore(backup); (3)
+     *     Transmitter.restore(backup); // (3)
      * }}</pre>
      * <p>
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
