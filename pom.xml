@@ -114,8 +114,8 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
+			<scope>provided</scope>
 			<version>4.2.0</version>
-			<optional>true</optional>
 		</dependency>
 		<!--
 			make other qa libs
