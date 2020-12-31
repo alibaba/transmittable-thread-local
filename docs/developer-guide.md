@@ -18,7 +18,7 @@
         - [其它`IDE`的解决方法](#%E5%85%B6%E5%AE%83ide%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
 - [发布操作列表](#%E5%8F%91%E5%B8%83%E6%93%8D%E4%BD%9C%E5%88%97%E8%A1%A8)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-    - [`Jdk` core classes](#jdk-core-classes)
+    - [`JDK` core classes](#jdk-core-classes)
     - [`Java Agent`](#java-agent)
     - [`Javassist`](#javassist)
     - [`Maven Shade`插件](#maven-shade%E6%8F%92%E4%BB%B6)
@@ -233,7 +233,7 @@ mvn install
 
 # 📚 相关资料
 
-## `Jdk` core classes
+## `JDK` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)

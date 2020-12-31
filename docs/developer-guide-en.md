@@ -8,7 +8,7 @@
 
 - [📌 Framework/Middleware integration to `TTL` transmittance](#-frameworkmiddleware-integration-to-ttl-transmittance)
 - [📚 Related material](#-related-material)
-    - [`Jdk` core classes](#jdk-core-classes)
+    - [`JDK` core classes](#jdk-core-classes)
     - [`Java` Agent](#java-agent)
     - [`Javassist`](#javassist)
     - [`Maven Shade plugin`](#maven-shade-plugin)
@@ -62,7 +62,7 @@ try {
 
 # 📚 Related material
 
-## `Jdk` core classes
+## `JDK` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
