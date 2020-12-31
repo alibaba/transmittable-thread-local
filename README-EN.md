@@ -229,12 +229,37 @@ Add start options on Java command:
 
 - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar`
 
+Java command example:
+
+```bash
+java -javaagent:transmittable-thread-local-2.x.y.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+# if changed the TTL jar file name or the TTL version is before 2.6.0,
+# should set argument -Xbootclasspath explicitly.
+java -javaagent:path/to/ttl-foo-name-changed.jar \
+    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
+    -Xbootclasspath/a:path/to/transmittable-thread-local-2.5.1.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+```
+
+Run the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)
+to start demo of "Use Java Agent to decorate thread pool implementation class".
+
+
+
 **NOTE**：
 
 - Because TTL agent modified the `JDK` std lib classes, make code refer from std lib class to the TTL classes, so the TTL Agent jar must be added to `boot classpath`.
 - Since `v2.6.0`, TTL agent jar will auto add self to `boot classpath`. But you **should _NOT_** modify the downloaded TTL jar file name in the maven repo(eg: `transmittable-thread-local-2.x.y.jar`).
     - if you modified the downloaded TTL jar file name(eg: `ttl-foo-name-changed.jar`),
-        you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
+      you must add TTL agent jar to `boot classpath` manually by java option `-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`.
 
 The implementation of auto adding self agent jar to `boot classpath` use the `Boot-Class-Path` property of manifest file(`META-INF/MANIFEST.MF`) in the TTL Java Agent Jar:
 
@@ -248,28 +273,6 @@ More info:
 - [`Java Agent Specification` - `JavaDoc`文档](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
 - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
-
-Java command example:
-
-```bash
-java -javaagent:transmittable-thread-local-2.x.y.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
-
-or
-
-```bash
-# if changed the TTL jar file name or the TTL version is before 2.6.0,
-# should set argument -Xbootclasspath explicitly.
-java -javaagent:path/to/ttl-foo-name-changed.jar \
-    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
-
-Run the script [`scripts/run-agent-demo.sh`](scripts/run-agent-demo.sh)
-to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 # 🔌 Java API Docs
 

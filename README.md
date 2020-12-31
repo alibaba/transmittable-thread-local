@@ -31,15 +31,15 @@
             - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
         - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
-            - [关于`boot class path`设置](#%E5%85%B3%E4%BA%8Eboot-class-path%E8%AE%BE%E7%BD%AE)
-            - [`Java`的启动参数配置](#java%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
+            - [`Java Agent`的启动参数配置](#java-agent%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
+            - [关于`boot class path`](#%E5%85%B3%E4%BA%8Eboot-class-path)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
 - [❓ FAQ](#-faq)
 - [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-    - [Jdk Core Classes](#jdk-core-classes)
+    - [JDK Core Classes](#jdk-core-classes)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -258,7 +258,38 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 > `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
 > 如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
 
-#### 关于`boot class path`设置
+#### `Java Agent`的启动参数配置
+
+在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.y.jar`。
+
+**_注意_**：
+
+- 如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.y.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置。  
+    比如修改文件名成`ttl-foo-name-changed.jar`，则还需要加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`。
+- 或使用`v2.6.0`之前的版本（如`v2.5.1`），则也需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。  
+    加上`Java`的启动参数：`-Xbootclasspath/a:path/to/transmittable-thread-local-2.5.1.jar`。
+
+`Java`命令行示例如下：
+
+```bash
+java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+# 如果修改了TTL jar文件名 或 TTL版本是 2.6.0 之前
+# 则还需要显式设置 -Xbootclasspath 参数
+java -javaagent:path/to/ttl-foo-name-changed.jar \
+    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
+    -Xbootclasspath/a:path/to/transmittable-thread-local-2.5.1.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+```
+
+#### 关于`boot class path`
 
 因为修饰了`JDK`标准库的类，标准库由`bootstrap class loader`加载；修饰后的`JDK`类引用了`TTL`的代码，所以`Java Agent`使用方式下`TTL Jar`文件需要配置到`boot class path`上。
 
@@ -278,32 +309,6 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
 - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
-
-#### `Java`的启动参数配置
-
-在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.y.jar`。
-
-如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.y.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
-比如修改文件名成`ttl-foo-name-changed.jar`，则还需要加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
-
-`Java`命令行示例如下：
-
-```bash
-java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
-
-或是
-
-```bash
-# 如果修改了TTL jar文件名 或 TTL版本是 2.6.0 之前，
-# 则还需要显式设置 -Xbootclasspath 参数
-java -javaagent:path/to/ttl-foo-name-changed.jar \
-    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
 
 # 🔌 Java API Docs
 
@@ -358,7 +363,7 @@ mvn install
 
 # 📚 相关资料
 
-## Jdk Core Classes
+## JDK Core Classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
