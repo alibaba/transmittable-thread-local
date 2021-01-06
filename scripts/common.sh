@@ -1,6 +1,6 @@
 #!/bin/bash
-[ -z "${_source_mark_of_common:+dummy}" ] || return 0
-_source_mark_of_common=true
+[ -z "${__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98:+dummy}" ] || return 0
+__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98=true
 
 
 set -eEuo pipefail
@@ -66,7 +66,7 @@ headInfo() {
     echo
 }
 
-runCmd() {
+logAndRun() {
     blueEcho "Run under work directory $PWD :$nl$*"
     time "$@"
 }
