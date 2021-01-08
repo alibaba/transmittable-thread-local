@@ -1,4 +1,15 @@
 #!/bin/bash
+# NOTE about Bash Traps and Pitfalls:
+#
+# 1. DO NOT declare var as readonly/local if value is supplied by subshell!!
+#    for example:
+#       readonly var1=$(echo value1)
+#       local var1=$(echo value1)
+#
+#    readonly declaration make exit code of assignment to be always 0,
+#      aka. the exit code of command in subshell is discarded.
+#      tested on bash 3.2.57/4.2.46
+
 [ -z "${__source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275:+dummy}" ] || return 0
 __source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275=true
 
@@ -27,8 +38,9 @@ __adjustPwdToProjectRootDir
 # project common info
 #################################################################################
 
-readonly version=$(grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}')
-readonly aid=$(grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}')
+# NOTE: DO NOT declare _version/_aid var as readonly, their value is supplied by subshell.
+_version=$(grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}')
+_aid=$(grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}')
 
 # set env variable ENABLE_JAVA_RUN_DEBUG to enable java debug mode
 readonly -a JAVA_CMD=(
@@ -52,7 +64,7 @@ mvnClean() {
     rm -rf target || die "fail to mvn clean!"
 }
 
-readonly ttl_jar="target/$aid-$version.jar"
+readonly ttl_jar="target/$_aid-$_version.jar"
 
 mvnBuildJar() {
     if [ ! -e "$ttl_jar" ] || [ "$ttl_jar" -ot src/ ]; then
