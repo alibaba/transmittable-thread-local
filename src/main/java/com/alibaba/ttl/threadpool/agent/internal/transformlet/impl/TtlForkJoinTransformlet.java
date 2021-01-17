@@ -36,9 +36,13 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     @Override
     public void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
         if (FORK_JOIN_TASK_CLASS_NAME.equals(classInfo.getClassName())) {
+            if (!addTtlAgentEnhancedInterfaceForClass(classInfo)) return;
+
             updateForkJoinTaskClass(classInfo.getCtClass());
             classInfo.setModified();
         } else if (disableInheritableForThreadPool && FORK_JOIN_POOL_CLASS_NAME.equals(classInfo.getClassName())) {
+            if (!addTtlAgentEnhancedInterfaceForClass(classInfo)) return;
+
             updateConstructorDisableInheritable(classInfo.getCtClass());
             classInfo.setModified();
         }

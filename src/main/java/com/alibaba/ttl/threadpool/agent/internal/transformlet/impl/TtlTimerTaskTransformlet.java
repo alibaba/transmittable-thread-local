@@ -8,6 +8,7 @@ import javassist.*;
 
 import java.io.IOException;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.addTtlAgentEnhancedInterfaceForClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doTryFinallyForMethod;
 
 /**
@@ -42,6 +43,8 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
             return;
         }
         if (!clazz.subclassOf(clazz.getClassPool().get(TIMER_TASK_CLASS_NAME))) return;
+
+        if (!addTtlAgentEnhancedInterfaceForClass(classInfo)) return;
 
         logger.info("Transforming class " + classInfo.getClassName());
 

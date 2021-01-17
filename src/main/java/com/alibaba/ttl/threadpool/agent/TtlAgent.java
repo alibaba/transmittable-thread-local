@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent;
 
+import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
@@ -143,6 +144,17 @@ public final class TtlAgent {
 
             logger.info("[TtlAgent.premain] end");
 
+            if (isRetransformLoadedClasses() && inst.isRetransformClassesSupported()) {
+                for (Class<?> clazz : inst.getAllLoadedClasses()) {
+                    if (!inst.isModifiableClass(clazz)) continue;
+                    if (clazz.isAssignableFrom(TtlEnhanced.class)) continue;
+                    if (clazz.isPrimitive() || clazz.isArray() || clazz.isInterface() || clazz.isAnnotation()) continue;
+
+                    logger.info("retransform class: " + clazz);
+                    inst.retransformClasses(clazz);
+                }
+            }
+
             ttlAgentLoaded = true;
         } catch (Exception e) {
             String msg = "Fail to load TtlAgent , cause: " + e.toString();
@@ -168,9 +180,20 @@ public final class TtlAgent {
         return ttlAgentLoaded;
     }
 
+    private static final String TTL_AGENT_RETRANSFORM_LOADED_CLASSES_KEY = "ttl.agent.retransform.loaded.classes";
+
     private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
     private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL = "ttl.agent.disable.inheritable.for.thread.pool";
+
+    /**
+     * Whether timer task is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     *
+     * @since 2.13.0
+     */
+    public static boolean isRetransformLoadedClasses() {
+        return isBooleanOptionSet(kvs, TTL_AGENT_RETRANSFORM_LOADED_CLASSES_KEY, true);
+    }
 
     /**
      * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.

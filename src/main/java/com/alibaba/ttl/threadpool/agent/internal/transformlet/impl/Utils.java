@@ -1,13 +1,16 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
 import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.TtlAgentEnhanced;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import javassist.*;
 
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
@@ -115,5 +118,16 @@ public class Utils {
         if (value == null) return false;
 
         return value;
+    }
+
+    public static boolean addTtlAgentEnhancedInterfaceForClass(ClassInfo classInfo) throws NotFoundException, IOException {
+        final CtClass clazz = classInfo.getCtClass();
+        final CtClass ttlAgentEnhancedClass = clazz.getClassPool().get(TtlAgentEnhanced.class.getName());
+
+        if (clazz.subclassOf(ttlAgentEnhancedClass)) return false;
+
+        clazz.addInterface(ttlAgentEnhancedClass);
+        classInfo.setModified();
+        return true;
     }
 }

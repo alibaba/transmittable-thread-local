@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.addTtlAgentEnhancedInterfaceForClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.signatureOfMethod;
 
 /**
@@ -59,6 +60,8 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     public void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
         final CtClass clazz = classInfo.getCtClass();
         if (EXECUTOR_CLASS_NAMES.contains(classInfo.getClassName())) {
+            if (!addTtlAgentEnhancedInterfaceForClass(classInfo)) return;
+
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(method);
             }
@@ -71,6 +74,8 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
                 return;
             }
             if (!clazz.subclassOf(clazz.getClassPool().get(THREAD_POOL_EXECUTOR_CLASS_NAME))) return;
+
+            if (!addTtlAgentEnhancedInterfaceForClass(classInfo)) return;
 
             logger.info("Transforming class " + classInfo.getClassName());
 
