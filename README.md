@@ -38,7 +38,7 @@
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
 - [❓ FAQ](#-faq)
-- [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
+- [🗿 更多文档与资料](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3%E4%B8%8E%E8%B5%84%E6%96%99)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [JDK Core Classes](#jdk-core-classes)
 - [👷 Contributors](#-contributors)
@@ -60,8 +60,8 @@
 
 欢迎 👏
 
-- 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
-- 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
+- 建议和提问，[提交 Issue](https://github.com/alibaba/transmittable-thread-local/issues/new)
+- 贡献和改进，[Fork 后提通过 Pull Request 贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
 # 🎨 需求场景
 
@@ -81,7 +81,7 @@
 - 好处和目标：透明/自动完成所有异步执行上下文的可定制、规范化的捕捉/传递。
 - 必要性：上下文问题实际上是个大的易错的架构问题，需要统一的解决方案。
 
-更多展开讨论参见 [Issue: 这个库带来怎样的好处和优势？ #128](https://github.com/alibaba/transmittable-thread-local/issues/128)。
+更多展开讨论参见 [Issue：这个库带来怎样的好处和优势？ #128](https://github.com/alibaba/transmittable-thread-local/issues/128)。
 
 # 👥 User Guide
 
@@ -374,7 +374,7 @@ java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
 - 如果配置在这样的`Agent`配置在前面，到了`TTL Agent`（的`premain`）时，`TTL`需要加强的线程池类已经加载（`load`）了。
 - `TTL Agent`的`TtlTransformer`是在类加载时触发类的增强；如果类已经加载了会跳过`TTL Agent`的增强逻辑。
 
-更多讨论参见[Issue: `TTL agent`与 其他`Agent`的兼容性问题 #226](https://github.com/alibaba/transmittable-thread-local/issues/226)。
+更多讨论参见 [Issue：`TTL agent`与 其他`Agent`的兼容性问题 #226](https://github.com/alibaba/transmittable-thread-local/issues/226)。
 
 **2. `MacOS`下，使用`Java Agent`，可能会报`JavaLaunchHelper`的出错信息**
 
@@ -382,9 +382,10 @@ JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>
 可以换一个版本的`JDK`。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
 \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
 
-# 🗿 更多文档
+# 🗿 更多文档与资料
 
 - [🎨 需求场景说明](docs/requirement-scenario.md)
+- [❤️ 小伙伴同学们写的`TTL`使用场景 与 设计实现解析的文章（写得都很好！） - Issue #123](https://github.com/alibaba/transmittable-thread-local/issues/123)
 - [🎓 Developer Guide](docs/developer-guide.md)
 - [☔ 性能测试](docs/performance-test.md)
 
