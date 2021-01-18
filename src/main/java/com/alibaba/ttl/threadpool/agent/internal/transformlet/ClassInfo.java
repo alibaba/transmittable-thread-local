@@ -49,7 +49,7 @@ public class ClassInfo {
 
         final ClassPool classPool = new ClassPool(true);
         if (loader == null) {
-            classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
+            classPool.insertClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
         } else {
             classPool.appendClassPath(new LoaderClassPath(loader));
         }
