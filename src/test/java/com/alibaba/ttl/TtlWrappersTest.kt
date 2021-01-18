@@ -241,8 +241,7 @@ class TtlWrappersTest {
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
-            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
-            if (!executorService.isTerminated) fail("Fail to shutdown thread pool")
+            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
         }
     }
 }
