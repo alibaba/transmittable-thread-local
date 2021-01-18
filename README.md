@@ -67,7 +67,6 @@
 
 `ThreadLocal`的需求场景即`TransmittableThreadLocal`的潜在需求场景，如果你的业务需要『在使用线程池等会池化复用线程的执行组件情况下传递`ThreadLocal`值』则是`TransmittableThreadLocal`目标场景。
 
-
 下面是几个典型场景例子。
 
 1. 分布式跟踪系统 或 全链路压测（即链路打标）
@@ -76,6 +75,13 @@
 4. 应用容器或上层框架跨应用代码给下层`SDK`传递信息
 
 各个场景的展开说明参见子文档 [需求场景](docs/requirement-scenario.md)。
+
+**使用`TransmittableThreadLocal`的好处与必要性**：
+
+- 好处和目标：透明/自动完成所有异步执行上下文的可定制、规范化的捕捉/传递。
+- 必要性：上下文问题实际上是个大的易错的架构问题，需要统一的解决方案。
+
+更多展开讨论参见 [Issue: 这个库带来怎样的好处和优势？ #128](https://github.com/alibaba/transmittable-thread-local/issues/128)。
 
 # 👥 User Guide
 
