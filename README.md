@@ -38,6 +38,7 @@
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
 - [❓ FAQ](#-faq)
+- [✨ 使用`TTL`的好处与必要性](#-%E4%BD%BF%E7%94%A8ttl%E7%9A%84%E5%A5%BD%E5%A4%84%E4%B8%8E%E5%BF%85%E8%A6%81%E6%80%A7)
 - [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [JDK Core Classes](#jdk-core-classes)
@@ -54,14 +55,14 @@
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见[User Guide](#-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见 [User Guide](#-user-guide)。
 
 整个`TransmittableThreadLocal`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有 **_~1000 `SLOC`代码行_**，非常精小。
 
 欢迎 👏
 
-- 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
-- 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
+- 建议和提问，[提交 Issue](https://github.com/alibaba/transmittable-thread-local/issues/new)
+- 贡献和改进，[Fork 后提通过 Pull Request 贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
 # 🎨 需求场景
 
@@ -351,14 +352,83 @@ mvn install
 
 # ❓ FAQ
 
-- Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
-    JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
-    可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
-    \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
+**_Q1. `TTL Agent`与其它`Agent`（如`Skywalking`、`Promethues`）配合使用时不生效？_**
+
+配置`TTL Agent`在最前的位置，可以避免与其它其它`Agent`配合使用时，`TTL Agent`可能的不生效问题。配置示例：
+
+```bash
+java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
+     -javaagent:path/to/skywalking-agent.jar \
+     -jar your_app.jar
+```
+
+原因是：
+
+- 像`Skywalking`这样的`Agent`的入口逻辑（`premain`）包含了线程池的启动。
+- 如果配置在这样的`Agent`配置在前面，到了`TTL Agent`（的`premain`）时，`TTL`需要加强的线程池类已经加载（`load`）了。
+- `TTL Agent`的`TtlTransformer`是在类加载时触发类的增强；如果类已经加载了会跳过`TTL Agent`的增强逻辑。
+
+更多讨论参见 [Issue：`TTL agent`与其他`Agent`的兼容性问题 #226](https://github.com/alibaba/transmittable-thread-local/issues/226)。
+
+**_Q2. `MacOS`下，使用`Java Agent`，可能会报`JavaLaunchHelper`的出错信息_**
+
+JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
+可以换一个版本的`JDK`。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
+\# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
+
+# ✨ 使用`TTL`的好处与必要性
+
+> 注：不读这一节，并不会影响你使用`TTL`来解决你碰到的问题，可以放心跳过；读了 [User Guide](#-user-guide) 就可以快速用起来了～ 😄 这一节信息密度较高不易读。
+
+**_好处：透明且自动完成所有异步执行上下文的可定制、规范化的捕捉与传递。_**  
+这个好处也是`TransmittableThreadLocal`的目标。
+
+**_必要性：随着应用的分布式微服务化并使用各种中间件，越来越多的功能与组件会涉及不同的上下文，逻辑流程也越来越长；上下文问题实际上是个大的易错的架构问题，需要统一的对业务透明的解决方案。_**
+
+使用`ThreadLocal`作为业务上下文传递的经典技术手段在中间件、技术与业务框架中广泛大量使用。而对于生产应用，几乎一定会使用线程池等异步执行组件，以高效支撑线上大流量。但使用`ThreadLocal`及其`set/remove`的上下文传递模式，在使用线程池等异步执行组件时，存在多方面的问题：
+
+**_1. 从业务使用者角度来看_**
+
+1. **繁琐**
+   - 业务逻辑要知道：有哪些上下文；各个上下文是如何获取的。
+   - 并需要业务逻辑去一个一个地捕捉与传递。
+1. **依赖**
+    - 需要直接依赖不同`ThreadLocal`上下文各自的获取的逻辑或类。
+    - 像`RPC`的上下文（如`Dubbo`的`RpcContext`）、全链路跟踪的上下文（如`SkyWalking`的`ContextManager`）、不同业务模块中的业务流程上下文，等等。
+1. **静态（易漏）**
+    - 因为要 **_事先_** 知道有哪些上下文，如果系统出现了一个新的上下文，业务逻辑就要修改添加上新上下文传递的几行代码。也就是说因 **_系统的_** 上下文新增，**_业务的_** 逻辑就跟进要修改。
+    - 而对于业务来说，不关心系统的上下文，即往往就可能遗漏，会是线上故障了。
+    - 随着应用的分布式微服务化并使用各种中间件，越来越多的功能与组件会涉及不同的上下文，逻辑流程也越来越长；上下文问题实际上是个大的易错的架构问题，需要统一的对业务透明的解决方案。
+1. **定制性**
+    - 因为需要业务逻辑来完成捕捉与传递，业务要关注『上下文的传递方式』：直接传引用？还是拷贝传值？拷贝是深拷贝还是浅拷贝？在不同的上下文会需要不同的做法。
+    - 『上下文的传递方式』往往是 **_上下文的提供者_**（或说是业务逻辑的框架部分）才能决策处理好的；而 **_上下文的使用者_**（或说是业务逻辑的应用部分）往往不（期望）知道上下文的传递方式。这也可以理解成是 **_依赖_**，即业务逻辑 依赖/关注/实现了 系统/架构的『上下文的传递方式』。
+
+**_2. 从整体流程实现角度来看_**
+
+关注的是 **上下文传递流程的规范化**。上下文传递到了子线程要做好 **_清理_**（或更准确地说是要 **_恢复_** 成之前的上下文），需要业务逻辑去处理好。如果业务逻辑对**清理**的处理不正确，比如：
+
+- 如果清理操作漏了：
+   - 下一次执行可能是上次的，即『上下文的 **_污染_**/**_串号_**』，会导致业务逻辑错误。
+   - 『上下文的 **_泄漏_**』，会导致内存泄漏问题。
+- 如果清理操作做多了，会出现上下文 **_丢失_**。
+
+上面的问题，在业务开发中引发的`Bug`真是**屡见不鲜** ！本质原因是：**_`ThreadLocal`的`set/remove`的上下文传递模式_** 在使用线程池等异步执行组件的情况下不再是有效的。常见的典型例子：
+
+- 当线程池满了且线程池的`RejectedExecutionHandler`使用的是`CallerRunsPolicy`时，提交到线程池的任务会在提交线程中直接执行，`ThreadLocal.remove`操作**清理**提交线程的上下文导致上下文**丢失**。
+- 类似的，使用`ForkJoinPool`（包含并行执行`Stream`与`CompletableFuture`，底层使用`ForkJoinPool`）的场景，展开的`ForkJoinTask`会在任务提交线程中直接执行。同样导致上下文**丢失**。
+
+怎么设计一个『上下文传递流程』方案（即上下文的生命周期），以**保证**没有上面的问题？
+
+期望：上下文生命周期的操作从业务逻辑中分离出来。业务逻辑不涉及生命周期，就不会有业务代码如疏忽清理而引发的问题了。整个上下文的传递流程或说生命周期可以规范化成：捕捉、回放和恢复这3个操作，即[**_`CRR(capture/replay/restore)`模式_**](docs/developer-guide.md#-%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E9%9B%86%E6%88%90ttl%E4%BC%A0%E9%80%92)。更多讨论参见 [Issue：能在详细讲解一下`replay`、`restore`的设计理念吗？#201](https://github.com/alibaba/transmittable-thread-local/issues/201)。
+
+总结上面的说明：在生产应用（几乎一定会使用线程池等异步执行组件）中，使用`ThreadLocal`及其`set/remove`的上下文传递模式**几乎一定是有问题的**，**_只是在等一个出`Bug`的机会_**。
+
+更多`TTL`好处与必要性的展开讨论参见 [Issue：这个库带来怎样的好处和优势？ #128](https://github.com/alibaba/transmittable-thread-local/issues/128)，欢迎继续讨论 ♥️
 
 # 🗿 更多文档
 
 - [🎨 需求场景说明](docs/requirement-scenario.md)
+- [❤️ 小伙伴同学们写的`TTL`使用场景 与 设计实现解析的文章（写得都很好！） - Issue #123](https://github.com/alibaba/transmittable-thread-local/issues/123)
 - [🎓 Developer Guide](docs/developer-guide.md)
 - [☔ 性能测试](docs/performance-test.md)
 
