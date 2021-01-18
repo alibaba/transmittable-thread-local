@@ -5,12 +5,13 @@
 
 	<groupId>com.moumou</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
 		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
-		provide an enhanced InheritableThreadLocal that transmits ThreadLocal value between threads even using thread pooling components.
+		provide an enhanced InheritableThreadLocal that transmits ThreadLocal value between threads even using thread
+		pooling components.
 	</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
@@ -99,13 +100,13 @@
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
 			<version>4.0.0-milestone4</version>
-			<!--			<optional>true</optional>-->
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-rx-java2</artifactId>
 			<version>4.0.0-milestone4</version>
-			<!--			<optional>true</optional>-->
+			<optional>true</optional>
 		</dependency>
 		<!--
 			javassist v3.23 is the last version support Java 6
@@ -470,7 +471,8 @@
 							<excludePackageNames>*.internal.*</excludePackageNames>
 							<sourceFileExcludes>
 								<!-- exclude deprecated TtlEnhanced from javadoc -->
-								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
+								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java
+								</sourceFilesourceFileExclude>
 							</sourceFileExcludes>
 							<overview>src/api/overview.html</overview>
 							<isOffline>true</isOffline>
@@ -497,7 +499,8 @@
 									<location>${project.basedir}/src/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
+									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/
+									</url>
 									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
@@ -616,7 +619,9 @@
 								</validationProperty>
 							</validationProperties>
 							<generateGitPropertiesFile>true</generateGitPropertiesFile>
-							<generateGitPropertiesFilename>${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties</generateGitPropertiesFilename>
+							<generateGitPropertiesFilename>
+								${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties
+							</generateGitPropertiesFilename>
 						</configuration>
 					</plugin>
 				</plugins>

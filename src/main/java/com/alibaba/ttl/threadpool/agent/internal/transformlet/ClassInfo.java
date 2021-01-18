@@ -41,7 +41,7 @@ public class ClassInfo {
         if (ctClass != null) return ctClass;
 
         final ClassPool classPool = new ClassPool(true);
-        if (loader == null) {
+        if (loader == null || className.contains("io.vertx.core.Handler")) {
             classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
         } else {
             classPool.appendClassPath(new LoaderClassPath(loader));
