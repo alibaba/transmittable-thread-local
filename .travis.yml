@@ -39,9 +39,6 @@ before_install:
   - ls -l /usr/lib/jvm && ls /usr/lib/jvm/*
   - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH\nSHELL=$SHELL"
 
-install:
-  - pip install --user codecov
-
 script:
   - ./scripts/integration-test.sh
 

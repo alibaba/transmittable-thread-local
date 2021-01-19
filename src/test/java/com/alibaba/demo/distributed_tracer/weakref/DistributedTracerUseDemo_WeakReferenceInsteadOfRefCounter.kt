@@ -82,12 +82,12 @@ private fun syncMethod() {
 }
 
 private fun asyncMethod() {
-    Thread.sleep(3)
+    sleep(3)
     invokeServerWithRpc("server 2")
 }
 
 private fun syncMethod_ByNewThread() {
-    Thread.sleep(2)
+    sleep(2)
     invokeServerWithRpc("server 3")
 }
 

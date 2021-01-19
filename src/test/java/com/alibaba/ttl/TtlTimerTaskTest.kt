@@ -4,6 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
 
+@Suppress("DEPRECATION")
 class TtlTimerTaskTest {
     @Test
     fun test_get() {
