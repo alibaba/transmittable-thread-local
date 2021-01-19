@@ -96,18 +96,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-core</artifactId>
-			<version>4.0.0-milestone4</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-rx-java2</artifactId>
-			<version>4.0.0-milestone4</version>
-			<optional>true</optional>
-		</dependency>
 		<!--
 			javassist v3.23 is the last version support Java 6
 			DO NOT upgrade javassist version!

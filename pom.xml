@@ -5,7 +5,7 @@
 
 	<groupId>com.moumou</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
@@ -96,18 +96,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-core</artifactId>
-			<version>4.0.0-milestone4</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-rx-java2</artifactId>
-			<version>4.0.0-milestone4</version>
-			<optional>true</optional>
-		</dependency>
 		<!--
 			javassist v3.23 is the last version support Java 6
 			DO NOT upgrade javassist version!
