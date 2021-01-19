@@ -23,30 +23,15 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
 /**
  * @author: tk
  * @since: 2021/1/15
+ * 包装io.vertx.core.Handler
+ * 解决vertx回调里拿不到ttl值的问题
  */
 public class TtlFutureTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class);
 
-    /**
-     * 修饰匿名executor
-     * key:创建匿名executor的类
-     * value:创建匿名executor的行号
-     */
-    private static final Map<String, Integer> ANONYMOUS_EXECUTOR_CLASS_NAME_AND_LINE = new HashMap<String, Integer>();
     private static final Set<String> CALLBACK_EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
-    /**
-     * 需要额外修改的由AppClassLoader加载的类
-     * 避免出现因类加载器不一致导致的ClassDefNotFoundException
-     */
-    private static final Set<String> EXTRA_MODIFY_CLASS_NAMES = new HashSet<String>();
-
     private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<String, String>();
-
-
-    private static final String FUNCTION_INVOKE_CLASS_NAME = "io.vertx.core.Future";
-    private static final String FUNCTION_CLASS_NAME = "java.util.function.Function";
-    private static final String TTL_FUNCTION_CLASS_NAME = "com.alibaba.ttl.TtlFunction";
 
     private static final String HANDLER_INVOKE_CLASS_NAME = "io.vertx.core.Future";
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
@@ -54,13 +39,9 @@ public class TtlFutureTransformlet implements JavassistTransformlet {
 
     static {
 
-        CALLBACK_EXECUTOR_CLASS_NAMES.add(FUNCTION_INVOKE_CLASS_NAME);
-//        EXECUTOR_CLASS_NAMES.add(HANDLER_INVOKE_CLASS_NAME);
+        CALLBACK_EXECUTOR_CLASS_NAMES.add(HANDLER_INVOKE_CLASS_NAME);
 
-//        PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put(FUNCTION_CLASS_NAME, TTL_FUNCTION_CLASS_NAME);
         PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.put(HANDLER_CLASS_NAME, TTL_HANDLER_CLASS_NAME);
-
-        EXTRA_MODIFY_CLASS_NAMES.add(HANDLER_CLASS_NAME);
     }
 
     public TtlFutureTransformlet() {
@@ -74,8 +55,6 @@ public class TtlFutureTransformlet implements JavassistTransformlet {
                 updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(method);
             }
 
-            classInfo.setModified();
-        } else if (EXTRA_MODIFY_CLASS_NAMES.contains(classInfo.getClassName())) {
             classInfo.setModified();
         } else {
             if (clazz.isPrimitive() || clazz.isArray() || clazz.isInterface() || clazz.isAnnotation()) {
@@ -101,11 +80,7 @@ public class TtlFutureTransformlet implements JavassistTransformlet {
         for (int i = 0; i < parameterTypes.length; i++) {
             final String paramTypeName = parameterTypes[i].getName();
             if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
-                /*if (paramTypeName.equals(HANDLER_CLASS_NAME)) {
-                    if (!"request".equals(method.getName())) {
-                        return;
-                    }
-                }*/
+                //如果参数类型是io.vertx.core.Handler.则只包装setHandler
                 if (paramTypeName.equals(HANDLER_CLASS_NAME)) {
                     if (!"setHandler".equals(method.getName())) {
                         return;
