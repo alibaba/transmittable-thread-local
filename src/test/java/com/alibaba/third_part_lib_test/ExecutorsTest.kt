@@ -32,7 +32,7 @@ class ExecutorsTest {
         futures.forEach { it.get() }
 
         threadPool.shutdown()
-        assertTrue(threadPool.awaitTermination(10, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", threadPool.awaitTermination(100, TimeUnit.MILLISECONDS))
     }
 }
 

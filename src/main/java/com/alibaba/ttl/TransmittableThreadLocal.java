@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link TransmittableThreadLocal} can transmit value from the thread of submitting task to the thread of executing task.
+ * {@link TransmittableThreadLocal}({@code TTL}) can transmit value from the thread of submitting task to the thread of executing task.
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link InheritableThreadLocal},
@@ -25,9 +25,9 @@ import java.util.logging.Logger;
  * {@link java.util.concurrent.ForkJoinPool}), Inheritable feature <b>should never</b> happen,
  * since threads in thread pooling components is pre-created and pooled, these threads is <b>neutral</b> to biz logic/data.
  * <br>
- * Disable inheritable for thread pooling components by wrapping thread factories using method
- * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)} /
- * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()}.
+ * Disable inheritable for thread pooling components by wrapping thread factories using methods
+ * {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory} /
+ * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
  * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
  * so as to wrap thread factories for thread pooling components automatically and transparently.
@@ -294,7 +294,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *     return "World";
      * } finally {
      *     // restore the TransmittableThreadLocal of thread B when replay
-     *     Transmitter.restore(backup); (3)
+     *     Transmitter.restore(backup); // (3)
      * }}</pre>
      * <p>
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code sample.
@@ -316,7 +316,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * // in thread B
      * ///////////////////////////////////////////////////////////////////////////
      *
-     * String result = runSupplierWithCaptured(captured, () -&gt; {
+     * String result = runSupplierWithCaptured(captured, () -> {
      *      // your biz logic, run with the TransmittableThreadLocal values of thread A
      *      System.out.println("Hello");
      *      ...
@@ -619,6 +619,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
+         * <B><I>Caution:</I></B><br>
+         * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
+         * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
+         *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param copier      the {@link TtlCopier}
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
@@ -641,6 +645,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          *
+         * <B><I>Caution:</I></B><br>
+         * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
+         * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
+         *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
          * @see #registerThreadLocal(ThreadLocal, TtlCopier)
@@ -659,6 +667,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
+         *
+         * <B><I>Caution:</I></B><br>
+         * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
+         * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param copier      the {@link TtlCopier}
@@ -696,6 +708,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
+         *
+         * <B><I>Caution:</I></B><br>
+         * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
+         * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
          *
          * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
          * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance

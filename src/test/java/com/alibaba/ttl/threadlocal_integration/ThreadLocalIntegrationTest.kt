@@ -5,7 +5,6 @@ import com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*
 import com.alibaba.ttl.TtlCopier
 import com.alibaba.ttl.threadpool.TtlExecutors
 import org.junit.AfterClass
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
@@ -127,7 +126,7 @@ class ThreadLocalIntegrationTest {
     fun register_ThreadLocal_can_NOT_Inheritable() {
         val initValue = "init"
         val threadLocal = object : ThreadLocal<String>() {
-            override fun initialValue(): String? = initValue
+            override fun initialValue(): String = initValue
         }
         threadLocal.set(PARENT)
         registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
@@ -144,7 +143,7 @@ class ThreadLocalIntegrationTest {
     fun register_InheritableThreadLocal_can_Inheritable() {
         val initValue = "init"
         val threadLocal = object : InheritableThreadLocal<String>() {
-            override fun initialValue(): String? = initValue
+            override fun initialValue(): String = initValue
         }
         threadLocal.set(PARENT)
         registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
@@ -173,8 +172,7 @@ class ThreadLocalIntegrationTest {
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
-            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
-            if (!executorService.isTerminated) Assert.fail("Fail to shutdown thread pool")
+            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
         }
     }
 }

@@ -1,18 +1,19 @@
 # 📌 TransmittableThreadLocal(TTL) 📌
 
-[![Build Status](https://travis-ci.org/alibaba/transmittable-thread-local.svg?branch=master)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master.svg?label=windows%20build)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master.svg)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability)](https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability)  
-[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg?label=javadoc&color=3d7c47)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local.svg?color=2d545e)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
-[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/releases)  
-[![Chat at gitter.im](https://badges.gitter.im/alibaba/transmittable-thread-local.svg)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/master?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
+[![Maintainability](https://badgen.net/codeclimate/maintainability/codeclimate/codeclimate?icon=codeclimate)](https://codeclimate.com/github/alibaba/transmittable-thread-local)  
+[![License](https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4EB1BA)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&logo=apache-maven&logoColor=white)](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav)
+[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local) ![JDK support](https://img.shields.io/badge/JDK-6+-green?logo=java&logoColor=white)](https://github.com/alibaba/transmittable-thread-local/releases)  
+[![Chat at gitter.im](https://img.shields.io/gitter/room/alibaba/transmittable-thread-local?color=46BC99&logo=gitter&logoColor=white)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/fork)
-[![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/issues)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/alibaba/transmittable-thread-local.svg)](https://github.com/alibaba/transmittable-thread-local/issues "Percentage of issues still open")
+[![GitHub repo dependents](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
+[![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/issues)
+[![GitHub Contributors](https://img.shields.io/github/contributors/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/graphs/contributors)
 
 [📖 English Documentation](README-EN.md) | 📖 中文文档
 
@@ -31,15 +32,15 @@
             - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
         - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
-            - [关于`boot class path`设置](#%E5%85%B3%E4%BA%8Eboot-class-path%E8%AE%BE%E7%BD%AE)
-            - [`Java`的启动参数配置](#java%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
+            - [`Java Agent`的启动参数配置](#java-agent%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
+            - [关于`boot class path`](#%E5%85%B3%E4%BA%8Eboot-class-path)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
 - [❓ FAQ](#-faq)
-- [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
+- [🗿 更多文档与资料](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3%E4%B8%8E%E8%B5%84%E6%96%99)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-    - [Jdk Core Classes](#jdk-core-classes)
+    - [JDK Core Classes](#jdk-core-classes)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -49,22 +50,22 @@
 # 🔧 功能
 
 👉 在使用线程池等会池化复用线程的执行组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。
-一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 16/15/14/13/12/11/10/9/8/7/6。
+一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 17/16/15/14/13/12/11/10/9/8/7/6。
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
-本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类，解决上述的问题，使用详见[User Guide](#-user-guide)。
+本库提供的[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见[User Guide](#-user-guide)。
 
 整个`TransmittableThreadLocal`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有 **_~1000 `SLOC`代码行_**，非常精小。
 
 欢迎 👏
 
-- 建议和提问，[提交`Issue`](https://github.com/alibaba/transmittable-thread-local/issues/new)
-- 贡献和改进，[`Fork`后提通过`Pull Request`贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
+- 建议和提问，[提交 Issue](https://github.com/alibaba/transmittable-thread-local/issues/new)
+- 贡献和改进，[Fork 后提通过 Pull Request 贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
 # 🎨 需求场景
 
-在`ThreadLocal`的需求场景即是`TransmittableThreadLocal`的潜在需求场景，如果你的业务需要『在使用线程池等会池化复用线程的执行组件情况下传递`ThreadLocal`』则是`TransmittableThreadLocal`目标场景。
+`ThreadLocal`的需求场景即`TransmittableThreadLocal`的潜在需求场景，如果你的业务需要『在使用线程池等会池化复用线程的执行组件情况下传递`ThreadLocal`值』则是`TransmittableThreadLocal`目标场景。
 
 下面是几个典型场景例子。
 
@@ -75,13 +76,18 @@
 
 各个场景的展开说明参见子文档 [需求场景](docs/requirement-scenario.md)。
 
+**使用`TransmittableThreadLocal`的好处与必要性**：
+
+- 好处和目标：透明/自动完成所有异步执行上下文的可定制、规范化的捕捉/传递。
+- 必要性：上下文问题实际上是个大的易错的架构问题，需要统一的解决方案。
+
+更多展开讨论参见 [Issue：这个库带来怎样的好处和优势？ #128](https://github.com/alibaba/transmittable-thread-local/issues/128)。
+
 # 👥 User Guide
 
 使用类[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-[`TransmittableThreadLocal`](src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)继承[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，使用方式也类似。
-
-相比[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)，添加了
+`TransmittableThreadLocal`继承`InheritableThreadLocal`，使用方式也类似。相比`InheritableThreadLocal`，添加了
 
 1. `copy`方法  
     用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。  
@@ -98,8 +104,11 @@
 示例代码：
 
 ```java
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
 // 在父线程中设置
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
 context.set("value-set-in-parent");
 
 // =====================================================
@@ -110,7 +119,7 @@ String value = context.get();
 
 \# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
 
-这是其实是[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)的功能，应该使用[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)来完成。
+这是其实是`InheritableThreadLocal`的功能，应该使用`InheritableThreadLocal`来完成。
 
 但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -125,7 +134,11 @@ String value = context.get();
 示例代码：
 
 ```java
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -142,7 +155,11 @@ String value = context.get();
 上面演示了`Runnable`，`Callable`的处理类似
 
 ```java
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Callable call = new CallableTask();
@@ -179,7 +196,11 @@ ExecutorService executorService = ...
 // 额外的处理，生成修饰了的对象executorService
 executorService = TtlExecutors.getTtlExecutorService(executorService);
 
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+
+// =====================================================
+
+// 在父线程中设置
 context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
@@ -204,7 +225,7 @@ String value = context.get();
 
 ```java
 // ## 1. 框架上层逻辑，后续流程框架调用业务 ##
-TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 context.set("value-set-in-parent");
 
 // ## 2. 应用逻辑，后续流程业务调用框架下层逻辑 ##
@@ -233,8 +254,8 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
     - 修饰实现代码在[`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlTimerTaskTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
     - **_注意_**：从`2.11.2`版本开始缺省开启`TimerTask`的修饰（因为保证正确性是第一位，而不是最佳实践『不推荐使用`TimerTask`』:）；`2.11.1`版本及其之前的版本没有缺省开启`TimerTask`的修饰。
     - 使用`Agent`参数`ttl.agent.enable.timer.task`开启/关闭`TimerTask`的修饰：
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true`
-        - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true`
+        - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false`
     - 更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
 
 > **关于`java.util.TimerTask`/`java.util.Timer`**
@@ -245,12 +266,43 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 > `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
 > 如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
 
-#### 关于`boot class path`设置
+#### `Java Agent`的启动参数配置
+
+在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.y.jar`。
+
+**_注意_**：
+
+- 如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.y.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置。  
+    比如修改文件名成`ttl-foo-name-changed.jar`，则还需要加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`。
+- 或使用`v2.6.0`之前的版本（如`v2.5.1`），则也需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。  
+    加上`Java`的启动参数：`-Xbootclasspath/a:path/to/transmittable-thread-local-2.5.1.jar`。
+
+`Java`命令行示例如下：
+
+```bash
+java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+# 如果修改了TTL jar文件名 或 TTL版本是 2.6.0 之前
+# 则还需要显式设置 -Xbootclasspath 参数
+java -javaagent:path/to/ttl-foo-name-changed.jar \
+    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+
+java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
+    -Xbootclasspath/a:path/to/transmittable-thread-local-2.5.1.jar \
+    -cp classes \
+    com.alibaba.demo.ttl.agent.AgentDemo
+```
+
+#### 关于`boot class path`
 
 因为修饰了`JDK`标准库的类，标准库由`bootstrap class loader`加载；修饰后的`JDK`类引用了`TTL`的代码，所以`Java Agent`使用方式下`TTL Jar`文件需要配置到`boot class path`上。
 
 `TTL`从`v2.6.0`开始，加载`TTL Agent`时会自动设置`TTL Jar`到`boot class path`上。  
-**_注意_**：不能修改从`Maven`库下载的`TTL Jar`文件名（形如`transmittable-thread-local-2.x.x.jar`）。
+**_注意_**：不能修改从`Maven`库下载的`TTL Jar`文件名（形如`transmittable-thread-local-2.x.y.jar`）。
 如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。
 
 自动设置`TTL Jar`到`boot class path`的实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
@@ -264,33 +316,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 
 - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
 - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
-- [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
-
-#### `Java`的启动参数配置
-
-在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar`。
-
-如果修改了下载的`TTL`的`Jar`的文件名（`transmittable-thread-local-2.x.x.jar`），则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置：  
-比如修改文件名成`ttl-foo-name-changed.jar`，则还加上`Java`的启动参数：`-Xbootclasspath/a:path/to/ttl-foo-name-changed.jar`
-
-`Java`命令行示例如下：
-
-```bash
-java -javaagent:path/to/transmittable-thread-local-2.x.x.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
-
-或是
-
-```bash
-# 如果修改了TTL jar文件名 或 TTL版本是 2.6.0 之前，
-# 则还需要显式设置 -Xbootclasspath 参数
-java -javaagent:path/to/ttl-foo-name-changed.jar \
-    -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar \
-    -cp classes \
-    com.alibaba.demo.ttl.agent.AgentDemo
-```
+- [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
 # 🔌 Java API Docs
 
@@ -304,7 +330,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.11.5</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
@@ -324,7 +350,7 @@ java -javaagent:path/to/ttl-foo-name-changed.jar \
 ./mvnw install
 
 #####################################################
-# 如果使用你自己安装的`Maven`，版本要求：maven 3.3.9+
+# 如果使用你自己安装的 maven，版本要求：maven 3.3.9+
 mvn install
 ```
 
@@ -332,20 +358,40 @@ mvn install
 
 # ❓ FAQ
 
-- Mac OS X下，使用javaagent，可能会报`JavaLaunchHelper`的出错信息。  
-    JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
-    可以换一个版本的JDK。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
-    \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
+**1. `TTL Agent`与其它`Agent`（如`Skywalking`、`Promethues`）配合使用时不生效？**
 
-# 🗿 更多文档
+配置`TTL Agent`在最前的位置，可以避免与其它其它`Agent`配合使用时，`TTL Agent`可能的不生效问题。配置示例：
+
+```bash
+java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
+     -javaagent:path/to/skywalking-agent.jar \
+     -jar your_app.jar
+```
+
+原因是：
+
+- 像`Skywalking`这样的`Agent`的入口逻辑（`premain`）包含了线程池的启动。
+- 如果配置在这样的`Agent`配置在前面，到了`TTL Agent`（的`premain`）时，`TTL`需要加强的线程池类已经加载（`load`）了。
+- `TTL Agent`的`TtlTransformer`是在类加载时触发类的增强；如果类已经加载了会跳过`TTL Agent`的增强逻辑。
+
+更多讨论参见 [Issue：`TTL agent`与 其他`Agent`的兼容性问题 #226](https://github.com/alibaba/transmittable-thread-local/issues/226)。
+
+**2. `MacOS`下，使用`Java Agent`，可能会报`JavaLaunchHelper`的出错信息**
+
+JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
+可以换一个版本的`JDK`。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
+\# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
+
+# 🗿 更多文档与资料
 
 - [🎨 需求场景说明](docs/requirement-scenario.md)
+- [❤️ 小伙伴同学们写的`TTL`使用场景 与 设计实现解析的文章（写得都很好！） - Issue #123](https://github.com/alibaba/transmittable-thread-local/issues/123)
 - [🎓 Developer Guide](docs/developer-guide.md)
 - [☔ 性能测试](docs/performance-test.md)
 
 # 📚 相关资料
 
-## Jdk Core Classes
+## JDK Core Classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
