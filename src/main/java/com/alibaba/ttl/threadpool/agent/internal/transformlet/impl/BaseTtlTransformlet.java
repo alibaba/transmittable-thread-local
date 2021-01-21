@@ -90,24 +90,36 @@ public abstract class BaseTtlTransformlet implements JavassistTransformlet {
     }
 
     /**
-     * load class custom
-     * current project was added to bootclasspath path.
+     * Template method which can be overridden to load specific class.
+     * call on {@link #doTransform(ClassInfo)}
+     * <p>
+     * because current project was added to boot classpath path.
      * there will be throw {@link NoClassDefFoundError}
      * when {@link BaseTtlTransformlet#updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(CtMethod)}
-     * try to load the class that implemented some class that load By AppClassLoader.
+     * try to load the class that implemented some class that was loaded By AppClassLoader.
      *
      * @see NoClassDefFoundError
      * @see com.alibaba.ttl.TtlVertxHandler
      * @see io.vertx.core.Handler
+     * @see sun.misc.Launcher.AppClassLoader
      */
-    protected abstract void loadClass();
+    protected void loadClass() {
+        // For subclasses: do nothing by default.
+    }
+
+    ;
 
     /**
-     * if true, the method belong to some class from CALL_CLASS_NAMES will be modify
+     * if it is true, the method that belong to some class which from CALL_CLASS_NAMES will be modified
      *
      * @param methodName method from {@link #CALL_CLASS_NAMES}
      * @return .
      * @see BaseTtlTransformlet#updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(CtMethod)
      */
-    protected abstract boolean needDecorateToTtlWrapper(String methodName);
+    protected boolean needDecorateToTtlWrapper(String methodName) {
+        // For subclasses: return true by default.
+        return true;
+    }
+
+    ;
 }

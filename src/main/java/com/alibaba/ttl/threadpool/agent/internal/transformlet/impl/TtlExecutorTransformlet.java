@@ -28,6 +28,7 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.Executors
+ * @see io.netty.util.concurrent.SingleThreadEventExecutor
  * @since 2.5.1
  */
 public class TtlExecutorTransformlet implements JavassistTransformlet {

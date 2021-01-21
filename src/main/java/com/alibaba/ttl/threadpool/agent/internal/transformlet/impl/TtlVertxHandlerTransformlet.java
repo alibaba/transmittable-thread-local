@@ -13,6 +13,8 @@ import java.net.URLClassLoader;
  * @since: 2021/1/15
  * @see com.alibaba.ttl.TtlVertxHandler
  * @see io.vertx.core.Handler
+ * @see sun.misc.Launcher.AppClassLoader
+ * @see URLClassLoader#findClass(String)
  */
 public class TtlVertxHandlerTransformlet extends BaseTtlTransformlet {
     private static final Logger LOGGER = Logger.getLogger(TtlVertxHandlerTransformlet.class);
