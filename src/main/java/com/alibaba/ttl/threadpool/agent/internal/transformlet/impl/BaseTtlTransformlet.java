@@ -93,10 +93,10 @@ public abstract class BaseTtlTransformlet implements JavassistTransformlet {
      * Template method which can be overridden to load specific class.
      * call on {@link #doTransform(ClassInfo)}
      * <p>
-     * because current project was added to boot classpath path.
-     * there will be throw {@link NoClassDefFoundError}
+     * current project was added to boot classpath path.
+     * so there will be throw {@link NoClassDefFoundError}
      * when {@link BaseTtlTransformlet#updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(CtMethod)}
-     * try to load the class that implemented some class that was loaded By AppClassLoader.
+     * try to load the class that related some class that was loaded By AppClassLoader.
      *
      * @see NoClassDefFoundError
      * @see com.alibaba.ttl.TtlVertxHandler
