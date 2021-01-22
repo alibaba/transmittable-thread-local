@@ -5,7 +5,7 @@
 
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.12.0-SNAPSHOT</version>
+	<version>2.13.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
@@ -90,8 +90,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.4.10</kotlin.version>
-		<kotlin.coroutine.version>1.3.9</kotlin.coroutine.version>
+		<kotlin.version>1.4.21-2</kotlin.version>
+		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -120,7 +120,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.1.3</version>
+			<version>4.2.0</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -139,7 +139,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -157,7 +157,7 @@
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>2.2.19</version>
+			<version>2.2.20</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -272,7 +272,7 @@
 									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
-							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
+							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
 							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
@@ -294,7 +294,7 @@
 							<relocations>
 								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.internal.javassist</shadedPattern>
+									<shadedPattern>com.alibaba.ttl.threadpool.agent.internal.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>
@@ -302,6 +302,14 @@
 									<include>org.javassist:javassist</include>
 								</includes>
 							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>org.javassist:javassist</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
 							<shadeSourcesContent>true</shadeSourcesContent>
 						</configuration>
 					</execution>
@@ -326,7 +334,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.0.4</version>
+				<version>4.2.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -498,6 +506,12 @@
 								<additionalJOption>-quiet</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
+
+								<!--
+									How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
+									https://stackoverflow.com/questions/39616344
+								-->
+								<additionalJOption>-Xdoclint:-missing</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -577,7 +591,7 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.2</version>
+						<version>4.0.3</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>

@@ -8,6 +8,6 @@ source ./common_build.sh
 readonly run_class_name="$1"
 shift 1
 
-runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
      "$run_class_name"

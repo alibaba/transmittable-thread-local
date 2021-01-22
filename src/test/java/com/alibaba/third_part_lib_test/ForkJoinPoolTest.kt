@@ -3,8 +3,8 @@ package com.alibaba.third_part_lib_test
 import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
+import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.ForkJoinPool
@@ -35,7 +35,7 @@ class ForkJoinPoolTest {
 
         // close
         pool.shutdown()
-        if (!pool.awaitTermination(100, TimeUnit.MILLISECONDS)) fail("Fail to shutdown thread pool")
+        assertTrue("Fail to shutdown thread pool", pool.awaitTermination(100, TimeUnit.MILLISECONDS))
     }
 }
 

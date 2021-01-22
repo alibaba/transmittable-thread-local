@@ -6,13 +6,10 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRecursiveAction
-import org.junit.AfterClass
-import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ForkJoinPool
-import java.util.concurrent.TimeUnit
 
 
 private val pool = ForkJoinPool()

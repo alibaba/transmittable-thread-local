@@ -1,7 +1,6 @@
 package com.alibaba.demo.coroutine.ttl_intergration
 
 import com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*
-import com.alibaba.ttl.threadpool.agent.TtlAgent
 import kotlinx.coroutines.ThreadContextElement
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

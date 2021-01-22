@@ -30,6 +30,6 @@ class TtlForkJoinPoolHelperTest {
     @ConditionalIgnore(condition = BelowJava7::class)
     fun test_null() {
         assertFalse(TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(null))
-        assertNull(TtlForkJoinPoolHelper.unwrap(null as? ForkJoinPool.ForkJoinWorkerThreadFactory))
+        assertNull(TtlForkJoinPoolHelper.unwrap(null))
     }
 }

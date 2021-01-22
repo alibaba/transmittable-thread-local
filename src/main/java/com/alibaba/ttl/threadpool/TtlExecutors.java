@@ -40,43 +40,80 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link Executor},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
+     * <p>
+     * NOTE: sine v2.12.0 the idempotency of return wrapped Executor is changed to true,
+     * so the wrapped Executor can be cooperated with the usage of "Decorate Runnable and Callable".
+     * <p>
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped Executor;
+     * otherwise throw {@link IllegalStateException}.
+     *
+     * @param executor input Executor
+     * @return wrapped Executor
+     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
+     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
      */
     @Nullable
     public static Executor getTtlExecutor(@Nullable Executor executor) {
         if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
             return executor;
         }
-        return new ExecutorTtlWrapper(executor);
+        return new ExecutorTtlWrapper(executor, true);
     }
 
     /**
      * {@link TransmittableThreadLocal} Wrapper of {@link ExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
+     * <p>
+     * NOTE: sine v2.12.0 the idempotency of return wrapped ExecutorService is changed to true,
+     * so the wrapped ExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
+     * <p>
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped ExecutorService;
+     * otherwise throw {@link IllegalStateException}.
+     *
+     * @param executorService input ExecutorService
+     * @return wrapped ExecutorService
+     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
+     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
      */
     @Nullable
     public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
         if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
             return executorService;
         }
-        return new ExecutorServiceTtlWrapper(executorService);
+        return new ExecutorServiceTtlWrapper(executorService, true);
     }
+
 
     /**
      * {@link TransmittableThreadLocal} Wrapper of {@link ScheduledExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link java.util.concurrent.Callable}
      * to the execution time of {@link Runnable} or {@link java.util.concurrent.Callable}.
+     * <p>
+     * NOTE: sine v2.12.0 the idempotency of return wrapped ScheduledExecutorService is changed to true,
+     * so the wrapped ScheduledExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
+     * <p>
+     * About idempotency: if is idempotent,
+     * it's allowed to submit the {@link com.alibaba.ttl.TtlRunnable}/{@link com.alibaba.ttl.TtlCallable} to the wrapped ScheduledExecutorService;
+     * otherwise throw {@link IllegalStateException}.
+     *
+     * @param scheduledExecutorService input scheduledExecutorService
+     * @return wrapped scheduledExecutorService
+     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
+     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
      */
     @Nullable
     public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
         if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof TtlEnhanced) {
             return scheduledExecutorService;
         }
-        return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService);
+        return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService, true);
     }
 
     /**
-     * check the executor is TTL wrapper executor or not.
+     * check the executor is a TTL executor wrapper or not.
      * <p>
      * if the parameter executor is TTL wrapper, return {@code true}, otherwise {@code false}.
      * <p>
@@ -95,7 +132,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * Unwrap TTL wrapper executor to the original/underneath one.
+     * Unwrap TTL executor wrapper to the original/underneath one.
      * <p>
      * if the parameter executor is TTL wrapper, return the original/underneath executor;
      * otherwise, just return the input parameter executor.
@@ -120,7 +157,7 @@ public final class TtlExecutors {
     }
 
     /**
-     * Wrapper of  {@link ThreadFactory}, disable inheritable.
+     * Wrapper of {@link ThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
      * @see DisableInheritableThreadFactory

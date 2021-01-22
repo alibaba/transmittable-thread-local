@@ -32,18 +32,18 @@ import java.util.logging.Level;
  * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ThreadPoolExecutor}
  * to {@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}
- * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)}.
+ * by util method {@link com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory}.
  * </li>
  * <li>rewrite the {@link java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ForkJoinPool}
  * to {@link com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory}
- * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)}.
+ * by util method {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory) getDisableInheritableForkJoinWorkerThreadFactory}.
  * </li>
  * </ul>
  * More info about "disable inheritable" see {@link com.alibaba.ttl.TransmittableThreadLocal}.
  * <p>
  * Configuration example:<br>
- * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
+ * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
  *
  * <h3>The log configuration</h3>
  * The log of TTL Java Agent is config by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
@@ -58,8 +58,8 @@ import java.util.logging.Level;
  * <p>
  * configuration example:
  * <ul>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar}</li>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT}</li>
  * </ul>
  *
  * <h3>Enable/disable TimerTask class decoration</h3>
@@ -72,16 +72,16 @@ import java.util.logging.Level;
  * <p>
  * Configuration example:
  * <ul>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:false}</li>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.enable.timer.task:true}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true}</li>
  * </ul>
  *
  * <h3>Multi key configuration example</h3>
- * {@code -javaagent:/path/to/transmittable-thread-local-2.x.x.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
+ * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
  *
  * <h2>About boot classpath for TTL agent</h2>
  * <b><i>NOTE:</i></b> Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.
- * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.x.jar}).<br>
+ * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.y.jar}).<br>
  * if you modified the downloaded TTL agent jar file name(eg: {@code ttl-foo-name-changed.jar}),
  * you must add TTL agent jar to {@code boot classpath} manually
  * by java option {@code -Xbootclasspath/a:path/to/ttl-foo-name-changed.jar}.
@@ -105,7 +105,7 @@ import java.util.logging.Level;
  * @see Instrumentation
  * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @see <a href="https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest">JAR File Specification - JAR Manifest</a>
- * @see <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html">Working with Manifest Files - The Java™ TutorialsHide</a>
+ * @see <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html">Working with Manifest Files - The Java™ Tutorials</a>
  * @see com.alibaba.ttl.TransmittableThreadLocal
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see java.util.concurrent.ScheduledThreadPoolExecutor

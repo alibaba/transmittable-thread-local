@@ -9,7 +9,6 @@ import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 import java.util.concurrent.*
 
 /**
@@ -242,8 +241,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
-            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
-            if (!executorService.isTerminated) fail("Fail to shutdown thread pool")
+            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
         }
     }
 }
