@@ -16,8 +16,8 @@ import java.net.URLClassLoader;
  * @see sun.misc.Launcher.AppClassLoader
  * @see URLClassLoader#findClass(String)
  */
-public class TtlVertxHandlerTransformlet extends BaseTtlTransformlet {
-    private static final Logger LOGGER = Logger.getLogger(TtlVertxHandlerTransformlet.class);
+public class TtlVertxFutureTransformlet extends BaseTtlTransformlet {
+    private static final Logger LOGGER = Logger.getLogger(TtlVertxFutureTransformlet.class);
 
     private static final String HANDLER_INVOKE_CLASS_NAME = "io.vertx.core.Future";
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";

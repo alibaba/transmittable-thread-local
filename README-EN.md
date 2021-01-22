@@ -30,6 +30,14 @@
         - [2.1 Decorate `Runnable` and `Callable`](#21-decorate-runnable-and-callable)
         - [2.2 Decorate thread pool](#22-decorate-thread-pool)
         - [2.3 Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
+    - [3. Transmit value even in async io](#3-Transmit-value-even-in-async-io)
+        - [3.1 callback in vert.x framework](#31-callback-in-vertx-framework)
+            - [Decorate `io.vertx.core.Handler`](#Decorate-iovertxcoreHandler)
+    - [4. Use Java Agent](#4-Use-Java-Agent)
+        - [4.1 Use Java Agent to decorate thread pool implementation class](#41-use-java-agent-to-decorate-thread-pool-implementation-class)
+        - [4.2 decorate `io.vertx.core.Future`](#42-decorate-iovertxcoreFuture)
+        - [4.3 about java BootClassPath](#43-about-java-BootClassPath)
+        - [4.4 Java command example](#44-Java-command-example)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven Dependency](#-maven-dependency)
 - [🔨 About compilation, build and dev](#-about-compilation-build-and-dev)
@@ -169,7 +177,51 @@ String value = parent.get();
 
 \# See the executable demo [`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt) with full source code.
 
-### 2.3 Use Java Agent to decorate thread pool implementation class
+## 3. Transmit value even in async io
+
+### 3.1 callback in vert.x framework
+
+#### Decorate `io.vertx.core.Handler`
+
+Use [`TtlVertxHandler`](src/main/java/com/alibaba/ttl/TtlVertxHandler.java) to decorate `Handler`。
+Sample code：
+```java
+    Vertx vertx = Vertx.vertx();
+
+    //build channel
+    ManagedChannel channel = VertxChannelBuilder
+      .forAddress(vertx, "localhost", 8080)
+      .usePlaintext()
+      .build();
+
+    // set in parent thread
+    TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+    context.set("value-set-in-parent");
+
+    //init stub
+    io.grpc.stub.XXX stub = XXX.newVertxStub(channel);
+    HelloRequest request = HelloRequest.newBuilder().setName("Julien").build();
+
+    //init handler
+    Handler<AsyncResult<String>> handler = event -> {
+      // read in callback, value is "value-set-in-parent"
+      context.get();
+      if (event.succeeded()) {
+        //do something
+      } else {
+        // find exception
+      }
+    };
+    // extra work, create decorated TtlVertxHandler object
+    TtlVertxHandler<AsyncResult<String>> ttlVertxHandler = TtlVertxHandler.get(handler);
+
+    //send request
+    stub.sayHello(request).onComplete(ttlVertxHandler);
+```
+
+## 4 Use Java Agent
+
+### 4.1 Use Java Agent to decorate thread pool implementation class
 
 In this usage, transmission is transparent\(no decoration operation\).
 
@@ -214,6 +266,14 @@ Add start options on Java command:
 
 - `-javaagent:path/to/transmittable-thread-local-2.x.x.jar`
 
+### 4.2 decorate `io.vertx.core.Future`
+
+At present, `TTL` agent has decorated below `Vertx` callback components(`io.vertx.core.Future`) implementation:
+
+- `io.vertx.core.Future` 
+    - decoration implementation code is in [`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
+
+### 4.3 about java BootClassPath
 **NOTE**：
 
 - Because TTL agent modified the `JDK` std lib classes, make code refer from std lib class to the TTL classes, so the TTL Agent jar must be added to `boot classpath`.
@@ -234,7 +294,7 @@ More info:
 - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
-Java command example:
+### 4.4 Java command example
 
 ```bash
 java -javaagent:transmittable-thread-local-2.x.x.jar \

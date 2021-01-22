@@ -30,9 +30,14 @@
         - [2.1 修饰`Runnable`和`Callable`](#21-%E4%BF%AE%E9%A5%B0runnable%E5%92%8Ccallable)
             - [整个过程的完整时序图](#%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE)
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
-        - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
-            - [关于`boot class path`设置](#%E5%85%B3%E4%BA%8Eboot-class-path%E8%AE%BE%E7%BD%AE)
-            - [`Java`的启动参数配置](#java%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
+    - [3. 保证异步io回调中传递值](#3-%e4%bf%9d%e8%af%81%e5%bc%82%e6%ad%a5io%e5%9b%9e%e8%b0%83%e4%b8%ad%e4%bc%a0%e9%80%92%e5%80%bc)
+        - [3.1 vert.x内的回调处理](#31-vertx%e5%86%85%e7%9a%84%e5%9b%9e%e8%b0%83%e5%a4%84%e7%90%86)
+            - [修饰`io.vertx.core.Handler`](#%e4%bf%ae%e9%a5%b0iovertxcoreHandler)
+    - [4. 使用`Java Agent`实现代码无侵入实现](#4-%e4%bd%bf%e7%94%a8Java-Agent%e5%ae%9e%e7%8e%b0%e4%bb%a3%e7%a0%81%e6%97%a0%e4%be%b5%e5%85%a5%e5%ae%9e%e7%8e%b0)
+        - [4.1 使用`Java Agent`来修饰`JDK`线程池实现类](#41-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
+        - [4.2 修饰`io.vertx.core.Future`](#42-%e4%bf%ae%e9%a5%b0iovertxcoreFuture)
+        - [4.3 关于`boot class path`设置](#43-%E5%85%B3%E4%BA%8Eboot-class-path%E8%AE%BE%E7%BD%AE)
+        - [4.4 `Java`的启动参数配置](#44-java%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
@@ -195,7 +200,51 @@ String value = context.get();
 
 \# 完整可运行的Demo代码参见[`TtlExecutorWrapperDemo.kt`](src/test/java/com/alibaba/demo/ttl/TtlExecutorWrapperDemo.kt)。
 
-### 2.3 使用`Java Agent`来修饰`JDK`线程池实现类
+## 3. 保证异步io回调中传递值
+
+### 3.1 vert.x内的回调处理
+
+#### 修饰`io.vertx.core.Handler`
+
+使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/TtlVertxHandler.java)来修饰传入的`Handler`。
+示例代码：
+```java
+    Vertx vertx = Vertx.vertx();
+
+    //build channel
+    ManagedChannel channel = VertxChannelBuilder
+      .forAddress(vertx, "localhost", 8080)
+      .usePlaintext()
+      .build();
+
+    // set in parent thread
+    TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+    context.set("value-set-in-parent");
+
+    //init stub
+    io.grpc.stub.XXX stub = XXX.newVertxStub(channel);
+    HelloRequest request = HelloRequest.newBuilder().setName("Julien").build();
+
+    //init handler
+    Handler<AsyncResult<String>> handler = event -> {
+      // read in callback, value is "value-set-in-parent"
+      context.get();
+      if (event.succeeded()) {
+        //do something
+      } else {
+        // find exception
+      }
+    };
+    // extra work, create decorated TtlVertxHandler object
+    TtlVertxHandler<AsyncResult<String>> ttlVertxHandler = TtlVertxHandler.get(handler);
+
+    //send request
+    stub.sayHello(request).onComplete(ttlVertxHandler);
+```
+
+## 4 使用`Java Agent`实现代码无侵入实现
+
+### 4.1 使用`Java Agent`来修饰`JDK`线程池实现类
 
 这种方式，实现线程池的传递是透明的，业务代码中没有修饰`Runnable`或是线程池的代码。即可以做到应用代码 **无侵入**。  
 \# 关于 **无侵入** 的更多说明参见文档[`Java Agent`方式对应用代码无侵入](docs/developer-guide.md#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)。
@@ -245,7 +294,13 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 > `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
 > 如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
 
-#### 关于`boot class path`设置
+### 4.2 修饰`io.vertx.core.Future`
+
+修饰了的Vert.x执行器组件如下:
+- `io.vertx.core.Future` 
+    - 修饰实现代码在[`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
+    
+### 4.3 关于`boot class path`设置
 
 因为修饰了`JDK`标准库的类，标准库由`bootstrap class loader`加载；修饰后的`JDK`类引用了`TTL`的代码，所以`Java Agent`使用方式下`TTL Jar`文件需要配置到`boot class path`上。
 
@@ -266,7 +321,7 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
 - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 
-#### `Java`的启动参数配置
+### 4.4 `Java`的启动参数配置
 
 在`Java`的启动参数加上：`-javaagent:path/to/transmittable-thread-local-2.x.x.jar`。
 
