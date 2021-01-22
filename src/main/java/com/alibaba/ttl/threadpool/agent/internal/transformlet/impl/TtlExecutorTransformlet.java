@@ -6,6 +6,8 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.DeliveryOptions;
 import javassist.*;
 
 import java.io.IOException;
@@ -29,6 +31,9 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.Executors
  * @see io.netty.util.concurrent.SingleThreadEventExecutor
+ * @see io.vertx.core.eventbus.EventBus
+ * @see io.vertx.core.impl.EventLoopContext
+ * @see io.vertx.core.eventbus.Message
  * @since 2.5.1
  */
 public class TtlExecutorTransformlet implements JavassistTransformlet {
@@ -97,11 +102,11 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final String paramTypeName = parameterTypes[i].getName();
             if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
                 String code = String.format(
-                        // decorate to TTL wrapper,
-                        // and then set AutoWrapper attachment/Tag
-                        "$%d = %s.get($%1$d, false, true);"
-                                + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%1$d);",
-                        i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName));
+                    // decorate to TTL wrapper,
+                    // and then set AutoWrapper attachment/Tag
+                    "$%d = %s.get($%1$d, false, true);"
+                        + "\ncom.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%1$d);",
+                    i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName));
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ": " + code);
                 insertCode.append(code);
             }
