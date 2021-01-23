@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.alibaba.ttl.threadpool.agent.TtlAgentHelper.isBooleanOptionSet;
+
 /**
  * TTL Java Agent.
  *
@@ -134,7 +136,7 @@ public final class TtlAgent {
             transformletList.add(new ForkJoinTtlTransformlet(disableInheritableForThreadPool));
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
-            final ClassFileTransformer transformer = new TtlTransformer(transformletList);
+            final ClassFileTransformer transformer = new TtlTransformer(transformletList, isBooleanOptionSet(kvs, TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false));
             inst.addTransformer(transformer, true);
             logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
 
@@ -164,6 +166,8 @@ public final class TtlAgent {
     public static boolean isTtlAgentLoaded() {
         return ttlAgentLoaded;
     }
+
+    private static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
 
     private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
 

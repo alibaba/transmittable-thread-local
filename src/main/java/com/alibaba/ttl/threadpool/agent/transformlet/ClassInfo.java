@@ -65,4 +65,8 @@ public class ClassInfo {
     public void setModified() {
         this.modified = true;
     }
+
+    public ClassLoader getClassLoader() {
+        return loader;
+    }
 }
