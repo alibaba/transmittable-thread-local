@@ -34,8 +34,10 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final byte[] NO_TRANSFORM = null;
 
     private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
+    private final boolean logClassTransform;
 
-    TtlTransformer(List<? extends TtlTransformlet> transformletList) {
+    TtlTransformer(List<? extends TtlTransformlet> transformletList, boolean logClassTransform) {
+        this.logClassTransform = logClassTransform;
         for (TtlTransformlet ttlTransformlet : transformletList) {
             this.transformletList.add(ttlTransformlet);
             logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass() + " success");
@@ -50,8 +52,9 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classFile == null) return NO_TRANSFORM;
 
             final String className = toClassName(classFile);
-
-            ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
+            final ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
+            if (logClassTransform)
+                logger.info("[TtlTransformer] transforming " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
 
             for (TtlTransformlet transformlet : transformletList) {
                 transformlet.doTransform(classInfo);
