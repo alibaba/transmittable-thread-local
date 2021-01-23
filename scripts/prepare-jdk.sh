@@ -4,10 +4,10 @@
 set -eEuo pipefail
 
 [ -z "${__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836:+dummy}" ] || return 0
-export __source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836=true
+__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # shellcheck source=common.sh
-source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/common.sh"
+source "$__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836/common.sh"
 
 __loadSdkman() {
     local this_time_install_sdk_man=false

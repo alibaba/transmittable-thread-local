@@ -1,6 +1,6 @@
 #!/bin/bash
 [ -z "${__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98:+dummy}" ] || return 0
-__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98=true
+__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 
 set -eEuo pipefail
@@ -36,7 +36,7 @@ trap '__error_trap_handler_ "${BASH_SOURCE[*]} / $LINENO ${BASH_LINENO[*]}" "$?"
 
 
 ################################################################################
-# util functions
+# common util functions
 ################################################################################
 
 colorEcho() {
@@ -61,14 +61,37 @@ blueEcho() {
 
 headInfo() {
     colorEcho "0;34;46" ================================================================================
-    echo "$*"
+    yellowEcho "$*"
     colorEcho "0;34;46" ================================================================================
-    echo
+}
+
+# How to compare a program's version in a shell script?
+#   https://unix.stackexchange.com/questions/285924
+versionLessThan() {
+    (($# == 2)) || die "${FUNCNAME[0]} need only 2 arguments, actual arguments: $*"
+
+    local ver=$1
+    local destVer=$2
+
+    [ "$ver" = "$destVer" ] && return 1
+
+    [ "$(printf '%s\n' "$ver" "$destVer" | sort -V | head -n1)" = "$ver" ]
 }
 
 logAndRun() {
-    blueEcho "Run under work directory $PWD :$nl$*"
-    time "$@"
+    local simple_mode=false
+    [ "$1" = "-s" ] && {
+        simple_mode=true
+        shift
+    }
+
+    if $simple_mode; then
+        echo "Run under work directory $PWD : $*"
+        "$@"
+    else
+        blueEcho "Run under work directory $PWD :$nl$*"
+        time "$@"
+    fi
 }
 
 die() {

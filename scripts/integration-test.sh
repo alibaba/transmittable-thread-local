@@ -5,7 +5,7 @@ cd "$(dirname "$(readlink -f "$0")")"
 export TTL_CI_TEST_MODE=true
 
 source ./prepare-jdk.sh
-source ./common_build.sh "${1:-}"
+source ./ttl_build.sh "${1:-}"
 
 # default jdk 11, do build and test
 switch_to_jdk 11
