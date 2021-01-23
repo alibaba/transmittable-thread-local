@@ -33,10 +33,12 @@ public class TtlTransformer implements ClassFileTransformer {
     // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
     private static final byte[] NO_TRANSFORM = null;
 
+    private final TtlExtensionTransformletManager extensionTransformletManager;
     private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
     private final boolean logClassTransform;
 
-    TtlTransformer(List<? extends TtlTransformlet> transformletList, boolean logClassTransform) {
+    TtlTransformer(List<? extends TtlTransformlet> transformletList, List<String> extensionTransformletClassNameList, boolean logClassTransform) {
+        extensionTransformletManager = new TtlExtensionTransformletManager(extensionTransformletClassNameList);
         this.logClassTransform = logClassTransform;
         for (TtlTransformlet ttlTransformlet : transformletList) {
             this.transformletList.add(ttlTransformlet);
@@ -44,6 +46,11 @@ public class TtlTransformer implements ClassFileTransformer {
         }
     }
 
+    /**
+     * info about class loader: may be <code>null</code> if the bootstrap loader.
+     * <p>
+     * more info see {@link ClassFileTransformer#transform(java.lang.ClassLoader, java.lang.String, java.lang.Class, java.security.ProtectionDomain, byte[])}
+     */
     @Override
     public final byte[] transform(@Nullable final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
                                   final ProtectionDomain protectionDomain, @NonNull final byte[] classFileBuffer) {
@@ -56,12 +63,23 @@ public class TtlTransformer implements ClassFileTransformer {
             if (logClassTransform)
                 logger.info("[TtlTransformer] transforming " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
 
+            extensionTransformletManager.collectExtensionTransformlet(classInfo);
+
             for (TtlTransformlet transformlet : transformletList) {
                 transformlet.doTransform(classInfo);
-                if (classInfo.isModified()) return classInfo.getCtClass().toBytecode();
+                if (classInfo.isModified()) {
+                    logger.info("[TtlTransformer] modified " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
+                    return classInfo.getCtClass().toBytecode();
+                }
+            }
+
+            extensionTransformletManager.extensionTransformletDoTransform(classInfo);
+            if (classInfo.isModified()) {
+                logger.info("[TtlTransformer] modified " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
+                return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {
-            String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
+            String msg = "[TtlTransformer] fail to transform class " + classFile + ", cause: " + t.toString();
             logger.error(msg, t);
             throw new IllegalStateException(msg, t);
         }
