@@ -146,7 +146,7 @@ public final class TtlAgent {
             ttlAgentLoaded = true;
         } catch (Exception e) {
             String msg = "Fail to load TtlAgent , cause: " + e.toString();
-            logger.log(Level.SEVERE, msg, e);
+            logger.error(msg, e);
             throw new IllegalStateException(msg, e);
         }
     }

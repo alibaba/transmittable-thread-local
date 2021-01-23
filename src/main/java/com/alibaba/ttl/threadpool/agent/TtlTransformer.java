@@ -60,7 +60,7 @@ public class TtlTransformer implements ClassFileTransformer {
             }
         } catch (Throwable t) {
             String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
-            logger.log(Level.SEVERE, msg, t);
+            logger.error(msg, t);
             throw new IllegalStateException(msg, t);
         }
 

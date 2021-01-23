@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * logger adaptor for ttl java agent, internal use for ttl usage only!
+ * logger adaptor for ttl java agent, internal use for ttl agent only!
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.6.0
@@ -48,7 +48,23 @@ public abstract class Logger {
         log(Level.INFO, msg, null);
     }
 
-    public abstract void log(Level level, String msg, Throwable thrown);
+    public void warn(String msg) {
+        log(Level.WARNING, msg, null);
+    }
+
+    public void warn(String msg, Throwable thrown) {
+        log(Level.WARNING, msg, thrown);
+    }
+
+    public void error(String msg) {
+        log(Level.SEVERE, msg, null);
+    }
+
+    public void error(String msg, Throwable thrown) {
+        log(Level.SEVERE, msg, thrown);
+    }
+
+    protected abstract void log(Level level, String msg, Throwable thrown);
 
     private static class StdErrorLogger extends Logger {
         StdErrorLogger(Class<?> clazz) {
