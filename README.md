@@ -324,7 +324,7 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.0</version>
+    <version>2.12.1</version>
 </dependency>
 ```
 
@@ -359,7 +359,7 @@ mvn install
 ```bash
 java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
      -javaagent:path/to/skywalking-agent.jar \
-     -jar your_app.jar
+     -jar your-app.jar
 ```
 
 原因是：

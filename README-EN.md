@@ -48,7 +48,7 @@
 # 🔧 Functions
 
 👉 The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
-provide an enhanced `InheritableThreadLocal` that transmits `ThreadLocal` value between threads even using thread pooling components.
+provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components.
 Support `Java` 17/16/15/14/13/12/11/10/9/8/7/6.
 
 Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
@@ -285,7 +285,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.0</version>
+    <version>2.12.1</version>
 </dependency>
 ```
 
