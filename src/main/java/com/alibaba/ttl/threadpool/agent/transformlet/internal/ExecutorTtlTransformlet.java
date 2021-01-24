@@ -3,7 +3,7 @@ package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.*;
@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
 import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.signatureOfMethod;
 
 /**
- * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.Executor}.
+ * {@link TtlTransformlet} for {@link java.util.concurrent.Executor}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
@@ -30,8 +30,8 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.signa
  * @see java.util.concurrent.Executors
  * @since 2.5.1
  */
-public class TtlExecutorTransformlet implements JavassistTransformlet {
-    private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class);
+public class ExecutorTtlTransformlet implements TtlTransformlet {
+    private static final Logger logger = Logger.getLogger(ExecutorTtlTransformlet.class);
 
     private static final Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
     private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<String, String>();
@@ -51,7 +51,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
 
     private final boolean disableInheritableForThreadPool;
 
-    public TtlExecutorTransformlet(boolean disableInheritableForThreadPool) {
+    public ExecutorTtlTransformlet(boolean disableInheritableForThreadPool) {
         this.disableInheritableForThreadPool = disableInheritableForThreadPool;
     }
 
