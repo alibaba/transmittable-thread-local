@@ -1,7 +1,5 @@
 package com.alibaba.ttl.threadpool.agent.transformlet;
 
-import com.alibaba.ttl.TtlRunnable;
-import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -103,32 +101,6 @@ public final class TtlTransformletHelper {
     public static Object doCaptureIfNotTtlEnhanced(@Nullable Object obj) {
         if (obj instanceof TtlEnhanced) return null;
         else return capture();
-    }
-
-    public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
-        if (notTtlAttachments(ttlAttachment)) return;
-        ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
-    }
-
-    // ======== AutoWrapper Helper ========
-
-    @Nullable
-    public static Runnable unwrapIfIsAutoWrapper(@Nullable Runnable runnable) {
-        if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
-        else return runnable;
-    }
-
-    private static boolean notTtlAttachments(@Nullable Object ttlAttachment) {
-        return !(ttlAttachment instanceof TtlAttachments);
-    }
-
-    public static boolean isAutoWrapper(@Nullable Runnable ttlAttachments) {
-        if (notTtlAttachments(ttlAttachments)) return false;
-
-        final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
-        if (value == null) return false;
-
-        return value;
     }
 
     private TtlTransformletHelper() {
