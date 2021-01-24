@@ -4,6 +4,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.*;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.signatureOfMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.signatureOfMethod;
 
 /**
  * {@link TtlTransformlet} for {@link java.util.concurrent.Executor}.
@@ -82,7 +83,7 @@ public class ExecutorTtlTransformlet implements TtlTransformlet {
     /**
      * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
      * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
-     * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils#setAutoWrapperAttachment(Object)
+     * @see TtlTransformletHelper#setAutoWrapperAttachment(Object)
      */
     @SuppressFBWarnings("VA_FORMAT_STRING_USES_NEWLINE") // [ERROR] Format string should use %n rather than \n
     private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@NonNull final CtMethod method) throws NotFoundException, CannotCompileException {
@@ -98,7 +99,7 @@ public class ExecutorTtlTransformlet implements TtlTransformlet {
                         // decorate to TTL wrapper,
                         // and then set AutoWrapper attachment/Tag
                         "    $%d = %s.get($%1$d, false, true);"
-                                + "\n    com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.setAutoWrapperAttachment($%1$d);",
+                                + "\n    com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.setAutoWrapperAttachment($%1$d);",
                         i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName));
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);
@@ -127,7 +128,7 @@ public class ExecutorTtlTransformlet implements TtlTransformlet {
     }
 
     /**
-     * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils#unwrapIfIsAutoWrapper(Runnable)
+     * @see TtlTransformletHelper#unwrapIfIsAutoWrapper(Runnable)
      */
     private boolean updateBeforeAndAfterExecuteMethodOfExecutorSubclass(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {
         final CtClass runnableClass = clazz.getClassPool().get(RUNNABLE_CLASS_NAME);
@@ -138,7 +139,7 @@ public class ExecutorTtlTransformlet implements TtlTransformlet {
         try {
             final CtMethod beforeExecute = clazz.getDeclaredMethod("beforeExecute", new CtClass[]{threadClass, runnableClass});
             // unwrap runnable if IsAutoWrapper
-            String code = "$2 = com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.unwrapIfIsAutoWrapper($2);";
+            String code = "$2 = com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.unwrapIfIsAutoWrapper($2);";
             logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " + beforeExecute.getDeclaringClass().getName() + ": " + code);
             beforeExecute.insertBefore(code);
             modified = true;
@@ -149,7 +150,7 @@ public class ExecutorTtlTransformlet implements TtlTransformlet {
         try {
             final CtMethod afterExecute = clazz.getDeclaredMethod("afterExecute", new CtClass[]{runnableClass, throwableClass});
             // unwrap runnable if IsAutoWrapper
-            String code = "$1 = com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.unwrapIfIsAutoWrapper($1);";
+            String code = "$1 = com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.unwrapIfIsAutoWrapper($1);";
             logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " + afterExecute.getDeclaringClass().getName() + ": " + code);
             afterExecute.insertBefore(code);
             modified = true;
