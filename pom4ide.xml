@@ -299,7 +299,7 @@
 							<relocations>
 								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.threadpool.agent.javassist</shadedPattern>
+									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>

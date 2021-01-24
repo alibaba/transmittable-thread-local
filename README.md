@@ -240,12 +240,12 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
 目前`TTL Agent`中，修饰了的`JDK`执行器组件（即如线程池）如下：
 
 1. `java.util.concurrent.ThreadPoolExecutor` 和 `java.util.concurrent.ScheduledThreadPoolExecutor`
-    - 修饰实现代码在[`TtlExecutorTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/TtlExecutorTransformlet.java)。
+    - 修饰实现代码在[`ExecutorTtlTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/ExecutorTtlTransformlet.java)。
 1. `java.util.concurrent.ForkJoinTask`（对应的执行器组件是`java.util.concurrent.ForkJoinPool`）
-    - 修饰实现代码在[`TtlForkJoinTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/TtlForkJoinTransformlet.java)。从版本 **_`2.5.1`_** 开始支持。
+    - 修饰实现代码在[`ForkJoinTtlTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/ForkJoinTtlTransformlet.java)。从版本 **_`2.5.1`_** 开始支持。
     - **_注意_**：`Java 8`引入的[**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html)与（并行执行的）[**_`Stream`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html)底层是通过`ForkJoinPool`来执行，所以支持`ForkJoinPool`后，`TTL`也就透明支持了`CompletableFuture`与`Stream`。🎉
 1. `java.util.TimerTask`的子类（对应的执行器组件是`java.util.Timer`）
-    - 修饰实现代码在[`TtlTimerTaskTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/TtlTimerTaskTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
+    - 修饰实现代码在[`TimerTaskTtlTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/transformlet/internal/TimerTaskTtlTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
     - **_注意_**：从`2.11.2`版本开始缺省开启`TimerTask`的修饰（因为保证正确性是第一位，而不是最佳实践『不推荐使用`TimerTask`』:）；`2.11.1`版本及其之前的版本没有缺省开启`TimerTask`的修饰。
     - 使用`Agent`参数`ttl.agent.enable.timer.task`开启/关闭`TimerTask`的修饰：
         - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true`

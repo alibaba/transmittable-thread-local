@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlTimerTaskTransformlet
+ * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.TimerTaskTtlTransformlet
  */
 fun main() {
     val timer = Timer(true)

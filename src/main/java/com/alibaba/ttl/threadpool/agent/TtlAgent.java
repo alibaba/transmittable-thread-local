@@ -1,10 +1,10 @@
 package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlExecutorTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlForkJoinTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlTimerTaskTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.ExecutorTtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.ForkJoinTtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.TimerTaskTtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -131,10 +131,10 @@ public final class TtlAgent {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
             final boolean disableInheritableForThreadPool = isDisableInheritableForThreadPool();
 
-            final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
-            transformletList.add(new TtlExecutorTransformlet(disableInheritableForThreadPool));
-            transformletList.add(new TtlForkJoinTransformlet(disableInheritableForThreadPool));
-            if (isEnableTimerTask()) transformletList.add(new TtlTimerTaskTransformlet());
+            final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
+            transformletList.add(new ExecutorTtlTransformlet(disableInheritableForThreadPool));
+            transformletList.add(new ForkJoinTtlTransformlet(disableInheritableForThreadPool));
+            if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList);
             inst.addTransformer(transformer, true);

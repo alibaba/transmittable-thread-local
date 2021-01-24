@@ -2,7 +2,7 @@ package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -33,12 +33,12 @@ public class TtlTransformer implements ClassFileTransformer {
     // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
     private static final byte[] NO_TRANSFORM = null;
 
-    private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
+    private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
 
-    TtlTransformer(List<? extends JavassistTransformlet> transformletList) {
-        for (JavassistTransformlet transformlet : transformletList) {
-            this.transformletList.add(transformlet);
-            logger.info("[TtlTransformer] add Transformlet " + transformlet.getClass() + " success");
+    TtlTransformer(List<? extends TtlTransformlet> transformletList) {
+        for (TtlTransformlet ttlTransformlet : transformletList) {
+            this.transformletList.add(ttlTransformlet);
+            logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass() + " success");
         }
     }
 
@@ -53,7 +53,7 @@ public class TtlTransformer implements ClassFileTransformer {
 
             ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
 
-            for (JavassistTransformlet transformlet : transformletList) {
+            for (TtlTransformlet transformlet : transformletList) {
                 transformlet.doTransform(classInfo);
                 if (classInfo.isModified()) return classInfo.getCtClass().toBytecode();
             }

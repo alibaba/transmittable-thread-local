@@ -7,11 +7,11 @@ import javassist.NotFoundException;
 import java.io.IOException;
 
 /**
- * TTL {@code Transformlet} by {@code Javassist}.
+ * TTL {@code Transformlet}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 2.5.1
+ * @since 2.13.0
  */
-public interface JavassistTransformlet {
-    void doTransform(@NonNull ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException;
+public interface TtlTransformlet {
+    void doTransform(@NonNull ClassInfo classInfo) throws CannotCompileException, NotFoundException, IOException;
 }

@@ -2,7 +2,7 @@ package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doTryFinallyForMethod;
 
 /**
- * TTL {@link JavassistTransformlet} for {@link java.util.TimerTask}.
+ * {@link TtlTransformlet} for {@link java.util.TimerTask}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
@@ -19,8 +19,8 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doTry
  * @see java.util.Timer
  * @since 2.7.0
  */
-public class TtlTimerTaskTransformlet implements JavassistTransformlet {
-    private static final Logger logger = Logger.getLogger(TtlTimerTaskTransformlet.class);
+public class TimerTaskTtlTransformlet implements TtlTransformlet {
+    private static final Logger logger = Logger.getLogger(TimerTaskTtlTransformlet.class);
 
     private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";
     private static final String RUN_METHOD_NAME = "run";

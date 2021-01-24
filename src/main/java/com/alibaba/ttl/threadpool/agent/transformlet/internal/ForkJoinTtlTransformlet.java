@@ -3,7 +3,7 @@ package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
@@ -12,7 +12,7 @@ import java.io.IOException;
 import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.*;
 
 /**
- * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
+ * {@link TtlTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
@@ -20,8 +20,8 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.*;
  * @see java.util.concurrent.ForkJoinTask
  * @since 2.5.1
  */
-public class TtlForkJoinTransformlet implements JavassistTransformlet {
-    private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
+public class ForkJoinTtlTransformlet implements TtlTransformlet {
+    private static final Logger logger = Logger.getLogger(ForkJoinTtlTransformlet.class);
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
     private static final String FORK_JOIN_POOL_CLASS_NAME = "java.util.concurrent.ForkJoinPool";
@@ -29,7 +29,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
 
     private final boolean disableInheritableForThreadPool;
 
-    public TtlForkJoinTransformlet(boolean disableInheritableForThreadPool) {
+    public ForkJoinTtlTransformlet(boolean disableInheritableForThreadPool) {
         this.disableInheritableForThreadPool = disableInheritableForThreadPool;
     }
 

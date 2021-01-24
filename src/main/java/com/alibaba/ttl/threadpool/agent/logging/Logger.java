@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * logger adaptor for ttl java agent, internal use for ttl agent only!
+ * Logger adaptor for ttl TTL agent/transformlet. Only use for TTL agent/transformlet!
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet
+ * @see com.alibaba.ttl.threadpool.agent.TtlAgent
  * @since 2.6.0
  */
 public abstract class Logger {
