@@ -10,6 +10,9 @@ import javassist.*;
 
 import java.io.IOException;
 
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.addTryFinallyToMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.signatureOfMethod;
+
 /**
  * {@link TtlTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
  *
@@ -65,7 +68,8 @@ public class ForkJoinTtlTransformlet implements TtlTransformlet {
 
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        TtlTransformletHelper.doTryFinallyForMethod(doExecMethod, doExec_renamed_method_name, beforeCode, finallyCode);
+        final String code = addTryFinallyToMethod(doExecMethod, doExec_renamed_method_name, beforeCode, finallyCode);
+        logger.info("insert code around method " + signatureOfMethod(doExecMethod) + " of class " + clazz.getName() + ": " + code);
     }
 
     private void updateConstructorDisableInheritable(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {

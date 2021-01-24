@@ -9,7 +9,8 @@ import javassist.*;
 
 import java.io.IOException;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.doTryFinallyForMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.addTryFinallyToMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.signatureOfMethod;
 
 /**
  * {@link TtlTransformlet} for {@link java.util.TimerTask}.
@@ -67,6 +68,7 @@ public class TimerTaskTtlTransformlet implements TtlTransformlet {
         final String beforeCode = "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        doTryFinallyForMethod(runMethod, beforeCode, finallyCode);
+        final String code = addTryFinallyToMethod(runMethod, beforeCode, finallyCode);
+        logger.info("insert code around method " + signatureOfMethod(runMethod) + " of class " + clazz.getName() + ": " + code);
     }
 }
