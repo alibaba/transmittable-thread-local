@@ -3,12 +3,12 @@ package com.alibaba.ttl.threadpool.agent
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.support.junit.conditional.IsAgentRun
-import com.alibaba.ttl.threadpool.agent.TtlAgent.splitCommaColonStringToKV
+import com.alibaba.ttl.threadpool.agent.TtlAgentHelper.splitCommaColonStringToKV
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
-class TtlAgentTest {
+class TtlAgentHelperTest {
     @Rule
     @JvmField
     val rule = ConditionalIgnoreRule()

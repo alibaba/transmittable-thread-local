@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent.transformlet.internal;
+package com.alibaba.ttl.threadpool.agent.transformlet;
 
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
@@ -13,21 +13,25 @@ import java.lang.reflect.Modifier;
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
 
 /**
+ * Helper methods for {@link TtlTransformlet} implementation.
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 2.6.0
+ * @since 2.13.0
  */
-public class Utils {
-    private static final Logger logger = Logger.getLogger(Utils.class);
+public final class TtlTransformletHelper {
+    private static final Logger logger = Logger.getLogger(TtlTransformletHelper.class);
+
+    // ======== Javassist Object ToString Helper ========
 
     /**
-     * String like {@code public ScheduledFuture scheduleAtFixedRate(Runnable, long, long, TimeUnit)}
+     * Output string like {@code public ScheduledFuture scheduleAtFixedRate(Runnable, long, long, TimeUnit)}
      * for {@link  java.util.concurrent.ScheduledThreadPoolExecutor#scheduleAtFixedRate}.
      *
      * @param method method object
      * @return method signature string
      */
     @NonNull
-    static String signatureOfMethod(@NonNull final CtBehavior method) throws NotFoundException {
+    public static String signatureOfMethod(@NonNull final CtBehavior method) throws NotFoundException {
         final StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(Modifier.toString(method.getModifiers()));
@@ -48,16 +52,18 @@ public class Utils {
         return stringBuilder.toString();
     }
 
+    // ======== Method Transform Helper ========
+
     @NonNull
-    static String renamedMethodNameByTtl(@NonNull CtMethod method) {
+    public static String renamedMethodNameByTtl(@NonNull CtMethod method) {
         return "original$" + method.getName() + "$method$renamed$by$ttl";
     }
 
-    static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
+    public static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
     }
 
-    static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String renamedMethodName, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
+    public static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String renamedMethodName, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
         final CtMethod newMethod = CtNewMethod.copy(method, clazz, null);
 
@@ -87,8 +93,10 @@ public class Utils {
         logger.info("insert code around method " + signatureOfMethod(newMethod) + " of class " + clazz.getName() + ": " + code);
     }
 
+    // ======== CRR Helper ========
+
     @Nullable
-    public static Object doCaptureWhenNotTtlEnhanced(@Nullable Object obj) {
+    public static Object doCaptureIfNotTtlEnhanced(@Nullable Object obj) {
         if (obj instanceof TtlEnhanced) return null;
         else return capture();
     }
@@ -97,6 +105,8 @@ public class Utils {
         if (notTtlAttachments(ttlAttachment)) return;
         ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
     }
+
+    // ======== AutoWrapper Helper ========
 
     @Nullable
     public static Runnable unwrapIfIsAutoWrapper(@Nullable Runnable runnable) {
@@ -108,12 +118,16 @@ public class Utils {
         return !(ttlAttachment instanceof TtlAttachments);
     }
 
-    private static boolean isAutoWrapper(@Nullable Runnable ttlAttachments) {
+    public static boolean isAutoWrapper(@Nullable Runnable ttlAttachments) {
         if (notTtlAttachments(ttlAttachments)) return false;
 
         final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
         if (value == null) return false;
 
         return value;
+    }
+
+    private TtlTransformletHelper() {
+        throw new InstantiationError("Must not instantiate this class");
     }
 }

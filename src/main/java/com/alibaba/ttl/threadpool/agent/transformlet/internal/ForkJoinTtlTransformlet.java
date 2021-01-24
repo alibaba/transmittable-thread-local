@@ -4,12 +4,11 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
 import java.io.IOException;
-
-import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.*;
 
 /**
  * {@link TtlTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
@@ -45,7 +44,7 @@ public class ForkJoinTtlTransformlet implements TtlTransformlet {
     }
 
     /**
-     * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
+     * @see TtlTransformletHelper#doCaptureIfNotTtlEnhanced(Object)
      */
     private void updateForkJoinTaskClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
@@ -53,11 +52,11 @@ public class ForkJoinTtlTransformlet implements TtlTransformlet {
         // add new field
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
-        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doCaptureWhenNotTtlEnhanced(this);");
+        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.doCaptureIfNotTtlEnhanced(this);");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
-        final String doExec_renamed_method_name = renamedMethodNameByTtl(doExecMethod);
+        final String doExec_renamed_method_name = TtlTransformletHelper.renamedMethodNameByTtl(doExecMethod);
 
         final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" + // if the class is already TTL enhanced(eg: com.alibaba.ttl.TtlRecursiveTask)
                 "    return " + doExec_renamed_method_name + "($$);\n" +                           // return directly/do nothing
@@ -66,7 +65,7 @@ public class ForkJoinTtlTransformlet implements TtlTransformlet {
 
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";
 
-        doTryFinallyForMethod(doExecMethod, doExec_renamed_method_name, beforeCode, finallyCode);
+        TtlTransformletHelper.doTryFinallyForMethod(doExecMethod, doExec_renamed_method_name, beforeCode, finallyCode);
     }
 
     private void updateConstructorDisableInheritable(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {
@@ -77,7 +76,7 @@ public class ForkJoinTtlTransformlet implements TtlTransformlet {
                 final String paramTypeName = parameterTypes[i].getName();
                 if (FORK_JOIN_WORKER_THREAD_FACTORY_CLASS_NAME.equals(paramTypeName)) {
                     String code = String.format("$%d = com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper.getDisableInheritableForkJoinWorkerThreadFactory($%<d);", i + 1);
-                    logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
+                    logger.info("insert code before method " + TtlTransformletHelper.signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
                     insertCode.append(code);
                 }
             }

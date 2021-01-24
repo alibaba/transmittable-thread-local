@@ -3,12 +3,13 @@ package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
 import java.io.IOException;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doTryFinallyForMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.doTryFinallyForMethod;
 
 /**
  * {@link TtlTransformlet} for {@link java.util.TimerTask}.
@@ -50,7 +51,7 @@ public class TimerTaskTtlTransformlet implements TtlTransformlet {
     }
 
     /**
-     * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
+     * @see TtlTransformletHelper#doCaptureIfNotTtlEnhanced(Object)
      */
     private void updateTimerTaskClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
@@ -58,7 +59,7 @@ public class TimerTaskTtlTransformlet implements TtlTransformlet {
         // add new field
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
-        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doCaptureWhenNotTtlEnhanced(this);");
+        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.doCaptureIfNotTtlEnhanced(this);");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod runMethod = clazz.getDeclaredMethod(RUN_METHOD_NAME, new CtClass[0]);
