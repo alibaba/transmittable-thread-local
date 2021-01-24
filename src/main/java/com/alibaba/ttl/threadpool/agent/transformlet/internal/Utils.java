@@ -1,9 +1,9 @@
-package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
+package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import javassist.*;
