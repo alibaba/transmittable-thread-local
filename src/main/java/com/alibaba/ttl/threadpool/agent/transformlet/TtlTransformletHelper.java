@@ -3,7 +3,6 @@ package com.alibaba.ttl.threadpool.agent.transformlet;
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
-import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import javassist.*;
@@ -19,7 +18,6 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
  * @since 2.13.0
  */
 public final class TtlTransformletHelper {
-    private static final Logger logger = Logger.getLogger(TtlTransformletHelper.class);
 
     // ======== Javassist Object ToString Helper ========
 
@@ -59,20 +57,26 @@ public final class TtlTransformletHelper {
         return "original$" + method.getName() + "$method$renamed$by$ttl";
     }
 
-    public static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
-        doTryFinallyForMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
+    public static String addTryFinallyToMethod(@NonNull CtMethod method, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
+        return addTryFinallyToMethod(method, renamedMethodNameByTtl(method), beforeCode, finallyCode);
     }
 
-    public static void doTryFinallyForMethod(@NonNull CtMethod method, @NonNull String renamedMethodName, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
+    /**
+     * Add {@code try-finally} logic to method.
+     *
+     * @return the body code of method rewritten
+     */
+    public static String addTryFinallyToMethod(@NonNull CtMethod method, @NonNull String nameForOriginalMethod, @NonNull String beforeCode, @NonNull String finallyCode) throws CannotCompileException, NotFoundException {
         final CtClass clazz = method.getDeclaringClass();
-        final CtMethod newMethod = CtNewMethod.copy(method, clazz, null);
 
+        final CtMethod newMethod = CtNewMethod.copy(method, clazz, null);
         // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
-        method.setName(renamedMethodName);
-        method.setModifiers(method.getModifiers()
+        newMethod.setName(nameForOriginalMethod);
+        newMethod.setModifiers(newMethod.getModifiers()
                 & ~Modifier.PUBLIC /* remove public */
                 & ~Modifier.PROTECTED /* remove protected */
                 | Modifier.PRIVATE /* add private */);
+        clazz.addMethod(newMethod);
 
         final String returnOp;
         if (method.getReturnType() == CtClass.voidType) {
@@ -84,13 +88,13 @@ public final class TtlTransformletHelper {
         final String code = "{\n" +
                 beforeCode + "\n" +
                 "try {\n" +
-                "    " + returnOp + renamedMethodName + "($$);\n" +
+                "    " + returnOp + nameForOriginalMethod + "($$);\n" +
                 "} finally {\n" +
                 "    " + finallyCode + "\n" +
                 "} }";
-        newMethod.setBody(code);
-        clazz.addMethod(newMethod);
-        logger.info("insert code around method " + signatureOfMethod(newMethod) + " of class " + clazz.getName() + ": " + code);
+        method.setBody(code);
+
+        return code;
     }
 
     // ======== CRR Helper ========
