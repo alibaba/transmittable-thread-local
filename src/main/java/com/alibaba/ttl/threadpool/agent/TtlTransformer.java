@@ -1,8 +1,8 @@
 package com.alibaba.ttl.threadpool.agent;
 
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
+import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -11,7 +11,6 @@ import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent

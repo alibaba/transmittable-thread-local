@@ -1,10 +1,10 @@
 package com.alibaba.ttl.threadpool.agent;
 
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet;
+import com.alibaba.ttl.threadpool.agent.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlExecutorTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlForkJoinTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.TtlTimerTaskTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * TTL Java Agent.

@@ -1,15 +1,15 @@
-package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
+package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
-import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
-import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.logging.Logger;
+import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
+import com.alibaba.ttl.threadpool.agent.transformlet.JavassistTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
 import java.io.IOException;
 
-import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
+import static com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.*;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.concurrent.ForkJoinTask}.
@@ -53,7 +53,7 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
         // add new field
         final String capturedFieldName = "captured$field$added$by$ttl";
         final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
-        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doCaptureWhenNotTtlEnhanced(this);");
+        clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.transformlet.internal.Utils.doCaptureWhenNotTtlEnhanced(this);");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);

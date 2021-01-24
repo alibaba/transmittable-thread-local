@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent.internal.logging;
+package com.alibaba.ttl.threadpool.agent.logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

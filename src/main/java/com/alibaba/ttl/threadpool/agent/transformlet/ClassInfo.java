@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent.internal.transformlet;
+package com.alibaba.ttl.threadpool.agent.transformlet;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 2.11.0
+ * @since 2.13.0
  */
 public class ClassInfo {
     private final String className;
@@ -20,7 +20,7 @@ public class ClassInfo {
     private final ClassLoader loader;
 
     // SuppressFBWarnings for classFileBuffer parameter:
-    //   [ERROR] new com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo(String, byte[], ClassLoader)
+    //   [ERROR] new com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo(String, byte[], ClassLoader)
     //   may expose internal representation by storing an externally mutable object
     //   into ClassInfo.classFileBuffer
     public ClassInfo(@NonNull String className, @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
