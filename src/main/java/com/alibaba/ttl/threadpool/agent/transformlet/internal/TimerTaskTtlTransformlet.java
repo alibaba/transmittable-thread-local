@@ -21,7 +21,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelpe
  * @see java.util.Timer
  * @since 2.7.0
  */
-public class TimerTaskTtlTransformlet implements TtlTransformlet {
+public final class TimerTaskTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(TimerTaskTtlTransformlet.class);
 
     private static final String TIMER_TASK_CLASS_NAME = "java.util.TimerTask";

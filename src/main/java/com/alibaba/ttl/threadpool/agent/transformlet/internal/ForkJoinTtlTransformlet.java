@@ -22,7 +22,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelpe
  * @see java.util.concurrent.ForkJoinTask
  * @since 2.5.1
  */
-public class ForkJoinTtlTransformlet implements TtlTransformlet {
+public final class ForkJoinTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(ForkJoinTtlTransformlet.class);
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
