@@ -3,7 +3,6 @@ package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.*;
 
@@ -52,7 +51,7 @@ public final class TimerTaskTtlTransformlet implements TtlTransformlet {
     }
 
     /**
-     * @see TtlTransformletHelper#doCaptureIfNotTtlEnhanced(Object)
+     * @see com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper#doCaptureIfNotTtlEnhanced(Object)
      */
     private void updateTimerTaskClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
