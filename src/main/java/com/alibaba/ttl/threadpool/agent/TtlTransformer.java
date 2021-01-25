@@ -12,6 +12,8 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
  *
@@ -61,21 +63,27 @@ public class TtlTransformer implements ClassFileTransformer {
             final String className = toClassName(classFile);
             final ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
             if (logClassTransform)
-                logger.info("[TtlTransformer] transforming " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
+                logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
+                    + " from classloader " + classInfo.getClassLoader()
+                    + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
 
             extensionTransformletManager.collectExtensionTransformlet(classInfo);
 
             for (TtlTransformlet transformlet : transformletList) {
                 transformlet.doTransform(classInfo);
                 if (classInfo.isModified()) {
-                    logger.info("[TtlTransformer] modified " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
+                    logger.info("[TtlTransformer] " + transformlet.getClass().getName() + " transformed " + classInfo.getClassName()
+                        + " from classloader " + classInfo.getClassLoader()
+                        + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
                     return classInfo.getCtClass().toBytecode();
                 }
             }
 
-            extensionTransformletManager.extensionTransformletDoTransform(classInfo);
+            final String transformlet = extensionTransformletManager.extensionTransformletDoTransform(classInfo);
             if (classInfo.isModified()) {
-                logger.info("[TtlTransformer] modified " + classInfo.getClassName() + " of classloader " + classInfo.getClassLoader());
+                logger.info("[TtlTransformer] " + transformlet + " transformed " + classInfo.getClassName()
+                    + " from classloader " + classInfo.getClassLoader()
+                    + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
                 return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {

@@ -8,10 +8,13 @@ import javassist.CannotCompileException;
 import javassist.NotFoundException;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -36,8 +39,8 @@ final class TtlExtensionTransformletManager {
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) {
         final ClassLoader classLoader = classInfo.getClassLoader();
-        // class loader may null be if the bootstrap loader,
-        // which class loader must contains NO Ttl Agent Extension Transformlet, so just safe skip
+        // classloader may null be if the bootstrap loader,
+        // which classloader must contains NO Ttl Agent Extension Transformlet, so just safe skip
         if (classLoader == null) return;
 
         ConcurrentMap<String, ExtensionTransformletInfo> className2Instance = classLoader2ClassName2Transformlet.get(classLoader);
@@ -58,28 +61,39 @@ final class TtlExtensionTransformletManager {
 
                 final Class<?> clazz = classLoader.loadClass(transformletClassName);
                 if (!TtlTransformlet.class.isAssignableFrom(clazz)) {
-                    final String msg = foundMsgHead + transformletClassName + " from class loader " + classLoader
+                    final String msg = foundMsgHead + transformletClassName
+                        + " from classloader " + classInfo.getClassLoader()
+                        + " at location " + getLocationUrlOfClass(clazz)
                         + ", but NOT subtype of " + TtlTransformlet.class.getName() + ", ignored!";
                     logger.error(msg);
                     continue;
                 }
 
-                extensionTransformletInfo.transformlet = (TtlTransformlet) clazz.newInstance();
-                final String msg = foundMsgHead + transformletClassName + ", and loaded from class loader " + classLoader;
+                extensionTransformletInfo.transformlet = (TtlTransformlet) clazz.getDeclaredConstructor().newInstance();
+                final String msg = foundMsgHead + transformletClassName
+                    + ", and loaded from classloader " + classInfo.getClassLoader()
+                    + " at location " + getLocationUrlOfClass(clazz);
                 logger.info(msg);
             } catch (ClassNotFoundException e) {
-                // do nothing
+                final String msg = failMsgHead + transformletClassName + " from classloader " + classLoader + ", cause: " + e.toString();
+                logger.warn(msg, e);
             } catch (IllegalAccessException e) {
-                final String msg = failMsgHead + transformletClassName + " from class loader " + classLoader + ", cause: " + e.toString();
+                final String msg = failMsgHead + transformletClassName + " from classloader " + classLoader + ", cause: " + e.toString();
                 logger.error(msg, e);
             } catch (InstantiationException e) {
-                final String msg = failMsgHead + transformletClassName + " from class loader " + classLoader + ", cause: " + e.toString();
+                final String msg = failMsgHead + transformletClassName + " from classloader " + classLoader + ", cause: " + e.toString();
+                logger.error(msg, e);
+            } catch (NoSuchMethodException e) {
+                final String msg = failMsgHead + transformletClassName + " from classloader " + classLoader + ", cause: " + e.toString();
+                logger.error(msg, e);
+            } catch (InvocationTargetException e) {
+                final String msg = failMsgHead + transformletClassName + " from classloader " + classLoader + ", cause: " + e.toString();
                 logger.error(msg, e);
             }
         }
     }
 
-    public void extensionTransformletDoTransform(@NonNull final ClassInfo classInfo) throws NotFoundException, CannotCompileException, IOException {
+    public String extensionTransformletDoTransform(@NonNull final ClassInfo classInfo) throws NotFoundException, CannotCompileException, IOException {
         for (final Map.Entry<ClassLoader, ConcurrentMap<String, ExtensionTransformletInfo>> entry : classLoader2ClassName2Transformlet.entrySet()) {
             final ClassLoader classLoader = entry.getKey();
             if (classInfo.getClassLoader() != classLoader) continue;
@@ -88,6 +102,7 @@ final class TtlExtensionTransformletManager {
             if (className2Transformlet == null) continue;
 
             for (final Map.Entry<String, ExtensionTransformletInfo> ee : className2Transformlet.entrySet()) {
+                final String className = ee.getKey();
                 final ExtensionTransformletInfo extensionTransformletInfo = ee.getValue();
                 if (extensionTransformletInfo == null) continue;
 
@@ -95,7 +110,12 @@ final class TtlExtensionTransformletManager {
                 if (transformlet == null) continue;
 
                 transformlet.doTransform(classInfo);
+                if (classInfo.isModified()) {
+                    return className;
+                }
             }
         }
+
+        return null;
     }
 }
