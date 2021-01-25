@@ -407,7 +407,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>gen-src+doc</id>
+			<id>gen-src</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
@@ -438,6 +438,19 @@
 							</execution>
 						</executions>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-javadoc</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
