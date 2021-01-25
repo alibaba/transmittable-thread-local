@@ -8,6 +8,9 @@ import javassist.CannotCompileException;
 import javassist.NotFoundException;
 
 import java.io.IOException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,14 +69,16 @@ final class TtlExtensionTransformletManager {
 
                 final Class<?> clazz = classLoader.loadClass(transformletClassName);
                 if (!TtlTransformlet.class.isAssignableFrom(clazz)) {
-                    final String msg = foundMsgHead + transformletClassName + " from class loader " + classLoader
+                    final String msg = foundMsgHead + transformletClassName
+                        + " from class loader " + classLoader + " @ " + getFileLocationOfClass(clazz)
                         + ", but NOT subtype of " + TtlTransformlet.class.getName() + ", ignored!";
                     logger.error(msg);
                     continue;
                 }
 
                 extensionTransformletInfo.transformlet = (TtlTransformlet) clazz.newInstance();
-                final String msg = foundMsgHead + transformletClassName + ", and loaded from class loader " + classLoader;
+                final String msg = foundMsgHead + transformletClassName
+                    + ", and loaded from class loader " + classLoader + " @ " + getFileLocationOfClass(clazz);
                 logger.info(msg);
             } catch (ClassNotFoundException e) {
                 // do nothing
@@ -105,5 +110,17 @@ final class TtlExtensionTransformletManager {
                 transformlet.doTransform(classInfo);
             }
         }
+    }
+
+    private static String getFileLocationOfClass(Class<?> clazz) {
+        final ProtectionDomain protectionDomain = clazz.getProtectionDomain();
+        if (protectionDomain == null) return null;
+
+        final CodeSource codeSource = protectionDomain.getCodeSource();
+        if (codeSource == null) return null;
+
+        final URL location = codeSource.getLocation();
+        if (location == null) return null;
+        return location.getFile();
     }
 }
