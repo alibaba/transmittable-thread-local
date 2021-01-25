@@ -130,11 +130,9 @@ public final class TtlAgent {
 
         try {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
-            final boolean disableInheritableForThreadPool = isDisableInheritableForThreadPool();
-
             final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
-            transformletList.add(new JdkExecutorTtlTransformlet(disableInheritableForThreadPool));
-            transformletList.add(new ForkJoinTtlTransformlet(disableInheritableForThreadPool));
+            transformletList.add(new JdkExecutorTtlTransformlet());
+            transformletList.add(new ForkJoinTtlTransformlet());
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList, getStringListOptionValue(kvs, TTL_AGENT_EXTENSION_TRANSFORMLET_LIST), isBooleanOptionSet(kvs, TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false));
