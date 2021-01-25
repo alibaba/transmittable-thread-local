@@ -29,13 +29,14 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(VertxFutureTtlTransformlet.class);
 
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
+    private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
 
     @Override
     public void doTransform(@NonNull ClassInfo classInfo) throws CannotCompileException, NotFoundException, IOException {
         // FIXME: add logic for subclasses of Future
 
         final CtClass clazz = classInfo.getCtClass();
-        if ("io.vertx.core.Future".contains(classInfo.getClassName())) {
+        if (FUTURE_CLASS_NAME.contains(classInfo.getClassName())) {
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateSetHandlerMethodsOfFutureClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(method);
             }
@@ -45,7 +46,7 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
 
     private void updateSetHandlerMethodsOfFutureClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
+        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || Modifier.isAbstract(modifiers)) return;
 
         CtClass[] parameterTypes = method.getParameterTypes();
         StringBuilder insertCode = new StringBuilder();
