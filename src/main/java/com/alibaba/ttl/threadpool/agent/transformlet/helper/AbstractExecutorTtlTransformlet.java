@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformletHelper.signatureOfMethod;
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
 /**
  * Abstract {@link TtlTransformlet} for {@link java.util.concurrent.Executor} and its subclass.
