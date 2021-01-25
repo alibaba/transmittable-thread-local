@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.alibaba.ttl.threadpool.agent.TtlAgentHelper.getStringListOptionValue;
-import static com.alibaba.ttl.threadpool.agent.TtlAgentHelper.isBooleanOptionSet;
-
 /**
  * TTL Java Agent.
  *
@@ -130,12 +127,15 @@ public final class TtlAgent {
 
         try {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
+
             final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
             transformletList.add(new JdkExecutorTtlTransformlet());
             transformletList.add(new ForkJoinTtlTransformlet());
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
-            final ClassFileTransformer transformer = new TtlTransformer(transformletList, getStringListOptionValue(kvs, TTL_AGENT_EXTENSION_TRANSFORMLET_LIST), isBooleanOptionSet(kvs, TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false));
+            final ClassFileTransformer transformer = new TtlTransformer(transformletList,
+                getOptionStringListValues(TTL_AGENT_EXTENSION_TRANSFORMLET_LIST),
+                isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false));
             inst.addTransformer(transformer, true);
             logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
 
@@ -186,16 +186,53 @@ public final class TtlAgent {
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
-        return TtlAgentHelper.isBooleanOptionSet(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY, false);
+        return isBooleanOptionSet(TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY, false);
     }
 
     /**
      * Whether timer task is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     * <p>
+     * Same as {@code isBooleanOptionSet(TTL_AGENT_ENABLE_TIMER_TASK_KEY, true)}
      *
+     * @see java.util.Timer
+     * @see java.util.TimerTask
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
-        return TtlAgentHelper.isBooleanOptionSet(kvs, TTL_AGENT_ENABLE_TIMER_TASK_KEY, true);
+        return isBooleanOptionSet(TTL_AGENT_ENABLE_TIMER_TASK_KEY, true);
+    }
+
+    /**
+     * @since 2.13.0
+     */
+    public static boolean isBooleanOptionSet(@NonNull String key, boolean defaultValue) {
+        return TtlAgentHelper.isBooleanOptionSet(kvs, key, defaultValue);
+    }
+
+    /**
+     * Get option value in TTL Agent configuration.
+     * <p>
+     * usage example:
+     * <p>
+     * if TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT},
+     * {@code getOptionValue("ttl.agent.logger")} return {@code STDOUT}.
+     *
+     * @since 2.13.0
+     */
+    public static String getOptionValue(@NonNull String key) {
+        return kvs.get(key);
+    }
+
+    /**
+     * Get list string values of specified option in TTL Agent configuration.
+     * <p>
+     * TTL Agent configuration use {@code |} to separate items.
+     * if TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=foo.list:v1|v2|v3},
+     * {@code getOptionValue("foo.list")} return {@code [v1, v2, v3]}.
+     */
+    @NonNull
+    static List<String> getOptionStringListValues(@NonNull String key) {
+        return TtlAgentHelper.getOptionStringListValues(kvs, key);
     }
 
     private TtlAgent() {
