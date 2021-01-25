@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 
+import com.alibaba.ttl.threadpool.agent.TtlAgent;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import com.alibaba.ttl.threadpool.agent.transformlet.helper.AbstractExecutorTtlTransformlet;
 
@@ -24,7 +25,7 @@ public final class JdkExecutorTtlTransformlet extends AbstractExecutorTtlTransfo
         executorClassNames.add("java.util.concurrent.ScheduledThreadPoolExecutor");
     }
 
-    public JdkExecutorTtlTransformlet(boolean disableInheritableForThreadPool) {
-        super(executorClassNames, disableInheritableForThreadPool);
+    public JdkExecutorTtlTransformlet() {
+        super(executorClassNames, TtlAgent.isDisableInheritableForThreadPool());
     }
 }

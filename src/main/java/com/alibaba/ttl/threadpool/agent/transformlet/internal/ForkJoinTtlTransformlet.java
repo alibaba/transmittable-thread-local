@@ -1,6 +1,7 @@
 package com.alibaba.ttl.threadpool.agent.transformlet.internal;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.threadpool.agent.TtlAgent;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
@@ -31,8 +32,8 @@ public final class ForkJoinTtlTransformlet implements TtlTransformlet {
 
     private final boolean disableInheritableForThreadPool;
 
-    public ForkJoinTtlTransformlet(boolean disableInheritableForThreadPool) {
-        this.disableInheritableForThreadPool = disableInheritableForThreadPool;
+    public ForkJoinTtlTransformlet() {
+        this.disableInheritableForThreadPool = TtlAgent.isDisableInheritableForThreadPool();
     }
 
     @Override
