@@ -42,7 +42,7 @@ public class TtlTransformer implements ClassFileTransformer {
         this.logClassTransform = logClassTransform;
         for (TtlTransformlet ttlTransformlet : transformletList) {
             this.transformletList.add(ttlTransformlet);
-            logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass() + " success");
+            logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass());
         }
     }
 

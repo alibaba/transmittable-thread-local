@@ -20,7 +20,7 @@ final class TtlAgentHelper {
     }
 
     @SuppressWarnings("unchecked")
-    static List<String> getStringListOptionValue(@Nullable final Map<String, String> kvs, @NonNull String key) {
+    static List<String> getOptionStringListValues(@Nullable final Map<String, String> kvs, @NonNull String key) {
         if (null == kvs) return Collections.EMPTY_LIST;
 
         final String value = kvs.get(key);
