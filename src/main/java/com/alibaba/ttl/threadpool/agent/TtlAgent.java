@@ -133,11 +133,10 @@ public final class TtlAgent {
             transformletList.add(new ForkJoinTtlTransformlet());
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
-            final ClassFileTransformer transformer = new TtlTransformer(transformletList,
-                getOptionStringListValues(TTL_AGENT_EXTENSION_TRANSFORMLET_LIST),
-                isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false));
+            final boolean logClassTransform = isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false);
+            final ClassFileTransformer transformer = new TtlTransformer(transformletList, logClassTransform);
             inst.addTransformer(transformer, true);
-            logger.info("[TtlAgent.premain] addTransformer " + transformer.getClass() + " success");
+            logger.info("[TtlAgent.premain] add Transformer " + transformer.getClass().getName() + " success");
 
             logger.info("[TtlAgent.premain] end");
 
@@ -171,8 +170,6 @@ public final class TtlAgent {
     private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
 
     private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
-
-    private static final String TTL_AGENT_EXTENSION_TRANSFORMLET_LIST = "ttl.agent.extension.transformlet.list";
 
     /**
      * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.

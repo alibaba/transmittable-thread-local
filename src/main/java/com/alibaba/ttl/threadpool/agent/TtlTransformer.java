@@ -39,12 +39,13 @@ public class TtlTransformer implements ClassFileTransformer {
     private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
     private final boolean logClassTransform;
 
-    TtlTransformer(List<? extends TtlTransformlet> transformletList, List<String> extensionTransformletClassNameList, boolean logClassTransform) {
-        extensionTransformletManager = new TtlExtensionTransformletManager(extensionTransformletClassNameList);
+    TtlTransformer(List<? extends TtlTransformlet> transformletList, boolean logClassTransform) {
+        extensionTransformletManager = new TtlExtensionTransformletManager();
+
         this.logClassTransform = logClassTransform;
         for (TtlTransformlet ttlTransformlet : transformletList) {
             this.transformletList.add(ttlTransformlet);
-            logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass());
+            logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass().getName());
         }
     }
 
