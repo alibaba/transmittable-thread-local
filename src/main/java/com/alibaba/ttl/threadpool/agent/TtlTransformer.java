@@ -60,12 +60,11 @@ public class TtlTransformer implements ClassFileTransformer {
             // Lambda has no class file, no need to transform, just return.
             if (classFile == null) return NO_TRANSFORM;
 
-            final String className = toClassName(classFile);
-            final ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
+            final ClassInfo classInfo = new ClassInfo(classFile, classFileBuffer, loader);
             if (logClassTransform)
                 logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
                     + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
+                    + " at location " + classInfo.getLocationUrl());
 
             extensionTransformletManager.collectExtensionTransformlet(classInfo);
 
@@ -74,7 +73,7 @@ public class TtlTransformer implements ClassFileTransformer {
                 if (classInfo.isModified()) {
                     logger.info("[TtlTransformer] " + transformlet.getClass().getName() + " transformed " + classInfo.getClassName()
                         + " from classloader " + classInfo.getClassLoader()
-                        + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
+                        + " at location " + classInfo.getLocationUrl());
                     return classInfo.getCtClass().toBytecode();
                 }
             }
@@ -83,7 +82,7 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classInfo.isModified()) {
                 logger.info("[TtlTransformer] " + transformlet + " transformed " + classInfo.getClassName()
                     + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + getLocationUrlOfClass(classInfo.getCtClass()));
+                    + " at location " + classInfo.getLocationUrl());
                 return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {
@@ -93,9 +92,5 @@ public class TtlTransformer implements ClassFileTransformer {
         }
 
         return NO_TRANSFORM;
-    }
-
-    private static String toClassName(@NonNull final String classFile) {
-        return classFile.replace('/', '.');
     }
 }
