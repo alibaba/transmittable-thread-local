@@ -26,4 +26,7 @@ public final class NettySingleThreadEventExecutorTtlTransformlet extends Abstrac
     public NettySingleThreadEventExecutorTtlTransformlet(boolean disableInheritableForThreadPool) {
         super(EXECUTOR_CLASS_NAMES, disableInheritableForThreadPool);
     }
+    public NettySingleThreadEventExecutorTtlTransformlet() {
+        super(EXECUTOR_CLASS_NAMES, false);
+    }
 }

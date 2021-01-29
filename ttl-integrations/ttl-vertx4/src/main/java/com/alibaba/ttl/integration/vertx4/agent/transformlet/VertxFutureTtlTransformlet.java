@@ -29,6 +29,7 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(VertxFutureTtlTransformlet.class);
 
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
+    private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.integration.vertx4.TtlVertxHandler";
     private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
 
     @Override
@@ -56,9 +57,9 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
                 String code = String.format(
                     // decorate to TTL wrapper,
                     // and then set AutoWrapper attachment/Tag
-                    "    $%d = com.alibaba.ttl.TtlVertxHandler.get($%1$d, false, true);"
+                    "$%d = %s.get($%1$d, false, true);"
                         + "\n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
-                    i + 1);
+                    i + 1, TTL_HANDLER_CLASS_NAME);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);
             }
