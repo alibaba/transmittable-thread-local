@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +43,10 @@ final class TtlExtensionTransformletManager {
         new ConcurrentHashMap<ClassLoader, ConcurrentMap<String, ExtensionTransformletInfo>>();
 
     public TtlExtensionTransformletManager(@NonNull List<String> extensionTransformletClassNameList) {
-        this.extensionTransformletClassNameList = extensionTransformletClassNameList;
+        //this.extensionTransformletClassNameList = extensionTransformletClassNameList;
+        this.extensionTransformletClassNameList = new ArrayList<String>();
+        this.extensionTransformletClassNameList.add("com.alibaba.ttl.integration.vertx4.agent.transformlet.NettySingleThreadEventExecutorTtlTransformlet");
+        this.extensionTransformletClassNameList.add("com.alibaba.ttl.integration.vertx4.agent.transformlet.VertxFutureTtlTransformlet");
     }
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) {
