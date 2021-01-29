@@ -13,7 +13,6 @@ import java.util.logging.Level;
  * @since 2.6.0
  */
 public abstract class Logger {
-    public static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
 

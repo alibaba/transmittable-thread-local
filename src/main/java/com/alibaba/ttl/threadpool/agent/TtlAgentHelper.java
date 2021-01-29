@@ -10,22 +10,83 @@ import java.util.*;
  * @since 2.13.0
  */
 final class TtlAgentHelper {
-    static boolean isBooleanOptionSet(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
-        if (null == kvs) return defaultValue;
 
-        final boolean containsKey = kvs.containsKey(key);
-        if (!containsKey) return defaultValue;
+    // ======== Option Getter Methods ========
 
-        return !"false".equalsIgnoreCase(kvs.get(key));
+    static boolean isBooleanOptionSet(
+        @Nullable final Map<String, String> kvs, @NonNull String key,
+        boolean defaultValueIfKeyAbsent
+    ) {
+        return isBooleanOptionSet(kvs, key, defaultValueIfKeyAbsent, true);
     }
 
+    static boolean isBooleanOptionSet(
+        @Nullable final Map<String, String> kvs, @NonNull String key,
+        boolean defaultValueIfKeyAbsent, boolean defaultValueIfValueAbsent
+    ) {
+        final String value;
+
+        final Properties properties = System.getProperties();
+        if (properties.containsKey(key)) {
+            value = properties.getProperty(key).trim();
+        } else {
+            if (kvs == null) return defaultValueIfKeyAbsent;
+
+            final boolean containsKey = kvs.containsKey(key);
+            if (!containsKey) return defaultValueIfKeyAbsent;
+
+            value = kvs.get(key).trim();
+        }
+
+        // if value is blank
+        if (value.isEmpty()) return defaultValueIfValueAbsent;
+
+        return !"false".equalsIgnoreCase(value);
+    }
+
+    @NonNull
+    static String getStringOptionValue(
+        @Nullable final Map<String, String> kvs, @NonNull String key,
+        @NonNull String defaultValue
+    ) {
+        final String value;
+
+        final Properties properties = System.getProperties();
+        if (properties.containsKey(key)) {
+            value = properties.getProperty(key).trim();
+        } else {
+            if (kvs == null) return defaultValue;
+
+            final boolean containsKey = kvs.containsKey(key);
+            if (!containsKey) return defaultValue;
+
+            value = kvs.get(key).trim();
+        }
+
+        // if value is blank
+        if (value.isEmpty()) return defaultValue;
+
+        return value;
+    }
+
+    @NonNull
     @SuppressWarnings("unchecked")
     static List<String> getOptionStringListValues(@Nullable final Map<String, String> kvs, @NonNull String key) {
-        if (null == kvs) return Collections.EMPTY_LIST;
+        final String value;
 
-        final String value = kvs.get(key);
+        final Properties properties = System.getProperties();
+        if (properties.containsKey(key)) {
+            value = properties.getProperty(key);
+        } else {
+            if (kvs == null) return Collections.EMPTY_LIST;
+
+            value = kvs.get(key);
+        }
+
         return splitListStringToStringList(value);
     }
+
+    // ======== Simple Parse Util Methods ========
 
     /**
      * Split {@code json} like String({@code "k1:v1,k2:v2"}) to KV map({@code "k1"->"v1", "k2"->"v2"}).
@@ -50,6 +111,7 @@ final class TtlAgentHelper {
     /**
      * Split String {@code "v1|v2|v3"} to String List({@code [v1, v2, v3]}).
      */
+    @NonNull
     static List<String> splitListStringToStringList(@Nullable String listString) {
         final List<String> ret = new ArrayList<String>();
         if (listString == null || listString.trim().length() == 0) return ret;
@@ -63,6 +125,7 @@ final class TtlAgentHelper {
 
         return ret;
     }
+
 
     private TtlAgentHelper() {
         throw new InstantiationError("Must not instantiate this class");

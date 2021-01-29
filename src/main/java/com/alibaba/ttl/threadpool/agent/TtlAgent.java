@@ -16,14 +16,44 @@ import java.util.Map;
 /**
  * TTL Java Agent.
  *
- * <h2>The configuration/arguments for TTL agent</h2>
+ * <h2>The configuration for TTL agent</h2>
  * <p>
- * Configure TTL agent via agent arguments, format is {@code k1:v1,k2:v2}. Below is available configuration keys.
+ * Configure TTL agent via {@code -D property}({@link System#getProperties()}) or TTL agent arguments.
+ * <ol>
+ *     <li>{@code -D property} config format is: {@code -Dkey1=v2 -Dkey2=v2}</li>
+ *     <li>TTL agent arguments config format is {@code key1:v1,key2:v2}.<br>
+ *         separate key-value pairs by {@code char ,}, and separate key-value by {@code char :}.<br></li>
+ * </ol>
+ * <B><I>NOTE about the config sources and the precedence:</I></B><br>
+ * <ol>
+ * <li>Read {@code -D property}({@link System#getProperties()}) first.</li>
+ * <li>if no {@code -D property} configured(including empty property value configured by {@code -Dkey1}/{@code -Dkey1=}), read TTL Agent argument configuration.</li>
+ * </ol>
+ * Below is available TTL agent configuration keys.
  *
- * <h3>Disable inheritable for thread pool</h3>
+ * <h3>Configuration key: Log Type</h3>
+ * <p>
+ * The log of TTL Java Agent is configured by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
+ *
+ * <ul>
+ * <li>{@code ttl.agent.logger : STDERR}<br>
+ * only log to {@code stderr} when error.
+ * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
+ * <li>{@code ttl.agent.logger : STDOUT}<br>
+ * Log to {@code stdout}, more info than {@code ttl.agent.logger:STDERR}; This is needed when developing.</li>
+ * </ul>
+ * <p>
+ * Configuration example:
+ *
+ * <ol>
+ * <li>{@code -Dttl.agent.logger=STDOUT}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT}</li>
+ * </ol>
+ *
+ * <h3>Configuration key: Disable inheritable for thread pool</h3>
  * <p>
  * Enable "disable inheritable" for thread pool, config by key {@code ttl.agent.disable.inheritable.for.thread.pool}.
- * When no configuration for this key, default does <b>not</b> enabled. Since version {@code 2.10.1}.
+ * When no configuration for this key, default is {@code false}(aka. dose <b>not</b> disable inheritable). Since version {@code 2.10.1}.
  *
  * <ul>
  * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
@@ -39,27 +69,15 @@ import java.util.Map;
  * </ul>
  * More info about "disable inheritable" see {@link com.alibaba.ttl.TransmittableThreadLocal}.
  * <p>
- * Configuration example:<br>
- * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.disable.inheritable.for.thread.pool:true}
+ * Configuration example:
  *
- * <h3>The log configuration</h3>
- * The log of TTL Java Agent is config by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
+ * <ol>
+ * <li>{@code -Dttl.agent.disable.inheritable.for.thread.pool=true}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.disable.inheritable.for.thread.pool:true}</li>
+ * </ol>
  *
- * <ul>
- * <li>{@code ttl.agent.logger : STDERR}<br>
- * only log to {@code stderr} when error.
- * This is <b>default</b>, when no/unrecognized configuration for key {@code ttl.agent.logger}.</li>
- * <li>{@code ttl.agent.logger : STDOUT}<br>
- * Log to {@code stdout}, more info than {@code ttl.agent.logger:STDERR}; This is needed when developing.</li>
- * </ul>
+ * <h3>Configuration key: Enable/Disable TimerTask class decoration</h3>
  * <p>
- * configuration example:
- * <ul>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar}</li>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT}</li>
- * </ul>
- *
- * <h3>Enable/disable TimerTask class decoration</h3>
  * Enable/disable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
  * Since version {@code 2.7.0}.
  * <p>
@@ -68,16 +86,23 @@ import java.util.Map;
  * Before version {@code 2.11.1} default value is {@code false}.
  * <p>
  * Configuration example:
- * <ul>
+ *
+ * <ol>
+ * <li>{@code -Dttl.agent.enable.timer.task=false}</li>
  * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false}</li>
- * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:true}</li>
- * </ul>
+ * </ol>
  *
  * <h3>Multi key configuration example</h3>
+ * <p>
+ * For TTL agent arguments config, example:<br>
  * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
+ * <p>
+ * For {@code -D property} config, simply specify multiply {@code -D property}, example:<br>
+ * {@code -Dttl.agent.logger=STDOUT -Dttl.agent.disable.inheritable.for.thread.pool=true}
  *
  * <h2>About boot classpath for TTL agent</h2>
- * <b><i>NOTE:</i></b> Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.
+ * <p>
+ * <b><i>NOTE:</i></b> Since {@code v2.6.0}, TTL agent jar will auto add self to {@code boot classpath}.<br>
  * But you <b>should <i>NOT</i></b> modify the downloaded TTL jar file name in the maven repo(eg: {@code transmittable-thread-local-2.x.y.jar}).<br>
  * if you modified the downloaded TTL agent jar file name(eg: {@code ttl-foo-name-changed.jar}),
  * you must add TTL agent jar to {@code boot classpath} manually
@@ -111,18 +136,28 @@ import java.util.Map;
  * @since 0.9.0
  */
 public final class TtlAgent {
+
+    private static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
+
+    private static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
+
+    private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
+
+    private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
+
+    private static volatile Map<String, String> kvs;
+
+    private static volatile boolean ttlAgentLoaded = false;
+
     /**
      * Entrance method of TTL Java Agent.
      *
-     * @see Logger
-     * @see Logger#TTL_AGENT_LOGGER_KEY
-     * @see Logger#STDERR
-     * @see Logger#STDOUT
+     * @see TtlAgent
      */
     public static void premain(final String agentArgs, @NonNull final Instrumentation inst) {
         kvs = TtlAgentHelper.splitCommaColonStringToKV(agentArgs);
 
-        Logger.setLoggerImplType(getLogImplTypeFromAgentArgs(kvs));
+        Logger.setLoggerImplType(getLoggerType());
         final Logger logger = Logger.getLogger(TtlAgent.class);
 
         try {
@@ -133,8 +168,7 @@ public final class TtlAgent {
             transformletList.add(new ForkJoinTtlTransformlet());
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
-            final boolean logClassTransform = isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY, false);
-            final ClassFileTransformer transformer = new TtlTransformer(transformletList, logClassTransform);
+            final ClassFileTransformer transformer = new TtlTransformer(transformletList, isLogClassTransform());
             inst.addTransformer(transformer, true);
             logger.info("[TtlAgent.premain] add Transformer " + transformer.getClass().getName() + " success");
 
@@ -148,14 +182,6 @@ public final class TtlAgent {
         }
     }
 
-    private static volatile Map<String, String> kvs;
-
-    private static volatile boolean ttlAgentLoaded = false;
-
-    private static String getLogImplTypeFromAgentArgs(@NonNull final Map<String, String> kvs) {
-        return kvs.get(Logger.TTL_AGENT_LOGGER_KEY);
-    }
-
     /**
      * Whether TTL agent is loaded.
      *
@@ -165,14 +191,10 @@ public final class TtlAgent {
         return ttlAgentLoaded;
     }
 
-    private static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
-
-    private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
-
-    private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
-
     /**
      * Whether disable inheritable for thread pool is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     * <p>
+     * Same as {@code isBooleanOptionSet(TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY)}.
      *
      * @see com.alibaba.ttl.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
      * @see com.alibaba.ttl.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
@@ -180,19 +202,24 @@ public final class TtlAgent {
      * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
      * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
+     * @see com.alibaba.ttl.TransmittableThreadLocal
+     * @see #isBooleanOptionSet(String)
+     * @see TtlAgent
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
-        return isBooleanOptionSet(TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY, false);
+        return isBooleanOptionSet(TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY);
     }
 
     /**
      * Whether timer task is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
      * <p>
-     * Same as {@code isBooleanOptionSet(TTL_AGENT_ENABLE_TIMER_TASK_KEY, true)}
+     * Same as {@code isBooleanOptionSet(TTL_AGENT_ENABLE_TIMER_TASK_KEY, true)}.
      *
      * @see java.util.Timer
      * @see java.util.TimerTask
+     * @see #isBooleanOptionSet(String, boolean)
+     * @see TtlAgent
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
@@ -200,37 +227,91 @@ public final class TtlAgent {
     }
 
     /**
+     * Whether logging the class transform when the class received by {@link TtlAgent}.
+     * <p>
+     * Same as {@code isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY)}.
+     *
+     * @see #isBooleanOptionSet(String)
+     * @see TtlAgent
      * @since 2.13.0
      */
-    public static boolean isBooleanOptionSet(@NonNull String key, boolean defaultValue) {
-        return TtlAgentHelper.isBooleanOptionSet(kvs, key, defaultValue);
+    public static boolean isLogClassTransform() {
+        return isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY);
     }
 
     /**
-     * Get option value in TTL Agent configuration.
+     * Get the TTL Agent Log type.
+     * <p>
+     * Same as {@code getStringOptionValue(TTL_AGENT_LOGGER_KEY, Logger.STDERR)}.
+     *
+     * @see Logger
+     * @see Logger#STDERR
+     * @see Logger#STDOUT
+     * @see #getStringOptionValue(String, String)
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    @NonNull
+    public static String getLoggerType() {
+        return getStringOptionValue(TTL_AGENT_LOGGER_KEY, Logger.STDERR);
+    }
+
+    // ======== Generic Option Getters ========
+
+    /**
+     * Generic Option Getters for {@code boolean type} option.
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static boolean isBooleanOptionSet(@NonNull String key) {
+        return isBooleanOptionSet(key, false);
+    }
+
+    /**
+     * Generic Option Getters for {@code boolean type} option.
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static boolean isBooleanOptionSet(@NonNull String key, boolean defaultValueIfKeyAbsent) {
+        return TtlAgentHelper.isBooleanOptionSet(kvs, key, defaultValueIfKeyAbsent);
+    }
+
+    /**
+     * Generic Option Getters for {@code string type} option.
      * <p>
      * usage example:
      * <p>
-     * if TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT},
+     * if {@code -Dttl.agent.logger=STDOUT} or
+     * TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT},
      * {@code getOptionValue("ttl.agent.logger")} return {@code STDOUT}.
      *
+     * @see TtlAgent
      * @since 2.13.0
      */
-    public static String getOptionValue(@NonNull String key) {
-        return kvs.get(key);
+    @NonNull
+    public static String getStringOptionValue(@NonNull String key, @NonNull String defaultValue) {
+        return TtlAgentHelper.getStringOptionValue(kvs, key, defaultValue);
     }
 
     /**
-     * Get list string values of specified option in TTL Agent configuration.
+     * Generic Option Getters for {@code string list type} option.
      * <p>
-     * TTL Agent configuration use {@code |} to separate items.
-     * if TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=foo.list:v1|v2|v3},
+     * TTL configuration use {@code |} to separate items.
+     * <p>
+     * usage example:<br>
+     * if {@code -Dfoo.list=v1|v2|v3} or
+     * TTL Agent configuration is {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=foo.list:v1|v2|v3},
      * {@code getOptionValue("foo.list")} return {@code [v1, v2, v3]}.
+     *
+     * @see TtlAgent
      */
     @NonNull
     static List<String> getOptionStringListValues(@NonNull String key) {
         return TtlAgentHelper.getOptionStringListValues(kvs, key);
     }
+
 
     private TtlAgent() {
         throw new InstantiationError("Must not instantiate this class");
