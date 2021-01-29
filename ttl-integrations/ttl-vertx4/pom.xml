@@ -47,6 +47,12 @@
 			<artifactId>transmittable-thread-local</artifactId>
 			<version>${ttl.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.23.2-GA</version>
+			<optional>true</optional>
+		</dependency>
 		<!--
 			make other qa libs
 				- optional, 0-dependency and smaller deployment

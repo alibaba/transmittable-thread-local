@@ -3,11 +3,11 @@ package com.alibaba.ttl.integration.vertx4.agent.transformlet;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.javassist.CannotCompileException;
-import com.alibaba.ttl.threadpool.agent.transformlet.javassist.CtClass;
-import com.alibaba.ttl.threadpool.agent.transformlet.javassist.CtMethod;
-import com.alibaba.ttl.threadpool.agent.transformlet.javassist.NotFoundException;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
