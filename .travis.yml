@@ -40,7 +40,8 @@ before_install:
   - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH\nSHELL=$SHELL"
 
 script:
-  - ./scripts/integration-test.sh
+  - scripts/integration-test.sh
+  - ttl-integrations/sample-ttl-agent-extension-transformlet/scripts/integration-test.sh
 
 after_success:
   # codecov
