@@ -43,10 +43,7 @@ final class TtlExtensionTransformletManager {
         new ConcurrentHashMap<ClassLoader, ConcurrentMap<String, ExtensionTransformletInfo>>();
 
     public TtlExtensionTransformletManager(@NonNull List<String> extensionTransformletClassNameList) {
-        //this.extensionTransformletClassNameList = extensionTransformletClassNameList;
-        this.extensionTransformletClassNameList = new ArrayList<String>();
-        this.extensionTransformletClassNameList.add("com.alibaba.ttl.integration.vertx4.agent.transformlet.NettySingleThreadEventExecutorTtlTransformlet");
-        this.extensionTransformletClassNameList.add("com.alibaba.ttl.integration.vertx4.agent.transformlet.VertxFutureTtlTransformlet");
+        this.extensionTransformletClassNameList = extensionTransformletClassNameList;
     }
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) {
