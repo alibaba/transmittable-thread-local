@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * <h3>Configuration key: Log Type</h3>
  * <p>
- * The log of TTL Java Agent is configured by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
+ * The log type of TTL Java Agent is configured by key {@code ttl.agent.logger}. Since version {@code 2.6.0}.
  *
  * <ul>
  * <li>{@code ttl.agent.logger : STDERR}<br>
@@ -52,8 +52,8 @@ import java.util.Map;
  *
  * <h3>Configuration key: Disable inheritable for thread pool</h3>
  * <p>
- * Enable "disable inheritable" for thread pool, config by key {@code ttl.agent.disable.inheritable.for.thread.pool}.
- * When no configuration for this key, default is {@code false}(aka. dose <b>not</b> disable inheritable). Since version {@code 2.10.1}.
+ * Enable "disable inheritable" for thread pool, configured by key {@code ttl.agent.disable.inheritable.for.thread.pool}.
+ * When no configuration for this key, default is {@code false}(aka. do <b>NOT</b> disable inheritable). Since version {@code 2.10.1}.
  *
  * <ul>
  * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
@@ -76,12 +76,12 @@ import java.util.Map;
  * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.disable.inheritable.for.thread.pool:true}</li>
  * </ol>
  *
- * <h3>Configuration key: Enable/Disable TimerTask class decoration</h3>
+ * <h3>Configuration key: Enable TimerTask class decoration</h3>
  * <p>
- * Enable/disable TimerTask class decoration is config by key {@code ttl.agent.enable.timer.task}.
+ * Enable TimerTask class decoration is configured by key {@code ttl.agent.enable.timer.task}.
  * Since version {@code 2.7.0}.
  * <p>
- * When no configuration for this key, default is <b>enabled</b>.<br>
+ * When no configuration for this key, default is {@code true}(aka. <b>enabled</b>).<br>
  * <b><i>Note</i></b>: Since version {@code 2.11.2} the default value is {@code true}(enable TimerTask class decoration);
  * Before version {@code 2.11.1} default value is {@code false}.
  * <p>
@@ -92,13 +92,26 @@ import java.util.Map;
  * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false}</li>
  * </ol>
  *
- * <h3>Multi key configuration example</h3>
+ * <h3>Configuration key: logging the transform class received by TTL Agent</h3>
  * <p>
- * For TTL agent arguments config, example:<br>
- * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
+ * Enable logging the transform class received by TTL Agent by key {@code ttl.agent.log.class.transform},
+ * default is {@code false}(aka. do <b>NOT</b> logging the transform class received by TTL Agent).
+ * Since version {@code 2.13.0}.
+ * <p>
+ * Configuration example:
+ *
+ * <ol>
+ * <li>{@code -Dttl.agent.log.class.transform=true}</li>
+ * <li>{@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.log.class.transform:true}</li>
+ * </ol>
+ *
+ * <h3>Multi key configuration example</h3>
  * <p>
  * For {@code -D property} config, simply specify multiply {@code -D property}, example:<br>
  * {@code -Dttl.agent.logger=STDOUT -Dttl.agent.disable.inheritable.for.thread.pool=true}
+ * <p>
+ * For TTL agent arguments config, example:<br>
+ * {@code -javaagent:/path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true}
  *
  * <h2>About boot classpath for TTL agent</h2>
  * <p>
@@ -110,6 +123,7 @@ import java.util.Map;
  * <p>
  * The implementation of auto adding self agent jar to {@code boot classpath} use
  * the {@code Boot-Class-Path} property of manifest file({@code META-INF/MANIFEST.MF}) in the TTL Java Agent Jar:
+ *
  * <blockquote>
  * <dl>
  * <dt>Boot-Class-Path</dt>
@@ -137,13 +151,40 @@ import java.util.Map;
  */
 public final class TtlAgent {
 
-    private static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
+    /**
+     * the TTL agent configuration key: Log Type
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
 
-    private static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
+    /**
+     * the TTL agent configuration key: Disable inheritable for thread pool
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
 
-    private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
+    /**
+     * the TTL agent configuration key: Enable TimerTask class decoration
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
-    private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
+    /**
+     * the TTL agent configuration key: logging the transform class received by TTL Agent
+     *
+     * @see TtlAgent
+     * @since 2.13.0
+     */
+    public static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
+
+
+    // ======== TTL Agent internal States ========
 
     private static volatile Map<String, String> kvs;
 
@@ -203,8 +244,9 @@ public final class TtlAgent {
      * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see com.alibaba.ttl.threadpool.DisableInheritableForkJoinWorkerThreadFactory
      * @see com.alibaba.ttl.TransmittableThreadLocal
-     * @see #isBooleanOptionSet(String)
      * @see TtlAgent
+     * @see #isBooleanOptionSet(String)
+     * @see #TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY
      * @since 2.10.1
      */
     public static boolean isDisableInheritableForThreadPool() {
@@ -218,8 +260,9 @@ public final class TtlAgent {
      *
      * @see java.util.Timer
      * @see java.util.TimerTask
-     * @see #isBooleanOptionSet(String, boolean)
      * @see TtlAgent
+     * @see #isBooleanOptionSet(String, boolean)
+     * @see #TTL_AGENT_ENABLE_TIMER_TASK_KEY
      * @since 2.10.1
      */
     public static boolean isEnableTimerTask() {
@@ -227,12 +270,13 @@ public final class TtlAgent {
     }
 
     /**
-     * Whether logging the class transform when the class received by {@link TtlAgent}.
+     * Whether logging the transform class received by {@link TtlAgent}.
      * <p>
      * Same as {@code isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY)}.
      *
-     * @see #isBooleanOptionSet(String)
      * @see TtlAgent
+     * @see #isBooleanOptionSet(String)
+     * @see #TTL_AGENT_LOG_CLASS_TRANSFORM_KEY
      * @since 2.13.0
      */
     public static boolean isLogClassTransform() {
@@ -247,8 +291,9 @@ public final class TtlAgent {
      * @see Logger
      * @see Logger#STDERR
      * @see Logger#STDOUT
-     * @see #getStringOptionValue(String, String)
      * @see TtlAgent
+     * @see #getStringOptionValue(String, String)
+     * @see #TTL_AGENT_LOGGER_KEY
      * @since 2.13.0
      */
     @NonNull
@@ -260,7 +305,10 @@ public final class TtlAgent {
 
     /**
      * Generic Option Getters for {@code boolean type} option.
+     * <p>
+     * Same as {@code isBooleanOptionSet(key, false)}.
      *
+     * @see #isBooleanOptionSet(String, boolean)
      * @see TtlAgent
      * @since 2.13.0
      */
