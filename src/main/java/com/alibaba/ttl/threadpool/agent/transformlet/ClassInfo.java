@@ -1,4 +1,4 @@
-package com.alibaba.ttl.threadpool.agent.internal.transformlet;
+package com.alibaba.ttl.threadpool.agent.transformlet;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -9,22 +9,32 @@ import javassist.LoaderClassPath;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
+
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
 
 /**
+ * Class Info for {@link TtlTransformlet}.
+ *
+ * <B><I>Caution:</I></B><br>
+ * Do <b>NOT</b> load {@link Class} which is transforming, or the transform will lose effectiveness.
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 2.11.0
+ * @since 2.13.0
  */
 public class ClassInfo {
+    private final String transformerClassFile;
     private final String className;
     private final byte[] classFileBuffer;
     private final ClassLoader loader;
 
     // SuppressFBWarnings for classFileBuffer parameter:
-    //   [ERROR] new com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo(String, byte[], ClassLoader)
+    //   [ERROR] new com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo(String, byte[], ClassLoader)
     //   may expose internal representation by storing an externally mutable object
     //   into ClassInfo.classFileBuffer
-    public ClassInfo(@NonNull String className, @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
-        this.className = className;
+    public ClassInfo(@NonNull String transformerClassFile, @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
+        this.transformerClassFile = transformerClassFile;
+        this.className = toClassName(transformerClassFile);
         this.classFileBuffer = classFileBuffer;
         this.loader = loader;
     }
@@ -35,6 +45,10 @@ public class ClassInfo {
     }
 
     private CtClass ctClass;
+
+    public URL getLocationUrl() throws IOException {
+        return getLocationUrlOfClass(getCtClass());
+    }
 
     @NonNull
     public CtClass getCtClass() throws IOException {
@@ -62,5 +76,13 @@ public class ClassInfo {
 
     public void setModified() {
         this.modified = true;
+    }
+
+    public ClassLoader getClassLoader() {
+        return loader;
+    }
+
+    private static String toClassName(@NonNull final String classFile) {
+        return classFile.replace('/', '.');
     }
 }

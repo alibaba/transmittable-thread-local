@@ -1,0 +1,13 @@
+# comments
+
+hello.World # comments
+
+spaceInside space
+tabInside	tab
+
+	hello.tabBefore
+hello.tabAfter
+  hello.spaceBefore
+hello.spaceAfter
+
+hello.!IllegalName

@@ -1,17 +1,18 @@
-package com.alibaba.ttl.threadpool.agent.internal.logging;
+package com.alibaba.ttl.threadpool.agent.logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * logger adaptor for ttl java agent, internal use for ttl agent only!
+ * Logger adaptor for ttl TTL agent/transformlet. Only use for TTL agent/transformlet!
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet
+ * @see com.alibaba.ttl.threadpool.agent.TtlAgent
  * @since 2.6.0
  */
 public abstract class Logger {
-    public static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
     public static final String STDOUT = "STDOUT";
     public static final String STDERR = "STDERR";
 
