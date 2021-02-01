@@ -3,8 +3,8 @@ package com.alibaba.ttl;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * @see com.alibaba.ttl.spi.TtlAttachments
- * @deprecated Use {@link com.alibaba.ttl.spi.TtlEnhanced} instead.
+ * @deprecated Use {@link com.alibaba.ttl.spi.TtlWrapper}, {@link com.alibaba.ttl.spi.TtlInheritanceEnhanced}
+ * or {@link com.alibaba.ttl.spi.TtlInPlaceEnhanced} instead.
  */
 @Deprecated
 @SuppressFBWarnings({"NM_SAME_SIMPLE_NAME_AS_INTERFACE"})

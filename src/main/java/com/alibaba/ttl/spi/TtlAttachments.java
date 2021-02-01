@@ -9,7 +9,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.11.0
  */
-public interface TtlAttachments extends TtlEnhanced {
+public interface TtlAttachments {
     /**
      * set the TTL attachments for TTL tasks
      *

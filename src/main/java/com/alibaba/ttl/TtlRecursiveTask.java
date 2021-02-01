@@ -1,6 +1,7 @@
 package com.alibaba.ttl;
 
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlInheritanceEnhanced;
 
 import java.util.concurrent.ForkJoinTask;
 
@@ -19,7 +20,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see com.alibaba.ttl.threadpool.agent.TtlAgent
  * @since 2.4.0
  */
-public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> implements TtlEnhanced {
+public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> implements TtlInheritanceEnhanced {
 
     private static final long serialVersionUID = 1814679366926362436L;
 

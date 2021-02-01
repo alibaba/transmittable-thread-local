@@ -41,7 +41,7 @@ public class TtlWrappers {
         else return new TtlSupplier<T>(supplier);
     }
 
-    private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>>, TtlEnhanced {
+    private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>> {
         final Supplier<T> supplier;
         final Object captured;
 
@@ -103,7 +103,7 @@ public class TtlWrappers {
         else return new TtlConsumer<T>(consumer);
     }
 
-    private static class TtlConsumer<T> implements Consumer<T>, TtlWrapper<Consumer<T>>, TtlEnhanced {
+    private static class TtlConsumer<T> implements Consumer<T>, TtlWrapper<Consumer<T>> {
         final Consumer<T> consumer;
         final Object captured;
 
@@ -165,7 +165,7 @@ public class TtlWrappers {
         else return new TtlBiConsumer<T, U>(consumer);
     }
 
-    private static class TtlBiConsumer<T, U> implements BiConsumer<T, U>, TtlWrapper<BiConsumer<T, U>>, TtlEnhanced {
+    private static class TtlBiConsumer<T, U> implements BiConsumer<T, U>, TtlWrapper<BiConsumer<T, U>> {
         final BiConsumer<T, U> consumer;
         final Object captured;
 
@@ -227,7 +227,7 @@ public class TtlWrappers {
         else return new TtlFunction<T, R>(fn);
     }
 
-    private static class TtlFunction<T, R> implements Function<T, R>, TtlWrapper<Function<T, R>>, TtlEnhanced {
+    private static class TtlFunction<T, R> implements Function<T, R>, TtlWrapper<Function<T, R>> {
         final Function<T, R> fn;
         final Object captured;
 
@@ -289,7 +289,7 @@ public class TtlWrappers {
         else return new TtlBiFunction<T, U, R>(fn);
     }
 
-    private static class TtlBiFunction<T, U, R> implements BiFunction<T, U, R>, TtlWrapper<BiFunction<T, U, R>>, TtlEnhanced {
+    private static class TtlBiFunction<T, U, R> implements BiFunction<T, U, R>, TtlWrapper<BiFunction<T, U, R>> {
         final BiFunction<T, U, R> fn;
         final Object captured;
 

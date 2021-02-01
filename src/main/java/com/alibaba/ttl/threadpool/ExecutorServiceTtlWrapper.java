@@ -20,7 +20,7 @@ import java.util.concurrent.*;
  * @since 0.9.0
  */
 @SuppressFBWarnings({"EQ_DOESNT_OVERRIDE_EQUALS"})
-class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService, TtlEnhanced {
+class ExecutorServiceTtlWrapper extends ExecutorTtlWrapper implements ExecutorService {
     private final ExecutorService executorService;
 
     ExecutorServiceTtlWrapper(@NonNull ExecutorService executorService, boolean idempotent) {

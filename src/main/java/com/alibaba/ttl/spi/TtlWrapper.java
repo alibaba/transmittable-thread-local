@@ -4,16 +4,18 @@ import com.alibaba.ttl.TtlUnwrap;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Ttl Wrapper interface.
+ * The TTL Wrapper interface for ttl enhanced classes by wrapper.
  * <p>
- * Used to mark wrapper types, for example:
+ * for example:
  * <ul>
+ *     <li>{@link com.alibaba.ttl.TtlRunnable}</li>
  *     <li>{@link com.alibaba.ttl.TtlCallable}</li>
- *     <li>{@link com.alibaba.ttl.threadpool.TtlExecutors}</li>
+ *     <li>the executor wrappers from {@link com.alibaba.ttl.threadpool.TtlExecutors}</li>
  *     <li>{@link com.alibaba.ttl.threadpool.DisableInheritableThreadFactory}</li>
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see TtlEnhanced
  * @see TtlUnwrap#unwrap
  * @see com.alibaba.ttl.TtlCallable
  * @see com.alibaba.ttl.TtlRunnable

@@ -60,7 +60,7 @@ final class TtlExtensionTransformletManager {
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) throws IOException {
         final ClassLoader classLoader = classInfo.getClassLoader();
         // classloader may null be if the bootstrap loader,
-        // which classloader must contains NO Ttl Agent Extension Transformlet, so just safe skip
+        // which classloader must contains NO TTL Agent Extension Transformlet, so just safe skip
         if (classLoader == null) return;
 
         // this classLoader is collected, so skip collection

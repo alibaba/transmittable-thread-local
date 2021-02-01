@@ -16,7 +16,7 @@ import java.util.concurrent.Executor;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 0.9.0
  */
-class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced {
+class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor> {
     private final Executor executor;
     protected final boolean idempotent;
 

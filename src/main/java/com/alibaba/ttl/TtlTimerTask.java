@@ -29,7 +29,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @deprecated Use {@link TtlRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link java.util.Timer}, {@link java.util.TimerTask}.
  */
 @Deprecated
-public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTask>, TtlEnhanced {
+public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTask> {
     private final AtomicReference<Object> capturedRef;
     private final TimerTask timerTask;
     private final boolean releaseTtlValueReferenceAfterRun;

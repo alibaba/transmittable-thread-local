@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @since 0.9.0
  */
 @SuppressFBWarnings({"EQ_DOESNT_OVERRIDE_EQUALS"})
-class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper implements ScheduledExecutorService, TtlEnhanced {
+class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper implements ScheduledExecutorService {
     final ScheduledExecutorService scheduledExecutorService;
 
     public ScheduledExecutorServiceTtlWrapper(@NonNull ScheduledExecutorService scheduledExecutorService, boolean idempotent) {
