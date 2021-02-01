@@ -47,15 +47,15 @@ final class TtlExtensionTransformletManager {
     }
 
     // NOTE: use WeakHashMap as a Set collection, value is always null.
-    private final WeakHashMap<ClassLoader, ?> collectedClassLoaderHistory = new WeakHashMap<ClassLoader, Object>();
+    private final WeakHashMap<ClassLoader, ?> collectedClassLoaderHistory = new WeakHashMap<ClassLoader, Object>(512);
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(not include from parent classloader)
     private final Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets =
-        new HashMap<ClassLoader, Map<String, TtlTransformlet>>();
+        new HashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(include from parent classloader)
     private final Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL =
-        new HashMap<ClassLoader, Map<String, TtlTransformlet>>();
+        new HashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) throws IOException {
         final ClassLoader classLoader = classInfo.getClassLoader();
@@ -82,7 +82,7 @@ final class TtlExtensionTransformletManager {
             classLoader2ExtensionTransformlets, classLoader2ExtensionTransformletsIncludeParentCL);
     }
 
-    // URL location string -> URL contained extension transformlet class names
+    // extension transformlet configuration file URL location string -> URL contained extension transformlet class names
     private final Map<String, LinkedHashSet<String>> redExtensionTransformletFileHistory = new HashMap<String, LinkedHashSet<String>>();
 
     private Set<String> readExtensionTransformletClassNames(ClassLoader classLoader) throws IOException {
