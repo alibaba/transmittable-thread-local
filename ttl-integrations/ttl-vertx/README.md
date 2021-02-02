@@ -1,12 +1,18 @@
 # Vertx 4的TTL集成
 
-## 1. 保证异步io回调中传递值
+## 1. 保证异步io回调中传递TTL值
 
-### 1.1 vert.x内的回调处理
+### 1.1修饰`io.vertx.core.Handler`
 
-#### 修饰`io.vertx.core.Handler`
+使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/TtlVertxHandler.java)来修饰传入的`Handler`。
 
-使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/integration/vertx4/TtlVertxHandler.java)来修饰传入的`Handler`。
+### 1.2 修饰`io.vertx.core.Future`
+
+修饰了的Vert.x执行器组件如下:
+- `io.vertx.core.Future`
+- `io.vertx.core.impl.future.FutureImpl`
+---
+- 修饰实现代码在[`VertxFutureTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/VertxFutureTtlTransformlet.java)。
 
 示例代码：
 
@@ -44,11 +50,12 @@ TtlVertxHandler<AsyncResult<String>> ttlVertxHandler = TtlVertxHandler.get(handl
 stub.sayHello(request).onComplete(ttlVertxHandler);
 ```
 
-### 1.2 修饰`io.vertx.core.Future`
-
-修饰了的Vert.x执行器组件如下:
-- `io.vertx.core.Future`
-- `io.vertx.core.impl.future.FutureImpl`
----
-- 修饰实现代码在[`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
     
+## 2. 保证`eventbus`上传递TTL值
+
+### 2.1修饰`java.lang.Runnable`
+使用[`TtlRunnable`](../../src/main/java/com/alibaba/ttl/TtlRunnable.java)来修饰传入的`Runnable`。
+
+### 2.2 修饰`io.netty.util.concurrent.SingleThreadEventExecutor`
+
+修饰实现代码在[`NettySingleThreadEventExecutorTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/NettySingleThreadEventExecutorTtlTransformlet.java)。

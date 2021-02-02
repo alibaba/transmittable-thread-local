@@ -1,10 +1,19 @@
 #  Vertx 4 integration of TTL
 
-## 1. callback in vert.x framework
+## 1. assure TTL context transmit in callback 
 
 ## 1.1 Decorate `io.vertx.core.Handler`
 
-Use [`TtlVertxHandler`](src/main/java/com/alibaba/ttl/TtlVertxHandler.java) to decorate `Handler`。
+Use [`TtlVertxHandler`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/TtlVertxHandler.java) to decorate `Handler`。
+
+## 1.2 Decorate `io.vertx.core.Future`
+
+At present, `TTL` agent has decorated below `Vertx` callback components(`io.vertx.core.Future`) implementation:
+
+- `io.vertx.core.Future`
+- `io.vertx.core.impl.future.FutureImpl`
+- decoration implementation code is in [`VertxFutureTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/VertxFutureTtlTransformlet.java)。
+
 Sample code：
 
 ```java
@@ -40,10 +49,12 @@ TtlVertxHandler<AsyncResult<String>> ttlVertxHandler = TtlVertxHandler.get(handl
 //send request
 stub.sayHello(request).onComplete(ttlVertxHandler);
 ```
+## 2. assure TTL context transmit in eventbus
 
-## 1.2 decorate `io.vertx.core.Future`
+### 2. decorate`java.lang.Runnable`
+Use [`TtlRunnable`](../../src/main/java/com/alibaba/ttl/TtlRunnable.java) to decorate`Runnable`。
 
-At present, `TTL` agent has decorated below `Vertx` callback components(`io.vertx.core.Future`) implementation:
+### 2.2 Decorate`io.netty.util.concurrent.SingleThreadEventExecutor`
 
-- `io.vertx.core.Future`
-    - decoration implementation code is in [`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
+- decoration implementation code is in[`NettySingleThreadEventExecutorTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/NettySingleThreadEventExecutorTtlTransformlet.java)。
+
