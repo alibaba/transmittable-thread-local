@@ -10,7 +10,7 @@ import java.util.logging.Level;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet
  * @see com.alibaba.ttl.threadpool.agent.TtlAgent
- * @since 2.6.0
+ * @since 2.13.0
  */
 public abstract class Logger {
     public static final String STDOUT = "STDOUT";
