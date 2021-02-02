@@ -13,6 +13,16 @@
       即只要将扩展`Transformlet`的依赖`Jar`引入到应用中就会自动生效。
     - 这个扫描并自动加载生效与`JDK`的[`ServiceLoader`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html)一样，只是使用不同的扩展配置文件。
 
+## 扩展`Transformlet`实现的注意点
+
+在`Transformlet`的实现逻辑中，**_不要_** 加载被`transform`的类 或是 做实例化，如
+
+- `ToBeTransformedClass.class`
+- `Class.forName("com.alibaba.ttl.agent.extension_transformlet.sample.biz.ToBeTransformedClass")`
+- `new ToBeTransformedClass()`
+
+加载被`transform`的类会导致对该类的`transform`操作被跳过，也就是`Transformlet`失效了。
+
 ## 扩展`Transformlet`的测试与生效验证
 
 单元测试类 在 [`ToBeTransformedClassTest`](src/test/java/com/alibaba/ttl/agent/extension_transformlet/sample/biz/ToBeTransformedClassTest.java)。
