@@ -24,6 +24,12 @@
 			<artifactId>vertx-core</artifactId>
 			<version>4.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-web-client</artifactId>
+			<version>4.0.0</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -116,7 +122,8 @@
 		<profile>
 			<id>enable-LogTransform-forTest</id>
 			<properties>
-				<surefire.ttl.agent.log.class.transform>-Dttl.agent.log.class.transform</surefire.ttl.agent.log.class.transform>
+				<surefire.ttl.agent.log.class.transform>-Dttl.agent.log.class.transform
+				</surefire.ttl.agent.log.class.transform>
 			</properties>
 		</profile>
 		<profile>

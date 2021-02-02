@@ -12,6 +12,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
@@ -31,13 +33,19 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
     private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.agent.extension_transformlet.vertx.TtlVertxHandler";
     private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
+    private static final String FUTURE_IMPL_CLASS_NAME = "io.vertx.core.impl.future.FutureImpl";
+
+    private static final Set<String> TO_BE_TRANSFORMED_CLASS_NAMES = new HashSet<>();
+
+    static {
+        TO_BE_TRANSFORMED_CLASS_NAMES.add(FUTURE_CLASS_NAME);
+        TO_BE_TRANSFORMED_CLASS_NAMES.add(FUTURE_IMPL_CLASS_NAME);
+    }
 
     @Override
     public void doTransform(@NonNull ClassInfo classInfo) throws CannotCompileException, NotFoundException, IOException {
-        // FIXME: add logic for subclasses of Future
-
         final CtClass clazz = classInfo.getCtClass();
-        if (FUTURE_CLASS_NAME.contains(classInfo.getClassName())) {
+        if (TO_BE_TRANSFORMED_CLASS_NAMES.contains(classInfo.getClassName())) {
             for (CtMethod method : clazz.getDeclaredMethods()) {
                 updateSetHandlerMethodsOfFutureClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(method);
             }
