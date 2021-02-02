@@ -29,7 +29,7 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(VertxFutureTtlTransformlet.class);
 
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
-    private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.integration.vertx4.TtlVertxHandler";
+    private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.agent.extension_transformlet.vertx.TtlVertxHandler";
     private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
 
     @Override

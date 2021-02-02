@@ -14,6 +14,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<ttl.version>2.13.0-SNAPSHOT</ttl.version>
+		<kotlin.version>1.4.21-2</kotlin.version>
+		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -23,6 +25,12 @@
 			<version>4.0.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
