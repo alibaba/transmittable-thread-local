@@ -69,14 +69,14 @@ final class TtlExtensionTransformletManager {
 
         logger.info("[TtlExtensionTransformletCollector] collecting TTL Extension Transformlets from classloader " + classLoader);
 
-        final Set<String> extensionTransformletClassNames = readExtensionTransformletClassNames(classLoader);
+        final LinkedHashSet<String> extensionTransformletClassNames = readExtensionTransformletClassNames(classLoader);
 
         final String foundMsgHead = "[TtlExtensionTransformletCollector] found TTL Extension Transformlet class ";
-        final String failMsgHead = "[TtlExtensionTransformletCollector] fail to load TTL Extension Transformlet ";
+        final String failLoadMsgHead = "[TtlExtensionTransformletCollector] fail to load TTL Extension Transformlet ";
         final Map<ClassLoader, Set<TtlTransformlet>> loadedTransformlet =
-            loadInstances(classLoader, extensionTransformletClassNames, TtlTransformlet.class, foundMsgHead, failMsgHead);
+            loadExtensionInstances(classLoader, extensionTransformletClassNames, TtlTransformlet.class, foundMsgHead, failLoadMsgHead);
 
-        mergeToClassLoader2extensionTransformlet(classLoader2ExtensionTransformlets, loadedTransformlet);
+        mergeToClassLoader2ExtensionTransformlet(classLoader2ExtensionTransformlets, loadedTransformlet);
 
         updateClassLoader2ExtensionTransformletsIncludeParentCL(
             classLoader2ExtensionTransformlets, classLoader2ExtensionTransformletsIncludeParentCL);
@@ -85,11 +85,12 @@ final class TtlExtensionTransformletManager {
     // extension transformlet configuration file URL location string -> URL contained extension transformlet class names
     private final Map<String, LinkedHashSet<String>> redExtensionTransformletFileHistory = new HashMap<String, LinkedHashSet<String>>();
 
-    private Set<String> readExtensionTransformletClassNames(ClassLoader classLoader) throws IOException {
-        final Enumeration<URL> resources = classLoader.getResources(TTL_AGENT_EXTENSION_TRANSFORMLET_FILE);
+    private LinkedHashSet<String> readExtensionTransformletClassNames(ClassLoader classLoader) throws IOException {
+        final Enumeration<URL> extensionFiles = classLoader.getResources(TTL_AGENT_EXTENSION_TRANSFORMLET_FILE);
 
-        final LinkedHashSet<String> stringUrls = new LinkedHashSet<String>();
-        final Set<String> extensionTransformletClassNames = readLines(resources, redExtensionTransformletFileHistory, stringUrls);
+        final Pair<LinkedHashSet<String>, Set<String>> pair = readLinesFromExtensionFiles(extensionFiles, redExtensionTransformletFileHistory);
+        final LinkedHashSet<String> extensionTransformletClassNames = pair.first;
+        final Set<String> stringUrls = pair.second;
         if (!stringUrls.isEmpty())
             logger.info("[TtlExtensionTransformletCollector] found TTL Extension Transformlet configuration files from classloader "
                 + classLoader + " : " + stringUrls);
@@ -97,7 +98,7 @@ final class TtlExtensionTransformletManager {
         return extensionTransformletClassNames;
     }
 
-    private static void mergeToClassLoader2extensionTransformlet(
+    private static void mergeToClassLoader2ExtensionTransformlet(
         Map<ClassLoader, Map<String, TtlTransformlet>> destination, Map<ClassLoader, Set<TtlTransformlet>> loadedTransformlets
     ) {
         for (Map.Entry<ClassLoader, Set<TtlTransformlet>> entry : loadedTransformlets.entrySet()) {
@@ -156,8 +157,8 @@ final class TtlExtensionTransformletManager {
 
     // ======== Extension load util methods ========
 
-    static <T> Map<ClassLoader, Set<T>> loadInstances(
-        ClassLoader classLoader, Set<String> instanceClassNames, Class<T> superType,
+    static <T> Map<ClassLoader, Set<T>> loadExtensionInstances(
+        ClassLoader classLoader, LinkedHashSet<String> instanceClassNames, Class<T> superType,
         String foundMsgHead, String failLoadMsgHead
     ) {
         Map<ClassLoader, Set<T>> ret = new HashMap<ClassLoader, Set<T>>();
@@ -209,56 +210,58 @@ final class TtlExtensionTransformletManager {
         return ret;
     }
 
-    static LinkedHashSet<String> readLines(
-        /* input */ Enumeration<URL> urls,
-        /* input/output */ Map<String, LinkedHashSet<String>> redUrlHistory,
-        /* output */ LinkedHashSet<String> stringUrls
+    // return: read lines from URL, url strings
+    @NonNull
+    static Pair<LinkedHashSet<String>, Set<String>> readLinesFromExtensionFiles(
+        /* input */ @NonNull Enumeration<URL> extensionFiles,
+        /* input/output, map url string -> content lines */ @NonNull Map<String, LinkedHashSet<String>> redExtensionFilesHistory
     ) {
-        final LinkedHashSet<String> ret = new LinkedHashSet<String>();
+        final LinkedHashSet<String> mergedLines = new LinkedHashSet<String>();
+        final Set<String> stringUrls = new HashSet<String>();
 
-        while (urls.hasMoreElements()) {
-            final URL url = urls.nextElement();
+        while (extensionFiles.hasMoreElements()) {
+            final URL url = extensionFiles.nextElement();
 
             final String urlString = url.toString();
             stringUrls.add(urlString);
 
             LinkedHashSet<String> lines;
-            if (redUrlHistory.containsKey(urlString)) {
-                lines = redUrlHistory.get(urlString);
+            if (redExtensionFilesHistory.containsKey(urlString)) {
+                lines = redExtensionFilesHistory.get(urlString);
             } else {
                 lines = readLines(url);
 
-                redUrlHistory.put(urlString, lines);
+                redExtensionFilesHistory.put(urlString, lines);
             }
 
-            ret.addAll(lines);
+            mergedLines.addAll(lines);
         }
 
-        return ret;
+        return new Pair<LinkedHashSet<String>, Set<String>>(mergedLines, stringUrls);
     }
 
     /**
      * this method is modified based on {@link java.util.ServiceLoader}
      */
     @SuppressWarnings("StatementWithEmptyBody")
-    static LinkedHashSet<String> readLines(URL url) {
+    static LinkedHashSet<String> readLines(URL extensionFile) {
         InputStream inputStream = null;
         BufferedReader reader = null;
 
         LinkedHashSet<String> names = new LinkedHashSet<String>();
         try {
-            inputStream = url.openStream();
+            inputStream = extensionFile.openStream();
             reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
             int lineNum = 1;
-            while ((lineNum = parseLine(url, reader, lineNum, names)) >= 0) ;
+            while ((lineNum = parseLine(extensionFile, reader, lineNum, names)) >= 0) ;
         } catch (IOException x) {
-            logger.error("Error reading configuration file " + url, x);
+            logger.error("Error reading configuration file " + extensionFile, x);
         } finally {
             try {
                 if (reader != null) reader.close();
                 if (inputStream != null) inputStream.close();
             } catch (IOException y) {
-                logger.warn("Error closing configuration file " + url, y);
+                logger.warn("Error closing configuration file " + extensionFile, y);
             }
         }
 
@@ -305,5 +308,15 @@ final class TtlExtensionTransformletManager {
         }
 
         return lineNum + 1;
+    }
+
+    static class Pair<T, U> {
+        T first;
+        U second;
+
+        public Pair(T first, U second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }

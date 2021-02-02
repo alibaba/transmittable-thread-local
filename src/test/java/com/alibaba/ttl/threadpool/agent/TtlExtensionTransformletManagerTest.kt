@@ -18,8 +18,10 @@ class TtlExtensionTransformletManagerTest {
         TtlAgentLoggerInitializer
 
         val classLoader = TtlExtensionTransformletManagerTest::class.java.classLoader
-        val lines: LinkedHashSet<String> =
-            TtlExtensionTransformletManager.readLines(classLoader.getResources("test_extension/foo.txt"), mutableMapOf(), linkedSetOf())
+        val pair = TtlExtensionTransformletManager.readLinesFromExtensionFiles(
+            classLoader.getResources("test_extension/foo.txt"), mutableMapOf()
+        )
+        val lines: LinkedHashSet<String> = pair.first
 
         assertEquals(
             linkedSetOf("hello.World", "hello.tabBefore", "hello.tabAfter", "hello.spaceBefore", "hello.spaceAfter"),
