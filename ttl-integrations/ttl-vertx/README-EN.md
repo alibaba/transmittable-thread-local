@@ -1,14 +1,11 @@
-# Vertx 4的TTL集成
+#  Vertx 4 integration of TTL
 
-## 1. 保证异步io回调中传递值
+## 1. callback in vert.x framework
 
-### 1.1 vert.x内的回调处理
+## 1.1 Decorate `io.vertx.core.Handler`
 
-#### 修饰`io.vertx.core.Handler`
-
-使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/integration/vertx4/TtlVertxHandler.java)来修饰传入的`Handler`。
-
-示例代码：
+Use [`TtlVertxHandler`](src/main/java/com/alibaba/ttl/TtlVertxHandler.java) to decorate `Handler`。
+Sample code：
 
 ```java
 Vertx vertx = Vertx.vertx();
@@ -44,11 +41,9 @@ TtlVertxHandler<AsyncResult<String>> ttlVertxHandler = TtlVertxHandler.get(handl
 stub.sayHello(request).onComplete(ttlVertxHandler);
 ```
 
-### 1.2 修饰`io.vertx.core.Future`
+## 1.2 decorate `io.vertx.core.Future`
 
-修饰了的Vert.x执行器组件如下:
+At present, `TTL` agent has decorated below `Vertx` callback components(`io.vertx.core.Future`) implementation:
+
 - `io.vertx.core.Future`
-- `io.vertx.core.impl.future.FutureImpl`
----
-- 修饰实现代码在[`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
-    
+    - decoration implementation code is in [`TtlVertxFutureTransformlet.java`](src/main/java/com/alibaba/ttl/threadpool/agent/internal/transformlet/impl/TtlVertxFutureTransformlet.java)。
