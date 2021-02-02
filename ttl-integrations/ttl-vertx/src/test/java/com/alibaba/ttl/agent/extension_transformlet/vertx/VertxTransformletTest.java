@@ -31,7 +31,7 @@ public class VertxTransformletTest {
                 Assert.assertNull(transmittableThreadLocal.get());
             }
 
-            //here will be null always
+            //it is always null
             Assert.assertNull(inheritableThreadLocal.get());
 
             System.out.println("========================================");
