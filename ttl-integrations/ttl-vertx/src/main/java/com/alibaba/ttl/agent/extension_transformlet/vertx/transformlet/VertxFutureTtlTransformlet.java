@@ -55,7 +55,8 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
 
     private void updateSetHandlerMethodsOfFutureClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || Modifier.isAbstract(modifiers)) return;
+        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) return;
+        if (Modifier.isAbstract(modifiers)) return;
 
         CtClass[] parameterTypes = method.getParameterTypes();
         StringBuilder insertCode = new StringBuilder();
