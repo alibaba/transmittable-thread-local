@@ -1,8 +1,8 @@
 # 📌 TransmittableThreadLocal(TTL) 📌
 
-[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/master?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
+[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/v2.13.0-Beta1?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.13.0-Beta1?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.13.0-Beta1?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.13.0-Beta1)
 [![Maintainability](https://badgen.net/codeclimate/maintainability/codeclimate/codeclimate?icon=codeclimate)](https://codeclimate.com/github/alibaba/transmittable-thread-local)  
 [![License](https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4EB1BA)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
