@@ -4,7 +4,7 @@
 
 ### 1.1修饰`io.vertx.core.Handler`
 
-使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/TtlVertxHandler.java)来修饰传入的`Handler`。
+使用[`TtlVertxHandler`](src/main/java/com/alibaba/ttl/integration/vertx4/TtlVertxHandler.java)来修饰传入的`Handler`。
 
 ### 1.2 修饰`io.vertx.core.Future`
 
@@ -12,7 +12,7 @@
 - `io.vertx.core.Future`
 - `io.vertx.core.impl.future.FutureImpl`
 ---
-- 修饰实现代码在[`VertxFutureTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/VertxFutureTtlTransformlet.java)。
+- 修饰实现代码在[`VertxFutureTtlTransformlet.java`](src/main/java/com/alibaba/ttl/integration/vertx4/agent/transformlet/VertxFutureTtlTransformlet.java)。
 
 示例代码：
 
@@ -58,4 +58,4 @@ stub.sayHello(request).onComplete(ttlVertxHandler);
 
 ### 2.2 修饰`io.netty.util.concurrent.SingleThreadEventExecutor`
 
-修饰实现代码在[`NettySingleThreadEventExecutorTtlTransformlet.java`](src/main/java/com/alibaba/ttl/agent/extension_transformlet/vertx/transformlet/NettySingleThreadEventExecutorTtlTransformlet.java)。
+修饰实现代码在[`NettySingleThreadEventExecutorTtlTransformlet.java`](src/main/java/com/alibaba/ttl/integration/vertx4/agent/transformlet/NettySingleThreadEventExecutorTtlTransformlet.java)。
