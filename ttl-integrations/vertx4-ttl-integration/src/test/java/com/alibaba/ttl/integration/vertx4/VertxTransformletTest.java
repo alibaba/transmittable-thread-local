@@ -2,78 +2,101 @@ package com.alibaba.ttl.integration.vertx4;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.Message;
+import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author tk (soulmate.tangk at gmail dot com)
  */
 public class VertxTransformletTest {
     @Test
-    public void testTransmitThreadLocalInEventbus() {
-        TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>();
-        InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<String>();
-        String transmittedData = "hahahahaha";
+    public void testTransmitThreadLocal_InEventbus() throws Exception {
+        final TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<>();
+        final InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<>();
 
-        Vertx vertx = Vertx.vertx();
-        vertx.eventBus().consumer("consumer", message -> {
-            //there will be execute in netty event loop thread
+        final String transmittedData = "transmitted_data";
+        final String inheritedData = "inherited_data_ttl";
+        final String message = "message_42";
+
+        final Vertx vertx = Vertx.vertx();
+        final String address = "consumer";
+
+        vertx.eventBus().consumer(address, msg -> {
+            // be executed in netty event loop thread
             System.out.println("========================================");
+            assertEquals(message, msg.body());
 
             if (TtlAgent.isTtlAgentLoaded()) {
                 System.out.println("Test **WITH** TTL Agent");
-                Assert.assertEquals(transmittedData, transmittableThreadLocal.get());
+                assertEquals(transmittedData, transmittableThreadLocal.get());
             } else {
                 System.out.println("Test WITHOUT TTL Agent");
-                Assert.assertNull(transmittableThreadLocal.get());
+                assertNull(transmittableThreadLocal.get());
             }
 
-            //it is always null
-            Assert.assertNull(inheritableThreadLocal.get());
+            // InheritableThreadLocal is always null
+            assertNull(inheritableThreadLocal.get());
 
             System.out.println("========================================");
         });
 
         transmittableThreadLocal.set(transmittedData);
-        inheritableThreadLocal.set("gagagagaga");
+        inheritableThreadLocal.set(inheritedData);
 
-        //delivery message
-        vertx.eventBus().request("consumer", "asdfsd");
+        // delivery message
+        final DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setSendTimeout(1000);
+        final Future<Message<Object>> messageFuture = vertx.eventBus().request(address, message, deliveryOptions);
+
+        // TODO how to block and wait to finish
+
+        // messageFuture.toCompletionStage().toCompletableFuture().get();
+        // assertEquals(message, messageFuture.toCompletionStage().toCompletableFuture().get().body());
     }
 
     @Test
     public void testCallback() throws Exception {
-        TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>();
-        InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<String>();
-        String transmittedData = "hahahahaha";
+        final TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<>();
+        final InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<>();
+        final String transmittedData = "transmitted_data_ttl";
+        final String inheritedData = "inherited_data_ttl";
 
-        Vertx vertx = Vertx.vertx();
+        final Vertx vertx = Vertx.vertx();
         //here will bind eventLoop to client and create a new Thread for eventLoop
-        WebClient client = WebClient.create(vertx);
+        final WebClient client = WebClient.create(vertx);
 
         //set value after eventLoop thread was created
         transmittableThreadLocal.set(transmittedData);
-        inheritableThreadLocal.set("gagagagaga");
+        inheritableThreadLocal.set(inheritedData);
 
-        client
-            .get(80, "baidu.com", "/")
+        final Future<HttpResponse<Buffer>> future = client.get(80, "baidu.com", "/")
             .send()
             .onSuccess(response -> {
                 System.out.println("===================callback=====================");
+                System.out.println(response.body().toString(UTF_8));
 
                 if (TtlAgent.isTtlAgentLoaded()) {
                     System.out.println("Test **WITH** TTL Agent");
-                    Assert.assertEquals(transmittedData, transmittableThreadLocal.get());
+                    assertEquals(transmittedData, transmittableThreadLocal.get());
                 } else {
                     System.out.println("Test WITHOUT TTL Agent");
-                    Assert.assertNull(transmittableThreadLocal.get());
+                    assertNull(transmittableThreadLocal.get());
                 }
 
                 System.out.println("===================callback=====================");
             });
 
-        Thread.sleep(10000);
+        // block and wait to finish
+        future.toCompletionStage().toCompletableFuture().get();
     }
 }
