@@ -9,25 +9,23 @@ import java.util.Set;
  * {@link com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet}
  * for {@link io.netty.util.concurrent.SingleThreadEventExecutor}.
  *
+ * @author tk (305809299 at qq dot com)
  * @see io.netty.util.concurrent.SingleThreadEventExecutor
  * @see io.vertx.core.eventbus.EventBus
  * @see io.vertx.core.impl.EventLoopContext
  * @see io.vertx.core.eventbus.Message
  */
 public final class NettySingleThreadEventExecutorTtlTransformlet extends AbstractExecutorTtlTransformlet {
-    private static final Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
 
-    static {
-        EXECUTOR_CLASS_NAMES.add("io.netty.util.concurrent.SingleThreadEventExecutor");
+    private static Set<String> getExecutorClassNames() {
+        Set<String> executorClassNames = new HashSet<>();
+
+        executorClassNames.add("io.netty.util.concurrent.SingleThreadEventExecutor");
+
+        return executorClassNames;
     }
 
-    private static final String THREAD_FACTORY_CLASS_NAME = "java.util.concurrent.ThreadFactory";
-
-    public NettySingleThreadEventExecutorTtlTransformlet(boolean disableInheritableForThreadPool) {
-        super(EXECUTOR_CLASS_NAMES, disableInheritableForThreadPool);
-        System.out.println("================================================");
-    }
     public NettySingleThreadEventExecutorTtlTransformlet() {
-        super(EXECUTOR_CLASS_NAMES, false);
+        super(getExecutorClassNames(), false);
     }
 }
