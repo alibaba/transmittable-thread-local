@@ -1,4 +1,4 @@
-package com.alibaba.ttl.agent.extension_transformlet.vertx;
+package com.alibaba.ttl.integration.vertx4;
 
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlAttachmentsDelegate;
@@ -27,10 +27,9 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * {@link io.netty.channel.nio.NioEventLoop#run()} rather than the {@link com.alibaba.ttl.TtlRunnable#run()}
  *
  * @author tk (305809299 at qq dot com)
+ * @see io.vertx.core.Future
  * @see io.netty.channel.nio.NioEventLoop#run()
  * @see io.netty.channel.nio.NioEventLoop#processSelectedKeys()
- * @see io.vertx.core.Future
- * @see com.alibaba.ttl.TransmittableThreadLocal.Transmitter#restore(Object)
  */
 public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, TtlEnhanced, TtlAttachments {
     private final AtomicReference<Object> capturedRef;

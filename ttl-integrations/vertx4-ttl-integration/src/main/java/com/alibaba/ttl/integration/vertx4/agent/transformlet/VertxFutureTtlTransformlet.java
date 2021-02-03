@@ -1,4 +1,4 @@
-package com.alibaba.ttl.agent.extension_transformlet.vertx.transformlet;
+package com.alibaba.ttl.integration.vertx4.agent.transformlet;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
@@ -11,7 +11,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,14 +23,12 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * @see com.alibaba.ttl.integration.vertx4.TtlVertxHandler
  * @see io.vertx.core.Future
  * @see io.vertx.core.Handler
- * @see sun.misc.Launcher.AppClassLoader
- * @see URLClassLoader#findClass(String)
  */
 public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final Logger logger = Logger.getLogger(VertxFutureTtlTransformlet.class);
 
     private static final String HANDLER_CLASS_NAME = "io.vertx.core.Handler";
-    private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.agent.extension_transformlet.vertx.TtlVertxHandler";
+    private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.integration.vertx4.TtlVertxHandler";
     private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
     private static final String FUTURE_IMPL_CLASS_NAME = "io.vertx.core.impl.future.FutureImpl";
 

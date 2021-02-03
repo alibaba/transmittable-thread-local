@@ -1,4 +1,4 @@
-package com.alibaba.ttl.agent.extension_transformlet.vertx;
+package com.alibaba.ttl.integration.vertx4;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
@@ -8,8 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author: tk (soulmate.tangk at gmail dot com)
- * @date: 2021/2/2
+ * @author tk (soulmate.tangk at gmail dot com)
  */
 public class VertxTransformletTest {
     @Test
@@ -44,12 +43,8 @@ public class VertxTransformletTest {
         vertx.eventBus().request("consumer", "asdfsd");
     }
 
-    /**
-     * @see
-     * @throws InterruptedException
-     */
     @Test
-    public void testCallback() throws InterruptedException {
+    public void testCallback() throws Exception {
         TransmittableThreadLocal<String> transmittableThreadLocal = new TransmittableThreadLocal<String>();
         InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<String>();
         String transmittedData = "hahahahaha";
