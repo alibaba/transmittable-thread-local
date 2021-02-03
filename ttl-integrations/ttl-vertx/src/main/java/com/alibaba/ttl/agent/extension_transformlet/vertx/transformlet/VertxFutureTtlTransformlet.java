@@ -78,6 +78,6 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     }
 
     private boolean checkMethodNeedToBeDecorated(int modifiers) {
-        return Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) || !Modifier.isAbstract(modifiers);
+        return Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers) && !Modifier.isAbstract(modifiers);
     }
 }
