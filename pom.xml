@@ -94,7 +94,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.4.30</kotlin.version>
+		<kotlin.version>1.4.31</kotlin.version>
 		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
 	</properties>
 
