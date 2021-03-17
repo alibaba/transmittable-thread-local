@@ -48,6 +48,9 @@ public class VertxTransformletTest {
             assertNull(inheritableThreadLocal.get());
 
             System.out.println("========================================");
+
+            //reply message can be get by {messageFuture.toCompletionStage().toCompletableFuture().get().body()} or {listener}
+            msg.reply(message);
         });
 
         transmittableThreadLocal.set(transmittedData);
@@ -58,10 +61,8 @@ public class VertxTransformletTest {
         deliveryOptions.setSendTimeout(1000);
         final Future<Message<Object>> messageFuture = vertx.eventBus().request(address, message, deliveryOptions);
 
-        // TODO how to block and wait to finish
-
-        // messageFuture.toCompletionStage().toCompletableFuture().get();
-        // assertEquals(message, messageFuture.toCompletionStage().toCompletableFuture().get().body());
+        messageFuture.toCompletionStage().toCompletableFuture().get();
+        assertEquals(message, messageFuture.toCompletionStage().toCompletableFuture().get().body());
     }
 
     @Test
