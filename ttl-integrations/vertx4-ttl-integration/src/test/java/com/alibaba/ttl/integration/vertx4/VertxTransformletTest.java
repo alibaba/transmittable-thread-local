@@ -49,6 +49,7 @@ public class VertxTransformletTest {
 
             System.out.println("========================================");
 
+            //reply message can be get by {messageFuture.toCompletionStage().toCompletableFuture().get().body()} or {listener}
             msg.reply(message);
         });
 
