@@ -31,6 +31,8 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
     private static final String TTL_HANDLER_CLASS_NAME = "com.alibaba.ttl.integration.vertx3.TtlVertxHandler";
     private static final String FUTURE_CLASS_NAME = "io.vertx.core.Future";
     private static final String HTTP_CLIENT_CLASS_NAME = "io.vertx.core.http.impl.HttpClientImpl";
+    private static final String DNS_CLIENT_CLASS_NAME = "io.vertx.core.dns.impl.DnsClientImpl";
+    private static final String VERTX_IMPL_CLASS_NAME = "io.vertx.core.impl.VertxImpl";
     private static final String FUTURE_IMPL_CLASS_NAME = "io.vertx.core.impl.future.FutureImpl";
 
     private static final Set<String> TO_BE_TRANSFORMED_CLASS_NAMES = new HashSet<>();
@@ -39,6 +41,7 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
         TO_BE_TRANSFORMED_CLASS_NAMES.add(FUTURE_CLASS_NAME);
         TO_BE_TRANSFORMED_CLASS_NAMES.add(FUTURE_IMPL_CLASS_NAME);
         TO_BE_TRANSFORMED_CLASS_NAMES.add(HTTP_CLIENT_CLASS_NAME);
+        TO_BE_TRANSFORMED_CLASS_NAMES.add(VERTX_IMPL_CLASS_NAME);
     }
 
     @Override
