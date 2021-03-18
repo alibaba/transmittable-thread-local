@@ -50,6 +50,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.0.28.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>transmittable-thread-local</artifactId>
 			<version>${ttl.version}</version>
