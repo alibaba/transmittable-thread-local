@@ -122,12 +122,11 @@ public class VertxTransformletTest {
             if (TtlAgent.isTtlAgentLoaded()) {
                 System.out.println("Test **WITH** TTL Agent");
                 assertEquals(transmittedData, transmittableThreadLocal.get());
-                assertNull(inheritableThreadLocal.get());
             } else {
                 System.out.println("Test WITHOUT TTL Agent");
                 assertNull(transmittableThreadLocal.get());
-                assertNull(inheritableThreadLocal.get());
             }
+            assertNull(inheritableThreadLocal.get());
 
             System.out.println("===================callback=====================");
         });
