@@ -90,8 +90,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.4.30</kotlin.version>
-		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
+		<kotlin.version>1.4.32</kotlin.version>
+		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -115,7 +115,7 @@
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<scope>provided</scope>
-			<version>4.2.1</version>
+			<version>4.2.2</version>
 		</dependency>
 		<!--
 			make other qa libs
@@ -328,7 +328,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.2.0</version>
+				<version>4.2.2</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -598,7 +598,7 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.3</version>
+						<version>4.0.4</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
