@@ -38,7 +38,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<vertx.version>3.0.0</vertx.version>
+		<vertx.version>3.5.4</vertx.version>
 		<ttl.version>2.13.0-SNAPSHOT</ttl.version>
 	</properties>
 
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
-			<version>4.0.28.Final</version>
+			<version>4.1.42.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -73,7 +73,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
