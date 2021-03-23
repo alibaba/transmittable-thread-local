@@ -159,28 +159,24 @@ class TtlRunnableTest {
         executorService.submit(ttlRunnable1).get()
         assertEquals(1, counterTtl.copyCounter.get())
         assertEquals(1, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
         assertEquals(1, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable1).get()
         assertEquals(if (noTtlAgentRun()) 1 else 2, counterTtl.copyCounter.get())
         assertEquals(2, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
         assertEquals(2, counterTtl.afterExecuteCounter.get())
 
         // do copy when decorate runnable
         val ttlRunnable2 = if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
         assertEquals(if (noTtlAgentRun()) 2 else 2, counterTtl.copyCounter.get())
         assertEquals(2, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
         assertEquals(2, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable2).get()
         assertEquals(if (noTtlAgentRun()) 2 else 3, counterTtl.copyCounter.get())
         assertEquals(3, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
         assertEquals(3, counterTtl.afterExecuteCounter.get())
     }
 
