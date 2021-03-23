@@ -95,7 +95,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<kotlin.version>1.4.32</kotlin.version>
-		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.4.3-native-mt</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
