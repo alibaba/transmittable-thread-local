@@ -17,7 +17,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * Use factory method {@link #get(TimerTask)} to create instance.
  * <p>
  * <b>NOTE:</b>
- * The {@link TtlTimerTask} make the the method {@link TimerTask#scheduledExecutionTime()} in
+ * The {@link TtlTimerTask} make the method {@link TimerTask#scheduledExecutionTime()} in
  * the origin {@link TimerTask} lose effectiveness! Use {@link com.alibaba.ttl.threadpool.agent.TtlAgent} instead.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -45,12 +45,12 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
      */
     @Override
     public void run() {
-        Object captured = capturedRef.get();
+        final Object captured = capturedRef.get();
         if (captured == null || releaseTtlValueReferenceAfterRun && !capturedRef.compareAndSet(captured, null)) {
             throw new IllegalStateException("TTL value reference is released after run!");
         }
 
-        Object backup = replay(captured);
+        final Object backup = replay(captured);
         try {
             timerTask.run();
         } finally {

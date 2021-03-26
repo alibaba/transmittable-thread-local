@@ -5,12 +5,12 @@
 
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.12.0-SNAPSHOT</version>
+	<version>2.13.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
 		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
-		provide an enhanced InheritableThreadLocal that transmits ThreadLocal value between threads even using thread pooling components.
+		provide an enhanced InheritableThreadLocal that transmits values between threads even using thread pooling components.
 	</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
@@ -26,12 +26,16 @@
 	<scm>
 		<connection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</connection>
 		<developerConnection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</developerConnection>
-		<url>git@github.com:alibaba/transmittable-thread-local.git</url>
+		<url>https://github.com/alibaba/transmittable-thread-local</url>
 	</scm>
 	<issueManagement>
 		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
+	<ciManagement>
+		<system>travis-ci</system>
+		<url>https://travis-ci.org/github/alibaba/transmittable-thread-local</url>
+	</ciManagement>
 	<organization>
 		<name>Alibaba</name>
 		<url>http://www.alibaba.com</url>
@@ -90,8 +94,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.3.61</kotlin.version>
-		<kotlin.coroutine.version>1.3.3</kotlin.coroutine.version>
+		<kotlin.version>1.4.32</kotlin.version>
+		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -110,12 +114,19 @@
 			Please continue using findbugs’ one.
 			depend on spotbugs-annotations instead.
 			https://spotbugs.readthedocs.io/en/stable/migration.html
+
+			set scope to *provided* but without optional=true:
+				- no lib user runtime cost, *still* runtime 0-dependency
+				  not runtime/compile Transitive dependence
+				- more IDE friendly
+				  ensure to be able to jump to annotation classes(edu.umd.cs.findbugs.annotations.NonNull, etc)
+				  when user browse source code in IDE
 		-->
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>3.1.12</version>
-			<optional>true</optional>
+			<scope>provided</scope>
+			<version>4.2.2</version>
 		</dependency>
 		<!--
 			make other qa libs
@@ -133,7 +144,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -151,7 +162,7 @@
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>2.2.16</version>
+			<version>2.2.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -254,7 +265,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.2.0</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -267,7 +278,7 @@
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
 							<Agent-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Agent-Class>
-							<Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
+							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
 							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
 							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
@@ -277,7 +288,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<id>shade-when-package</id>
@@ -289,7 +300,7 @@
 							<relocations>
 								<relocation>
 									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.internal.javassist</shadedPattern>
+									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.javassist</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>
@@ -297,6 +308,14 @@
 									<include>org.javassist:javassist</include>
 								</includes>
 							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>org.javassist:javassist</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
 							<shadeSourcesContent>true</shadeSourcesContent>
 						</configuration>
 					</execution>
@@ -321,17 +340,17 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.12.2</version>
+				<version>4.2.2</version>
 			</plugin>
 			<!--
-					official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
+				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
 
-					add maven-enforce-plugin to make sure the right jdk is used
-					https://stackoverflow.com/a/18420462/922688
-				-->
+				add maven-enforce-plugin to make sure the right jdk is used
+				https://stackoverflow.com/a/18420462/922688
+			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
+				<version>3.0.0-M3</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -341,7 +360,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.5.4</version>
+									<version>3.3.9</version>
 								</requireMavenVersion>
 							</rules>
 						</configuration>
@@ -354,7 +373,7 @@
 				-->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.7</version>
+				<version>2.8.1</version>
 				<configuration>
 					<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
 					<generateBackupPoms>false</generateBackupPoms>
@@ -369,15 +388,15 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.2.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.2.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.2.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -385,7 +404,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.7.1</version>
+					<version>3.9.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
@@ -400,7 +419,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>gen-src+doc</id>
+			<id>gen-src</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
@@ -431,6 +450,19 @@
 							</execution>
 						</executions>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-javadoc</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
@@ -493,6 +525,12 @@
 								<additionalJOption>-quiet</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
+
+								<!--
+									How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
+									https://stackoverflow.com/questions/39616344
+								-->
+								<additionalJOption>-Xdoclint:-missing</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>
@@ -572,7 +610,7 @@
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>
-						<version>3.0.0</version>
+						<version>4.0.4</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
@@ -604,7 +642,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>travis</id>
+			<id>gen-code-cov</id>
 			<activation>
 				<property>
 					<name>env.TRAVIS</name>
@@ -619,7 +657,7 @@
 						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.4</version>
+						<version>0.8.6</version>
 						<executions>
 							<execution>
 								<goals>
@@ -645,7 +683,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>force-jdk-11+when-do-release</id>
+			<id>force-jdk11-when-release</id>
 			<activation>
 				<property>
 					<name>performRelease</name>

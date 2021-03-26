@@ -3,7 +3,6 @@ package com.alibaba.ttl.testmodel
 import com.alibaba.CHILD_CREATE
 import com.alibaba.PARENT_CREATE_MODIFIED_IN_CHILD
 import com.alibaba.copyTtlValues
-import com.alibaba.printTtlInstances
 import com.alibaba.ttl.TransmittableThreadLocal
 import java.util.concurrent.ConcurrentMap
 

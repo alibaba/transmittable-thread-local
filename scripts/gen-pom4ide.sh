@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"/..
 
 sed '
@@ -10,4 +10,4 @@ sed '
 echo "diff between pom and pom4ide.xml:"
 echo
 
-diff pom.xml pom4ide.xml
+diff pom.xml pom4ide.xml || true

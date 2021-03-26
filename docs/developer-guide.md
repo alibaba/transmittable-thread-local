@@ -10,12 +10,18 @@
 - [📟 关于`Java Agent`](#-%E5%85%B3%E4%BA%8Ejava-agent)
     - [`Java Agent`方式对应用代码无侵入](#java-agent%E6%96%B9%E5%BC%8F%E5%AF%B9%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5)
     - [已有`Java Agent`中嵌入`TTL Agent`](#%E5%B7%B2%E6%9C%89java-agent%E4%B8%AD%E5%B5%8C%E5%85%A5ttl-agent)
-- [👢 Bootstrap上添加通用库的`Jar`的问题及解决方法](#-bootstrap%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93%E7%9A%84jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法](#-bootstrap-classpath%E4%B8%8A%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%94%A8%E5%BA%93jar%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
+    - [如何编译构建](#%E5%A6%82%E4%BD%95%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)
+    - [如何用`IDE`开发](#%E5%A6%82%E4%BD%95%E7%94%A8ide%E5%BC%80%E5%8F%91)
+        - [`IntelliJ IDEA`关闭检查的方法](#intellij-idea%E5%85%B3%E9%97%AD%E6%A3%80%E6%9F%A5%E7%9A%84%E6%96%B9%E6%B3%95)
+        - [其它`IDE`的解决方法](#%E5%85%B6%E5%AE%83ide%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95)
+- [发布操作列表](#%E5%8F%91%E5%B8%83%E6%93%8D%E4%BD%9C%E5%88%97%E8%A1%A8)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
-    - [Jdk core classes](#jdk-core-classes)
-    - [Java Agent](#java-agent)
-    - [Javassist](#javassist)
-    - [Shade插件](#shade%E6%8F%92%E4%BB%B6)
+    - [`JDK` core classes](#jdk-core-classes)
+    - [`Java Agent`](#java-agent)
+    - [`Javassist`](#javassist)
+    - [`Maven Shade`插件](#maven-shade%E6%8F%92%E4%BB%B6)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -23,10 +29,10 @@
 
 # 📌 框架/中间件集成`TTL`传递
 
-框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)
+框架/中间件集成`TTL`传递，通过[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362)
 抓取当前线程的所有`TTL`值并在其他线程进行回放；在回放线程执行完业务操作后，恢复为回放线程原来的`TTL`值。
 
-[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L201)提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
+`TransmittableThreadLocal.Transmitter`提供了所有`TTL`值的抓取、回放和恢复方法（即`CRR`操作）：
 
 1. `capture`方法：抓取线程（线程A）的所有`TTL`值。
 2. `replay`方法：在另一个线程（线程B）中，回放在`capture`方法中抓取的`TTL`值，并返回 回放前`TTL`值的备份
@@ -39,8 +45,8 @@
 // 线程 A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+context.set("value-set-in-parent");
 
 // (1) 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -53,7 +59,7 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
 try {
     // 你的业务逻辑，这里你可以获取到外面设置的TTL值
-    String value = parent.get();
+    String value = context.get();
 
     System.out.println("Hello: " + value);
     ...
@@ -64,7 +70,7 @@ try {
 }
 ```
 
-`TTL`传递的具体实现示例参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+更多`TTL`传递的代码实现示例，参见 [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 当然可以使用`TransmittableThreadLocal.Transmitter`的工具方法`runSupplierWithCaptured`和`runCallableWithCaptured`和可爱的`Java 8 Lambda`语法
 来简化`replay`和`restore`操作，示例代码：
@@ -74,8 +80,8 @@ try {
 // 线程 A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
+context.set("value-set-in-parent");
 
 // (1) 抓取当前线程的所有TTL值
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -86,14 +92,15 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 
 String result = runSupplierWithCaptured(captured, () -> {
     // 你的业务逻辑，这里你可以获取到外面设置的TTL值
-    String value = parent.get();
+    String value = context.get();
     System.out.println("Hello: " + value);
     ...
     return "World: " + value;
 }); // (2) + (3)
 ```
 
-更多`TTL`传递的说明详见[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240)的`JavaDoc`。
+- 更多`TTL`传递的说明，详见[`TransmittableThreadLocal.Transmitter`的`JavaDoc`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L266-L362)。
+- 更多`TTL`传递的代码实现，参见[`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java)、[`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
 
 # 📟 关于`Java Agent`
 
@@ -148,45 +155,103 @@ public final class YourXxxAgent {
 
 关于`Java Agent`和`ClassFileTransformer`的如何实现可以参考：[`TtlAgent.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)、[`TtlTransformer.java`](../src/main/java/com/alibaba/ttl/threadpool/agent/TtlTransformer.java)。
 
-注意在`bootclasspath`上，还是要加上`TTL`依赖的Jar：
+注意，在`bootclasspath`上，还是要加上`TTL Jar`：
 
 ```bash
--Xbootclasspath/a:/path/to/transmittable-thread-local-2.0.0.jar:/path/to/your/agent/jar/files
+-Xbootclasspath/a:/path/to/transmittable-thread-local-2.x.y.jar:/path/to/your/agent/jar/files
 ```
 
-# 👢 Bootstrap上添加通用库的`Jar`的问题及解决方法
+# 👢 `Bootstrap ClassPath`上添加通用库`Jar`的问题及其解决方法
 
-通过`Java`命令参数`-Xbootclasspath`把库的`Jar`加`Bootstrap` `ClassPath`上。`Bootstrap` `ClassPath`上的`Jar`中类会优先于应用`ClassPath`的`Jar`被加载，并且不能被覆盖。
+`TTL Agent`的使用方式，需要将`TTL Jar`加到`Bootstrap ClassPath`上（通过`Java`命令行参数`-Xbootclasspath`）；这样`TTL`的类与`JDK`的标准库的类（如`java.lang.String`）的`ClassLoader`是一样的，都在`Bootstrap ClassPath`上。
 
-`TTL`在`Bootstrap` `ClassPath`上添加了`Javassist`的依赖，如果应用中如果使用了`Javassist`，实际上会优先使用`Bootstrap` `ClassPath`上的`Javassist`，即应用不能选择`Javassist`的版本，应用需要的`Javassist`和`TTL`的`Javassist`有兼容性的风险。
+`Bootstrap ClassPath`上的类会优先于应用`ClassPath`的`Jar`被加载，并且加载`ClassLoader`不能被改。  
+\# 当然技术上严格地说，通过`Bootstrap ClassPath`上的类（如标准库的类）是可以改`ClassLoader`的，但这样做一般只会带来各种麻烦的问题。关于`ClassLoader`及其使用注意的介绍说明 可以参见[ClassLoader委托关系的完备配置](https://github.com/oldratlee/land#1-classloader%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%8C%E5%A4%87%E9%85%8D%E7%BD%AE)。
 
-可以通过`repackage`（重新命名包名）来解决这个问题。
+`TTL Agent`自己内部实现使用了`Javassist`，即在`Bootstrap ClassPath`上也需要添加`Javassist`。如果应用中也使用了`Javassist`，由于运行时会优先使用`TTL Agent`配置`Bootstrap ClassPath`上的`Javassist`，应用逻辑运行时实际不能选择/指定应用自己的`Javassist`的版本，带来了 应用需要的`Javassist`与`TTL Agent`用的`Javassist`之间的兼容性风险。
 
-`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成`repackage`操作，并把`Javassist`的类加到`TTL`的`Jar`中。
+可以通过 `repackage`依赖（即 重命名/改写 依赖类的包名）来解决这个问题。`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成下面的操作：
 
-这样就不需要依赖外部的`Javassist`依赖，也规避了依赖冲突的问题。
+- `repackage` `Javassist`的类文件
+- 添加`repackage`过的`Javassist`到`TTL Jar`中
+
+这样操作后，`TTL Agent`不需要依赖外部的`Javassist`依赖，效果上这样的`shade`过的`TTL Jar`是自包含的、在使用上是编译/运行时0依赖的，自然也规避了依赖冲突的问题。
+
+# 🔨 关于编译构建与`IDE`开发
+
+## 如何编译构建
+
+编译构建的环境要求： **_`JDK 8~11`_**；用`Maven`常规的方式执行编译构建即可：  
+\# 在工程中已经包含了符合版本要求的`Maven`，直接运行 **_工程根目录下的`mvnw`_**；并不需要先手动自己安装好`Maven`。
+
+```bash
+# 运行测试Case
+./mvnw test
+# 编译打包
+./mvnw package
+# 运行测试Case、编译打包、安装TTL库到Maven本地
+./mvnw install
+
+#####################################################
+# 如果使用你自己安装的 maven，版本要求：maven 3.3.9+
+mvn install
+```
+
+## 如何用`IDE`开发
+
+`TTL`的代码实现使用了`JDK 8`的标准库类，但编译成`Java 6`版本的类文件。即
+
+- 编译`Java`文件的`Java`语言版本 是 `Java 6`。
+- 而编译依赖的`Java API`/标准库（由`JVM`提供） 需要是 `Java 8`/`JVM 8`；高于`Java`语言版本。
+
+现代的`IDE`（如`IntelliJ IDEA`）一般会缺省做 语言版本 与 `API`版本 的检查：
+
+- 如果使用了高于语言版本的标准库类，`IDE`会报错。
+- 以避免 在低语言版本`JVM`运行时使用高版本`API`/标准类找不到 的风险。
+
+可以在`IDE`设置中，关闭这个『语言版本 与 `API`版本』检查。
+
+### `IntelliJ IDEA`关闭检查的方法
+
+在设置中关闭【`Inspections` - `Usages of API which isn't available at the configured language level`】：  
+![1-preferences-setting](https://user-images.githubusercontent.com/1063891/90236020-c57acd00-de54-11ea-8984-695adaf08a67.png)
+
+当然通过【`Find Actions...` <kbd>cmd + shift + A</kbd>】，可以更方便快速完成设置：  
+![2-action-setting](https://user-images.githubusercontent.com/1063891/90236035-c875bd80-de54-11ea-8a9a-f55c42093798.png)
+
+### 其它`IDE`的解决方法
+
+其它`IDE`（如`Eclipse`、`NetBeans`）可以找一下设置方法，以关闭这个『语言版本 与 `API`版本』检查。
+
+如果没有找到`IDE`的设置方法，也可以用下面的方法来 **`workaround`**： 😂
+
+打开 **_工程根目录下的`pom4ide.xml`文件_**（修改了`Java`文件的语言版本），而不是`pom.xml`。
+
+# 发布操作列表
+
+详见独立文档 [发布操作列表](release-action-list.md)。
 
 # 📚 相关资料
 
-## Jdk core classes
+## `JDK` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-## Java Agent
+## `Java Agent`
 
 - 官方文档
     - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
     - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
-    - [Working with Manifest Files - The Java™ TutorialsHide](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
+    - [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
 - [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
 - [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
-- [JavaAgent加载机制分析](http://alipaymiddleware.com/jvm/javaagent%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/)
+- [JavaAgent加载机制分析](https://www.iteye.com/blog/nijiaben-1847212/)
 
-## Javassist
+## `Javassist`
 
 - [Getting Started with Javassist](https://www.javassist.org/tutorial/tutorial.html)
 
-## Shade插件
+## `Maven Shade`插件
 
-- `Maven`的[Shade](http://maven.apache.org/plugins/maven-shade-plugin/)插件
+- [`Maven Shade`插件文档](http://maven.apache.org/plugins/maven-shade-plugin/)

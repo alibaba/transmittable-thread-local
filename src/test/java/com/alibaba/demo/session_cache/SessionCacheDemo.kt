@@ -8,6 +8,7 @@ import io.reactivex.Flowable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.*
+import org.junit.Assert.assertTrue
 import java.util.concurrent.*
 
 
@@ -74,8 +75,7 @@ class SessionCacheDemo {
         @Suppress("unused")
         fun afterClass() {
             executorService.shutdown()
-            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
-            if (!executorService.isTerminated) Assert.fail("Fail to shutdown thread pool")
+            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
         }
     }
 

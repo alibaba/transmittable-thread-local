@@ -8,10 +8,10 @@
 
 - [📌 Framework/Middleware integration to `TTL` transmittance](#-frameworkmiddleware-integration-to-ttl-transmittance)
 - [📚 Related material](#-related-material)
-    - [Jdk core classes](#jdk-core-classes)
-    - [Java Agent](#java-agent)
-    - [Javassist](#javassist)
-    - [Shade Maven Plugin](#shade-maven-plugin)
+    - [`JDK` core classes](#jdk-core-classes)
+    - [`Java` Agent](#java-agent)
+    - [`Javassist`](#javassist)
+    - [`Maven Shade plugin`](#maven-shade-plugin)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -19,13 +19,13 @@
 
 # 📌 Framework/Middleware integration to `TTL` transmittance
 
-[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L240) to capture all `TTL` values of current thread and replay them in other thread.
+[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362) to capture all `TTL` values of current thread and replay them in another thread.
 
 There are following methods：
 
-- `capture`: capture all `TTL` values in current thread
-- `replay`: replay the captured `TTL` values in current thread, and return the backup `TTL` values before replay
-- `restore`: restore `TTL` values before replay
+1. `capture`: capture all `TTL` values in current thread
+2. `replay`: replay the captured `TTL` values in the current thread, and return the backup `TTL` values before replay
+3. `restore`: restore `TTL` values before replay
 
 Sample code：
 
@@ -34,8 +34,8 @@ Sample code：
 // Thread A
 // ===========================================================================
 
-TransmittableThreadLocal<String> parent = new TransmittableThreadLocal<String>();
-parent.set("value-set-in-parent");
+TransmittableThreadLocal<String> context = new TransmittableThreadLocal<String>();
+context.set("value-set-in-parent");
 
 // 1. capture all TTL values in current thread
 final Object captured = TransmittableThreadLocal.Transmitter.capture();
@@ -48,7 +48,7 @@ final Object captured = TransmittableThreadLocal.Transmitter.capture();
 final Object backup = TransmittableThreadLocal.Transmitter.replay(captured);
 try {
     // Your biz code, you can get the TTL value from here
-    String value = parent.get();
+    String value = context.get();
     ...
 } finally {
     // 3. restore TTL values before replay
@@ -56,23 +56,25 @@ try {
 }
 ```
 
-For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java)。
+
+- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L266-L362).
+- For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java).
 
 # 📚 Related material
 
-## Jdk core classes
+## `JDK` core classes
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-## Java Agent
+## `Java` Agent
 
 - [Java Agent Specification](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
 
-## Javassist
+## `Javassist`
 
 - [Getting Started with Javassist](https://www.javassist.org/tutorial/tutorial.html)
 
-## Shade Maven Plugin
+## `Maven Shade plugin`
 
-- [`Maven` Shade doc](http://maven.apache.org/plugins/maven-shade-plugin/)
+- [`Maven Shade plugin` doc](http://maven.apache.org/plugins/maven-shade-plugin/)

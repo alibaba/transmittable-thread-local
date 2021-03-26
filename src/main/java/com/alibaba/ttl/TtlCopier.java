@@ -13,7 +13,7 @@ package com.alibaba.ttl;
 public interface TtlCopier<T> {
     /**
      * Computes the value for {@link TransmittableThreadLocal}
-     * or registered {@link ThreadLocal}(registered by {@link TransmittableThreadLocal.Transmitter#registerThreadLocal})
+     * or registered {@link ThreadLocal}(registered by method {@link TransmittableThreadLocal.Transmitter#registerThreadLocal Transmitter#registerThreadLocal})
      * as a function of the source thread's value at the time the task
      * Object is created.
      * <p>

@@ -18,14 +18,16 @@ import java.util.concurrent.Executor;
  */
 class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced {
     private final Executor executor;
+    protected final boolean idempotent;
 
-    ExecutorTtlWrapper(@NonNull Executor executor) {
+    ExecutorTtlWrapper(@NonNull Executor executor, boolean idempotent) {
         this.executor = executor;
+        this.idempotent = idempotent;
     }
 
     @Override
     public void execute(@NonNull Runnable command) {
-        executor.execute(TtlRunnable.get(command));
+        executor.execute(TtlRunnable.get(command, false, idempotent));
     }
 
     @Override

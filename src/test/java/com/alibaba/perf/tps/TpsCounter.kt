@@ -1,6 +1,6 @@
 package com.alibaba.perf.tps
 
-import org.junit.Assert.fail
+import org.junit.Assert.assertTrue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -36,7 +36,6 @@ class TpsCounter internal constructor(private val threadCount: Int) {
         stopped = true
 
         executorService.shutdown()
-        executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
-        if (!executorService.isTerminated) fail("Fail to shutdown thread pool")
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
     }
 }

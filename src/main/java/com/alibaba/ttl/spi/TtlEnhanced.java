@@ -1,7 +1,8 @@
 package com.alibaba.ttl.spi;
 
 /**
- * a Ttl marker/tag interface, for ttl enhanced class, for example {@code TTL wrapper} like {@link com.alibaba.ttl.TtlRunnable}, {@link com.alibaba.ttl.TtlCallable}.
+ * a Ttl marker/tag interface, for ttl enhanced class, for example {@code TTL wrapper}
+ * like {@link com.alibaba.ttl.TtlRunnable}, {@link com.alibaba.ttl.TtlCallable}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.TtlRunnable

@@ -1,11 +1,11 @@
-package com.alibaba.ttl.threadpool;
+package com.alibaba.ttl.threadpool
 
 import com.alibaba.*
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.testmodel.Task
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Test;
+import org.junit.Test
 import java.util.concurrent.*
 
 private const val POOL_SIZE = 3

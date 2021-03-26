@@ -1,24 +1,12 @@
 #!/bin/bash
+[ -z "${__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98:+dummy}" ] || return 0
+__source_guard_4611926F_96EE_4837_8FAD_75929EF1EB98="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-set -o pipefail
-set -e
 
-# https://stackoverflow.com/questions/64786/error-handling-in-bash
-error() {
-    local parent_lineno="$1"
-    local message="$2"
-    local code="${3:-1}"
-    if [[ -n "$message" ]] ; then
-        redEcho "Error on or near line $(caller): ${message}; exiting with status ${code}"
-    else
-        redEcho "Error on or near line $(caller); exiting with status ${code}"
-    fi
-    exit "${code}"
-}
-trap 'error ${LINENO}' ERR
+set -eEuo pipefail
 
 ################################################################################
-# util functions
+# constants
 ################################################################################
 
 # NOTE: $'foo' is the escape sequence syntax of bash
@@ -26,12 +14,37 @@ readonly nl=$'\n' # new line
 readonly ec=$'\033' # escape char
 readonly eend=$'\033[0m' # escape end
 
+################################################################################
+# trap error setting
+################################################################################
+
+# https://stackoverflow.com/questions/6928946/mysterious-lineno-in-bash-trap-err
+# https://stackoverflow.com/questions/64786/error-handling-in-bash
+# https://stackoverflow.com/questions/24398691/how-to-get-the-real-line-number-of-a-failing-bash-command
+# https://unix.stackexchange.com/questions/39623/trap-err-and-echoing-the-error-line
+# https://unix.stackexchange.com/questions/462156/how-do-i-find-the-line-number-in-bash-when-an-error-occured
+# https://unix.stackexchange.com/questions/365113/how-to-avoid-error-message-during-the-execution-of-a-bash-script
+# https://shapeshed.com/unix-exit-codes/#how-to-suppress-exit-statuses
+# https://stackoverflow.com/questions/30078281/raise-error-in-a-bash-script/50265513#50265513
+__error_trap_handler_() {
+  local file_line_info="$1"
+  local code="$2"
+  local commands="$3"
+  echo "Trap error! Exit status: $code${nl}File/(near) line info:$nl  $file_line_info${nl}Error code line:$nl  $commands"
+}
+trap '__error_trap_handler_ "${BASH_SOURCE[*]} / $LINENO ${BASH_LINENO[*]}" "$?" "$BASH_COMMAND"' ERR
+
+
+################################################################################
+# common util functions
+################################################################################
+
 colorEcho() {
     local color=$1
     shift
 
-    # if stdout is console, turn on color output.
-    [ -t 1 ] && echo "$ec[1;${color}m$@$eend" || echo "$@"
+    # if stdout is the console, turn on color output.
+    [ -t 1 ] && echo "${ec}[1;${color}m$*${eend}" || echo "$*"
 }
 
 redEcho() {
@@ -46,139 +59,42 @@ blueEcho() {
     colorEcho 36 "$@"
 }
 
-runCmd() {
-    blueEcho "Run under work directory $PWD :$nl$@"
-    time "$@"
+headInfo() {
+    colorEcho "0;34;46" ================================================================================
+    yellowEcho "$*"
+    colorEcho "0;34;46" ================================================================================
+}
+
+# How to compare a program's version in a shell script?
+#   https://unix.stackexchange.com/questions/285924
+versionLessThan() {
+    (($# == 2)) || die "${FUNCNAME[0]} need only 2 arguments, actual arguments: $*"
+
+    local ver=$1
+    local destVer=$2
+
+    [ "$ver" = "$destVer" ] && return 1
+
+    [ "$(printf '%s\n' "$ver" "$destVer" | sort -V | head -n1)" = "$ver" ]
+}
+
+logAndRun() {
+    local simple_mode=false
+    [ "$1" = "-s" ] && {
+        simple_mode=true
+        shift
+    }
+
+    if $simple_mode; then
+        echo "Run under work directory $PWD : $*"
+        "$@"
+    else
+        blueEcho "Run under work directory $PWD :$nl$*"
+        time "$@"
+    fi
 }
 
 die() {
-    redEcho "Error: $@" 1>&2
+    redEcho "Error: $*" 1>&2
     exit 1
 }
-
-headInfo() {
-    colorEcho "0;34;46" ================================================================================
-    echo "$@"
-    colorEcho "0;34;46" ================================================================================
-    echo
-}
-
-#################################################################################
-# auto adjust pwd to project root dir, and set PROJECT_ROOT_DIR var
-#################################################################################
-adjustPwdToProjectRootDir() {
-    while true; do
-        [ / = "$PWD" ] && die "fail to detect project directory!"
-
-        [ -f pom.xml ] && {
-            readonly PROJECT_ROOT_DIR="$PWD"
-            yellowEcho "Find project root dir: $PWD"
-            break
-        }
-        cd ..
-    done
-}
-
-adjustPwdToProjectRootDir
-
-#################################################################################
-# project common info
-#################################################################################
-
-readonly version=`grep '<version>.*</version>' pom.xml | awk -F'</?version>' 'NR==1{print $2}'`
-readonly aid=`grep '<artifactId>.*</artifactId>' pom.xml | awk -F'</?artifactId>' 'NR==1{print $2}'`
-
-# set env variable ENABLE_JAVA_RUN_DEBUG to enable java debug mode
-readonly -a JAVA_CMD=(
-    "$JAVA_HOME/bin/java" -Xmx128m -Xms128m -server -ea -Duser.language=en -Duser.country=US
-    ${ENABLE_JAVA_RUN_DEBUG+
-        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-    }
-)
-readonly -a MVN_CMD=(
-    ./mvnw -V
-)
-
-#################################################################################
-# maven operation functions
-#################################################################################
-
-mvnClean() {
-    rm -rf target || die "fail to mvn clean!"
-}
-
-readonly ttl_jar="target/$aid-$version.jar"
-
-mvnBuildJar() {
-    if [ ! -e "$ttl_jar"  -o  "$ttl_jar" -ot src/ ]; then
-        if [ -n "${TTL_CI_TEST_MODE+YES}" ]; then
-            # Build jar action should have used package instead of install
-            # here use install intendedly to check release operations.
-            #
-            # De-activate a maven profile from command line
-            # https://stackoverflow.com/questions/25201430
-            runCmd "${MVN_CMD[@]}" install -DperformRelease -P '!gen-sign' || die "fail to build jar!"
-        else
-            runCmd "${MVN_CMD[@]}" package -Dmaven.test.skip=true || die "fail to build jar!"
-        fi
-    fi
-}
-
-mvnCompileTest() {
-    if [ ! -e "target/test-classes/"  -o  "target/test-classes/" -ot src/  ]; then
-        runCmd "${MVN_CMD[@]}" test-compile || die "fail to mvn test-compile!" || die "fail to compile test!"
-    fi
-}
-
-readonly dependencies_dir="target/dependency"
-
-mvnCopyDependencies() {
-    if [ ! -e "$dependencies_dir" ]; then
-        # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
-        # exclude repackaged and shaded javassist libs
-        runCmd "${MVN_CMD[@]}" dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations || die "fail to mvn copy-dependencies!"
-    fi
-}
-
-getClasspathOfDependencies() {
-    mvnCopyDependencies 1>&2
-
-    echo "$dependencies_dir"/*.jar | tr ' ' :
-}
-
-getClasspathWithoutTtlJar() {
-    mvnCompileTest 1>&2
-
-    echo "target/test-classes:$(getClasspathOfDependencies)"
-}
-
-getTtlJarPath() {
-    mvnBuildJar 1>&2
-
-    echo "$ttl_jar"
-}
-
-getClasspath() {
-    echo "$(getTtlJarPath):$(getClasspathWithoutTtlJar)"
-}
-
-getJUnitTestCases() {
-    (
-        mvnCompileTest 1>&2
-
-        cd target/test-classes &&
-        find . -iname '*Test.class' | sed '
-                s%^\./%%
-                s/\.class$//
-                s%/%.%g
-            '
-    )
-}
-
-#################################################################################
-# maven actions
-#################################################################################
-
-if [ "$1" != "skipClean" ]; then 
-    mvnClean
-fi

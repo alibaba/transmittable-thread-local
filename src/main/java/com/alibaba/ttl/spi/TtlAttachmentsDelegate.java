@@ -1,6 +1,8 @@
 package com.alibaba.ttl.spi;
 
+import com.alibaba.ttl.TtlUnwrap;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -25,5 +27,46 @@ public class TtlAttachmentsDelegate implements TtlAttachments {
     @SuppressWarnings("unchecked")
     public <T> T getTtlAttachment(@NonNull String key) {
         return (T) attachments.get(key);
+    }
+
+    // ======== AutoWrapper Util Methods ========
+
+    /**
+     * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
+     * @since 2.13.0
+     */
+    public static boolean isAutoWrapper(@Nullable Object ttlAttachments) {
+        if (notTtlAttachments(ttlAttachments)) return false;
+
+        final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(KEY_IS_AUTO_WRAPPER);
+        if (value == null) return false;
+
+        return value;
+    }
+
+    /**
+     * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
+     * @since 2.13.0
+     */
+    public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
+        if (TtlAttachmentsDelegate.notTtlAttachments(ttlAttachment)) return;
+        ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
+    }
+
+    /**
+     * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
+     * @since 2.13.0
+     */
+    @Nullable
+    public static <T> T unwrapIfIsAutoWrapper(@Nullable T obj) {
+        if (isAutoWrapper(obj)) return TtlUnwrap.unwrap(obj);
+        else return obj;
+    }
+
+    /**
+     * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
+     */
+    private static boolean notTtlAttachments(@Nullable Object ttlAttachment) {
+        return !(ttlAttachment instanceof TtlAttachments);
     }
 }

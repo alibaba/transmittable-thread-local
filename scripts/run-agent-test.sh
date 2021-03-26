@@ -1,32 +1,32 @@
 #!/bin/bash
-
+set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
-source ./common.sh
+source ./ttl_build.sh
 
-# do heavy operation first, descrease mvn operation count.
-runCmd mvnBuildJar
+# do heavy operation first, decrease mvn operation count.
+logAndRun mvnBuildJar
 
-blueEcho "Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool"
-runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+blueEcho 'Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool'
+logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
     -Drun-ttl-test-under-agent=true \
     org.junit.runner.JUnitCore $(getJUnitTestCases)
 
-blueEcho "Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement"
-runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+blueEcho 'Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement'
+logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT,ttl.agent.disable.inheritable.for.thread.pool:true" \
     -Drun-ttl-test-under-agent=true \
     -Drun-ttl-test-under-agent-with-disable-inheritable=true \
     org.junit.runner.JUnitCore $(getJUnitTestCases)
 
 blueEcho 'Run agent check for Timer/TimerTask, default "ttl.agent.enable.timer.task"'
-runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
     com.alibaba.ttl.threadpool.agent.check.timer.TimerAgentCheck
 
-blueEcho "Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task""
-runCmd "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
+blueEcho 'Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task"'
+logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT,ttl.agent.enable.timer.task:true" \
     com.alibaba.ttl.threadpool.agent.check.timer.TimerAgentCheck

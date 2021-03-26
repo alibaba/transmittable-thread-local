@@ -10,10 +10,10 @@ import com.alibaba.perf.getRandomString
 fun main() {
     val tpsCounter = TpsCounter(2)
 
-    tpsCounter.setAction(Runnable {
+    tpsCounter.setAction {
         val threadLocal = ThreadLocal<String>()
         threadLocal.set(getRandomString())
-    })
+    }
 
     while (true) {
         val start = tpsCounter.count
