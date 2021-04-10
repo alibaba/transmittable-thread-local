@@ -114,7 +114,7 @@ String value = context.get();
 
 \# 完整可运行的Demo代码参见[`SimpleDemo.kt`](src/test/java/com/alibaba/demo/ttl/SimpleDemo.kt)。
 
-这是其实是`InheritableThreadLocal`的功能，应该使用`InheritableThreadLocal`来完成。
+这其实是`InheritableThreadLocal`的功能，应该使用`InheritableThreadLocal`来完成。
 
 但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -145,6 +145,23 @@ executorService.submit(ttlRunnable);
 
 // Task中可以读取，值是"value-set-in-parent"
 String value = context.get();
+```
+
+**_注意_**：  
+即使是同一个`Runnable`任务多次提交到线程池时，每次提交时都需要修饰操作（即`TtlRunnable.get(task)`），以抓取当时`TransmittableThreadLocal`上下文的值；即如果同一个任务下一次提交时不执行修饰而仍然使用上一次的`TtlRunnable`，则提交的任务运行时会是上次抓取的上下文。示例代码如下：
+
+```java
+// 第一次提交
+Runnable task = new RunnableTask();
+executorService.submit(TtlRunnable.get(task));
+
+// ...业务逻辑代码，
+// 并且修改了 TransmittableThreadLocal上下文 ...
+// context.set("value-modified-in-parent");
+
+// 再次提交
+// 重新执行修饰，以传递修改了的 TransmittableThreadLocal上下文
+executorService.submit(TtlRunnable.get(task));
 ```
 
 上面演示了`Runnable`，`Callable`的处理类似

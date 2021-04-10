@@ -122,7 +122,25 @@ executorService.submit(ttlRunnable);
 String value = context.get();
 ```
 
-above code show how to dealing with `Runnable`, `Callable` is similar:
+**_NOTE_**：  
+Even when the same `Runnable` task is submitted to the thread pool multiple times, the decoration operation (ie： `TtlRunnable.get(task)`) is required for each submission to capture the value of the `TransmittableThreadLocal` context at submission time; That is, if the same task is submitted next time without reperforming decoration and still using the last `TtlRunnable`, the submitted task will run in the context of the last captured context. The sample code is as follows:
+
+
+```java
+// first submission
+Runnable task = new RunnableTask();
+executorService.submit(TtlRunnable.get(task));
+
+// ... some biz logic,
+// and modified TransmittableThreadLocal context ...
+// context.set("value-modified-in-parent");
+
+// next submission
+// reperform decoration to transmit the modified TransmittableThreadLocal context
+executorService.submit(TtlRunnable.get(task));
+```
+
+Above code show how to dealing with `Runnable`, `Callable` is similar:
 
 ```java
 TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
