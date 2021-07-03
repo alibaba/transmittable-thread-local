@@ -22,7 +22,6 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author wuwen5 (wuwen.55 at aliyun dot com)
- * @author Jerry Lee (oldratlee at gmail dot com)
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService
  * @see java.util.concurrent.ThreadPoolExecutor
