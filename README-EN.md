@@ -12,7 +12,7 @@
 [![Chat at gitter.im](https://img.shields.io/gitter/room/alibaba/transmittable-thread-local?color=46BC99&logo=gitter&logoColor=white)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/fork)
-[![GitHub repo dependents](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
+[![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
 [![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/issues)
 [![GitHub Contributors](https://img.shields.io/github/contributors/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/graphs/contributors)
 
@@ -38,6 +38,7 @@
     - [How to compile and build](#how-to-compile-and-build)
     - [How to development by `IDE`](#how-to-development-by-ide)
 - [🗿 More Documentation](#-more-documentation)
+- [💝 Who used](#-who-used)
 - [📚 Related Resources](#-related-resources)
     - [JDK Core Classes](#jdk-core-classes)
 - [👷 Contributors](#-contributors)
@@ -351,6 +352,100 @@ The code implementation of `TTL` uses the `JDK 8` standard library class, but it
 
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
+
+# 💝 Who used
+
+Some open-source projects used `TTL`:
+
+- **Middleware**
+    - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
+      Distributed transaction solutions
+    - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
+      微服务路由网关（zuul-plus）
+    - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
+      ZTO Message Service
+- **Middleware/Data**
+    - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
+      数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
+    - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
+      Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
+    - [`DataLinkDC/DataLink` ![](https://img.shields.io/github/stars/DataLinkDC/DataLink.svg?style=social&label=Star)](https://github.com/DataLinkDC/DataLink)  
+      a new open source solution to bring Flink development to data center
+- **Middleware/Flow engine**
+    - [`alibaba/bulbasaur` ![](https://img.shields.io/github/stars/alibaba/bulbasaur.svg?style=social&label=Star)](https://github.com/alibaba/bulbasaur)  
+      A pluggable, scalable process engine
+    - [`dromara/liteflow` ![](https://img.shields.io/github/stars/dromara/liteflow.svg?style=social&label=Star)](https://github.com/dromara/liteflow) [![star](https://gitee.com/dromara/liteFlow/badge/star.svg?theme=gray)](https://gitee.com/dromara/liteFlow)  
+      a lightweight and practical micro-process framework
+- **Middleware/Log**
+    - [`dromara/TLog` ![](https://img.shields.io/github/stars/dromara/TLog.svg?style=social&label=Star)](https://github.com/dromara/TLog) [![star](https://gitee.com/dromara/TLog/badge/star.svg?theme=gray)](https://gitee.com/dromara/TLog)  
+      Lightweight distributed log label tracking framework
+    - [`fayechenlong/plumelog` ![](https://img.shields.io/github/stars/fayechenlong/plumelog.svg?style=social&label=Star)](https://github.com/fayechenlong/plumelog) [![star](https://gitee.com/plumeorg/plumelog/badge/star.svg?theme=gray)](https://gitee.com/plumeorg/plumelog)  
+      一个java分布式日志组件，支持百亿级别
+    - [`minbox-projects/minbox-logging` ![](https://img.shields.io/github/stars/minbox-projects/minbox-logging.svg?style=social&label=Star)](https://github.com/minbox-projects/minbox-logging) [![star](https://gitee.com/minbox-projects/minbox-logging/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/minbox-logging)  
+      分布式零侵入式、链路式请求日志分析框架。提供Admin端点进行采集日志、分析日志、日志告警通知、服务性能分析等。通过Admin Ui可查看实时链路日志信息、在线业务服务列表
+        - [`minbox-projects/bulldog` ![](https://img.shields.io/github/stars/minbox-projects/bulldog.svg?style=social&label=Star)](https://github.com/minbox-projects/bulldog) [![star](https://gitee.com/minbox-projects/bulldog/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/bulldog)  
+          一款分布式链路日志跟踪监控框架，支持Openfeign、RestTemplate、Retrofit、HttpClient、OkHttp、RabbitMQ等方式透传链路信息
+        - [`minbox-projects/api-boot` ![](https://img.shields.io/github/stars/minbox-projects/api-boot.svg?style=social&label=Star)](https://github.com/minbox-projects/api-boot) [![star](https://gitee.com/minbox-projects/api-boot/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/api-boot)  
+          为接口服务而生的，基于“ SpringBoot”完成扩展和自动配置，内部封装了一系列的开箱即用Starters
+    - [`ofpay/logback-mdc-ttl` ![](https://img.shields.io/github/stars/ofpay/logback-mdc-ttl.svg?style=social&label=Star)](https://github.com/ofpay/logback-mdc-ttl)  
+      logback扩展，集成transmittable-thread-local支持跨线程池的mdc跟踪
+    - [`oldratlee/log4j2-ttl-thread-context-map` ![](https://img.shields.io/github/stars/oldratlee/log4j2-ttl-thread-context-map.svg?style=social&label=Star)](https://github.com/oldratlee/log4j2-ttl-thread-context-map)  
+      Log4j2 TTL ThreadContextMap, Log4j2 extension integrated TransmittableThreadLocal to MDC
+- **Middleware/Bytecode**
+    - [`ymm-tech/easy-byte-coder` ![](https://img.shields.io/github/stars/ymm-tech/easy-byte-coder.svg?style=social&label=Star)](https://github.com/ymm-tech/easy-byte-coder)  
+      Easy-byte-coder is a non-invasive bytecode injection framework based on JVM
+- **Test solution or tool**
+    - [`alibaba/jvm-sandbox-repeater` ![](https://img.shields.io/github/stars/alibaba/jvm-sandbox-repeater.svg?style=social&label=Star)](https://github.com/alibaba/jvm-sandbox-repeater)  
+      A Java server-side recording and playback solution based on JVM-Sandbox, 录制/回放通用解决方案
+    - [`alibaba/testable-mock` ![](https://img.shields.io/github/stars/alibaba/testable-mock.svg?style=social&label=Star)](https://github.com/alibaba/testable-mock)  
+      换种思路写Mock，让单元测试更简单
+    - [`shulieTech/Takin` ![](https://img.shields.io/github/stars/shulieTech/Takin.svg?style=social&label=Star)](https://github.com/shulieTech/Takin)  
+      measure online environmental performance test for full-links, Especially for microservices
+        - [`shulieTech/LinkAgent` ![](https://img.shields.io/github/stars/shulieTech/LinkAgent.svg?style=social&label=Star)](https://github.com/shulieTech/LinkAgent)  
+          a Java-based open-source agent designed to collect data and control Functions for Java applications through JVM bytecode, without modifying applications codes
+    - [`alibaba/virtual-environment` ![](https://img.shields.io/github/stars/alibaba/virtual-environment.svg?style=social&label=Star)](https://github.com/alibaba/virtual-environment)  
+      Route isolation with service sharing, 阿里测试环境服务隔离和联调机制的`Kubernetes`版实现
+- **Tool product**
+    - [`ssssssss-team/spider-flow` ![](https://img.shields.io/github/stars/ssssssss-team/spider-flow.svg?style=social&label=Star)](https://github.com/ssssssss-team/spider-flow) [![star](https://gitee.com/ssssssss-team/spider-flow/badge/star.svg?theme=gray)](https://gitee.com/ssssssss-team/spider-flow)  
+      新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫
+    - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
+      🍰 一个可视化的爬虫平台
+    - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/molicloud/mqr/badge/star.svg?theme=gray)](https://gitee.com/molicloud/mqr)  
+      茉莉QQ机器人（简称MQR），采用mirai的Android协议实现的QQ机器人服务，通过web控制机器人的启停和配置
+- **Business service or platform application**
+    - [`OpenBankProject/OBP-API` ![](https://img.shields.io/github/stars/OpenBankProject/OBP-API.svg?style=social&label=Star)](https://github.com/OpenBankProject/OBP-API)  
+      An open source RESTful API platform for banks that supports Open Banking, XS2A and PSD2 through access to accounts, transactions, counterparties, payments, entitlements and metadata - plus a host of internal banking and management APIs
+    - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
+      JooLun微信商城
+    - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
+      一个基于spring cloud Greenwich的简单秒杀电子商城项目
+- **`Spring Cloud` microservices framework solution**
+    - [`zlt2000/microservices-platform` ![](https://img.shields.io/github/stars/zlt2000/microservices-platform.svg?style=social&label=Star)](https://github.com/zlt2000/microservices-platform) [![star](https://gitee.com/zlt2000/microservices-platform/badge/star.svg?theme=gray)](https://gitee.com/zlt2000/microservices-platform)  
+      基于SpringBoot2.x、SpringCloud和SpringCloudAlibaba并采用前后端分离的企业级微服务多租户系统架构
+    - [`zuihou/lamp-cloud` ![](https://img.shields.io/github/stars/zuihou/lamp-cloud.svg?style=social&label=Star)](https://github.com/zuihou/lamp-cloud) [![star](https://gitee.com/zuihou111/lamp-cloud/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-cloud)  
+      基于Jdk11 + SpringCloud + SpringBoot 的微服务快速开发平台，其中的可配置的SaaS功能尤其闪耀， 具备RBAC功能、网关统一鉴权、Xss防跨站攻击、自动代码生成、多种存储系统、分布式事务、分布式定时任务等多个模块，支持多业务系统并行开发， 支持多服务并行开发，可以作为后端服务的开发脚手架
+        - [`zuihou/lamp-util` ![](https://img.shields.io/github/stars/zuihou/lamp-util.svg?style=social&label=Star)](https://github.com/zuihou/lamp-util) [![star](https://gitee.com/zuihou111/lamp-util/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-util)  
+          打造一套兼顾 SpringBoot 和 SpringCloud 项目的公共工具类
+    - [`gavenwangcn/vole` ![](https://img.shields.io/github/stars/gavenwangcn/vole.svg?style=social&label=Star)](https://github.com/gavenwangcn/vole)  
+      SpringCloud Micro service business framework, SpringCloud 微服务商业脚手架
+    - [`liuweijw/fw-cloud-framework` ![](https://img.shields.io/github/stars/liuweijw/fw-cloud-framework.svg?style=social&label=Star)](https://github.com/liuweijw/fw-cloud-framework) [![star](https://gitee.com/liuweijw/fw-cloud-framework/badge/star.svg?theme=gray)](https://gitee.com/liuweijw/fw-cloud-framework)  
+      基于springcloud全家桶开发分布式框架（支持oauth2认证授权、SSO登录、统一下单、微信公众号服务、Shardingdbc分库分表、常见服务监控、链路监控、异步日志、redis缓存等功能），实现基于Vue全家桶等前后端分离项目工程
+    - [`matevip/matecloud` ![](https://img.shields.io/github/stars/matevip/matecloud.svg?style=social&label=Star)](https://github.com/matevip/matecloud) [![star](https://gitee.com/matevip/matecloud/badge/star.svg?theme=gray)](https://gitee.com/matevip/matecloud)  
+      一款基于Spring Cloud Alibaba的微服务架构
+    - [`liuht777/Taroco` ![](https://img.shields.io/github/stars/liuht777/Taroco.svg?style=social&label=Star)](https://github.com/liuht777/Taroco)  
+      整合Nacos、Spring Cloud Alibaba，提供了一系列starter组件， 同时提供服务治理、服务监控、OAuth2权限认证，支持服务降级/熔断、服务权重
+    - [`yzcheng90/ms` ![](https://img.shields.io/github/stars/yzcheng90/ms.svg?style=social&label=Star)](https://github.com/yzcheng90/ms)  
+      一个前后分离的分布式 spring cloud 框架(全家桶)，这里有统一认证，统一网关等等功能，是一个非常简洁的微服务脚手架
+    - [`fafeidou/fast-cloud-nacos` ![](https://img.shields.io/github/stars/fafeidou/fast-cloud-nacos.svg?style=social&label=Star)](https://github.com/fafeidou/fast-cloud-nacos)  
+      致力于打造一个基于nacos为注册中心，结合企业开发习惯，总结的一些基本的实现方式
+    - [`HongZhaoHua/jstarcraft-core` ![](https://img.shields.io/github/stars/HongZhaoHua/jstarcraft-core.svg?style=social&label=Star)](https://github.com/HongZhaoHua/jstarcraft-core)  
+      目标是提供一个通用的Java核心编程框架,作为搭建其它框架或者项目的基础. 让相关领域的研发人员能够专注高层设计而不用关注底层实现. 涵盖了缓存,编解码,通讯,事件,输入/输出,监控,存储,配置,脚本和事务10个方面
+    - [`budwk/budwk` ![](https://img.shields.io/github/stars/budwk/budwk.svg?style=social&label=Star)](https://github.com/budwk/budwk) [![star](https://gitee.com/budwk/budwk/badge/star.svg?theme=gray)](https://gitee.com/budwk/budwk)  
+      `BudWk` 原名 [`NutzWk` ![](https://img.shields.io/github/stars/Wizzercn/NutzWk.svg?style=social&label=Star)](https://github.com/Wizzercn/NutzWk) [![star](https://gitee.com/wizzer/NutzWk/badge/star.svg?theme=gray)](https://gitee.com/wizzer/NutzWk)，基于国产框架 nutz 及 nutzboot 开发的开源Web基础项目，集权限体系、系统参数、数据字典、站内消息、定时任务、CMS、微信等最常用功能，不庞杂、不面面俱到，使其具有上手容易、开发便捷、扩展灵活等特性，特别适合各类大中小型定制化项目需求
+    - [`yinjihuan/spring-cloud` ![](https://img.shields.io/github/stars/yinjihuan/spring-cloud.svg?style=social&label=Star)](https://github.com/yinjihuan/spring-cloud)  
+      《Spring Cloud微服务-全栈技术与案例解析》和《Spring Cloud微服务 入门 实战与进阶》配套源码
+
+more open-source projects used `TTL`, see [![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
 
 # 👷 Contributors
 
