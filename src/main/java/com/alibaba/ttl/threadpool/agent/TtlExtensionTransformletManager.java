@@ -47,15 +47,15 @@ final class TtlExtensionTransformletManager {
     }
 
     // NOTE: use WeakHashMap as a Set collection, value is always null.
-    private final WeakHashMap<ClassLoader, ?> collectedClassLoaderHistory = new WeakHashMap<ClassLoader, Object>(512);
+    private final Map<ClassLoader, ?> collectedClassLoaderHistory = Collections.synchronizedMap(new WeakHashMap<ClassLoader, Object>(512));
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(not include from parent classloader)
-    private final WeakHashMap<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets =
-        new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
+    private final Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets =
+        Collections.synchronizedMap(new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512));
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(include from parent classloader)
-    private final WeakHashMap<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL =
-        new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
+    private final Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL =
+        Collections.synchronizedMap(new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512));
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) throws IOException {
         final ClassLoader classLoader = classInfo.getClassLoader();
