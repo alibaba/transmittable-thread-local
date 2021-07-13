@@ -28,11 +28,13 @@ public class ClassInfo {
     private final byte[] classFileBuffer;
     private final ClassLoader loader;
 
-    // SuppressFBWarnings for classFileBuffer parameter:
+    // SuppressFBWarnings for classFileBuffer/loader parameter:
     //   [ERROR] new com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo(String, byte[], ClassLoader)
     //   may expose internal representation by storing an externally mutable object
-    //   into ClassInfo.classFileBuffer
-    public ClassInfo(@NonNull String transformerClassFile, @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer, @Nullable ClassLoader loader) {
+    //   into ClassInfo.classFileBuffer/loader
+    public ClassInfo(@NonNull String transformerClassFile,
+                     @NonNull @SuppressFBWarnings({"EI_EXPOSE_REP2"}) byte[] classFileBuffer,
+                     @Nullable @SuppressFBWarnings({"EI_EXPOSE_REP2"}) ClassLoader loader) {
         this.transformerClassFile = transformerClassFile;
         this.className = toClassName(transformerClassFile);
         this.classFileBuffer = classFileBuffer;
@@ -51,6 +53,10 @@ public class ClassInfo {
     }
 
     @NonNull
+    @SuppressFBWarnings({"EI_EXPOSE_REP"})
+    // [ERROR] Medium: com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo.getCtClass()
+    // may expose internal representation
+    // by returning ClassInfo.ctClass [com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo]
     public CtClass getCtClass() throws IOException {
         if (ctClass != null) return ctClass;
 
@@ -78,6 +84,10 @@ public class ClassInfo {
         this.modified = true;
     }
 
+    @SuppressFBWarnings({"EI_EXPOSE_REP"})
+    // [ERROR] Medium: com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo.getClassLoader()
+    // may expose internal representation
+    // by returning ClassInfo.loader [com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo]
     public ClassLoader getClassLoader() {
         return loader;
     }

@@ -10,6 +10,7 @@ import javassist.*;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +51,7 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
      * @param executorClassNames the executor class names to be transformed
      */
     public AbstractExecutorTtlTransformlet(Set<String> executorClassNames, boolean disableInheritableForThreadPool) {
-        this.executorClassNames = executorClassNames;
+        this.executorClassNames = Collections.unmodifiableSet(executorClassNames);
         this.disableInheritableForThreadPool = disableInheritableForThreadPool;
 
         paramTypeNameToDecorateMethodClass.put(RUNNABLE_CLASS_NAME, TTL_RUNNABLE_CLASS_NAME);
