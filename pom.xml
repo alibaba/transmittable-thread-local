@@ -328,7 +328,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.2.3</version>
+				<version>4.3.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -593,12 +593,12 @@
 					<!--
 						Maven plugin which includes build-time git repository information into an POJO / *.properties).
 						Make your apps tell you which version exactly they were built from! Priceless in large distributed deployments.
-							https://github.com/ktoso/maven-git-commit-id-plugin
+							https://github.com/git-commit-id/git-commit-id-maven-plugin
 					-->
 					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.5</version>
+						<groupId>io.github.git-commit-id</groupId>
+						<artifactId>git-commit-id-maven-plugin</artifactId>
+						<version>5.0.0</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
