@@ -33,16 +33,10 @@ jdks_install_by_sdkman=(
     7.0.282-zulu
     8.0.275-amzn
 
-    9.0.7-zulu
-    10.0.2-zulu
-    11.0.9-zulu
+    11.0.11-zulu
 
-    12.0.2-open
-    13.0.5-zulu
-    14.0.2-zulu
-    15.0.1-zulu
-    16.ea.29-open
-    17.ea.2-open
+    16.0.1-open
+    17.ea.21-open
 )
 java_home_var_names=()
 
@@ -70,7 +64,7 @@ __setJdkHomeVarsAndInstallJdk() {
             # install jdk by sdkman
             [ ! -d "$jdkHomePath" ] && {
                 set +u
-                logAndRun sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
+                logAndRun sdk install java "$jdkNameOfSdkman" || redEcho "fail to install jdk $jdkNameOfSdkman by sdkman"
                 set -u
             }
         fi
