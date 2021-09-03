@@ -165,7 +165,7 @@ String value = context.get();
 
 ### 2.2 Decorate thread pool
 
-Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can completed in the thread pool.
+Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can be completed in the thread pool.
 
 Use util class
 [`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
