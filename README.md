@@ -149,7 +149,7 @@ String value = context.get();
 ```
 
 **_注意_**：  
-即使是同一个`Runnable`任务多次提交到线程池时，每次提交时都需要修饰操作（即`TtlRunnable.get(task)`），以抓取当时`TransmittableThreadLocal`上下文的值；即如果同一个任务下一次提交时不执行修饰而仍然使用上一次的`TtlRunnable`，则提交的任务运行时会是上次抓取的上下文。示例代码如下：
+即使是同一个`Runnable`任务多次提交到线程池时，每次提交时都需要通过修饰操作（即`TtlRunnable.get(task)`）以抓取这次提交时的`TransmittableThreadLocal`上下文的值；即如果同一个任务下一次提交时不执行修饰而仍然使用上一次的`TtlRunnable`，则提交的任务运行时会是之前修饰操作所抓取的上下文。示例代码如下：
 
 ```java
 // 第一次提交
