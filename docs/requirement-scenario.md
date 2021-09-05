@@ -24,7 +24,7 @@
 
 ## 🔎 1. 分布式跟踪系统 或 全链路压测（即链路打标）
 
-关于『分布式跟踪系统』可以了解一下`Google`的`Dapper`（介绍的论文：[中文](http://bigbully.github.io/Dapper-translation/)| [英文](http://research.google.com/pubs/pub36356.html)）。分布式跟踪系统作为基础设施，不会限制『使用线程池等会池化复用线程的组件』，并期望对业务逻辑尽可能的透明。
+关于『分布式跟踪系统』可以了解一下`Google`的`Dapper`（介绍的论文：[中文](https://bigbully.github.io/Dapper-translation/)| [英文](https://research.google.com/pubs/pub36356.html)）。分布式跟踪系统作为基础设施，不会限制『使用线程池等会池化复用线程的组件』，并期望对业务逻辑尽可能的透明。
 
 分布式跟踪系统的实现的示意Demo参见[`DistributedTracerUseDemo.kt`](../src/test/java/com/alibaba/demo/distributed_tracer/refcount/DistributedTracerUseDemo.kt)
 
@@ -56,7 +56,7 @@ PS： 多谢 [@wyzssw](https://github.com/https://github.com/wyzssw) 对分布�
 </dependency>
 ```
 
-可以在 [search.maven.org](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:log4j2-ttl-thread-context-map&core=gav) 查看可用的版本。
+可以在 [search.maven.org](https://search.maven.org/artifact/com.alibaba/log4j2-ttl-thread-context-map) 查看可用的版本。
 
 PS： 多谢 @bwzhang2011 和 @wuwen5 对日志场景说明交流和实现上讨论建议：
 
@@ -75,7 +75,7 @@ PS： 多谢 @bwzhang2011 和 @wuwen5 对日志场景说明交流和实现上讨
 </dependency>
 ```
 
-可以在 [search.maven.org](https://search.maven.org/search?q=g:com.ofpay%20AND%20a:logback-mdc-ttl&core=gav) 查看可用的版本。
+可以在 [search.maven.org](https://search.maven.org/artifact/com.ofpay/logback-mdc-ttl) 查看可用的版本。
 
 这个集成已经在 **_线上产品环境_** 使用的。说明详见[欧飞网的使用场景](https://github.com/alibaba/transmittable-thread-local/issues/73#issuecomment-300665308)。
 

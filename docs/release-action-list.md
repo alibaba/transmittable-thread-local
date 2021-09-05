@@ -25,7 +25,7 @@
     1. 生成`JavaDoc`，更新到分支`gh-pages`
         - `git checkout gh-pages`
         - `mv target/apidocs apidocs/2.x.y`
-    2. 修改`index.html`<http://alibaba.github.io/transmittable-thread-local/apidocs>的重定向到最新版本的`JavaDoc`
+    2. 修改`index.html`<https://alibaba.github.io/transmittable-thread-local/apidocs>的重定向到最新版本的`JavaDoc`
 7. 编写Release Note： <https://github.com/alibaba/transmittable-thread-local/releases>
 8. 升级`Master`分支的开发版本号
     - [`scripts/gen-pom4ide.sh`](../scripts/gen-pom4ide.sh) 重新生成 `pom4ide`

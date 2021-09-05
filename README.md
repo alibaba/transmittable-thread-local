@@ -389,7 +389,7 @@ java -javaagent:path/to/transmittable-thread-local-2.x.y.jar \
 
 **_Q2. `MacOS`下，使用`Java Agent`，可能会报`JavaLaunchHelper`的出错信息_**
 
-JDK Bug: <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8021205>  
+JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>  
 可以换一个版本的`JDK`。我的开发机上`1.7.0_40`有这个问题，`1.6.0_51`、`1.7.0_45`可以运行。  
 \# `1.7.0_45`还是有`JavaLaunchHelper`的出错信息，但不影响运行。
 
