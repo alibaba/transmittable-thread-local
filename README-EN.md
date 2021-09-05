@@ -1,4 +1,4 @@
-# 📌 TransmittableThreadLocal(TTL) 📌
+# [![📌 TransmittableThreadLocal(TTL) 📌](docs/logo-blue.png)](#dummy)
 
 [![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/master?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
@@ -49,7 +49,7 @@
 
 # 🔧 Functions
 
-👉 The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
+👉 `TransmittableThreadLocal`(`TTL`): The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
 provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components.
 Support `Java` 17/16/15/14/13/12/11/10/9/8/7/6.
 
