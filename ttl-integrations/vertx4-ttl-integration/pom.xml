@@ -14,7 +14,7 @@
 	<licenses>
 		<license>
 			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 			<comments>A business-friendly OSS license</comments>
 		</license>
@@ -413,7 +413,7 @@
 					<plugin>
 						<!-- for codecov.io -->
 						<!-- config example: https://github.com/codecov/example-java -->
-						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
+						<!-- plugin docs: https://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>0.8.6</version>

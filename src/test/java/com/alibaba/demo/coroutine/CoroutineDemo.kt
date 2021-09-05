@@ -14,8 +14,8 @@ import kotlinx.coroutines.runBlocking
  *      - [Kotlin/kotlin-coroutines-examples: Design documents and examples for coroutines in Kotlin - github.com](https://github.com/Kotlin/kotlin-coroutines-examples)
  * - others
  *      - [Demystifying Kotlin Coroutines – ProAndroidDev](https://proandroiddev.com/demystifying-kotlin-coroutines-6fe1f410570b)
- *      - [Kotlin coroutines in Spring - Code for glory](http://blog.alexnesterov.com/post/kotlin-coroutines-in-spring/)
- *      - [Kotlin coroutines and Spring 5 - Code for glory](http://blog.alexnesterov.com/post/kotlin-coroutines-and-spring-5/)
+ *      - [Kotlin coroutines in Spring - Code for glory](https://blog.alexnesterov.com/post/kotlin-coroutines-in-spring/)
+ *      - [Kotlin coroutines and Spring 5 - Code for glory](https://blog.alexnesterov.com/post/kotlin-coroutines-and-spring-5/)
  */
 fun main(): Unit = runBlocking {
     println("[${Thread.currentThread().name}] main")

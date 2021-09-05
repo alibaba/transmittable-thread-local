@@ -18,7 +18,7 @@
 	<licenses>
 		<license>
 			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 			<comments>A business-friendly OSS license</comments>
 		</license>
@@ -38,7 +38,7 @@
 	</ciManagement>
 	<organization>
 		<name>Alibaba</name>
-		<url>http://www.alibaba.com</url>
+		<url>https://www.alibaba.com</url>
 	</organization>
 	<developers>
 		<developer>
@@ -51,7 +51,7 @@
 			<timezone>+8</timezone>
 			<url>https://github.com/oldratlee</url>
 			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>Yang Fang</name>
@@ -63,7 +63,7 @@
 			<timezone>+8</timezone>
 			<url>https://github.com/driventokill</url>
 			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>wuwen</name>
@@ -75,7 +75,7 @@
 			<timezone>+8</timezone>
 			<url>https://github.com/wuwen5</url>
 			<organization>ofpay</organization>
-			<organizationUrl>http://www.ofpay.com</organizationUrl>
+			<organizationUrl>https://www.ofpay.com</organizationUrl>
 		</developer>
 		<developer>
 			<name>David Dai</name>
@@ -87,7 +87,7 @@
 			<timezone>+8</timezone>
 			<url>https://github.com/LNAmp</url>
 			<organization>Alibaba</organization>
-			<organizationUrl>http://www.alibaba.com</organizationUrl>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
 		</developer>
 	</developers>
 
@@ -174,7 +174,7 @@
 		</dependency>
 		<!--
 			commons-lang3 v3.5 is the last version support Java 6
-			http://commons.apache.org/proper/commons-lang/release-history.html
+			https://commons.apache.org/proper/commons-lang/changes-report.html
 			DO NOT upgrade commons-lang3 version!
 		-->
 		<dependency>
@@ -496,7 +496,6 @@
 									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
 									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
 									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-									无法在Javadoc注释中链接到JDK10 http://landcareweb.com/questions/24829/wu-fa-zai-javadoczhu-shi-zhong-lian-jie-dao-jdk10
 
 									About package-list vs.element-list
 									- Can't link to JDK10 in Javadoc comments
@@ -654,7 +653,7 @@
 					<plugin>
 						<!-- for codecov.io -->
 						<!-- config example: https://github.com/codecov/example-java -->
-						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
+						<!-- plugin docs: https://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>0.8.7</version>

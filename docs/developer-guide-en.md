@@ -77,4 +77,4 @@ try {
 
 ## `Maven Shade plugin`
 
-- [`Maven Shade plugin` doc](http://maven.apache.org/plugins/maven-shade-plugin/)
+- [`Maven Shade plugin` doc](https://maven.apache.org/plugins/maven-shade-plugin/)
