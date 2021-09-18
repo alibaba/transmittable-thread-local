@@ -256,7 +256,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     private static void doExecuteCallback(boolean isBefore) {
-        for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
+        // copy TTL Instances to avoid `ConcurrentModificationException`
+        // even adjust TTL instances in biz lifecycle callbacks(beforeExecute/afterExecute)
+        WeakHashMap<TransmittableThreadLocal<Object>, ?> ttlInstances = new WeakHashMap<TransmittableThreadLocal<Object>, Object>(holder.get());
+
+        for (TransmittableThreadLocal<Object> threadLocal : ttlInstances.keySet()) {
             try {
                 if (isBefore) threadLocal.beforeExecute();
                 else threadLocal.afterExecute();
