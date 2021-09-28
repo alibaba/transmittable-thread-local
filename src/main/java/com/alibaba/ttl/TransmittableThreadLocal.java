@@ -3,10 +3,7 @@ package com.alibaba.ttl;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -114,6 +111,38 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
+     * Creates a transmittable thread local variable. The initial value of the variable is
+     * determined by invoking the {@code get} method on the {@code Supplier}.
+     *
+     * @param <S>      the type of the thread local's value
+     * @param supplier the supplier to be used to determine the initial value
+     * @return a new transmittable thread local variable
+     * @throws NullPointerException if the specified supplier is null
+     * @since 2.12.2
+     */
+    @NonNull
+    public static <S> TransmittableThreadLocal<S> withInitial(@NonNull Supplier<? extends S> supplier) {
+        return new SuppliedTransmittableThreadLocal<S>(supplier);
+    }
+
+    /**
+     * An extension of ThreadLocal that obtains its initial value from the specified {@code Supplier}.
+     */
+    private static final class SuppliedTransmittableThreadLocal<T> extends TransmittableThreadLocal<T> {
+        private final Supplier<? extends T> supplier;
+
+        SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier) {
+            if (supplier == null) throw new NullPointerException("supplier is null");
+            this.supplier = supplier;
+        }
+
+        @Override
+        protected T initialValue() {
+            return supplier.get();
+        }
+    }
+
+    /**
      * Computes the value for this transmittable thread-local variable
      * as a function of the source thread's value at the time the task
      * Object is created.
@@ -204,17 +233,17 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     //        the value of WeakHashMap is *always* null, and never used.
     //    2.2 WeakHashMap support *null* value.
     private static final InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
-            new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
-                @Override
-                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
-                }
+        new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
+            @Override
+            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
+                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
+            }
 
-                @Override
-                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
-                }
-            };
+            @Override
+            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
+                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+            }
+        };
 
     @SuppressWarnings("unchecked")
     private void addThisToHolder() {
