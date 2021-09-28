@@ -2,7 +2,9 @@ package com.alibaba.ttl.threadpool;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.spi.TtlEnhanced;
+import com.alibaba.ttl.spi.TtlWrapper;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.concurrent.*;
@@ -128,7 +130,7 @@ public final class TtlExecutors {
      * @since 2.8.0
      */
     public static <T extends Executor> boolean isTtlWrapper(@Nullable T executor) {
-        return executor instanceof TtlEnhanced;
+        return executor instanceof TtlWrapper;
     }
 
     /**
@@ -176,7 +178,7 @@ public final class TtlExecutors {
      * @see #getDisableInheritableThreadFactory(ThreadFactory)
      * @since 2.10.0
      */
-    @Nullable
+    @NonNull
     public static ThreadFactory getDefaultDisableInheritableThreadFactory() {
         return getDisableInheritableThreadFactory(Executors.defaultThreadFactory());
     }

@@ -90,8 +90,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kotlin.version>1.4.21-2</kotlin.version>
-		<kotlin.coroutine.version>1.4.2</kotlin.coroutine.version>
+		<kotlin.version>1.4.32</kotlin.version>
+		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -115,7 +115,7 @@
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<scope>provided</scope>
-			<version>4.2.0</version>
+			<version>4.4.1</version>
 		</dependency>
 		<!--
 			make other qa libs
@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>2.2.20</version>
+			<version>2.2.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -328,7 +328,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.2.0</version>
+				<version>4.4.1</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -338,7 +338,7 @@
 			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M3</version>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -384,7 +384,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -407,7 +407,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>gen-src+doc</id>
+			<id>gen-src</id>
 			<activation>
 				<property>
 					<name>performRelease</name>
@@ -438,6 +438,19 @@
 							</execution>
 						</executions>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-javadoc</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
@@ -524,7 +537,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -580,12 +593,12 @@
 					<!--
 						Maven plugin which includes build-time git repository information into an POJO / *.properties).
 						Make your apps tell you which version exactly they were built from! Priceless in large distributed deployments.
-							https://github.com/ktoso/maven-git-commit-id-plugin
+							https://github.com/git-commit-id/git-commit-id-maven-plugin
 					-->
 					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.3</version>
+						<groupId>io.github.git-commit-id</groupId>
+						<artifactId>git-commit-id-maven-plugin</artifactId>
+						<version>5.0.0</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
@@ -632,7 +645,7 @@
 						<!-- plugin docs: http://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.6</version>
+						<version>0.8.7</version>
 						<executions>
 							<execution>
 								<goals>
