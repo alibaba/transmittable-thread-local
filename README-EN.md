@@ -305,11 +305,11 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.1</version>
+    <version>2.12.2</version>
 </dependency>
 ```
 
-Check available version at [search.maven.org](https://search.maven.org/search?q=g:com.alibaba%20AND%20a:transmittable-thread-local&core=gav).
+Check available version at [search.maven.org](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local).
 
 # 🔨 About compilation, build and dev
 
