@@ -94,6 +94,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<spotbugs.annotations.version>4.4.2</spotbugs.annotations.version>
 		<kotlin.version>1.4.32</kotlin.version>
 		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
@@ -126,7 +127,7 @@
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<scope>provided</scope>
-			<version>4.4.2</version>
+			<version>${spotbugs.annotations.version}</version>
 		</dependency>
 		<!--
 			make other qa libs
@@ -509,7 +510,7 @@
 									<location>${project.basedir}/src/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
+									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
 									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
