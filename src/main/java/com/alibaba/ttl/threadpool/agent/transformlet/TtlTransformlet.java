@@ -1,10 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.transformlet;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-import javassist.CannotCompileException;
-import javassist.NotFoundException;
-
-import java.io.IOException;
+import net.bytebuddy.agent.builder.AgentBuilder;
 
 /**
  * TTL {@code Transformlet}.
@@ -21,5 +17,5 @@ public interface TtlTransformlet {
      * @see com.alibaba.ttl.threadpool.agent.TtlTransformer#transform(ClassLoader, String, Class, java.security.ProtectionDomain, byte[])
      * @see java.lang.instrument.ClassFileTransformer#transform
      */
-    void doTransform(@NonNull ClassInfo classInfo) throws CannotCompileException, NotFoundException, IOException;
+    AgentBuilder doTransform(AgentBuilder agentBuilder);
 }

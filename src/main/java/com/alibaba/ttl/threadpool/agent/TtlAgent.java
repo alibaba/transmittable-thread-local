@@ -2,12 +2,9 @@ package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.ForkJoinTtlTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.JdkExecutorTtlTransformlet;
-import com.alibaba.ttl.threadpool.agent.transformlet.internal.TimerTaskTtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.*;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +200,6 @@ public final class TtlAgent {
 
         try {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
-
             logger.info(logTtlAgentConfig());
 
             final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
@@ -211,10 +207,9 @@ public final class TtlAgent {
             transformletList.add(new ForkJoinTtlTransformlet());
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
-            final ClassFileTransformer transformer = new TtlTransformer(transformletList, isLogClassTransform());
-            inst.addTransformer(transformer, true);
-            logger.info("[TtlAgent.premain] add Transformer " + transformer.getClass().getName() + " success");
-
+            TtlTransformer transformer = new TtlTransformer(transformletList, isLogClassTransform());
+            transformer.transform(inst);
+            logger.info("[TtlAgent.premain] add Transformer success");
             logger.info("[TtlAgent.premain] end");
 
             ttlAgentLoaded = true;

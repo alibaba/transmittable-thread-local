@@ -19,12 +19,13 @@ import java.util.Set;
  */
 public final class JdkExecutorTtlTransformlet extends AbstractExecutorTtlTransformlet implements TtlTransformlet {
 
+    protected static final String THREAD_POOL_EXECUTOR_CLASS_NAME = "java.util.concurrent.ThreadPoolExecutor";
+    protected static final String SCHEDULED_THREAD_POOL_EXECUTOR_CLASS_NAME = "java.util.concurrent.ScheduledThreadPoolExecutor";
+
     private static Set<String> getExecutorClassNames() {
         Set<String> executorClassNames = new HashSet<String>();
-
         executorClassNames.add(THREAD_POOL_EXECUTOR_CLASS_NAME);
-        executorClassNames.add("java.util.concurrent.ScheduledThreadPoolExecutor");
-
+        executorClassNames.add(SCHEDULED_THREAD_POOL_EXECUTOR_CLASS_NAME);
         return executorClassNames;
     }
 

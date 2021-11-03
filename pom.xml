@@ -99,14 +99,10 @@
 	</properties>
 
 	<dependencies>
-		<!--
-			javassist v3.23 is the last version support Java 6
-			DO NOT upgrade javassist version!
-		-->
 		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.23.2-GA</version>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.11.12</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -298,18 +294,18 @@
 						<configuration>
 							<relocations>
 								<relocation>
-									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.javassist</shadedPattern>
+									<pattern>net.bytebuddy</pattern>
+									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.net.bytebuddy</shadedPattern>
 								</relocation>
 							</relocations>
 							<artifactSet>
 								<includes>
-									<include>org.javassist:javassist</include>
+									<include>net.bytebuddy:byte-buddy</include>
 								</includes>
 							</artifactSet>
 							<filters>
 								<filter>
-									<artifact>org.javassist:javassist</artifact>
+									<artifact>net.bytebuddy:byte-buddy</artifact>
 									<excludes>
 										<exclude>META-INF/MANIFEST.MF</exclude>
 									</excludes>

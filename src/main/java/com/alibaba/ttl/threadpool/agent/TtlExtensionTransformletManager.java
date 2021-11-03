@@ -1,11 +1,9 @@
 package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import javassist.CannotCompileException;
-import javassist.NotFoundException;
+import net.bytebuddy.agent.builder.AgentBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +12,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
-
-import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -29,20 +25,18 @@ final class TtlExtensionTransformletManager {
     public TtlExtensionTransformletManager() {
     }
 
-    public String extensionTransformletDoTransform(@NonNull final ClassInfo classInfo) throws NotFoundException, CannotCompileException, IOException {
-        final Map<String, TtlTransformlet> transformlets = classLoader2ExtensionTransformletsIncludeParentCL.get(classInfo.getClassLoader());
+
+    public String extensionTransformletDoTransform(AgentBuilder agentBuilder) throws IOException {
+        final Map<String, TtlTransformlet> transformlets = new HashMap<String, TtlTransformlet>();
+//            classLoader2ExtensionTransformletsIncludeParentCL.get(classInfo.getClassLoader());
         if (transformlets == null) return null;
 
         for (Map.Entry<String, TtlTransformlet> entry : transformlets.entrySet()) {
             final String className = entry.getKey();
             final TtlTransformlet transformlet = entry.getValue();
-
-            transformlet.doTransform(classInfo);
-            if (classInfo.isModified()) {
-                return className;
-            }
+            transformlet.doTransform(agentBuilder);
         }
-
+        // TODO: 增加扩展的包信息
         return null;
     }
 
@@ -57,8 +51,9 @@ final class TtlExtensionTransformletManager {
     private final WeakHashMap<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL =
         new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
 
-    public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) throws IOException {
-        final ClassLoader classLoader = classInfo.getClassLoader();
+    public void collectExtensionTransformlet() throws IOException {
+        final ClassLoader classLoader = null;
+//            classInfo.getClassLoader();
         // classloader may null be if the bootstrap loader,
         // which classloader must contains NO Ttl Agent Extension Transformlet, so just safe skip
         if (classLoader == null) return;
@@ -169,7 +164,7 @@ final class TtlExtensionTransformletManager {
                 if (!superType.isAssignableFrom(clazz)) {
                     final String msg = foundMsgHead + className
                         + " from classloader " + classLoader
-                        + " at location " + getLocationUrlOfClass(clazz)
+                        //+ " at location " + getLocationUrlOfClass(clazz)
                         + ", but NOT subtype of " + superType.getName() + ", ignored!";
                     logger.error(msg);
                     continue;
@@ -186,8 +181,7 @@ final class TtlExtensionTransformletManager {
                 set.add(superType.cast(instance));
 
                 final String msg = foundMsgHead + className
-                    + ", and loaded from classloader " + classLoader
-                    + " at location " + getLocationUrlOfClass(clazz);
+                    + ", and loaded from classloader " + classLoader;
                 logger.info(msg);
             } catch (ClassNotFoundException e) {
                 final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();

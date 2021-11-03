@@ -1,18 +1,24 @@
 package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
-import com.alibaba.ttl.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.bytebuddy.NamingStrategy;
+import net.bytebuddy.agent.builder.AgentBuilder;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.matcher.ElementMatchers;
+import net.bytebuddy.utility.JavaModule;
 
 import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static net.bytebuddy.matcher.ElementMatchers.*;
+import static net.bytebuddy.matcher.ElementMatchers.isSynthetic;
+
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -22,76 +28,100 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  * @since 0.9.0
  */
-public class TtlTransformer implements ClassFileTransformer {
+public class TtlTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class);
 
-    /**
-     * "<code>null</code> if no transform is performed",
-     * see {@code @return} of {@link ClassFileTransformer#transform(ClassLoader, String, Class, ProtectionDomain, byte[])}
-     */
-    @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    // [ERROR] com.alibaba.ttl.threadpool.agent.TtlTransformer.transform(ClassLoader, String, Class, ProtectionDomain, byte[])
-    //         may expose internal representation by returning TtlTransformer.NO_TRANSFORM
-    // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
-    private static final byte[] NO_TRANSFORM = null;
 
     private final TtlExtensionTransformletManager extensionTransformletManager;
     private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
     private final boolean logClassTransform;
+    private final AgentBuilder agentBuilder;
 
     TtlTransformer(List<? extends TtlTransformlet> transformletList, boolean logClassTransform) {
         extensionTransformletManager = new TtlExtensionTransformletManager();
-
         this.logClassTransform = logClassTransform;
         for (TtlTransformlet ttlTransformlet : transformletList) {
             this.transformletList.add(ttlTransformlet);
             logger.info("[TtlTransformer] add Transformlet " + ttlTransformlet.getClass().getName());
         }
+
+        this.agentBuilder = new AgentBuilder.Default()
+            .ignore(agentIgnore())
+            .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
+            .with(new TransformLoggingListener());
     }
 
-    /**
-     * info about class loader: may be <code>null</code> if the bootstrap loader.
-     * <p>
-     * more info see {@link ClassFileTransformer#transform(java.lang.ClassLoader, java.lang.String, java.lang.Class, java.security.ProtectionDomain, byte[])}
-     */
-    @Override
-    public final byte[] transform(@Nullable final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
-                                  final ProtectionDomain protectionDomain, @NonNull final byte[] classFileBuffer) {
+
+    private AgentBuilder.RawMatcher agentIgnore() {
+        return new AgentBuilder.RawMatcher.ForElementMatchers(nameStartsWith("net.bytebuddy.")
+            .and(not(nameStartsWith(NamingStrategy.SuffixingRandom.BYTE_BUDDY_RENAME_PACKAGE + ".")))
+            .or(nameStartsWith("sun.reflect.")
+                .or(nameStartsWith("jdk.reflect."))
+                .or(nameStartsWith("org.slf4j."))
+                .or(nameStartsWith("org.groovy."))
+                .or(nameContains("javassist"))
+                .or(nameContains(".asm."))
+                .or(nameContains(".reflectasm."))
+                .or(nameContains("$$FastClassByGuice$$"))
+                .or(nameStartsWith("sun.reflect")))
+            .<TypeDescription>or(isSynthetic()));
+    }
+
+
+    public void transform(Instrumentation instrumentation) {
         try {
             // Lambda has no class file, no need to transform, just return.
-            if (classFile == null) return NO_TRANSFORM;
+            if (logClassTransform) {
 
-            final ClassInfo classInfo = new ClassInfo(classFile, classFileBuffer, loader);
-            if (logClassTransform)
-                logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
-                    + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + classInfo.getLocationUrl());
+            }
 
-            extensionTransformletManager.collectExtensionTransformlet(classInfo);
-
+            extensionTransformletManager.collectExtensionTransformlet();
+            AgentBuilder agentBuilder = this.agentBuilder;
             for (TtlTransformlet transformlet : transformletList) {
-                transformlet.doTransform(classInfo);
-                if (classInfo.isModified()) {
-                    logger.info("[TtlTransformer] " + transformlet.getClass().getName() + " transformed " + classInfo.getClassName()
-                        + " from classloader " + classInfo.getClassLoader()
-                        + " at location " + classInfo.getLocationUrl());
-                    return classInfo.getCtClass().toBytecode();
-                }
+                agentBuilder = transformlet.doTransform(agentBuilder);
             }
-
-            final String transformlet = extensionTransformletManager.extensionTransformletDoTransform(classInfo);
-            if (classInfo.isModified()) {
-                logger.info("[TtlTransformer] " + transformlet + " transformed " + classInfo.getClassName()
-                    + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + classInfo.getLocationUrl());
-                return classInfo.getCtClass().toBytecode();
-            }
+            extensionTransformletManager.extensionTransformletDoTransform(agentBuilder);
+            agentBuilder.installOn(instrumentation);
         } catch (Throwable t) {
-            String msg = "[TtlTransformer] fail to transform class " + classFile + ", cause: " + t.toString();
+            String msg = "[TtlTransformer] fail to transform class " + ", cause: " + t.toString();
             logger.error(msg, t);
             throw new IllegalStateException(msg, t);
         }
+    }
 
-        return NO_TRANSFORM;
+    /**
+     * 类增强日志监听器
+     */
+    class TransformLoggingListener implements AgentBuilder.Listener {
+
+        @Override
+        public void onError(String typeName, ClassLoader classLoader, JavaModule module, boolean loaded, Throwable throwable) {
+            logger.error("[TtlTransformer] fail to transform class " + typeName
+                + " from classloader " + classLoader, throwable);
+        }
+
+        @Override
+        public void onTransformation(TypeDescription typeDescription, ClassLoader classLoader, JavaModule module, boolean loaded,
+                                     DynamicType dynamicType) {
+            logger.info("[TtlTransformer] transformed " + typeDescription.getName()
+                + " from classloader " + classLoader);
+        }
+
+        @Override
+        public void onIgnored(TypeDescription typeDescription, ClassLoader classLoader, JavaModule module, boolean loaded) {
+        }
+
+        @Override
+        public void onComplete(String typeName, ClassLoader classLoader, JavaModule module, boolean loaded) {
+            // 对每个加载的类都会匹配无论是否匹配成功，直接忽略
+        }
+
+        @Override
+        public void onDiscovery(String typeName, ClassLoader classLoader, JavaModule module, boolean loaded) {
+            if (logClassTransform) {
+                logger.info("[TtlTransformer] transforming " + typeName
+                    + " from classloader " + classLoader);
+            }
+        }
     }
 }

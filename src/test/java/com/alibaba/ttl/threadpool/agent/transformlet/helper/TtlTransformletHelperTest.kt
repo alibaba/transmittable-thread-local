@@ -5,7 +5,6 @@ import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIg
 import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.threadpool.agent.TtlAgentLoggerInitializer
 import com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationFileOfClass
-import javassist.ClassPool
 import org.apache.commons.lang3.StringUtils
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -27,27 +26,6 @@ class TtlTransformletHelperTest {
         MatcherAssert.assertThat(
             getLocationFileOfClass(StringUtils::class.java),
             CoreMatchers.endsWith("/commons-lang3-3.5.jar")
-        )
-    }
-
-    @Test
-    @ConditionalIgnore(condition = IsAgentRun::class) // skip unit test for Javassist on agent, because Javassist is repackaged
-    fun test_getFileLocationOfClass_ctClass() {
-        TtlAgentLoggerInitializer
-
-        val classPool = ClassPool(true)
-
-        // Java 8: file:/path/to/jdk_8/jre/lib/rt.jar!/java/lang/String.class
-        // Java 11: /java.base/java/lang/String.class
-        MatcherAssert.assertThat(
-            getLocationFileOfClass(classPool.getCtClass("java.lang.String")),
-            CoreMatchers.endsWith("/java/lang/String.class")
-        )
-
-        // Java 8: file:/path/to/commons-lang3-3.5.jar!/org/apache/commons/lang3/StringUtils.class
-        MatcherAssert.assertThat(
-            getLocationFileOfClass(classPool.getCtClass("org.apache.commons.lang3.StringUtils")),
-            CoreMatchers.endsWith("/commons-lang3-3.5.jar!/org/apache/commons/lang3/StringUtils.class")
         )
     }
 }
