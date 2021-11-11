@@ -94,7 +94,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.4.2</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.5.0</spotbugs.annotations.version>
 		<kotlin.version>1.4.32</kotlin.version>
 		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
@@ -340,7 +340,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.4.2.2</version>
+				<version>4.5.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
