@@ -1,7 +1,6 @@
 # [![📌 TransmittableThreadLocal(TTL) 📌](docs/logo-blue.png)](#dummy)
 
-[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/master?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
 [![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
 [![Maintainability](https://badgen.net/codeclimate/maintainability/codeclimate/codeclimate?icon=codeclimate)](https://codeclimate.com/github/alibaba/transmittable-thread-local)
 [![JDK support](https://img.shields.io/badge/JDK-6+-green?logo=java&logoColor=white)](https://openjdk.java.net/)  
