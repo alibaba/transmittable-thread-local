@@ -642,12 +642,6 @@
 		</profile>
 		<profile>
 			<id>gen-code-cov</id>
-			<activation>
-				<property>
-					<name>env.TRAVIS</name>
-					<value>true</value>
-				</property>
-			</activation>
 			<build>
 				<plugins>
 					<plugin>

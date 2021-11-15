@@ -78,6 +78,14 @@ versionLessThan() {
     [ "$(printf '%s\n' "$ver" "$destVer" | sort -V | head -n1)" = "$ver" ]
 }
 
+loose() {
+    set +eEuo pipefail
+    "$@"
+    local exit_code=$?
+    set -eEuo pipefail
+    return $exit_code
+}
+
 logAndRun() {
     local simple_mode=false
     [ "$1" = "-s" ] && {

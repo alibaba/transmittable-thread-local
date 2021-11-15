@@ -36,7 +36,7 @@ __getMvnwExe() {
 }
 
 __getJavaVersion() {
-    "$JAVA_HOME/bin/java" -version 2>&1 | awk -F\" 'NR == 1 {print $2}'
+    "$JAVA_HOME/bin/java" -version 2>&1 | awk -F\" '/ version "/{print $2}'
 }
 
 __getMoreMvnOptionsWhenJdk11() {

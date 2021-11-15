@@ -11,6 +11,6 @@ source ./ttl_build.sh
 
 switch_to_jdk 8
 MVN_WITH_BASIC_OPTIONS clean
-MVN_WITH_BASIC_OPTIONS cobertura:cobertura
+MVN_WITH_BASIC_OPTIONS -Pgen-code-cov cobertura:cobertura
 
 bash <(curl -s https://codecov.io/bash)
