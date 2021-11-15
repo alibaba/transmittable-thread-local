@@ -10,4 +10,4 @@ sed '
 echo "diff between pom and pom4ide.xml:"
 echo
 
-diff pom.xml pom4ide.xml
+diff pom.xml pom4ide.xml || true

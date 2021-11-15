@@ -2,7 +2,7 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-source ./common_build.sh
+source ./ttl_build.sh
 
 logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
     "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \

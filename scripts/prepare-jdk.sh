@@ -4,10 +4,10 @@
 set -eEuo pipefail
 
 [ -z "${__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836:+dummy}" ] || return 0
-export __source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836=true
+__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # shellcheck source=common.sh
-source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/common.sh"
+source "$__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836/common.sh"
 
 __loadSdkman() {
     local this_time_install_sdk_man=false
@@ -16,36 +16,41 @@ __loadSdkman() {
         [ -d "$HOME/.sdkman" ] && rm -rf "$HOME/.sdkman"
 
         curl -s get.sdkman.io | bash || die "fail to install sdkman"
-        echo sdkman_auto_answer=true >>"$HOME/.sdkman/etc/config"
+        {
+            echo sdkman_auto_answer=true
+            echo sdkman_auto_selfupdate=false
+            echo sdkman_disable_auto_upgrade_check=true
+        } >>"$HOME/.sdkman/etc/config"
 
         this_time_install_sdk_man=true
     fi
 
-    set +u
+    logAndRun cat "$HOME/.sdkman/etc/config"
+
     # shellcheck disable=SC1090
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-    "$this_time_install_sdk_man" && logAndRun sdk ls java
-    set -u
+    loose source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+    if "$this_time_install_sdk_man"; then
+        loose logAndRun sdk ls java | sed -n '/^ Vendor/,/^===========/p'
+    fi
 }
 __loadSdkman
 
 jdks_install_by_sdkman=(
-    7.0.282-zulu
-    8.0.275-amzn
+    6.0.119-zulu
+    7.0.322-zulu
+    8.312.07.1-amzn
 
-    11.0.11-zulu
+    11.0.13-ms
 
-    16.0.1-open
-    17.ea.21-open
+    16.0.2.7.1-amzn
+    17.0.1-ms
 )
 java_home_var_names=()
 
 __setJdkHomeVarsAndInstallJdk() {
     blueEcho "prepared jdks:"
-
     JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
-    java_home_var_names=(JDK6_HOME)
-    printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
 
     local jdkNameOfSdkman
     for jdkNameOfSdkman in "${jdks_install_by_sdkman[@]}"; do
@@ -64,12 +69,12 @@ __setJdkHomeVarsAndInstallJdk() {
             # install jdk by sdkman
             [ ! -d "$jdkHomePath" ] && {
                 set +u
-                logAndRun sdk install java "$jdkNameOfSdkman" || redEcho "fail to install jdk $jdkNameOfSdkman by sdkman"
+                loose logAndRun sdk install java "$jdkNameOfSdkman" || die "fail to install jdk $jdkNameOfSdkman by sdkman"
                 set -u
             }
         fi
 
-        java_home_var_names=("${java_home_var_names[@]}" "$jdkHomeVarName")
+        java_home_var_names=(${java_home_var_names[@]:+"${java_home_var_names[@]}"} "$jdkHomeVarName")
         printf '%s :\n\t%s\n\tspecified is %s\n' "$jdkHomeVarName" "${!jdkHomeVarName}" "$jdkNameOfSdkman"
     done
 

@@ -2,7 +2,7 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 readonly BASE="$(pwd)"
-. ./common_build.sh
+. ./ttl_build.sh
 
 update_version=false
 deploy_maven=false
@@ -74,7 +74,7 @@ $deploy_java_doc && {
     git checkout gh-pages
     mv target/apidocs "apidocs/$new_version"
     sed "s#\".*/index.html\"#\"$new_version/index.html\"#" -i apidocs/index.html
-    
+
     git add -A
     git commit -m "add javadoc for $new_version"
     git push
