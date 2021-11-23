@@ -1,19 +1,23 @@
-# [![📌 TransmittableThreadLocal(TTL) 📌](docs/logo-blue.png)](#dummy)
+# <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
-[![Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master)
-[![Maintainability](https://badgen.net/codeclimate/maintainability/codeclimate/codeclimate?icon=codeclimate)](https://codeclimate.com/github/alibaba/transmittable-thread-local)
-[![JDK support](https://img.shields.io/badge/JDK-6+-green?logo=java&logoColor=white)](https://openjdk.java.net/)  
-[![License](https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
-[![Maven Central](https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&logo=apache-maven&logoColor=white)](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local)
-[![GitHub release](https://img.shields.io/github/release/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/releases)  
-[![Chat at gitter.im](https://img.shields.io/gitter/room/alibaba/transmittable-thread-local?color=46BC99&logo=gitter&logoColor=white)](https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![GitHub Stars](https://img.shields.io/github/stars/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/fork)
-[![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
-[![GitHub issues](https://img.shields.io/github/issues/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/issues)
-[![GitHub Contributors](https://img.shields.io/github/contributors/alibaba/transmittable-thread-local)](https://github.com/alibaba/transmittable-thread-local/graphs/contributors)
+<p align="center">
+<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&amp;logoColor=white" alt="Build Status"></a>
+<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&amp;logoColor=white" alt="Coverage Status"></a>
+<a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability" alt="Maintainability"></a>
+<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/JDK-6+-green?logo=java&amp;logoColor=white" alt="JDK support"></a>
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97" alt="License"></a>
+<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&amp;color=3d7c47&amp;logo=microsoft-academic&amp;logoColor=white" alt="Javadocs"></a>
+<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&amp;logo=apache-maven&amp;logoColor=white" alt="Maven Central"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
+<a href="https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://img.shields.io/gitter/room/alibaba/transmittable-thread-local?color=46BC99&amp;logo=gitter&amp;logoColor=white" alt="Chat at gitter.im"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/network/dependents"><img src="https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos" alt="user repos"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/github/repo-size/alibaba/transmittable-thread-local" alt="GitHub repo size"></a>
+</p>
+
 
 [📖 English Documentation](README-EN.md) | 📖 中文文档
 
