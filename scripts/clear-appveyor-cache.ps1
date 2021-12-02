@@ -9,14 +9,16 @@ if ($confirmation -ne 'y') {
 
 # PowerShell: Run command from script's directory - Stack Overflow
 # https://stackoverflow.com/questions/4724290
-$script_path = $MyInvocation.MyCommand.Path
-$script_dir = Split-Path $script_path
+# $script_path = $MyInvocation.MyCommand.Path
+# $script_dir = Split-Path $script_path
 
 # Equivalent of bash's `source` command in Powershell? - Super User
 #   https://superuser.com/questions/71446
 # Script scope and dot sourcing - PowerShell | Microsoft Docs
 #   https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scripts#script-scope-and-dot-sourcing
-. "$script_dir\appveyor_token.ps1"
+# PowerShell: How to quickly switch to your home directory
+#   https://sid-500.com/2017/08/03/powershell-how-to-quickly-switch-to-your-home-directory/
+. "$home\.appveyor_token.ps1"
 # file appveyor_token.ps1 provide appveyor token. content sample:
 #   $appveyor_token = xxx
 
