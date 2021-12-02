@@ -7,6 +7,7 @@ import com.alibaba.ttl.threadpool.agent.TtlAgent;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.concurrent.*;
 
 /**
@@ -205,6 +206,56 @@ public final class TtlExecutors {
         if (!isDisableInheritableThreadFactory(threadFactory)) return threadFactory;
 
         return ((DisableInheritableThreadFactory) threadFactory).unwrap();
+    }
+
+    /**
+     * Wrapper of {@code Comparator<Runnable>} which unwrap {@link com.alibaba.ttl.TtlRunnable} before compare,
+     * aka. {@code TtlRunnableUnwrapComparator}.
+     * <p>
+     * Prepared for {@code comparator} parameter of constructor
+     * {@link PriorityBlockingQueue#PriorityBlockingQueue(int, java.util.Comparator)}.
+     * <p>
+     * {@link PriorityBlockingQueue} can be used by constructor
+     * {@link ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue)}.
+     *
+     * @param comparator input comparator
+     * @return wrapped comparator
+     * @see ThreadPoolExecutor
+     * @see ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue)
+     * @see PriorityBlockingQueue
+     * @see PriorityBlockingQueue#PriorityBlockingQueue(int, Comparator)
+     * @see com.alibaba.ttl.TtlRunnable#unwrap()
+     * @since 2.12.3
+     */
+    @Nullable
+    public static Comparator<Runnable> getTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
+        if (comparator == null || isTtlRunnableUnwrapComparator(comparator)) return comparator;
+
+        return new TtlRunnableUnwrapComparator(comparator);
+    }
+
+    /**
+     * check the {@code Comparator<Runnable>} is a wrapper {@code TtlRunnableUnwrapComparator} or not.
+     *
+     * @see #getTtlRunnableUnwrapComparator(Comparator)
+     * @since 2.12.3
+     */
+    public static boolean isTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
+        return comparator instanceof TtlRunnableUnwrapComparator;
+    }
+
+    /**
+     * Unwrap {@code TtlRunnableUnwrapComparator} to the original/underneath {@code Comparator<Runnable>}.
+     *
+     * @see #isTtlRunnableUnwrapComparator(Comparator)
+     * @see #getTtlRunnableUnwrapComparator(Comparator)
+     * @since 2.12.3
+     */
+    @Nullable
+    public static Comparator<Runnable> unwrap(@Nullable Comparator<Runnable> comparator) {
+        if (!isTtlRunnableUnwrapComparator(comparator)) return comparator;
+
+        return ((TtlRunnableUnwrapComparator) comparator).unwrap();
     }
 
     private TtlExecutors() {
