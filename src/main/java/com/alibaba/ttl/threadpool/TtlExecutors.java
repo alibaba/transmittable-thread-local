@@ -213,7 +213,7 @@ public final class TtlExecutors {
      * aka. {@code TtlRunnableUnwrapComparator}.
      * <p>
      * Prepared for {@code comparator} parameter of constructor
-     * {@link PriorityBlockingQueue#PriorityBlockingQueue(int, java.util.Comparator)}.
+     * {@link PriorityBlockingQueue#PriorityBlockingQueue(int, Comparator)}.
      * <p>
      * {@link PriorityBlockingQueue} can be used by constructor
      * {@link ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue)}.
@@ -232,6 +232,20 @@ public final class TtlExecutors {
         if (comparator == null || isTtlRunnableUnwrapComparator(comparator)) return comparator;
 
         return new TtlRunnableUnwrapComparator(comparator);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static final Comparator<Runnable> INSTANCE = new TtlRunnableUnwrapComparator(ComparableComparator.INSTANCE);
+
+    /**
+     * {@code TtlRunnableUnwrapComparator} that compares {@link Comparable Comparable} objects.
+     *
+     * @see #getTtlRunnableUnwrapComparator(Comparator)
+     * @since 2.12.3
+     */
+    @NonNull
+    public static Comparator<Runnable> getTtlRunnableUnwrapComparatorForComparableRunnable() {
+        return INSTANCE;
     }
 
     /**
