@@ -5,6 +5,7 @@ import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import com.alibaba.ttl.threadpool.agent.transformlet.internal.ForkJoinTtlTransformlet;
 import com.alibaba.ttl.threadpool.agent.transformlet.internal.JdkExecutorTtlTransformlet;
 import com.alibaba.ttl.threadpool.agent.transformlet.internal.TimerTaskTtlTransformlet;
+import com.alibaba.ttl.threadpool.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -207,8 +208,12 @@ public final class TtlAgent {
             logger.info(logTtlAgentConfig());
 
             final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
+
             transformletList.add(new JdkExecutorTtlTransformlet());
+            transformletList.add(new PriorityBlockingQueueTtlTransformlet());
+
             transformletList.add(new ForkJoinTtlTransformlet());
+
             if (isEnableTimerTask()) transformletList.add(new TimerTaskTtlTransformlet());
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList, isLogClassTransform());
