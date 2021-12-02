@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
@@ -28,15 +29,24 @@ public class TtlPriorityBlockingQueueTransformlet implements JavassistTransforml
     }
 
     /**
-     * @see com.alibaba.ttl.threadpool.TtlExecutors#getTtlRunnableUnwrapComparator(Comparator)
+     * @see #rewriteComparator$by$ttl(Comparator)
      */
     private void updatePriorityBlockingQueueClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         // wrap comparator field
-        final String code = "this.comparator = com.alibaba.ttl.threadpool.TtlExecutors.getTtlRunnableUnwrapComparator(this.comparator);";
+        final String code = "this.comparator = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlPriorityBlockingQueueTransformlet.rewriteComparator$by$ttl(this.comparator);";
 
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
             logger.info("insert code after constructor " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
             constructor.insertAfter(code);
         }
+    }
+
+    /**
+     * @see TtlExecutors#getTtlRunnableUnwrapComparator(Comparator)
+     */
+    public static Comparator<Runnable> rewriteComparator$by$ttl(Comparator<Runnable> comparator) {
+        if (comparator == null) return TtlExecutors.getTtlRunnableUnwrapComparatorForComparableRunnable();
+
+        return TtlExecutors.getTtlRunnableUnwrapComparator(comparator);
     }
 }
