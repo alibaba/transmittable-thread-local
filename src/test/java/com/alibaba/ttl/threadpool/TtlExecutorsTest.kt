@@ -3,7 +3,6 @@ package com.alibaba.ttl.threadpool
 import com.alibaba.noTtlAgentRun
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.IsAgentRun
-import com.alibaba.support.junit.conditional.NoAgentRun
 import com.alibaba.ttl.TtlCallable
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.TtlUnwrap
@@ -203,12 +202,7 @@ class TtlExecutorsTest {
             BizTask().also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
             fail()
         } catch (e: ClassCastException) {
-            // java 8
-            val msg1 = "com.alibaba.ttl.TtlRunnable cannot be cast to java.lang.Comparable"
-            // java 11
-            val msg2 = "class com.alibaba.ttl.TtlRunnable cannot be cast to class java.lang.Comparable"
-
-            assertTrue(msg1 == e.message || e.message!!.startsWith(msg2))
+            assertClassCastException(e, TtlRunnable::class.java, Comparable::class.java)
         }
     }
 
@@ -230,6 +224,59 @@ class TtlExecutorsTest {
             assertEquals(task1, priorityBlockingQueue.poll())
         }
     }
+
+    @Test
+    @ConditionalIgnoreRule.ConditionalIgnore(condition = IsAgentRun::class)
+    fun test_reproduce_ClassCastException_explicit_comparator() {
+        val priorityBlockingQueue = PriorityBlockingQueue(11, compareBy<Runnable> { (it as BizOrderTask).order })
+
+        Pair(
+            BizOrderTask(1).also { priorityBlockingQueue.put(it) },
+            BizOrderTask(2).also { priorityBlockingQueue.put(it) },
+        ).let { (task0, task1) ->
+            assertEquals(task0, priorityBlockingQueue.poll())
+            assertEquals(task1, priorityBlockingQueue.poll())
+        }
+
+        BizOrderTask(3).also { priorityBlockingQueue.put(it) }
+
+        try {
+            BizOrderTask(4).also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
+            fail()
+        } catch (e: ClassCastException) {
+            assertClassCastException(e, TtlRunnable::class.java, BizOrderTask::class.java)
+        }
+    }
+
+    @Test
+    fun test_fixed_ClassCastException_explicit_comparator() {
+        val priorityBlockingQueue = PriorityBlockingQueue(11,
+            compareBy<Runnable> { (it as BizOrderTask).order }.let {
+                if (noTtlAgentRun()) getTtlRunnableUnwrapComparator(it)
+                else it
+            }
+        )
+
+        Pair(
+            BizOrderTask(1).also { priorityBlockingQueue.put(it) },
+            BizOrderTask(2).let { TtlRunnable.get(it) }.also { priorityBlockingQueue.put(it) },
+        ).let { (task0, task1) ->
+            assertEquals(task0, priorityBlockingQueue.poll())
+            assertEquals(task1, priorityBlockingQueue.poll())
+        }
+    }
+
+    private fun assertClassCastException(e: ClassCastException, actualClass: Class<*>, targetClass: Class<*>) {
+        // java 8
+        val msg1 = "${actualClass.name} cannot be cast to ${targetClass.name}"
+        // java 11
+        val msg2 = "class ${actualClass.name} cannot be cast to class ${targetClass.name}"
+
+        assertTrue(
+            "${e.message}, actual: ${actualClass.name}, target: ${targetClass.name}",
+            msg1 == e.message || e.message!!.startsWith(msg2)
+        )
+    }
 }
 
 private class BizTask : Runnable, Comparable<Runnable> {
@@ -240,8 +287,14 @@ private class BizTask : Runnable, Comparable<Runnable> {
     private val num = counter.getAndIncrement()
 
     override fun run() {
-        println("BizTask#run")
+        println("BizComparableTask#run")
     }
 
     override fun compareTo(other: Runnable): Int = num - (other as BizTask).num
+}
+
+data class BizOrderTask(val order: Int) : Runnable {
+    override fun run() {
+        println("BizTask#run")
+    }
 }
