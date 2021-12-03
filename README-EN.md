@@ -1,8 +1,8 @@
 # [![📌 TransmittableThreadLocal(TTL) 📌](docs/logo-blue.png)](#dummy)
 
-[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/v2.12.1?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.12.1?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.12.1?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.12.1)
+[![Build Status](https://img.shields.io/travis/alibaba/transmittable-thread-local/v2.12.3-RC1?logo=travis-ci&logoColor=white)](https://travis-ci.org/alibaba/transmittable-thread-local)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.12.3-RC1?label=windows%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.12.3-RC1?logo=codecov&logoColor=white)](https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.12.3-RC1)
 [![Maintainability](https://badgen.net/codeclimate/maintainability/codeclimate/codeclimate?icon=codeclimate)](https://codeclimate.com/github/alibaba/transmittable-thread-local)  
 [![License](https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4EB1BA)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Javadocs](https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white)](https://alibaba.github.io/transmittable-thread-local/apidocs/)
@@ -296,7 +296,7 @@ More info:
 
 # 🔌 Java API Docs
 
-The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.2/index.html>
+The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.3-RC1/index.html>
 
 # 🍪 Maven Dependency
 
