@@ -14,9 +14,9 @@ import java.util.concurrent.*;
  * Util methods for TTL wrapper of jdk executors.
  *
  * <ol>
- *     <li>Factory methods to get TTL wrapper from jdk executors.</li>
- *     <li>unwrap/check methods for TTL wrapper of jdk executors.</li>
+ *     <li>wrap(factory)/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
  *     <li>wrap/unwrap/check methods to disable Inheritable for {@link ThreadFactory}.</li>
+ *     <li>wrap/unwrap/check methods to {@code TtlRunnableUnwrapComparator} for {@link PriorityBlockingQueue}.</li>
  * </ol>
  * <p>
  * <b><i>Note:</i></b>
@@ -27,15 +27,18 @@ import java.util.concurrent.*;
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see java.util.concurrent.Executor
- * @see java.util.concurrent.ExecutorService
- * @see java.util.concurrent.ThreadPoolExecutor
- * @see java.util.concurrent.ScheduledThreadPoolExecutor
- * @see java.util.concurrent.Executors
+ * @see Executor
+ * @see ExecutorService
+ * @see ScheduledExecutorService
+ * @see ThreadPoolExecutor
+ * @see ScheduledThreadPoolExecutor
+ * @see Executors
  * @see java.util.concurrent.CompletionService
  * @see java.util.concurrent.ExecutorCompletionService
  * @see ThreadFactory
  * @see Executors#defaultThreadFactory()
+ * @see PriorityBlockingQueue
+ * @see TtlForkJoinPoolHelper
  * @since 0.9.0
  */
 public final class TtlExecutors {
@@ -164,6 +167,7 @@ public final class TtlExecutors {
      *
      * @param threadFactory input thread factory
      * @see DisableInheritableThreadFactory
+     * @see TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory
      * @since 2.10.0
      */
     @Nullable
@@ -177,6 +181,7 @@ public final class TtlExecutors {
      * Wrapper of {@link Executors#defaultThreadFactory()}, disable inheritable.
      *
      * @see #getDisableInheritableThreadFactory(ThreadFactory)
+     * @see TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
      * @since 2.10.0
      */
     @NonNull
@@ -187,6 +192,8 @@ public final class TtlExecutors {
     /**
      * check the {@link ThreadFactory} is {@link DisableInheritableThreadFactory} or not.
      *
+     * @see TtlForkJoinPoolHelper#getDisableInheritableForkJoinWorkerThreadFactory
+     * @see #getDefaultDisableInheritableThreadFactory()
      * @see DisableInheritableThreadFactory
      * @since 2.10.0
      */
@@ -197,8 +204,12 @@ public final class TtlExecutors {
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      *
-     * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
+     * @see #getDisableInheritableThreadFactory(ThreadFactory)
+     * @see #getDefaultDisableInheritableThreadFactory()
+     * @see #isDisableInheritableThreadFactory(ThreadFactory)
+     * @see TtlForkJoinPoolHelper#unwrap(ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see DisableInheritableThreadFactory
+     * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      * @since 2.10.0
      */
     @Nullable
@@ -210,7 +221,7 @@ public final class TtlExecutors {
 
     /**
      * Wrapper of {@code Comparator<Runnable>} which unwrap {@link com.alibaba.ttl.TtlRunnable} before compare,
-     * aka. {@code TtlRunnableUnwrapComparator}.
+     * aka {@code TtlRunnableUnwrapComparator}.
      * <p>
      * Prepared for {@code comparator} parameter of constructor
      * {@link PriorityBlockingQueue#PriorityBlockingQueue(int, Comparator)}.
@@ -224,7 +235,6 @@ public final class TtlExecutors {
      * @see ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue)
      * @see PriorityBlockingQueue
      * @see PriorityBlockingQueue#PriorityBlockingQueue(int, Comparator)
-     * @see com.alibaba.ttl.TtlRunnable#unwrap()
      * @since 2.12.3
      */
     @Nullable
@@ -252,6 +262,7 @@ public final class TtlExecutors {
      * check the {@code Comparator<Runnable>} is a wrapper {@code TtlRunnableUnwrapComparator} or not.
      *
      * @see #getTtlRunnableUnwrapComparator(Comparator)
+     * @see #getTtlRunnableUnwrapComparatorForComparableRunnable()
      * @since 2.12.3
      */
     public static boolean isTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
@@ -261,8 +272,10 @@ public final class TtlExecutors {
     /**
      * Unwrap {@code TtlRunnableUnwrapComparator} to the original/underneath {@code Comparator<Runnable>}.
      *
-     * @see #isTtlRunnableUnwrapComparator(Comparator)
      * @see #getTtlRunnableUnwrapComparator(Comparator)
+     * @see #getTtlRunnableUnwrapComparatorForComparableRunnable()
+     * @see #isTtlRunnableUnwrapComparator(Comparator)
+     * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      * @since 2.12.3
      */
     @Nullable
@@ -273,5 +286,6 @@ public final class TtlExecutors {
     }
 
     private TtlExecutors() {
+        throw new InstantiationError("Must not instantiate this class");
     }
 }
