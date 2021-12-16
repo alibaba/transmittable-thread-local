@@ -5,7 +5,10 @@ import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.ClassInfo;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -40,6 +43,7 @@ public class TtlPriorityBlockingQueueTransformlet implements JavassistTransforml
 
     private static final String PRIORITY_BLOCKING_QUEUE_CLASS_NAME = "java.util.concurrent.PriorityBlockingQueue";
     private static final String PRIORITY_QUEUE_CLASS_NAME = "java.util.PriorityQueue";
+    private static final String COMPARATOR_CLASS_NAME = "java.util.Comparator";
     private static final String COMPARATOR_FIELD_NAME = "comparator";
 
     @Override
@@ -88,28 +92,55 @@ public class TtlPriorityBlockingQueueTransformlet implements JavassistTransforml
     }
 
     /**
-     * wrap comparator field in constructors
+     * @see #wrapComparator$by$ttl(Comparator)
      */
-    private static final String CODE = "this." + COMPARATOR_FIELD_NAME + " = "
-        + TtlPriorityBlockingQueueTransformlet.class.getName() +
-        ".overwriteComparatorField$by$ttl(this." + COMPARATOR_FIELD_NAME + ");";
+    private static final String WRAP_METHOD_NAME = "wrapComparator$by$ttl";
 
     /**
-     * @see #overwriteComparatorField$by$ttl(Comparator)
+     * wrap comparator field in constructors
+     *
+     * @see #COMPARATOR_FIELD_NAME
      */
+    private static final String AFTER_CODE_REWRITE_FILED = String.format("this.%s = %s.%s(this.%1$s);",
+        COMPARATOR_FIELD_NAME, TtlPriorityBlockingQueueTransformlet.class.getName(), WRAP_METHOD_NAME
+    );
+
     private static void modifyConstructors(@NonNull CtClass clazz) throws NotFoundException, CannotCompileException {
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
-            logger.info("insert code after constructor " + signatureOfMethod(constructor) + " of class " +
-                constructor.getDeclaringClass().getName() + ": " + CODE);
+            final CtClass[] parameterTypes = constructor.getParameterTypes();
+            final StringBuilder beforeCode = new StringBuilder();
+            for (int i = 0; i < parameterTypes.length; i++) {
+                ///////////////////////////////////////////////////////////////
+                // rewrite Comparator constructor parameter
+                ///////////////////////////////////////////////////////////////
+                final String paramTypeName = parameterTypes[i].getName();
+                if (COMPARATOR_CLASS_NAME.equals(paramTypeName)) {
+                    String code = String.format("$%d = %s.%s($%1$d);",
+                        i + 1, TtlPriorityBlockingQueueTransformlet.class.getName(), WRAP_METHOD_NAME
+                    );
+                    beforeCode.append(code);
+                }
+            }
+            if (beforeCode.length() > 0) {
+                logger.info("insert code before constructor " + signatureOfMethod(constructor) + " of class " +
+                    constructor.getDeclaringClass().getName() + ": " + beforeCode);
+                constructor.insertBefore(beforeCode.toString());
+            }
 
-            constructor.insertAfter(CODE);
+            ///////////////////////////////////////////////////////////////
+            // rewrite Comparator class field
+            ///////////////////////////////////////////////////////////////
+            logger.info("insert code after constructor " + signatureOfMethod(constructor) + " of class " +
+                constructor.getDeclaringClass().getName() + ": " + AFTER_CODE_REWRITE_FILED);
+            constructor.insertAfter(AFTER_CODE_REWRITE_FILED);
         }
     }
 
     /**
+     * @see TtlExecutors#getTtlRunnableUnwrapComparatorForComparableRunnable()
      * @see TtlExecutors#getTtlRunnableUnwrapComparator(Comparator)
      */
-    public static Comparator<Runnable> overwriteComparatorField$by$ttl(Comparator<Runnable> comparator) {
+    public static Comparator<Runnable> wrapComparator$by$ttl(Comparator<Runnable> comparator) {
         if (comparator == null) return TtlExecutors.getTtlRunnableUnwrapComparatorForComparableRunnable();
 
         return TtlExecutors.getTtlRunnableUnwrapComparator(comparator);
