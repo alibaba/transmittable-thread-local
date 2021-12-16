@@ -79,11 +79,14 @@ public final class ForkJoinTtlTransformlet implements TtlTransformlet {
                 final String paramTypeName = parameterTypes[i].getName();
                 if (FORK_JOIN_WORKER_THREAD_FACTORY_CLASS_NAME.equals(paramTypeName)) {
                     String code = String.format("$%d = com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper.getDisableInheritableForkJoinWorkerThreadFactory($%<d);", i + 1);
-                    logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
                     insertCode.append(code);
                 }
             }
-            if (insertCode.length() > 0) constructor.insertBefore(insertCode.toString());
+            if (insertCode.length() > 0) {
+                logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " +
+                    constructor.getDeclaringClass().getName() + ": " + insertCode);
+                constructor.insertBefore(insertCode.toString());
+            }
         }
     }
 }
