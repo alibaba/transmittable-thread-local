@@ -3,6 +3,7 @@ package com.alibaba.ttl;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
@@ -110,34 +111,114 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * Creates a transmittable thread local variable. The initial value of the variable is
-     * determined by invoking the {@code get} method on the {@code Supplier}.
+     * Creates a transmittable thread local variable.
+     * The initial value({@link #initialValue()}) of the variable is
+     * determined by invoking the {@link #get()} method on the {@code Supplier}.
      *
      * @param <S>      the type of the thread local's value
      * @param supplier the supplier to be used to determine the initial value
      * @return a new transmittable thread local variable
      * @throws NullPointerException if the specified supplier is null
+     * @see #withInitialAndCopier(Supplier, TtlCopier)
      * @since 2.12.2
      */
     @NonNull
+    @SuppressWarnings("ConstantConditions")
     public static <S> TransmittableThreadLocal<S> withInitial(@NonNull Supplier<? extends S> supplier) {
-        return new SuppliedTransmittableThreadLocal<S>(supplier);
+        if (supplier == null) throw new NullPointerException("supplier is null");
+
+        return new SuppliedTransmittableThreadLocal<S>(supplier, null, null);
     }
 
     /**
-     * An extension of ThreadLocal that obtains its initial value from the specified {@code Supplier}.
+     * Creates a transmittable thread local variable.
+     * The initial value({@link #initialValue()}) of the variable is
+     * determined by invoking the {@link #get()} method on the {@code Supplier};
+     * and the child value({@link #childValue(Object)}) and the transmitting value({@link #copy(Object)}) of the variable is
+     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}
+     *
+     * @param <S>                        the type of the thread local's value
+     * @param supplier                   the supplier to be used to determine the initial value
+     * @param copierForChildValueAndCopy the ttl copier to be used to determine the child value and the transmitting value
+     * @return a new transmittable thread local variable
+     * @throws NullPointerException if the specified supplier and copier is null
+     * @see #withInitial(Supplier)
+     * @since 2.12.3
+     */
+    @NonNull
+    @ParametersAreNonnullByDefault
+    @SuppressWarnings("ConstantConditions")
+    public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValueAndCopy) {
+        if (supplier == null) throw new NullPointerException("supplier is null");
+        if (copierForChildValueAndCopy == null) throw new NullPointerException("ttl copier is null");
+
+        return new SuppliedTransmittableThreadLocal<S>(supplier, copierForChildValueAndCopy, copierForChildValueAndCopy);
+    }
+
+    /**
+     * Creates a transmittable thread local variable.
+     * The initial value({@link #initialValue()}) of the variable is
+     * determined by invoking the {@link #get()} method on the {@code Supplier};
+     * and the child value({@link #childValue(Object)}) and the transmitting value({@link #copy(Object)}) of the variable is
+     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}
+     *
+     * <B><I>NOTE:</I></B><br>
+     * Recommend use {@link #withInitialAndCopier(Supplier, TtlCopier)} instead of this method.
+     * In most cases, the logic of determining the child value({@link #childValue(Object)})
+     * and the transmitting value({@link #copy(Object)}) should be the same.
+     *
+     * @param <S>                 the type of the thread local's value
+     * @param supplier            the supplier to be used to determine the initial value
+     * @param copierForChildValue the ttl copier to be used to determine the child value
+     * @param copierForCopy       the ttl copier to be used to determine the transmitting value
+     * @return a new transmittable thread local variable
+     * @throws NullPointerException if the specified supplier and copier is null
+     * @see #withInitial(Supplier)
+     * @see #withInitialAndCopier(Supplier, TtlCopier)
+     * @since 2.12.3
+     */
+    @NonNull
+    @ParametersAreNonnullByDefault
+    @SuppressWarnings("ConstantConditions")
+    public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValue, TtlCopier<S> copierForCopy) {
+        if (supplier == null) throw new NullPointerException("supplier is null");
+        if (copierForChildValue == null) throw new NullPointerException("ttl copier for child value is null");
+        if (copierForCopy == null) throw new NullPointerException("ttl copier for copy value is null");
+
+        return new SuppliedTransmittableThreadLocal<S>(supplier, copierForChildValue, copierForCopy);
+    }
+
+    /**
+     * An extension of ThreadLocal that obtains its initial value from the specified {@code Supplier}
+     * and obtains its child value and transmitting value from the specified ttl copier.
      */
     private static final class SuppliedTransmittableThreadLocal<T> extends TransmittableThreadLocal<T> {
         private final Supplier<? extends T> supplier;
+        private final TtlCopier<T> copierForChildValue;
+        private final TtlCopier<T> copierForCopy;
 
-        SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier) {
+        SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier, TtlCopier<T> copierForChildValue, TtlCopier<T> copierForCopy) {
             if (supplier == null) throw new NullPointerException("supplier is null");
             this.supplier = supplier;
+            this.copierForChildValue = copierForChildValue;
+            this.copierForCopy = copierForCopy;
         }
 
         @Override
         protected T initialValue() {
             return supplier.get();
+        }
+
+        @Override
+        protected T childValue(T parentValue) {
+            if (copierForChildValue != null) return copierForChildValue.copy(parentValue);
+            else return super.childValue(parentValue);
+        }
+
+        @Override
+        public T copy(T parentValue) {
+            if (copierForCopy != null) return copierForCopy.copy(parentValue);
+            else return super.copy(parentValue);
         }
     }
 
