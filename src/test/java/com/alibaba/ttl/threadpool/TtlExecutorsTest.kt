@@ -189,17 +189,17 @@ class TtlExecutorsTest {
         val priorityBlockingQueue = PriorityBlockingQueue<Runnable>()
 
         Pair(
-            BizTask().also { priorityBlockingQueue.put(it) },
-            BizTask().also { priorityBlockingQueue.put(it) },
+            BizComparableTask().also { priorityBlockingQueue.put(it) },
+            BizComparableTask().also { priorityBlockingQueue.put(it) },
         ).let { (task0, task1) ->
             assertEquals(task0, priorityBlockingQueue.poll())
             assertEquals(task1, priorityBlockingQueue.poll())
         }
 
-        BizTask().also { priorityBlockingQueue.put(it) }
+        BizComparableTask().also { priorityBlockingQueue.put(it) }
 
         try {
-            BizTask().also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
+            BizComparableTask().also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
             fail()
         } catch (e: ClassCastException) {
             assertClassCastException(e, TtlRunnable::class.java, Comparable::class.java)
@@ -217,8 +217,8 @@ class TtlExecutorsTest {
         }
 
         Pair(
-            BizTask().also { priorityBlockingQueue.put(it) },
-            BizTask().let { TtlRunnable.get(it) }!!.also { priorityBlockingQueue.put(it) },
+            BizComparableTask().also { priorityBlockingQueue.put(it) },
+            BizComparableTask().let { TtlRunnable.get(it) }!!.also { priorityBlockingQueue.put(it) },
         ).let { (task0, task1) ->
             assertEquals(task0, priorityBlockingQueue.poll())
             assertEquals(task1, priorityBlockingQueue.poll())
@@ -279,7 +279,7 @@ class TtlExecutorsTest {
     }
 }
 
-private class BizTask : Runnable, Comparable<Runnable> {
+private class BizComparableTask : Runnable, Comparable<Runnable> {
     companion object {
         val counter = AtomicInteger()
     }
@@ -290,11 +290,11 @@ private class BizTask : Runnable, Comparable<Runnable> {
         println("BizComparableTask#run")
     }
 
-    override fun compareTo(other: Runnable): Int = num - (other as BizTask).num
+    override fun compareTo(other: Runnable): Int = num - (other as BizComparableTask).num
 }
 
-data class BizOrderTask(val order: Int) : Runnable {
+private data class BizOrderTask(val order: Int) : Runnable {
     override fun run() {
-        println("BizTask#run")
+        println("BizOrderTask#run")
     }
 }
