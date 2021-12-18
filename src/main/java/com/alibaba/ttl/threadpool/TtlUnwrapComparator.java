@@ -1,6 +1,6 @@
 package com.alibaba.ttl.threadpool;
 
-import com.alibaba.ttl.TtlRunnable;
+import com.alibaba.ttl.TtlUnwrap;
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -12,21 +12,21 @@ import java.util.Comparator;
  * @see TtlExecutors#unwrap(Comparator)
  * @since 2.12.3
  */
-final class TtlRunnableUnwrapComparator implements Comparator<Runnable>, TtlWrapper<Comparator<Runnable>> {
-    private final Comparator<Runnable> comparator;
+final class TtlUnwrapComparator<T> implements Comparator<T>, TtlWrapper<Comparator<T>> {
+    private final Comparator<T> comparator;
 
-    public TtlRunnableUnwrapComparator(@NonNull Comparator<Runnable> comparator) {
+    public TtlUnwrapComparator(@NonNull Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
     @Override
-    public int compare(Runnable o1, Runnable o2) {
-        return comparator.compare(TtlRunnable.unwrap(o1), TtlRunnable.unwrap(o2));
+    public int compare(T o1, T o2) {
+        return comparator.compare(TtlUnwrap.unwrap(o1), TtlUnwrap.unwrap(o2));
     }
 
     @NonNull
     @Override
-    public Comparator<Runnable> unwrap() {
+    public Comparator<T> unwrap() {
         return comparator;
     }
 
@@ -35,7 +35,7 @@ final class TtlRunnableUnwrapComparator implements Comparator<Runnable>, TtlWrap
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TtlRunnableUnwrapComparator that = (TtlRunnableUnwrapComparator) o;
+        TtlUnwrapComparator<?> that = (TtlUnwrapComparator<?>) o;
 
         return comparator.equals(that.comparator);
     }
@@ -47,6 +47,6 @@ final class TtlRunnableUnwrapComparator implements Comparator<Runnable>, TtlWrap
 
     @Override
     public String toString() {
-        return "TtlRunnableUnwrapComparator{comparator=" + comparator + '}';
+        return "TtlUnwrapComparator{comparator=" + comparator + '}';
     }
 }
