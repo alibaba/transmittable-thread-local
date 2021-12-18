@@ -170,7 +170,7 @@ public final class YourXxxAgent {
 
 `TTL Agent`自己内部实现使用了`Javassist`，即在`Bootstrap ClassPath`上也需要添加`Javassist`。如果应用中也使用了`Javassist`，由于运行时会优先使用`TTL Agent`配置`Bootstrap ClassPath`上的`Javassist`，应用逻辑运行时实际不能选择/指定应用自己的`Javassist`的版本，带来了 应用需要的`Javassist`与`TTL Agent`用的`Javassist`之间的兼容性风险。
 
-可以通过 `repackage`依赖（即 重命名/改写 依赖类的包名）来解决这个问题。`Maven`提供了[`Shade`插件](http://maven.apache.org/plugins/maven-shade-plugin/)，可以完成下面的操作：
+可以通过 `repackage`依赖（即 重命名/改写 依赖类的包名）来解决这个问题。`Maven`提供了[`Shade`插件](https://maven.apache.org/plugins/maven-shade-plugin/)，可以完成下面的操作：
 
 - `repackage` `Javassist`的类文件
 - 添加`repackage`过的`Javassist`到`TTL Jar`中
@@ -244,8 +244,8 @@ mvn install
     - [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
     - [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
     - [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
-- [Java SE 6 新特性: Instrumentation 新功能](http://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
-- [Creation, dynamic loading and instrumentation with javaagents](http://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
+- [Java SE 6 新特性: Instrumentation 新功能](https://www.ibm.com/developerworks/cn/java/j-lo-jse61/)
+- [Creation, dynamic loading and instrumentation with javaagents](https://dhruba.name/2010/02/07/creation-dynamic-loading-and-instrumentation-with-javaagents/)
 - [JavaAgent加载机制分析](https://www.iteye.com/blog/nijiaben-1847212/)
 
 ## `Javassist`
@@ -254,4 +254,4 @@ mvn install
 
 ## `Maven Shade`插件
 
-- [`Maven Shade`插件文档](http://maven.apache.org/plugins/maven-shade-plugin/)
+- [`Maven Shade`插件文档](https://maven.apache.org/plugins/maven-shade-plugin/)

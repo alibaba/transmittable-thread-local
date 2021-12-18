@@ -6,7 +6,7 @@ set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 export TTL_CI_TEST_MODE=true
-source ./common_build.sh skipClean
+source ./ttl_build.sh skipClean
 
 ttl_jar_path="$(readlink -f "$(getTtlJarPath)")"
 JCC="$(readlink -f "$(command -v japi-compliance-checker.pl)")"
