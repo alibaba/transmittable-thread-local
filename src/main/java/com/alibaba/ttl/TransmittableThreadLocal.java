@@ -4,7 +4,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -136,13 +139,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
      * and the child value({@link #childValue(Object)}) and the transmitting value({@link #copy(Object)}) of the variable is
-     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}
+     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
      *
      * @param <S>                        the type of the thread local's value
      * @param supplier                   the supplier to be used to determine the initial value
      * @param copierForChildValueAndCopy the ttl copier to be used to determine the child value and the transmitting value
      * @return a new transmittable thread local variable
-     * @throws NullPointerException if the specified supplier and copier is null
+     * @throws NullPointerException if the specified supplier or copier is null
      * @see #withInitial(Supplier)
      * @since 2.12.3
      */
@@ -161,8 +164,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
      * and the child value({@link #childValue(Object)}) and the transmitting value({@link #copy(Object)}) of the variable is
-     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}
-     *
+     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
+     * <p>
      * <B><I>NOTE:</I></B><br>
      * Recommend use {@link #withInitialAndCopier(Supplier, TtlCopier)} instead of this method.
      * In most cases, the logic of determining the child value({@link #childValue(Object)})
@@ -173,7 +176,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * @param copierForChildValue the ttl copier to be used to determine the child value
      * @param copierForCopy       the ttl copier to be used to determine the transmitting value
      * @return a new transmittable thread local variable
-     * @throws NullPointerException if the specified supplier and copier is null
+     * @throws NullPointerException if the specified supplier or copier is null
      * @see #withInitial(Supplier)
      * @see #withInitialAndCopier(Supplier, TtlCopier)
      * @since 2.12.3
@@ -267,7 +270,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * see {@link InheritableThreadLocal#get()}
+     * {@inheritDoc}
      */
     @Override
     public final T get() {
@@ -277,7 +280,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * see {@link InheritableThreadLocal#set}
+     * {@inheritDoc}
      */
     @Override
     public final void set(T value) {
@@ -291,7 +294,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * see {@link InheritableThreadLocal#remove()}
+     * {@inheritDoc}
      */
     @Override
     public final void remove() {
@@ -314,17 +317,17 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     //        the value of WeakHashMap is *always* null, and never used.
     //    2.2 WeakHashMap support *null* value.
     private static final InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>> holder =
-        new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
-            @Override
-            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
-                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
-            }
+            new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
+                @Override
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
+                }
 
-            @Override
-            protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
-            }
-        };
+                @Override
+                protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
+                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+                }
+            };
 
     @SuppressWarnings("unchecked")
     private void addThisToHolder() {
@@ -348,7 +351,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                 else threadLocal.afterExecute();
             } catch (Throwable t) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t.toString(), t);
+                    logger.log(Level.WARNING, "TTL exception when " + (isBefore ? "beforeExecute" : "afterExecute") + ", cause: " + t, t);
                 }
             }
         }
@@ -439,7 +442,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * }); // (2) + (3)}</pre>
      * <p>
      * The reason of providing 2 util methods is the different {@code throws Exception} type
-     * so as to satisfy your biz logic({@code lambda}):
+     * to satisfy your biz logic({@code lambda}):
      * <ol>
      * <li>{@link #runCallableWithCaptured(Object, Callable)}: {@code throws Exception}</li>
      * <li>{@link #runSupplierWithCaptured(Object, Supplier)}: No {@code throws}</li>
@@ -687,7 +690,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param bizLogic biz logic
          * @param <R>      the return type of biz logic
          * @return the return value of biz logic
-         * @throws Exception exception threw by biz logic
+         * @throws Exception the exception threw by biz logic
          * @see #capture()
          * @see #replay(Object)
          * @see #restore(Object)
@@ -708,7 +711,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param bizLogic biz logic
          * @param <R>      the return type of biz logic
          * @return the return value of biz logic
-         * @throws Exception exception threw by biz logic
+         * @throws Exception the exception threw by biz logic
          * @see #clear()
          * @see #restore(Object)
          * @since 2.9.0
