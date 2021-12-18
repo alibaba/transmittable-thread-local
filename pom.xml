@@ -90,6 +90,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<spotbugs.annotations.version>4.5.2</spotbugs.annotations.version>
 		<kotlin.version>1.4.32</kotlin.version>
 		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
@@ -114,7 +115,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.4.1</version>
+			<version>${spotbugs.annotations.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--
@@ -327,7 +328,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.4.1</version>
+				<version>4.5.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -497,7 +498,7 @@
 									<location>${project.basedir}/src/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/3.1.12/</url>
+									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
 									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>

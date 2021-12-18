@@ -114,8 +114,8 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
+			<version>4.5.2</version>
 			<scope>provided</scope>
-			<version>4.4.1</version>
 		</dependency>
 		<!--
 			make other qa libs
@@ -126,8 +126,7 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
@@ -328,7 +327,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.4.1</version>
+				<version>4.5.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
