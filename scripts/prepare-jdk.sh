@@ -38,13 +38,11 @@ __loadSdkman
 
 jdks_install_by_sdkman=(
     6.0.119-zulu
-    7.0.322-zulu
     8.312.07.1-amzn
-
     11.0.13-ms
-
-    16.0.2.7.1-amzn
     17.0.1-ms
+
+    18.ea.28-open
 )
 java_home_var_names=()
 
