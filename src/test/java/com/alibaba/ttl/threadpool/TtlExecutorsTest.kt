@@ -145,16 +145,16 @@ class TtlExecutorsTest {
 
         getTtlRunnableUnwrapComparator(comparator).let {
             // use class name check instead of type check by
-            //     assertTrue(it is TtlRunnableUnwrapComparator)
+            //     assertTrue(it is TtlUnwrapComparator)
             //
             // avoid test error under java 11 using TTL Agent:
             //
             // java.lang.IllegalAccessError:
-            //   failed to access class com.alibaba.ttl.threadpool.TtlRunnableUnwrapComparator
+            //   failed to access class com.alibaba.ttl.threadpool.TtlUnwrapComparator
             //     from class com.alibaba.ttl.threadpool.TtlExecutorsTest
-            //   (com.alibaba.ttl.threadpool.TtlRunnableUnwrapComparator is in unnamed module of loader 'bootstrap';
+            //   (com.alibaba.ttl.threadpool.TtlUnwrapComparator is in unnamed module of loader 'bootstrap';
             //     com.alibaba.ttl.threadpool.TtlExecutorsTest is in unnamed module of loader 'app')
-            assertEquals("com.alibaba.ttl.threadpool.TtlRunnableUnwrapComparator", it!!.javaClass.name)
+            assertEquals("com.alibaba.ttl.threadpool.TtlUnwrapComparator", it!!.javaClass.name)
 
             assertTrue(isTtlRunnableUnwrapComparator(it))
 
