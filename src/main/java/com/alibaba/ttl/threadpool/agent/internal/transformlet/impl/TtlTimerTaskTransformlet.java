@@ -9,6 +9,7 @@ import javassist.*;
 import java.io.IOException;
 
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doTryFinallyForMethod;
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.isClassAtPackageJavaUtil;
 
 /**
  * TTL {@link JavassistTransformlet} for {@link java.util.TimerTask}.
@@ -27,7 +28,12 @@ public class TtlTimerTaskTransformlet implements JavassistTransformlet {
 
     @Override
     public void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
-        if (TIMER_TASK_CLASS_NAME.equals(classInfo.getClassName())) return; // No need transform TimerTask class
+        // work-around ClassCircularityError:
+        if (isClassAtPackageJavaUtil(classInfo.getClassName())) return;
+
+        // TimerTask class is checked by above logic.
+        //
+        // if (TIMER_TASK_CLASS_NAME.equals(classInfo.getClassName())) return; // No need transform TimerTask class
 
         final CtClass clazz = classInfo.getCtClass();
 

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.isClassUnderPackage;
+
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
  *
@@ -51,8 +53,10 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classFile == null) return NO_TRANSFORM;
 
             final String className = toClassName(classFile);
+            if (isClassUnderPackage(className, "com.alibaba.ttl")) return NO_TRANSFORM;
+            if (isClassUnderPackage(className, "java.lang")) return NO_TRANSFORM;
 
-            ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
+            final ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
 
             for (JavassistTransformlet transformlet : transformletList) {
                 transformlet.doTransform(classInfo);
