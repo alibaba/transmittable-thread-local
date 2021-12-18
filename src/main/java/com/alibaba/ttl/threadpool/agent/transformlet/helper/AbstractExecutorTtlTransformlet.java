@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.isClassAtPackageJavaUtil;
 import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
 /**
@@ -61,6 +62,11 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
 
     @Override
     public final void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+        // work-around ClassCircularityError:
+        //      https://github.com/alibaba/transmittable-thread-local/issues/278
+        //      https://github.com/alibaba/transmittable-thread-local/issues/234
+        if (isClassAtPackageJavaUtil(classInfo.getClassName())) return;
+
         final CtClass clazz = classInfo.getCtClass();
         if (executorClassNames.contains(classInfo.getClassName())) {
             for (CtMethod method : clazz.getDeclaredMethods()) {

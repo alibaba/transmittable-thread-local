@@ -28,6 +28,13 @@ public abstract class Logger {
         else loggerImplType = 0;
     }
 
+    /**
+     * Only for test code
+     */
+    public static void setLoggerImplTypeIfNotSetYet(String type) {
+        if (loggerImplType == -1) setLoggerImplType(type);
+    }
+
     public static Logger getLogger(Class<?> clazz) {
         if (loggerImplType == -1) throw new IllegalStateException("TTL logger implementation type is NOT set!");
 

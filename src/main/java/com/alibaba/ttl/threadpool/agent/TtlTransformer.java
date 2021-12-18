@@ -12,7 +12,7 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -62,10 +62,13 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classFile == null) return NO_TRANSFORM;
 
             final ClassInfo classInfo = new ClassInfo(classFile, classFileBuffer, loader);
+            if (isClassUnderPackage(classInfo.getClassName(), "com.alibaba.ttl")) return NO_TRANSFORM;
+            if (isClassUnderPackage(classInfo.getClassName(), "java.lang")) return NO_TRANSFORM;
+
             if (logClassTransform)
                 logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
-                    + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + classInfo.getLocationUrl());
+                        + " from classloader " + classInfo.getClassLoader()
+                        + " at location " + classInfo.getLocationUrl());
 
             extensionTransformletManager.collectExtensionTransformlet(classInfo);
 
@@ -73,8 +76,8 @@ public class TtlTransformer implements ClassFileTransformer {
                 transformlet.doTransform(classInfo);
                 if (classInfo.isModified()) {
                     logger.info("[TtlTransformer] " + transformlet.getClass().getName() + " transformed " + classInfo.getClassName()
-                        + " from classloader " + classInfo.getClassLoader()
-                        + " at location " + classInfo.getLocationUrl());
+                            + " from classloader " + classInfo.getClassLoader()
+                            + " at location " + classInfo.getLocationUrl());
                     return classInfo.getCtClass().toBytecode();
                 }
             }
@@ -82,8 +85,8 @@ public class TtlTransformer implements ClassFileTransformer {
             final String transformlet = extensionTransformletManager.extensionTransformletDoTransform(classInfo);
             if (classInfo.isModified()) {
                 logger.info("[TtlTransformer] " + transformlet + " transformed " + classInfo.getClassName()
-                    + " from classloader " + classInfo.getClassLoader()
-                    + " at location " + classInfo.getLocationUrl());
+                        + " from classloader " + classInfo.getClassLoader()
+                        + " at location " + classInfo.getLocationUrl());
                 return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {

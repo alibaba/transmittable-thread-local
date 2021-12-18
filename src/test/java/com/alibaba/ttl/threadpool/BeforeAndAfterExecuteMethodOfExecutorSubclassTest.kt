@@ -1,10 +1,15 @@
-package com.alibaba.ttl.threadpool
+@file:Suppress("PackageDirectoryMismatch")
+
+// Change the package out of com.alibaba.ttl
+// so agent will transform MyThreadPoolExecutor
+package com.alibaba.test.ttl.threadpool
 
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.support.junit.conditional.NoAgentRun
 import com.alibaba.ttl.TtlRunnable
+import com.alibaba.ttl.threadpool.TtlExecutors
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
