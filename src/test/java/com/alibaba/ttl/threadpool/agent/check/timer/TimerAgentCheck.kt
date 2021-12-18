@@ -1,6 +1,7 @@
 @file:JvmName("TimerAgentCheck")
+@file:Suppress("PackageDirectoryMismatch")
 
-package com.alibaba.ttl.threadpool.agent.check.timer
+package com.alibaba.test.ttl.threadpool.agent.check.timer
 
 import com.alibaba.*
 import com.alibaba.ttl.testmodel.Task
@@ -39,7 +40,7 @@ fun main() {
 
     // child Inheritable
     assertChildTtlValues(tag, task.copied)
-    // child do not effect parent
+    // child do not affect parent
     assertParentTtlValues(copyTtlValues(ttlInstances))
 
     printHead("TimerAgentCheck OK!")

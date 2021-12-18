@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.isClassAtPackageJavaUtil;
 import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
 /**
@@ -28,6 +29,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.Executors
+ * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet
  * @since 2.13.0
  */
 public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet {
@@ -60,6 +62,11 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
 
     @Override
     public final void doTransform(@NonNull final ClassInfo classInfo) throws IOException, NotFoundException, CannotCompileException {
+        // work-around ClassCircularityError:
+        //      https://github.com/alibaba/transmittable-thread-local/issues/278
+        //      https://github.com/alibaba/transmittable-thread-local/issues/234
+        if (isClassAtPackageJavaUtil(classInfo.getClassName())) return;
+
         final CtClass clazz = classInfo.getCtClass();
         if (executorClassNames.contains(classInfo.getClassName())) {
             for (CtMethod method : clazz.getDeclaredMethods()) {
@@ -98,16 +105,20 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
             final String paramTypeName = parameterTypes[i].getName();
             if (paramTypeNameToDecorateMethodClass.containsKey(paramTypeName)) {
                 String code = String.format(
-                    // decorate to TTL wrapper,
-                    // and then set AutoWrapper attachment/Tag
-                    "    $%d = %s.get($%1$d, false, true);"
-                        + "\n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
-                    i + 1, paramTypeNameToDecorateMethodClass.get(paramTypeName));
+                        // decorate to TTL wrapper,
+                        // and then set AutoWrapper attachment/Tag
+                        "    $%d = %s.get($%1$d, false, true);"
+                                + "\n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
+                        i + 1, paramTypeNameToDecorateMethodClass.get(paramTypeName));
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);
             }
         }
-        if (insertCode.length() > 0) method.insertBefore(insertCode.toString());
+        if (insertCode.length() > 0) {
+            logger.info("insert code before method " + signatureOfMethod(method) + " of class " +
+                    method.getDeclaringClass().getName() + ":\n" + insertCode);
+            method.insertBefore(insertCode.toString());
+        }
     }
 
     /**
@@ -121,11 +132,14 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
                 final String paramTypeName = parameterTypes[i].getName();
                 if (THREAD_FACTORY_CLASS_NAME.equals(paramTypeName)) {
                     String code = String.format("$%d = com.alibaba.ttl.threadpool.TtlExecutors.getDisableInheritableThreadFactory($%<d);", i + 1);
-                    logger.info("insert code before method " + signatureOfMethod(constructor) + " of class " + constructor.getDeclaringClass().getName() + ": " + code);
                     insertCode.append(code);
                 }
             }
-            if (insertCode.length() > 0) constructor.insertBefore(insertCode.toString());
+            if (insertCode.length() > 0) {
+                logger.info("insert code before constructor " + signatureOfMethod(constructor) + " of class " +
+                        constructor.getDeclaringClass().getName() + ": " + insertCode);
+                constructor.insertBefore(insertCode.toString());
+            }
         }
     }
 
@@ -142,7 +156,8 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
             final CtMethod beforeExecute = clazz.getDeclaredMethod("beforeExecute", new CtClass[]{threadClass, runnableClass});
             // unwrap runnable if IsAutoWrapper
             String code = "$2 = com.alibaba.ttl.spi.TtlAttachmentsDelegate.unwrapIfIsAutoWrapper($2);";
-            logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " + beforeExecute.getDeclaringClass().getName() + ": " + code);
+            logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " +
+                    beforeExecute.getDeclaringClass().getName() + ": " + code);
             beforeExecute.insertBefore(code);
             modified = true;
         } catch (NotFoundException e) {
@@ -153,7 +168,8 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
             final CtMethod afterExecute = clazz.getDeclaredMethod("afterExecute", new CtClass[]{runnableClass, throwableClass});
             // unwrap runnable if IsAutoWrapper
             String code = "$1 = com.alibaba.ttl.spi.TtlAttachmentsDelegate.unwrapIfIsAutoWrapper($1);";
-            logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " + afterExecute.getDeclaringClass().getName() + ": " + code);
+            logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " +
+                    afterExecute.getDeclaringClass().getName() + ": " + code);
             afterExecute.insertBefore(code);
             modified = true;
         } catch (NotFoundException e) {

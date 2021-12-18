@@ -153,6 +153,27 @@ public final class TtlTransformletHelper {
         else return capture();
     }
 
+    @NonNull
+    public static String getPackageName(@NonNull String className) {
+        final int idx = className.lastIndexOf('.');
+        if (-1 == idx) return "";
+
+        return className.substring(0, idx);
+    }
+
+    public static boolean isClassAtPackage(@NonNull String className, @NonNull String packageName) {
+        return packageName.equals(getPackageName(className));
+    }
+
+    public static boolean isClassUnderPackage(@NonNull String className, @NonNull String packageName) {
+        String packageOfClass = getPackageName(className);
+        return packageOfClass.equals(packageName) || packageOfClass.startsWith(packageName + ".");
+    }
+
+    public static boolean isClassAtPackageJavaUtil(@NonNull String className) {
+        return isClassAtPackage(className, "java.util");
+    }
+
     private TtlTransformletHelper() {
         throw new InstantiationError("Must not instantiate this class");
     }

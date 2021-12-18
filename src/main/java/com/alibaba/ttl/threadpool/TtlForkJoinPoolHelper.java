@@ -5,6 +5,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Util methods to wrap/unwrap/check methods to disable Inheritable for {@link ForkJoinWorkerThreadFactory}.
@@ -17,7 +18,8 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
  * @see ForkJoinPool
  * @see ForkJoinWorkerThreadFactory
  * @see ForkJoinPool#defaultForkJoinWorkerThreadFactory
- * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
+ * @see java.util.stream.Stream
+ * @see TtlExecutors
  * @since 2.10.1
  */
 public class TtlForkJoinPoolHelper {
@@ -26,6 +28,7 @@ public class TtlForkJoinPoolHelper {
      *
      * @param threadFactory input thread factory
      * @see DisableInheritableForkJoinWorkerThreadFactory
+     * @see TtlExecutors#getDisableInheritableThreadFactory(ThreadFactory)
      * @since 2.10.1
      */
     @Nullable
@@ -40,6 +43,7 @@ public class TtlForkJoinPoolHelper {
      * Wrapper of {@link ForkJoinPool#defaultForkJoinWorkerThreadFactory}, disable inheritable.
      *
      * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
+     * @see TtlExecutors#getDefaultDisableInheritableThreadFactory()
      * @since 2.10.1
      */
     @NonNull
@@ -50,6 +54,8 @@ public class TtlForkJoinPoolHelper {
     /**
      * check the {@link ForkJoinWorkerThreadFactory} is {@link DisableInheritableForkJoinWorkerThreadFactory} or not.
      *
+     * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
+     * @see #getDefaultDisableInheritableForkJoinWorkerThreadFactory()
      * @see DisableInheritableForkJoinWorkerThreadFactory
      * @since 2.10.1
      */
@@ -62,6 +68,7 @@ public class TtlForkJoinPoolHelper {
      *
      * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      * @see DisableInheritableForkJoinWorkerThreadFactory
+     * @see TtlExecutors#unwrap(ThreadFactory)
      * @since 2.10.1
      */
     @Nullable
@@ -72,5 +79,6 @@ public class TtlForkJoinPoolHelper {
     }
 
     private TtlForkJoinPoolHelper() {
+        throw new InstantiationError("Must not instantiate this class");
     }
 }
