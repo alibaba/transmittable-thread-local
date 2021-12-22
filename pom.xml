@@ -96,7 +96,7 @@
 
 		<spotbugs.annotations.version>4.5.2</spotbugs.annotations.version>
 		<kotlin.version>1.4.32</kotlin.version>
-		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.6.0</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
