@@ -4,7 +4,7 @@ import com.alibaba.expandThreadPool
 import com.alibaba.support.junit.conditional.BelowJava8
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.TtlUnwrap.unwrap
-import com.alibaba.ttl.TtlWrappers.wrap
+import com.alibaba.ttl.TtlWrappers.*
 import org.junit.AfterClass
 import org.junit.Assert.*
 import org.junit.Rule
@@ -24,52 +24,97 @@ class TtlWrappersTest {
     fun test_null() {
         val supplier: Supplier<String>? = null
         assertNull(wrap(supplier))
+        assertNull(wrapSupplier(supplier))
         assertNull(unwrap(supplier))
 
         val consumer: Consumer<String>? = null
-        assertNull(unwrap(consumer))
         assertNull(wrap(consumer))
+        assertNull(wrapConsumer(consumer))
+        assertNull(unwrap(consumer))
 
         val biConsumer: BiConsumer<String, String>? = null
         assertNull(wrap(biConsumer))
+        assertNull(wrapBiConsumer(biConsumer))
         assertNull(unwrap(biConsumer))
 
         val function: Function<String, String>? = null
         assertNull(wrap(function))
+        assertNull(wrapFunction(function))
         assertNull(unwrap(function))
 
         val biFunction: BiFunction<String, String, String>? = null
         assertNull(wrap(biFunction))
+        assertNull(wrapBiFunction(biFunction))
         assertNull(unwrap(biFunction))
     }
 
     @Test
     @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun wrap_ReWrap_Unwrap_same() {
+        // Supplier
         val supplier = Supplier { 42 }
+
         val ttlSupplier = wrap(supplier)
         assertSame(ttlSupplier, wrap(ttlSupplier))
+        assertSame(ttlSupplier, wrapSupplier(ttlSupplier))
         assertSame(supplier, unwrap(ttlSupplier))
 
+        val ttlSupplier2 = wrapSupplier(supplier)
+        assertSame(ttlSupplier2, wrapSupplier(ttlSupplier2))
+        assertSame(ttlSupplier2, wrap(ttlSupplier2))
+        assertSame(supplier, unwrap(ttlSupplier2))
+
+        // Consumer
         val consumer = Consumer<String> {}
+
         val ttlConsumer = wrap(consumer)
         assertSame(ttlConsumer, wrap(ttlConsumer))
+        assertSame(ttlConsumer, wrapConsumer(ttlConsumer))
         assertSame(consumer, unwrap(ttlConsumer))
 
+        val ttlConsumer2 = wrapConsumer(consumer)
+        assertSame(ttlConsumer2, wrapConsumer(ttlConsumer2))
+        assertSame(ttlConsumer2, wrap(ttlConsumer2))
+        assertSame(consumer, unwrap(ttlConsumer2))
+
+        // BiConsumer
         val biConsumer = BiConsumer<String, String> { _, _ -> }
+
         val ttlBiConsumer = wrap(biConsumer)
         assertSame(ttlBiConsumer, wrap(ttlBiConsumer))
+        assertSame(ttlBiConsumer, wrapBiConsumer(ttlBiConsumer))
         assertSame(biConsumer, unwrap(ttlBiConsumer))
 
+        val ttlBiConsumer2 = wrapBiConsumer(biConsumer)
+        assertSame(ttlBiConsumer2, wrapBiConsumer(ttlBiConsumer2))
+        assertSame(ttlBiConsumer2, wrap(ttlBiConsumer2))
+        assertSame(biConsumer, unwrap(ttlBiConsumer2))
+
+        // Function
         val function = Function<String, String> { "" }
+
         val ttlFunction = wrap(function)
         assertSame(ttlFunction, wrap(ttlFunction))
+        assertSame(ttlFunction, wrapFunction(ttlFunction))
         assertSame(function, unwrap(ttlFunction))
 
+        val ttlFunction2 = wrapFunction(function)
+        assertSame(ttlFunction2, wrapFunction(ttlFunction2))
+        assertSame(ttlFunction2, wrap(ttlFunction2))
+        assertSame(function, unwrap(ttlFunction2))
+
+        // BiFunction
         val biFunction = BiFunction<String, String, String> { _, _ -> "" }
+
         val ttlBiFunction = wrap(biFunction)
         assertSame(ttlBiFunction, wrap(ttlBiFunction))
+        assertSame(ttlBiFunction, wrapBiFunction(ttlBiFunction))
         assertSame(biFunction, unwrap(ttlBiFunction))
+
+        val ttlBiFunction2 = wrapBiFunction(biFunction)
+        assertSame(ttlBiFunction2, wrapBiFunction(ttlBiFunction2))
+        assertSame(ttlBiFunction2, wrap(ttlBiFunction2))
+        assertSame(biFunction, unwrap(ttlBiFunction2))
     }
 
     @Test
