@@ -359,7 +359,7 @@ public class TtlWrappers {
      * @return Wrapped {@link BiFunction}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
-     * @deprecated @deprecated please use {@link TtlWrappers#wrapBiFunction(java.util.function.BiFunction)}
+     * @deprecated please use {@link TtlWrappers#wrapBiFunction(java.util.function.BiFunction)}
      */
     @Nullable
     @Deprecated
