@@ -37,7 +37,9 @@ public class TtlWrappers {
      */
     @Nullable
     public static <T> Supplier<T> wrapSupplier(@Nullable Supplier<T> supplier) {
-        return wrap(supplier);
+        if (supplier == null) return null;
+        else if (supplier instanceof TtlEnhanced) return supplier;
+        else return new TtlSupplier<T>(supplier);
     }
 
     /**
@@ -54,9 +56,7 @@ public class TtlWrappers {
     @Deprecated
     @Nullable
     public static <T> Supplier<T> wrap(@Nullable Supplier<T> supplier) {
-        if (supplier == null) return null;
-        else if (supplier instanceof TtlEnhanced) return supplier;
-        else return new TtlSupplier<T>(supplier);
+        return wrapSupplier(supplier);
     }
 
     private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>>, TtlEnhanced {
@@ -116,7 +116,9 @@ public class TtlWrappers {
      */
     @Nullable
     public static <T> Consumer<T> wrapConsumer(@Nullable Consumer<T> consumer) {
-        return wrap(consumer);
+        if (consumer == null) return null;
+        else if (consumer instanceof TtlEnhanced) return consumer;
+        else return new TtlConsumer<T>(consumer);
     }
 
     /**
@@ -133,9 +135,7 @@ public class TtlWrappers {
     @Deprecated
     @Nullable
     public static <T> Consumer<T> wrap(@Nullable Consumer<T> consumer) {
-        if (consumer == null) return null;
-        else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlConsumer<T>(consumer);
+        return wrapConsumer(consumer);
     }
 
     private static class TtlConsumer<T> implements Consumer<T>, TtlWrapper<Consumer<T>>, TtlEnhanced {
@@ -195,7 +195,9 @@ public class TtlWrappers {
      */
     @Nullable
     public static <T, U> BiConsumer<T, U> wrapBiConsumer(@Nullable BiConsumer<T, U> consumer) {
-        return wrap(consumer);
+        if (consumer == null) return null;
+        else if (consumer instanceof TtlEnhanced) return consumer;
+        else return new TtlBiConsumer<T, U>(consumer);
     }
 
     /**
@@ -212,9 +214,7 @@ public class TtlWrappers {
     @Deprecated
     @Nullable
     public static <T, U> BiConsumer<T, U> wrap(@Nullable BiConsumer<T, U> consumer) {
-        if (consumer == null) return null;
-        else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlBiConsumer<T, U>(consumer);
+        return wrapBiConsumer(consumer);
     }
 
     private static class TtlBiConsumer<T, U> implements BiConsumer<T, U>, TtlWrapper<BiConsumer<T, U>>, TtlEnhanced {
@@ -274,7 +274,9 @@ public class TtlWrappers {
      */
     @Nullable
     public static <T, R> Function<T, R> wrapFunction(@Nullable Function<T, R> fn) {
-        return wrap(fn);
+        if (fn == null) return null;
+        else if (fn instanceof TtlEnhanced) return fn;
+        else return new TtlFunction<T, R>(fn);
     }
 
     /**
@@ -291,9 +293,7 @@ public class TtlWrappers {
     @Deprecated
     @Nullable
     public static <T, R> Function<T, R> wrap(@Nullable Function<T, R> fn) {
-        if (fn == null) return null;
-        else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlFunction<T, R>(fn);
+        return wrapFunction(fn);
     }
 
     private static class TtlFunction<T, R> implements Function<T, R>, TtlWrapper<Function<T, R>>, TtlEnhanced {
@@ -353,7 +353,9 @@ public class TtlWrappers {
      */
     @Nullable
     public static <T, U, R> BiFunction<T, U, R> wrapBiFunction(@Nullable BiFunction<T, U, R> fn) {
-        return wrap(fn);
+        if (fn == null) return null;
+        else if (fn instanceof TtlEnhanced) return fn;
+        else return new TtlBiFunction<T, U, R>(fn);
     }
 
     /**
@@ -370,9 +372,7 @@ public class TtlWrappers {
     @Deprecated
     @Nullable
     public static <T, U, R> BiFunction<T, U, R> wrap(@Nullable BiFunction<T, U, R> fn) {
-        if (fn == null) return null;
-        else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlBiFunction<T, U, R>(fn);
+        return wrapBiFunction(fn);
     }
 
     private static class TtlBiFunction<T, U, R> implements BiFunction<T, U, R>, TtlWrapper<BiFunction<T, U, R>>, TtlEnhanced {
