@@ -113,7 +113,7 @@ TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
 // =====================================================
 
 // set in parent thread
-context("value-set-in-parent");
+context.set("value-set-in-parent");
 
 Runnable task = new RunnableTask();
 // extra work, create decorated ttlRunnable object
