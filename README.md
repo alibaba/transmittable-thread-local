@@ -345,7 +345,7 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.3</version>
+    <version>2.12.4</version>
 </dependency>
 ```
 
