@@ -7,7 +7,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Util methods for TTL Wrapper: unwrap TTL Wrapper and check TTL Wrapper.
  * <p>
  * <b><i>Note:</i></b><br>
- * all methods is {@code null}-safe, when input parameter is {@code null}, return {@code null}.
+ * all methods are {@code null}-safe, when input parameter is {@code null}, return {@code null}.
  * <p>
  * <b><i>Implementation Note:</i></b><br>
  * The util methods in this class should have been inside {@link TtlWrappers}.<br>
@@ -37,11 +37,11 @@ public class TtlUnwrap {
      * @see com.alibaba.ttl.threadpool.TtlExecutors#unwrap(java.util.concurrent.ThreadFactory)
      * @see com.alibaba.ttl.threadpool.TtlExecutors#unwrap(java.util.Comparator)
      * @see com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#unwrap(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
-     * @see TtlWrappers#wrap(java.util.function.Supplier)
-     * @see TtlWrappers#wrap(java.util.function.Consumer)
-     * @see TtlWrappers#wrap(java.util.function.BiConsumer)
-     * @see TtlWrappers#wrap(java.util.function.Function)
-     * @see TtlWrappers#wrap(java.util.function.BiFunction)
+     * @see TtlWrappers#wrapSupplier(java.util.function.Supplier)
+     * @see TtlWrappers#wrapConsumer(java.util.function.Consumer)
+     * @see TtlWrappers#wrapBiConsumer(java.util.function.BiConsumer)
+     * @see TtlWrappers#wrapFunction(java.util.function.Function)
+     * @see TtlWrappers#wrapBiFunction(java.util.function.BiFunction)
      * @see #isWrapper(Object)
      * @since 2.11.4
      */

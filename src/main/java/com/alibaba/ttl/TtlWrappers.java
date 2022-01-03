@@ -19,6 +19,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @author huangfei1101 (fei.hf at alibaba-inc dot com)
  * @see TtlRunnable
  * @see TtlCallable
  * @see TtlUnwrap
@@ -27,18 +28,35 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  */
 public class TtlWrappers {
     /**
-     * wrap input {@link Supplier} to TTL wrapper.
+     * wrap {@link Supplier} to TTL wrapper.
+     *
+     * @param supplier input {@link Supplier}
+     * @return Wrapped {@link Supplier}
+     * @see TtlUnwrap#unwrap(Object)
+     * @since 2.12.4
+     */
+    @Nullable
+    public static <T> Supplier<T> wrapSupplier(@Nullable Supplier<T> supplier) {
+        if (supplier == null) return null;
+        else if (supplier instanceof TtlEnhanced) return supplier;
+        else return new TtlSupplier<T>(supplier);
+    }
+
+    /**
+     * wrap {@link Supplier} to TTL wrapper.
      *
      * @param supplier input {@link Supplier}
      * @return Wrapped {@link Supplier}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
+     * @deprecated overload methods using the same name {@code wrap} is not readable
+     * and have the type inference problems in some case;
+     * so use {@link TtlWrappers#wrapSupplier(Supplier)} instead.
      */
+    @Deprecated
     @Nullable
     public static <T> Supplier<T> wrap(@Nullable Supplier<T> supplier) {
-        if (supplier == null) return null;
-        else if (supplier instanceof TtlEnhanced) return supplier;
-        else return new TtlSupplier<T>(supplier);
+        return wrapSupplier(supplier);
     }
 
     private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>>, TtlEnhanced {
@@ -89,18 +107,35 @@ public class TtlWrappers {
 
 
     /**
-     * wrap input {@link Consumer} to TTL wrapper.
+     * wrap {@link Consumer} to TTL wrapper.
+     *
+     * @param consumer input {@link Consumer}
+     * @return Wrapped {@link Consumer}
+     * @see TtlUnwrap#unwrap(Object)
+     * @since 2.12.4
+     */
+    @Nullable
+    public static <T> Consumer<T> wrapConsumer(@Nullable Consumer<T> consumer) {
+        if (consumer == null) return null;
+        else if (consumer instanceof TtlEnhanced) return consumer;
+        else return new TtlConsumer<T>(consumer);
+    }
+
+    /**
+     * wrap {@link Consumer} to TTL wrapper.
      *
      * @param consumer input {@link Consumer}
      * @return Wrapped {@link Consumer}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
+     * @deprecated overload methods using the same name {@code wrap} is not readable
+     * and have the type inference problems in some case;
+     * so use {@link TtlWrappers#wrapConsumer(java.util.function.Consumer)} instead.
      */
+    @Deprecated
     @Nullable
     public static <T> Consumer<T> wrap(@Nullable Consumer<T> consumer) {
-        if (consumer == null) return null;
-        else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlConsumer<T>(consumer);
+        return wrapConsumer(consumer);
     }
 
     private static class TtlConsumer<T> implements Consumer<T>, TtlWrapper<Consumer<T>>, TtlEnhanced {
@@ -151,18 +186,35 @@ public class TtlWrappers {
 
 
     /**
+     * wrap {@link BiConsumer} to TTL wrapper.
+     *
+     * @param consumer input {@link BiConsumer}
+     * @return Wrapped {@link BiConsumer}
+     * @see TtlUnwrap#unwrap(Object)
+     * @since 2.12.4
+     */
+    @Nullable
+    public static <T, U> BiConsumer<T, U> wrapBiConsumer(@Nullable BiConsumer<T, U> consumer) {
+        if (consumer == null) return null;
+        else if (consumer instanceof TtlEnhanced) return consumer;
+        else return new TtlBiConsumer<T, U>(consumer);
+    }
+
+    /**
      * wrap input {@link BiConsumer} to TTL wrapper.
      *
      * @param consumer input {@link BiConsumer}
      * @return Wrapped {@link BiConsumer}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
+     * @deprecated overload methods using the same name {@code wrap} is not readable
+     * and have the type inference problems in some case;
+     * so use {@link TtlWrappers#wrapBiConsumer(BiConsumer)} instead.
      */
+    @Deprecated
     @Nullable
     public static <T, U> BiConsumer<T, U> wrap(@Nullable BiConsumer<T, U> consumer) {
-        if (consumer == null) return null;
-        else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlBiConsumer<T, U>(consumer);
+        return wrapBiConsumer(consumer);
     }
 
     private static class TtlBiConsumer<T, U> implements BiConsumer<T, U>, TtlWrapper<BiConsumer<T, U>>, TtlEnhanced {
@@ -213,18 +265,35 @@ public class TtlWrappers {
 
 
     /**
-     * wrap input {@link Function} to TTL wrapper.
+     * wrap {@link Function} to TTL wrapper.
+     *
+     * @param fn input {@link Function}
+     * @return Wrapped {@link Function}
+     * @see TtlUnwrap#unwrap(Object)
+     * @since 2.12.4
+     */
+    @Nullable
+    public static <T, R> Function<T, R> wrapFunction(@Nullable Function<T, R> fn) {
+        if (fn == null) return null;
+        else if (fn instanceof TtlEnhanced) return fn;
+        else return new TtlFunction<T, R>(fn);
+    }
+
+    /**
+     * wrap {@link Function} to TTL wrapper.
      *
      * @param fn input {@link Function}
      * @return Wrapped {@link Function}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
+     * @deprecated overload methods using the same name {@code wrap} is not readable
+     * and have the type inference problems in some case;
+     * so use {@link TtlWrappers#wrapFunction(Function)} instead.
      */
+    @Deprecated
     @Nullable
     public static <T, R> Function<T, R> wrap(@Nullable Function<T, R> fn) {
-        if (fn == null) return null;
-        else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlFunction<T, R>(fn);
+        return wrapFunction(fn);
     }
 
     private static class TtlFunction<T, R> implements Function<T, R>, TtlWrapper<Function<T, R>>, TtlEnhanced {
@@ -275,18 +344,35 @@ public class TtlWrappers {
 
 
     /**
-     * wrap input {@link BiFunction} to TTL wrapper.
+     * wrap {@link BiFunction} to TTL wrapper.
+     *
+     * @param fn input {@link BiFunction}
+     * @return Wrapped {@link BiFunction}
+     * @see TtlUnwrap#unwrap(Object)
+     * @since 2.12.4
+     */
+    @Nullable
+    public static <T, U, R> BiFunction<T, U, R> wrapBiFunction(@Nullable BiFunction<T, U, R> fn) {
+        if (fn == null) return null;
+        else if (fn instanceof TtlEnhanced) return fn;
+        else return new TtlBiFunction<T, U, R>(fn);
+    }
+
+    /**
+     * wrap {@link BiFunction} to TTL wrapper.
      *
      * @param fn input {@link BiFunction}
      * @return Wrapped {@link BiFunction}
      * @see TtlUnwrap#unwrap(Object)
      * @since 2.11.4
+     * @deprecated overload methods using the same name {@code wrap} is not readable
+     * and have the type inference problems in some case;
+     * so use {@link TtlWrappers#wrapBiFunction(BiFunction)} instead.
      */
+    @Deprecated
     @Nullable
     public static <T, U, R> BiFunction<T, U, R> wrap(@Nullable BiFunction<T, U, R> fn) {
-        if (fn == null) return null;
-        else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlBiFunction<T, U, R>(fn);
+        return wrapBiFunction(fn);
     }
 
     private static class TtlBiFunction<T, U, R> implements BiFunction<T, U, R>, TtlWrapper<BiFunction<T, U, R>>, TtlEnhanced {
