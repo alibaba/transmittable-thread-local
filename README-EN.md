@@ -1,8 +1,8 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 <p align="center">
-<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&amp;logoColor=white" alt="Build Status"></a>
-<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&amp;logoColor=white" alt="Coverage Status"></a>
+<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.12.4?logo=appveyor&amp;logoColor=white" alt="Build Status"></a>
+<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/v2.12.4"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/v2.12.4?logo=codecov&amp;logoColor=white" alt="Coverage Status"></a>
 <a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability" alt="Maintainability"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=java&amp;logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97" alt="License"></a>
@@ -300,7 +300,7 @@ More info:
 
 # 🔌 Java API Docs
 
-The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.3/index.html>
+The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.4/index.html>
 
 # 🍪 Maven Dependency
 
@@ -308,7 +308,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.3</version>
+    <version>2.12.4</version>
 </dependency>
 ```
 
