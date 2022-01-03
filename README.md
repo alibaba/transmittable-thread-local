@@ -335,7 +335,7 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.3/index.html>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.12.4/index.html>
 
 # 🍪 Maven依赖
 
@@ -345,7 +345,7 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.3</version>
+    <version>2.12.4</version>
 </dependency>
 ```
 
