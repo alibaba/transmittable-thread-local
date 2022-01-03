@@ -11,18 +11,19 @@ import java.util.List;
  * @author huangfei1101 (fei.hf at alibaba-inc dot com)
  * @date 2021/12/30
  */
-public class TtlWrapperDemo {
+public class TtlWrapperTypeInferenceProblemShowcase {
     @Test
     public void wrapFunction() {
         List<Integer> source = buildSourceList(10);
-        /**
+
+        /*
          * Try to call the function foo for each element in the list
          * Because it is compatible with Java 6, the following code is commented
          * The following line of code has a compilation error
          */
         //List<Integer> targetWithCompileError = source.parallelStream().map(TtlWrappers.wrap(i->foo(i))).collect(Collectors.toList());
 
-        /**
+        /*
          * The following line of code is correct
          */
         //List<Integer> target = source.parallelStream().map(TtlWrappers.wrapFunction(i->foo(i))).collect(Collectors.toList());
