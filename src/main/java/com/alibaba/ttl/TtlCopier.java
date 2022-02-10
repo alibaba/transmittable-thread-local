@@ -1,12 +1,12 @@
 package com.alibaba.ttl;
 
 /**
- * TtlCopier creates the value when {@link TransmittableThreadLocal.Transmitter#capture()},
- * use the created value when {@link TransmittableThreadLocal.Transmitter#replay(Object)}
+ * {@code TtlCopier} copies the value when {@link TransmittableThreadLocal.Transmitter#capture()},
+ * use the copied value when {@link TransmittableThreadLocal.Transmitter#replay(Object)}
  *
+ * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TransmittableThreadLocal.Transmitter
  * @see TransmittableThreadLocal.Transmitter#capture()
- * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.11.0
  */
 @FunctionalInterface
