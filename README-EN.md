@@ -209,7 +209,7 @@ String value = context.get();
 
 ### 2.3 Use Java Agent to decorate thread pool implementation class
 
-In this usage, transmission is transparent\(no decoration operation\).
+In this usage, transmittance is transparent\(no decoration operation\).
 
 Sample code:
 
