@@ -1,8 +1,11 @@
 #!/usr/bin/env pwsh
 
+$appveyor_project = "oldratlee/transmittable-thread-local"
+
 # https://stackoverflow.com/questions/24649019/how-to-use-confirm-in-powershell
-$confirmation = Read-Host "Are you Sure You Want To Clear cache of appveyor project oldratlee/transmittable-thread-local"
-if ($confirmation -ne 'y') {
+$confirmation = Read-Host "Are you Sure You Want To Clear cache of appveyor project $appveyor_project [y/N]"
+if ($confirmation -ne 'y')
+{
     Write-Output "do nothing and exit"
     exit
 }
@@ -25,7 +28,9 @@ if ($confirmation -ne 'y') {
 # https://www.appveyor.com/docs/build-cache/#remove-cache-entry-from-build-config
 # https://www.appveyor.com/docs/api/#authentication
 
-$headers = @{}
+$headers = @{ }
 $headers['Authorization'] = "Bearer $appveyor_token"
 $headers["Content-type"] = "application/json"
-Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/projects/oldratlee/transmittable-thread-local/buildcache' -Headers $headers -Method Delete
+$uri = "https://ci.appveyor.com/api/projects/$appveyor_project/buildcache"
+
+Invoke-RestMethod -Uri $uri -Headers $headers -Method Delete
