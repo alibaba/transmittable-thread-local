@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link TransmittableThreadLocal}({@code TTL}) can transmit value from the thread of submitting task to the thread of executing task.
+ * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task to the thread of executing task.
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link InheritableThreadLocal},
@@ -50,6 +50,7 @@ import java.util.logging.Logger;
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @author Yang Fang (snoop dot fy at gmail dot com)
+ * @see <a href="https://github.com/alibaba/transmittable-thread-local">user guide docs and code repo of TransmittableThreadLocal(TTL)</a>
  * @see TtlRunnable
  * @see TtlCallable
  * @see com.alibaba.ttl.threadpool.TtlExecutors
@@ -757,7 +758,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          * <p>
          * Use the shadow copier(transmit the reference directly),
-         * and should use {@link #registerThreadLocal(ThreadLocal, TtlCopier)} to pass a {@link TtlCopier} explicitly
+         * and should use method {@link #registerThreadLocal(ThreadLocal, TtlCopier)} to pass a customized {@link TtlCopier} explicitly
          * if a different behavior is desired.
          * <p>
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
@@ -821,7 +822,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
          * <p>
          * Use the shadow copier(transmit the reference directly),
-         * and should use {@link #registerThreadLocal(ThreadLocal, TtlCopier, boolean)} to pass a {@link TtlCopier} explicitly
+         * and should use method {@link #registerThreadLocal(ThreadLocal, TtlCopier, boolean)} to pass a customized {@link TtlCopier} explicitly
          * if a different behavior is desired.
          * <p>
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
