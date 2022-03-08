@@ -277,6 +277,21 @@ class TtlExecutorsTest {
             msg1 == e.message || e.message!!.startsWith(msg2)
         )
     }
+
+    /**
+     * https://github.com/alibaba/transmittable-thread-local/issues/361
+     */
+    @Test
+    fun test_fixed_ClassCastException_of_issue_361() {
+        val queue = PriorityBlockingQueue<Int>()
+        queue.put(1)
+        queue.put(100)
+        queue.put(2)
+
+        assertEquals(1, queue.poll())
+        assertEquals(2, queue.poll())
+        assertEquals(100, queue.poll())
+    }
 }
 
 private class BizComparableTask : Runnable, Comparable<Runnable> {
