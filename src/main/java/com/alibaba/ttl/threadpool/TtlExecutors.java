@@ -185,6 +185,7 @@ public final class TtlExecutors {
      * @since 2.10.0
      */
     @NonNull
+    @SuppressWarnings("ConstantConditions")
     public static ThreadFactory getDefaultDisableInheritableThreadFactory() {
         return getDisableInheritableThreadFactory(Executors.defaultThreadFactory());
     }
@@ -241,11 +242,11 @@ public final class TtlExecutors {
     public static Comparator<Runnable> getTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
         if (comparator == null || isTtlRunnableUnwrapComparator(comparator)) return comparator;
 
-        return new TtlRunnableUnwrapComparator(comparator);
+        return new TtlUnwrapComparator<Runnable>(comparator);
     }
 
-    @SuppressWarnings("unchecked")
-    private static final Comparator<Runnable> INSTANCE = new TtlRunnableUnwrapComparator(ComparableComparator.INSTANCE);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Comparator INSTANCE = new TtlUnwrapComparator(ComparableComparator.INSTANCE);
 
     /**
      * {@code TtlRunnableUnwrapComparator} that compares {@link Comparable Comparable} objects.
@@ -254,8 +255,9 @@ public final class TtlExecutors {
      * @since 2.12.3
      */
     @NonNull
+    @SuppressWarnings("unchecked")
     public static Comparator<Runnable> getTtlRunnableUnwrapComparatorForComparableRunnable() {
-        return INSTANCE;
+        return (Comparator<Runnable>) INSTANCE;
     }
 
     /**
@@ -266,7 +268,7 @@ public final class TtlExecutors {
      * @since 2.12.3
      */
     public static boolean isTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
-        return comparator instanceof TtlRunnableUnwrapComparator;
+        return comparator instanceof TtlUnwrapComparator;
     }
 
     /**
@@ -282,7 +284,7 @@ public final class TtlExecutors {
     public static Comparator<Runnable> unwrap(@Nullable Comparator<Runnable> comparator) {
         if (!isTtlRunnableUnwrapComparator(comparator)) return comparator;
 
-        return ((TtlRunnableUnwrapComparator) comparator).unwrap();
+        return ((TtlUnwrapComparator<Runnable>) comparator).unwrap();
     }
 
     private TtlExecutors() {
