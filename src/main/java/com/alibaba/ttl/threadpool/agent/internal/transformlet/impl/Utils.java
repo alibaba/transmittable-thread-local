@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent.internal.transformlet.impl;
 
+import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlAttachments;
 import com.alibaba.ttl.spi.TtlEnhanced;
@@ -9,10 +10,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import javassist.*;
 
 import java.lang.reflect.Modifier;
+import java.util.concurrent.Callable;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
 
 /**
+ * <b>Internal</b> utils for {@code Transformlet}.
+ *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @since 2.6.0
  */
@@ -93,28 +97,45 @@ public class Utils {
         else return capture();
     }
 
-    public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
-        if (notTtlAttachments(ttlAttachment)) return;
+    @Nullable
+    public static Runnable doAutoWrap(@Nullable final Runnable runnable) {
+        if (runnable == null) return null;
+
+        final TtlRunnable ret = TtlRunnable.get(runnable, false, true);
+
+        // have been auto wrapped?
+        if (ret != runnable) setAutoWrapperAttachment(ret);
+
+        return ret;
+    }
+
+    @Nullable
+    public static <T> Callable<T> doAutoWrap(@Nullable final Callable<T> callable) {
+        if (callable == null) return null;
+
+        final TtlCallable<T> ret = TtlCallable.get(callable, false, true);
+
+        // have been auto wrapped?
+        if (ret != callable) setAutoWrapperAttachment(ret);
+
+        return ret;
+    }
+
+    private static void setAutoWrapperAttachment(@Nullable final Object ttlAttachment) {
+        if (!(ttlAttachment instanceof TtlAttachments)) return;
+
         ((TtlAttachments) ttlAttachment).setTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER, true);
     }
 
     @Nullable
-    public static Runnable unwrapIfIsAutoWrapper(@Nullable Runnable runnable) {
-        if (isAutoWrapper(runnable)) return TtlRunnable.unwrap(runnable);
-        else return runnable;
-    }
+    public static Runnable doUnwrapIfIsAutoWrapper(@Nullable final Runnable runnable) {
+        if (!(runnable instanceof TtlAttachments)) return runnable;
 
-    private static boolean notTtlAttachments(@Nullable Object ttlAttachment) {
-        return !(ttlAttachment instanceof TtlAttachments);
-    }
+        // is an auto wrapper?
+        final Boolean isAutoWrapper = ((TtlAttachments) runnable).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
+        if (!Boolean.TRUE.equals(isAutoWrapper)) return runnable;
 
-    private static boolean isAutoWrapper(@Nullable Runnable ttlAttachments) {
-        if (notTtlAttachments(ttlAttachments)) return false;
-
-        final Boolean value = ((TtlAttachments) ttlAttachments).getTtlAttachment(TtlAttachments.KEY_IS_AUTO_WRAPPER);
-        if (value == null) return false;
-
-        return value;
+        return TtlRunnable.unwrap(runnable);
     }
 
     @NonNull

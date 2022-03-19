@@ -87,9 +87,8 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     /**
-     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
-     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
-     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#setAutoWrapperAttachment(Object)
+     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#doAutoWrap(Runnable)
+     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#doAutoWrap(Callable)
      */
     @SuppressFBWarnings("VA_FORMAT_STRING_USES_NEWLINE") // [ERROR] Format string should use %n rather than \n
     private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@NonNull final CtMethod method) throws NotFoundException, CannotCompileException {
@@ -102,11 +101,9 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
             final String paramTypeName = parameterTypes[i].getName();
             if (PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.containsKey(paramTypeName)) {
                 String code = String.format(
-                        // decorate to TTL wrapper,
-                        // and then set AutoWrapper attachment/Tag
-                        "    $%d = %s.get($%1$d, false, true);"
-                                + "\n    com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.setAutoWrapperAttachment($%1$d);",
-                        i + 1, PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS.get(paramTypeName));
+                        // auto decorate to TTL wrapper
+                        "$%d = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doAutoWrap($%<d);",
+                        i + 1);
                 insertCode.append(code);
             }
         }
@@ -140,7 +137,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
     }
 
     /**
-     * @see Utils#unwrapIfIsAutoWrapper(Runnable)
+     * @see Utils#doUnwrapIfIsAutoWrapper(Runnable)
      */
     private boolean updateBeforeAndAfterExecuteMethodOfExecutorSubclass(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {
         final CtClass runnableClass = clazz.getClassPool().get(RUNNABLE_CLASS_NAME);
@@ -151,7 +148,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         try {
             final CtMethod beforeExecute = clazz.getDeclaredMethod("beforeExecute", new CtClass[]{threadClass, runnableClass});
             // unwrap runnable if IsAutoWrapper
-            String code = "$2 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($2);";
+            String code = "$2 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doUnwrapIfIsAutoWrapper($2);";
             logger.info("insert code before method " + signatureOfMethod(beforeExecute) + " of class " +
                 beforeExecute.getDeclaringClass().getName() + ": " + code);
             beforeExecute.insertBefore(code);
@@ -163,7 +160,7 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         try {
             final CtMethod afterExecute = clazz.getDeclaredMethod("afterExecute", new CtClass[]{runnableClass, throwableClass});
             // unwrap runnable if IsAutoWrapper
-            String code = "$1 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.unwrapIfIsAutoWrapper($1);";
+            String code = "$1 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doUnwrapIfIsAutoWrapper($1);";
             logger.info("insert code before method " + signatureOfMethod(afterExecute) + " of class " +
                 afterExecute.getDeclaringClass().getName() + ": " + code);
             afterExecute.insertBefore(code);
