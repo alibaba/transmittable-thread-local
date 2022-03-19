@@ -364,10 +364,16 @@ Some open-source projects used `TTL`:
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
+    - [`acmenlt/dynamic-threadpool` ![](https://img.shields.io/github/stars/acmenlt/dynamic-threadpool.svg?style=social&label=Star)](https://github.com/acmenlt/dynamic-threadpool) [![star](https://gitee.com/acmenlt/dynamic-threadpool/badge/star.svg?theme=gray)](https://gitee.com/acmenlt/dynamic-threadpool)  
+      Powerful dynamic thread pool, does not rely on any middleware, with monitoring and alarm function
+    - [`lyh200/dynamic-tp` ![](https://img.shields.io/github/stars/lyh200/dynamic-tp.svg?style=social&label=Star)](https://github.com/lyh200/dynamic-tp) [![star](https://gitee.com/yanhom/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/yanhom/dynamic-tp)  
+      Lightweight dynamic threadpool, with monitoring and alarming functions, base on popular config centers (already support Nacos、Apollo、Zookeeper, can be customized through SPI)
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
-      微服务路由网关（zuul-plus）
+      microservice route gateway(zuul-plus)
     - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
       ZTO Message Service
+    - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
+      The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms.
 - **Middleware/Data**
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
@@ -377,13 +383,13 @@ Some open-source projects used `TTL`:
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
       实现快速创建数据构造流程，数据构造流程的可视化、线上化、持久化、标准化
-    - [`DataLinkDC/DataLink` ![](https://img.shields.io/github/stars/DataLinkDC/DataLink.svg?style=social&label=Star)](https://github.com/DataLinkDC/DataLink)  
+    - [`aiwenmo/DataLink` ![](https://img.shields.io/github/stars/aiwenmo/DataLink.svg?style=social&label=Star)](https://github.com/aiwenmo/DataLink)  
       a new open source solution to bring Flink development to data center
 - **Middleware/Flow engine**
-    - [`alibaba/bulbasaur` ![](https://img.shields.io/github/stars/alibaba/bulbasaur.svg?style=social&label=Star)](https://github.com/alibaba/bulbasaur)  
-      A pluggable, scalable process engine
     - [`dromara/liteflow` ![](https://img.shields.io/github/stars/dromara/liteflow.svg?style=social&label=Star)](https://github.com/dromara/liteflow) [![star](https://gitee.com/dromara/liteFlow/badge/star.svg?theme=gray)](https://gitee.com/dromara/liteFlow)  
       a lightweight and practical micro-process framework
+    - [`alibaba/bulbasaur` ![](https://img.shields.io/github/stars/alibaba/bulbasaur.svg?style=social&label=Star)](https://github.com/alibaba/bulbasaur)  
+      A pluggable, scalable process engine
 - **Middleware/Log**
     - [`dromara/TLog` ![](https://img.shields.io/github/stars/dromara/TLog.svg?style=social&label=Star)](https://github.com/dromara/TLog) [![star](https://gitee.com/dromara/TLog/badge/star.svg?theme=gray)](https://gitee.com/dromara/TLog)  
       Lightweight distributed log label tracking framework
@@ -402,6 +408,26 @@ Some open-source projects used `TTL`:
 - **Middleware/Bytecode**
     - [`ymm-tech/easy-byte-coder` ![](https://img.shields.io/github/stars/ymm-tech/easy-byte-coder.svg?style=social&label=Star)](https://github.com/ymm-tech/easy-byte-coder)  
       Easy-byte-coder is a non-invasive bytecode injection framework based on JVM
+- **Business service or platform application**
+    - [`OpenBankProject/OBP-API` ![](https://img.shields.io/github/stars/OpenBankProject/OBP-API.svg?style=social&label=Star)](https://github.com/OpenBankProject/OBP-API)  
+      An open source RESTful API platform for banks that supports Open Banking, XS2A and PSD2 through access to accounts, transactions, counterparties, payments, entitlements and metadata - plus a host of internal banking and management APIs
+    - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
+      JooLun微信商城
+    - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
+      基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
+    - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
+      基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
+    - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
+      一个基于spring cloud Greenwich的简单秒杀电子商城项目
+- **Tool product**
+    - [`ssssssss-team/spider-flow` ![](https://img.shields.io/github/stars/ssssssss-team/spider-flow.svg?style=social&label=Star)](https://github.com/ssssssss-team/spider-flow) [![star](https://gitee.com/ssssssss-team/spider-flow/badge/star.svg?theme=gray)](https://gitee.com/ssssssss-team/spider-flow)  
+      新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫
+    - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
+      🍰 一个可视化的爬虫平台
+    - [`zjcscut/octopus` ![](https://img.shields.io/github/stars/zjcscut/octopus.svg?style=social&label=Star)](https://github.com/zjcscut/octopus)  
+      长链接压缩为短链接的服务
+    - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/molicloud/mqr/badge/star.svg?theme=gray)](https://gitee.com/molicloud/mqr)  
+      茉莉QQ机器人（简称MQR），采用mirai的Android协议实现的QQ机器人服务，通过web控制机器人的启停和配置
 - **Test solution or tool**
     - [`alibaba/jvm-sandbox-repeater` ![](https://img.shields.io/github/stars/alibaba/jvm-sandbox-repeater.svg?style=social&label=Star)](https://github.com/alibaba/jvm-sandbox-repeater)  
       A Java server-side recording and playback solution based on JVM-Sandbox, 录制/回放通用解决方案
@@ -413,37 +439,25 @@ Some open-source projects used `TTL`:
           a Java-based open-source agent designed to collect data and control Functions for Java applications through JVM bytecode, without modifying applications codes
     - [`alibaba/virtual-environment` ![](https://img.shields.io/github/stars/alibaba/virtual-environment.svg?style=social&label=Star)](https://github.com/alibaba/virtual-environment)  
       Route isolation with service sharing, 阿里测试环境服务隔离和联调机制的`Kubernetes`版实现
-- **Tool product**
-    - [`ssssssss-team/spider-flow` ![](https://img.shields.io/github/stars/ssssssss-team/spider-flow.svg?style=social&label=Star)](https://github.com/ssssssss-team/spider-flow) [![star](https://gitee.com/ssssssss-team/spider-flow/badge/star.svg?theme=gray)](https://gitee.com/ssssssss-team/spider-flow)  
-      新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫
-    - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
-      🍰 一个可视化的爬虫平台
-    - [`zjcscut/octopus` ![](https://img.shields.io/github/stars/zjcscut/octopus.svg?style=social&label=Star)](https://github.com/zjcscut/octopus)  
-      长链接压缩为短链接的服务
-    - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/molicloud/mqr/badge/star.svg?theme=gray)](https://gitee.com/molicloud/mqr)  
-      茉莉QQ机器人（简称MQR），采用mirai的Android协议实现的QQ机器人服务，通过web控制机器人的启停和配置
-- **Business service or platform application**
-    - [`OpenBankProject/OBP-API` ![](https://img.shields.io/github/stars/OpenBankProject/OBP-API.svg?style=social&label=Star)](https://github.com/OpenBankProject/OBP-API)  
-      An open source RESTful API platform for banks that supports Open Banking, XS2A and PSD2 through access to accounts, transactions, counterparties, payments, entitlements and metadata - plus a host of internal banking and management APIs
-    - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
-      JooLun微信商城
-    - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
-      一个基于spring cloud Greenwich的简单秒杀电子商城项目
-- **`Spring Cloud` microservices framework solution**
+- **`Spring Cloud`/`Spring Boot` microservices framework solution or scaffold**
     - [`zlt2000/microservices-platform` ![](https://img.shields.io/github/stars/zlt2000/microservices-platform.svg?style=social&label=Star)](https://github.com/zlt2000/microservices-platform) [![star](https://gitee.com/zlt2000/microservices-platform/badge/star.svg?theme=gray)](https://gitee.com/zlt2000/microservices-platform)  
       基于SpringBoot2.x、SpringCloud和SpringCloudAlibaba并采用前后端分离的企业级微服务多租户系统架构
     - [`zuihou/lamp-cloud` ![](https://img.shields.io/github/stars/zuihou/lamp-cloud.svg?style=social&label=Star)](https://github.com/zuihou/lamp-cloud) [![star](https://gitee.com/zuihou111/lamp-cloud/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-cloud)  
       基于Jdk11 + SpringCloud + SpringBoot 的微服务快速开发平台，其中的可配置的SaaS功能尤其闪耀， 具备RBAC功能、网关统一鉴权、Xss防跨站攻击、自动代码生成、多种存储系统、分布式事务、分布式定时任务等多个模块，支持多业务系统并行开发， 支持多服务并行开发，可以作为后端服务的开发脚手架
         - [`zuihou/lamp-util` ![](https://img.shields.io/github/stars/zuihou/lamp-util.svg?style=social&label=Star)](https://github.com/zuihou/lamp-util) [![star](https://gitee.com/zuihou111/lamp-util/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-util)  
           打造一套兼顾 SpringBoot 和 SpringCloud 项目的公共工具类
-    - [`gavenwangcn/vole` ![](https://img.shields.io/github/stars/gavenwangcn/vole.svg?style=social&label=Star)](https://github.com/gavenwangcn/vole)  
-      SpringCloud Micro service business framework, SpringCloud 微服务商业脚手架
-    - [`liuweijw/fw-cloud-framework` ![](https://img.shields.io/github/stars/liuweijw/fw-cloud-framework.svg?style=social&label=Star)](https://github.com/liuweijw/fw-cloud-framework) [![star](https://gitee.com/liuweijw/fw-cloud-framework/badge/star.svg?theme=gray)](https://gitee.com/liuweijw/fw-cloud-framework)  
-      基于springcloud全家桶开发分布式框架（支持oauth2认证授权、SSO登录、统一下单、微信公众号服务、Shardingdbc分库分表、常见服务监控、链路监控、异步日志、redis缓存等功能），实现基于Vue全家桶等前后端分离项目工程
+    - [`YunaiV/ruoyi-vue-pro` ![](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Star)](https://github.com/YunaiV/ruoyi-vue-pro)  [![star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  
+      一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能。
     - [`matevip/matecloud` ![](https://img.shields.io/github/stars/matevip/matecloud.svg?style=social&label=Star)](https://github.com/matevip/matecloud) [![star](https://gitee.com/matevip/matecloud/badge/star.svg?theme=gray)](https://gitee.com/matevip/matecloud)  
       一款基于Spring Cloud Alibaba的微服务架构
+    - [`gavenwangcn/vole` ![](https://img.shields.io/github/stars/gavenwangcn/vole.svg?style=social&label=Star)](https://github.com/gavenwangcn/vole)  
+      SpringCloud Micro service business framework
+    - [`liuweijw/fw-cloud-framework` ![](https://img.shields.io/github/stars/liuweijw/fw-cloud-framework.svg?style=social&label=Star)](https://github.com/liuweijw/fw-cloud-framework) [![star](https://gitee.com/liuweijw/fw-cloud-framework/badge/star.svg?theme=gray)](https://gitee.com/liuweijw/fw-cloud-framework)  
+      基于springcloud全家桶开发分布式框架（支持oauth2认证授权、SSO登录、统一下单、微信公众号服务、Shardingdbc分库分表、常见服务监控、链路监控、异步日志、redis缓存等功能），实现基于Vue全家桶等前后端分离项目工程
     - [`liuht777/Taroco` ![](https://img.shields.io/github/stars/liuht777/Taroco.svg?style=social&label=Star)](https://github.com/liuht777/Taroco)  
       整合Nacos、Spring Cloud Alibaba，提供了一系列starter组件， 同时提供服务治理、服务监控、OAuth2权限认证，支持服务降级/熔断、服务权重
+    - [`mingyang66/spring-parent` ![](https://img.shields.io/github/stars/mingyang66/spring-parent.svg?style=social&label=Star)](https://github.com/mingyang66/spring-parent)  
+      数据库多数据源、Redis多数据源、日志组件、全链路日志追踪、埋点扩展点、Netty、微服务、开发基础框架支持、异常统一处理、返回值、跨域、API路由、监控等
     - [`yzcheng90/ms` ![](https://img.shields.io/github/stars/yzcheng90/ms.svg?style=social&label=Star)](https://github.com/yzcheng90/ms)  
       一个前后分离的分布式 spring cloud 框架(全家桶)，这里有统一认证，统一网关等等功能，是一个非常简洁的微服务脚手架
     - [`fafeidou/fast-cloud-nacos` ![](https://img.shields.io/github/stars/fafeidou/fast-cloud-nacos.svg?style=social&label=Star)](https://github.com/fafeidou/fast-cloud-nacos)  
@@ -454,6 +468,8 @@ Some open-source projects used `TTL`:
       `BudWk` 原名 [`NutzWk` ![](https://img.shields.io/github/stars/Wizzercn/NutzWk.svg?style=social&label=Star)](https://github.com/Wizzercn/NutzWk) [![star](https://gitee.com/wizzer/NutzWk/badge/star.svg?theme=gray)](https://gitee.com/wizzer/NutzWk)，基于国产框架 nutz 及 nutzboot 开发的开源Web基础项目，集权限体系、系统参数、数据字典、站内消息、定时任务、CMS、微信等最常用功能，不庞杂、不面面俱到，使其具有上手容易、开发便捷、扩展灵活等特性，特别适合各类大中小型定制化项目需求
     - [`yinjihuan/spring-cloud` ![](https://img.shields.io/github/stars/yinjihuan/spring-cloud.svg?style=social&label=Star)](https://github.com/yinjihuan/spring-cloud)  
       《Spring Cloud微服务-全栈技术与案例解析》和《Spring Cloud微服务 入门 实战与进阶》配套源码
+    - [`louyanfeng25/ddd-demo` ![](https://img.shields.io/github/stars/louyanfeng25/ddd-demo.svg?style=social&label=Star)](https://github.com/louyanfeng25/ddd-demo)  
+      《深入浅出DDD》讲解的演示项目，为了能够更好的理解Demo中的分层与逻辑处理，我强烈建议你配合小册来深入了解DDD。
 
 more open-source projects used `TTL`, see [![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
 
