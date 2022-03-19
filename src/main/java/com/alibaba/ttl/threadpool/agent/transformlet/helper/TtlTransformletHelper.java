@@ -1,5 +1,7 @@
 package com.alibaba.ttl.threadpool.agent.transformlet.helper;
 
+import com.alibaba.ttl.TtlCallable;
+import com.alibaba.ttl.TtlRunnable;
 import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
@@ -11,8 +13,10 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.concurrent.Callable;
 
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.capture;
+import static com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment;
 
 /**
  * Helper methods for {@link TtlTransformlet} implementation.
@@ -121,9 +125,9 @@ public final class TtlTransformletHelper {
         // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
         newMethod.setName(nameForOriginalMethod);
         newMethod.setModifiers(newMethod.getModifiers()
-            & ~Modifier.PUBLIC /* remove public */
-            & ~Modifier.PROTECTED /* remove protected */
-            | Modifier.PRIVATE /* add private */);
+                & ~Modifier.PUBLIC /* remove public */
+                & ~Modifier.PROTECTED /* remove protected */
+                | Modifier.PRIVATE /* add private */);
         clazz.addMethod(newMethod);
 
         final String returnOp;
@@ -134,12 +138,12 @@ public final class TtlTransformletHelper {
         }
         // set new method implementation
         final String code = "{\n" +
-            beforeCode + "\n" +
-            "try {\n" +
-            "    " + returnOp + nameForOriginalMethod + "($$);\n" +
-            "} finally {\n" +
-            "    " + finallyCode + "\n" +
-            "} }";
+                beforeCode + "\n" +
+                "try {\n" +
+                "    " + returnOp + nameForOriginalMethod + "($$);\n" +
+                "} finally {\n" +
+                "    " + finallyCode + "\n" +
+                "} }";
         method.setBody(code);
 
         return code;
@@ -152,6 +156,35 @@ public final class TtlTransformletHelper {
         if (obj instanceof TtlEnhanced) return null;
         else return capture();
     }
+
+
+    // FIXME hard-coded for type Runnable, not generic!
+    @Nullable
+    public static Runnable doAutoWrap(@Nullable final Runnable runnable) {
+        if (runnable == null) return null;
+
+        final TtlRunnable ret = TtlRunnable.get(runnable, false, true);
+
+        // have been auto wrapped?
+        if (ret != runnable) setAutoWrapperAttachment(ret);
+
+        return ret;
+    }
+
+    // FIXME hard-coded for type Callable, not generic!
+    @Nullable
+    public static <T> Callable<T> doAutoWrap(@Nullable final Callable<T> callable) {
+        if (callable == null) return null;
+
+        final TtlCallable<T> ret = TtlCallable.get(callable, false, true);
+
+        // have been auto wrapped?
+        if (ret != callable) setAutoWrapperAttachment(ret);
+
+        return ret;
+    }
+
+    // ======== class/package info Helper ========
 
     @NonNull
     public static String getPackageName(@NonNull String className) {
