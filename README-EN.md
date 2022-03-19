@@ -307,7 +307,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.12.4</version>
+    <version>2.12.6</version>
 </dependency>
 ```
 
