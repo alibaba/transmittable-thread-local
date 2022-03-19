@@ -26,7 +26,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [🔧 功能](#-%E5%8A%9F%E8%83%BD)
 - [🎨 需求场景](#-%E9%9C%80%E6%B1%82%E5%9C%BA%E6%99%AF)
 - [👥 User Guide](#-user-guide)
@@ -88,10 +87,23 @@
 `TransmittableThreadLocal`继承`InheritableThreadLocal`，使用方式也类似。相比`InheritableThreadLocal`，添加了
 
 1. `copy`方法  
-    用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省传递的是引用。  
-    注意：如果跨线程传递了对象引用因为不再有线程封闭，与`InheritableThreadLocal.childValue`一样，使用者/业务逻辑要注意传递对象的线程安全。
+   用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的拷贝行为，缺省是简单的赋值传递。
+    - 注意：如果传递的是一个对象（引用类型）且没有做深拷贝，如直接传递引用或是浅拷贝，那么
+        - 跨线程传递而不再有线程封闭，传递对象在多个线程之间是有共享的；
+        - 与`InheritableThreadLocal.childValue`一样，使用者/业务逻辑要注意传递对象的线程安全。
 1. `protected`的`beforeExecute`/`afterExecute`方法  
-    执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
+   执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
+
+> **关于`copy`方法**
+>
+> 严谨地说，应该是『传递行为』，而不是『拷贝行为』；相应的，这个方法应该命名成`transmiteeValue`，与`InheritableThreadLocal.childValue`方法有一致的命名风格。
+>
+> 但多数情况下，传递的是一个复杂的对象，习惯上会先想到的是如何做拷贝，如深拷贝、浅拷贝；命名成`copy`反而更容易理解这个过程与行为了。 😂
+>
+> 关于构词后缀`er`与`ee`的说明：
+>
+> - `transmit`是动词传递，`transmitter`动作的执行者/主动方，而`transmitee`动作的接收者/被动方。
+> - `er`与`ee`后缀的常见词是`employer`（雇主）/`employee`（雇员）、`caller`（调用者）/`callee`（被调用者）。
 
 具体使用方式见下面的说明。
 
