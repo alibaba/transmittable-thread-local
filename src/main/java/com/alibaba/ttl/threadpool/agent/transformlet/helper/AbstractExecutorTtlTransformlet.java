@@ -90,9 +90,8 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
     }
 
     /**
-     * @see com.alibaba.ttl.TtlRunnable#get(Runnable, boolean, boolean)
-     * @see com.alibaba.ttl.TtlCallable#get(Callable, boolean, boolean)
-     * @see com.alibaba.ttl.spi.TtlAttachmentsDelegate#setAutoWrapperAttachment(Object)
+     * @see TtlTransformletHelper#doAutoWrap(Runnable)
+     * @see TtlTransformletHelper#doAutoWrap(Callable)
      */
     @SuppressFBWarnings("VA_FORMAT_STRING_USES_NEWLINE") // [ERROR] Format string should use %n rather than \n
     private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@NonNull final CtMethod method) throws NotFoundException, CannotCompileException {
@@ -105,11 +104,9 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
             final String paramTypeName = parameterTypes[i].getName();
             if (paramTypeNameToDecorateMethodClass.containsKey(paramTypeName)) {
                 String code = String.format(
-                        // decorate to TTL wrapper,
-                        // and then set AutoWrapper attachment/Tag
-                        "    $%d = %s.get($%1$d, false, true);"
-                                + "\n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
-                        i + 1, paramTypeNameToDecorateMethodClass.get(paramTypeName));
+                        // auto decorate to TTL wrapper
+                        "$%d = com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.doAutoWrap($%<d);",
+                        i + 1);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);
             }
