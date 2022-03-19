@@ -36,7 +36,6 @@
         - [2.2 修饰线程池](#22-%E4%BF%AE%E9%A5%B0%E7%BA%BF%E7%A8%8B%E6%B1%A0)
         - [2.3 使用`Java Agent`来修饰`JDK`线程池实现类](#23-%E4%BD%BF%E7%94%A8java-agent%E6%9D%A5%E4%BF%AE%E9%A5%B0jdk%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E7%B1%BB)
             - [`Java Agent`的启动参数配置](#java-agent%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
-            - [关于`boot class path`](#%E5%85%B3%E4%BA%8Eboot-class-path)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
 - [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
@@ -94,16 +93,25 @@
 1. `protected`的`beforeExecute`/`afterExecute`方法  
    执行任务(`Runnable`/`Callable`)的前/后的生命周期回调，缺省是空操作。
 
-> **关于`copy`方法**
->
-> 严谨地说，应该是『传递行为』，而不是『拷贝行为』；相应的，这个方法应该命名成`transmiteeValue`，与`InheritableThreadLocal.childValue`方法有一致的命名风格。
->
-> 但多数情况下，传递的是一个复杂的对象，习惯上会先想到的是如何做拷贝，如深拷贝、浅拷贝；命名成`copy`反而更容易理解这个过程与行为了。 😂
->
-> 关于构词后缀`er`与`ee`的说明：
->
-> - `transmit`是动词传递，`transmitter`动作的执行者/主动方，而`transmitee`动作的接收者/被动方。
-> - `er`与`ee`后缀的常见词是`employer`（雇主）/`employee`（雇员）、`caller`（调用者）/`callee`（被调用者）。
+<blockquote>
+<details>
+
+<summary>关于<code>copy</code>方法 的 展开说明</summary>
+<br>
+
+<p>严谨地说，应该是『传递行为』，而不是『拷贝行为』；相应的，这个方法应该命名成<code>transmiteeValue</code>，与<code>InheritableThreadLocal.childValue</code>方法有一致的命名风格。
+
+<p>但多数情况下，传递的是一个复杂的对象，习惯上会先想到的是如何做拷贝，如深拷贝、浅拷贝；命名成<code>copy</code>反而更容易理解这个过程与行为了。 😂
+
+<p>关于构词后缀<code>er</code>与<code>ee</code>的说明：
+
+<ul>
+<li><code>transmit</code>是动词传递，<code>transmitter</code>动作的执行者/主动方，而<code>transmitee</code>动作的接收者/被动方。</li>
+<li><code>er</code>与<code>ee</code>后缀的常见词是<code>employer</code>（雇主）/<code>employee</code>（雇员）、<code>caller</code>（调用者）/<code>callee</code>（被调用者）。</li>
+</ul>
+
+</details>
+</blockquote>
 
 具体使用方式见下面的说明。
 
@@ -285,13 +293,20 @@ Demo参见[`AgentDemo.kt`](src/test/java/com/alibaba/demo/ttl/agent/AgentDemo.kt
         - `-javaagent:path/to/transmittable-thread-local-2.x.y.jar=ttl.agent.enable.timer.task:false`
     - 更多关于`TTL Agent`参数的配置说明详见[`TtlAgent.java`的JavaDoc](src/main/java/com/alibaba/ttl/threadpool/agent/TtlAgent.java)。
 
-> **关于`java.util.TimerTask`/`java.util.Timer`**
->
-> `Timer`是`JDK 1.3`的老类，不推荐使用`Timer`类。
->
-> 推荐用[`ScheduledExecutorService`](https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/ScheduledExecutorService.html)。  
-> `ScheduledThreadPoolExecutor`实现更强壮，并且功能更丰富。
-> 如支持配置线程池的大小（`Timer`只有一个线程）；`Timer`在`Runnable`中抛出异常会中止定时执行。更多说明参见[10. **Mandatory** Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines](https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency)。
+<blockquote>
+<details>
+
+<summary>关于<code>java.util.TimerTask</code>/<code>java.util.Timer</code> 的 展开说明</summary>
+<br>
+
+<p><code>Timer</code>是<code>JDK 1.3</code>的老类，不推荐使用<code>Timer</code>类。
+
+<p>推荐用<a href="https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/ScheduledExecutorService.html" rel="nofollow"><code>ScheduledExecutorService</code></a>。<br>
+<code>ScheduledThreadPoolExecutor</code>实现更强壮，并且功能更丰富。
+如支持配置线程池的大小（<code>Timer</code>只有一个线程）；<code>Timer</code>在<code>Runnable</code>中抛出异常会中止定时执行。更多说明参见 <a href="https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency" rel="nofollow">10. <strong>Mandatory</strong> Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines</a>。</p>
+
+</details>
+</blockquote>
 
 #### `Java Agent`的启动参数配置
 
@@ -324,26 +339,36 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
     com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
-#### 关于`boot class path`
 
-因为修饰了`JDK`标准库的类，标准库由`bootstrap class loader`加载；修饰后的`JDK`类引用了`TTL`的代码，所以`Java Agent`使用方式下`TTL Jar`文件需要配置到`boot class path`上。
 
-`TTL`从`v2.6.0`开始，加载`TTL Agent`时会自动设置`TTL Jar`到`boot class path`上。  
-**_注意_**：不能修改从`Maven`库下载的`TTL Jar`文件名（形如`transmittable-thread-local-2.x.y.jar`）。
-如果修改了，则需要自己手动通过`-Xbootclasspath JVM`参数来显式配置（就像`TTL`之前的版本的做法一样）。
+<blockquote>
+<details>
 
-自动设置`TTL Jar`到`boot class path`的实现是通过指定`TTL Java Agent Jar`文件里`manifest`文件（`META-INF/MANIFEST.MF`）的`Boot-Class-Path`属性：
+<summary>关于<code>boot class path</code> 的 展开说明</summary>
+<br>
 
-> `Boot-Class-Path`
->
-> A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
-> These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.
+<p>因为修饰了<code>JDK</code>标准库的类，标准库由<code>bootstrap class loader</code>加载；修饰后的<code>JDK</code>类引用了<code>TTL</code>的代码，所以<code>Java Agent</code>使用方式下<code>TTL Jar</code>文件需要配置到<code>boot class path</code>上。</p>
 
-更多详见
+<p><code>TTL</code>从<code>v2.6.0</code>开始，加载<code>TTL Agent</code>时会自动设置<code>TTL Jar</code>到<code>boot class path</code>上。<br>
+<strong><em>注意</em></strong>：不能修改从<code>Maven</code>库下载的<code>TTL Jar</code>文件名（形如<code>transmittable-thread-local-2.x.y.jar</code>）。
+如果修改了，则需要自己手动通过<code>-Xbootclasspath JVM</code>参数来显式配置（就像<code>TTL</code>之前的版本的做法一样）。</p>
 
-- [`Java Agent`规范 - `JavaDoc`](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description)
-- [JAR File Specification - JAR Manifest](https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest)
-- [Working with Manifest Files - The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html)
+<p>自动设置<code>TTL Jar</code>到<code>boot class path</code>的实现是通过指定<code>TTL Java Agent Jar</code>文件里<code>manifest</code>文件（<code>META-INF/MANIFEST.MF</code>）的<code>Boot-Class-Path</code>属性：</p>
+
+<p><code>Boot-Class-Path</code></p>
+<p>A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
+These paths are searched by the bootstrap class loader after the platform specific mechanisms of locating a class have failed. Paths are searched in the order listed.</p>
+
+<p>更多详见</p>
+
+<ul>
+<li><a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description" rel="nofollow"><code>Java Agent</code>规范 - <code>JavaDoc</code></a></li>
+<li><a href="https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest" rel="nofollow">JAR File Specification - JAR Manifest</a></li>
+<li><a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html" rel="nofollow">Working with Manifest Files - The Java™ Tutorials</a></li>
+</ul>
+
+</details>
+</blockquote>
 
 # 🔌 Java API Docs
 
