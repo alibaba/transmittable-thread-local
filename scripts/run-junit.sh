@@ -2,11 +2,13 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-export TTL_CI_TEST_MODE=true
+source bash-buddy/lib/trap_error_info.sh
+source bash-buddy/lib/common_utils.sh
+
 source ./ttl_build.sh
 
 # skip unit test for Javassist on command line, because Javassist is repackaged.
 # skip unit test for TransmittableThreadLocal_withInit_Test for java 6
 # shellcheck disable=SC2046
-logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspath)" \
+cu::log_then_run "${JAVA_CMD[@]}" -cp "$(getClasspath)" \
     org.junit.runner.JUnitCore $(getJUnitTestCases | grep -vE '\.JavassistTest$|\.TtlTransformletHelperTest$|\.TransmittableThreadLocal_withInit_Null_Test$')
