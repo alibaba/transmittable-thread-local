@@ -13,8 +13,8 @@
 [ -z "${__source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275:+dummy}" ] || return 0
 __source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-# shellcheck source=common.sh
-source "$__source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275/common.sh"
+# shellcheck source=bash-buddy/lib/common_utils.sh
+source "$__source_guard_E2EB46EC_DEB8_4818_8D4E_F425BDF4A275/bash-buddy/lib/common_utils.sh"
 
 
 ################################################################################
@@ -26,7 +26,7 @@ __getMvnwExe() {
 
     local d="$PWD"
     while true; do
-        [ "/" = "$d" ] && die "Fail to find $maven_wrapper_name!"
+        [ "/" = "$d" ] && cu::die "Fail to find $maven_wrapper_name!"
         [ -f "$d/$maven_wrapper_name" ] && break
 
         d=$(dirname "$d")
@@ -42,7 +42,7 @@ __getJavaVersion() {
 __getMoreMvnOptionsWhenJdk11() {
     local javaVersion
     javaVersion=$(__getJavaVersion)
-    if ! versionLessThan $javaVersion 11 && versionLessThan $javaVersion 12; then
+    if cu::version_ge $javaVersion 11 && cu::version_lt $javaVersion 12; then
         echo -DperformRelease -P'!gen-sign'
     fi
 }
@@ -56,15 +56,15 @@ _MVN_OPTIONS=(
 )
 
 MVN() {
-    logAndRun "$(__getMvnwExe)" "${_MVN_OPTIONS[@]}" "$@"
+    cu::log_then_run "$(__getMvnwExe)" "${_MVN_OPTIONS[@]}" ${DISABLE_GIT_DIRTY_CHECK+-Dgit.dirty=false} "$@"
 }
 
 MVN_WITH_BASIC_OPTIONS() {
-    logAndRun "$(__getMvnwExe)" "${_MVN_BASIC_OPTIONS[@]}" "$@"
+    cu::log_then_run "$(__getMvnwExe)" "${_MVN_BASIC_OPTIONS[@]}" ${DISABLE_GIT_DIRTY_CHECK+-Dgit.dirty=false} "$@"
 }
 
 extractFirstElementValueFromPom() {
-    (($# == 2)) || die "${FUNCNAME[0]} need only 2 arguments, actual arguments: $*"
+    (($# == 2)) || cu::die "${FUNCNAME[0]} need only 2 arguments, actual arguments: $*"
 
     local element=$1
     local pom_file=$2

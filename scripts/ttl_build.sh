@@ -2,7 +2,8 @@
 [ -z "${__source_guard_0397A413_E12B_4B3D_B2A6_4E1EED3D5447:+dummy}" ] || return 0
 __source_guard_0397A413_E12B_4B3D_B2A6_4E1EED3D5447="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-# shellcheck source=common.sh
+# shellcheck source=bash-buddy/lib/common_utils.sh
+source "$__source_guard_0397A413_E12B_4B3D_B2A6_4E1EED3D5447/bash-buddy/lib/common_utils.sh"
 source "$__source_guard_0397A413_E12B_4B3D_B2A6_4E1EED3D5447/common_build.sh"
 
 #################################################################################
@@ -10,11 +11,11 @@ source "$__source_guard_0397A413_E12B_4B3D_B2A6_4E1EED3D5447/common_build.sh"
 #################################################################################
 __adjustPwdToProjectRootDir() {
     while true; do
-        [ / = "$PWD" ] && die "fail to detect project directory!"
+        [ / = "$PWD" ] && cu::die "fail to detect project directory!"
 
         [ -f pom.xml ] && {
             readonly PROJECT_ROOT_DIR="$PWD"
-            yellowEcho "Find project root dir and change dir to $PWD"
+            cu::yellow_echo "Find project root dir and change dir to $PWD"
             break
         }
         cd ..
@@ -44,30 +45,26 @@ readonly -a JAVA_CMD=(
 #################################################################################
 
 mvnClean() {
-    yellowEcho "clean maven"
-    rm -rf target || die "fail to mvn clean!"
+    cu::yellow_echo "clean maven"
+    rm -rf target || cu::die "fail to mvn clean!"
 }
 
 readonly ttl_jar="target/$_aid-$_version.jar"
 
 mvnBuildJar() {
     if [ ! -e "$ttl_jar" ] || [ "$ttl_jar" -ot src/ ]; then
-        if [ -n "${TTL_CI_TEST_MODE+YES}" ]; then
-            # Build jar action should have used package instead of install
-            # here use install intentionally to check release operations.
-            #
-            # De-activate a maven profile from command line
-            # https://stackoverflow.com/questions/25201430
-            MVN_WITH_BASIC_OPTIONS install -DperformRelease -P '!gen-sign' || die "fail to build jar!"
-        else
-            MVN_WITH_BASIC_OPTIONS package -Dmaven.test.skip=true || die "fail to build jar!"
-        fi
+        # Build jar action should have used package instead of install
+        # here use install intentionally to check release operations.
+        #
+        # De-activate a maven profile from command line
+        # https://stackoverflow.com/questions/25201430
+        MVN_WITH_BASIC_OPTIONS install -DperformRelease -P '!gen-sign' || cu::die "fail to build jar!"
     fi
 }
 
 mvnCompileTest() {
     if [ ! -e "target/test-classes/" ] || [ "target/test-classes/" -ot src/ ]; then
-        MVN_WITH_BASIC_OPTIONS test-compile || die "fail to mvn test-compile!" || die "fail to compile test!"
+        MVN_WITH_BASIC_OPTIONS test-compile || cu::die "fail to mvn test-compile!"
     fi
 }
 
@@ -77,7 +74,7 @@ mvnCopyDependencies() {
     if [ ! -e "$dependencies_dir" ]; then
         # https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html
         # exclude repackaged and shaded javassist libs
-        MVN_WITH_BASIC_OPTIONS dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations || die "fail to mvn copy-dependencies!"
+        MVN_WITH_BASIC_OPTIONS dependency:copy-dependencies -DincludeScope=test -DexcludeArtifactIds=javassist,jsr305,spotbugs-annotations || cu::die "fail to mvn copy-dependencies!"
     fi
 }
 
@@ -121,5 +118,5 @@ getJUnitTestCases() {
 #################################################################################
 
 if [ "${1:-}" != "skipClean" ]; then
-    logAndRun mvnClean
+    cu::log_then_run mvnClean
 fi

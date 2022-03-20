@@ -5,7 +5,9 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-export TTL_CI_TEST_MODE=true
+source bash-buddy/lib/trap_error_info.sh
+source bash-buddy/lib/common_utils.sh
+
 source ./ttl_build.sh skipClean
 
 ttl_jar_path="$(readlink -f "$(getTtlJarPath)")"
@@ -20,7 +22,7 @@ for base_version in 2.5.0 2.6.0 2.7.0 2.10.2; do
     url="https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/$base_version/transmittable-thread-local-$base_version.jar"
     base_jar="transmittable-thread-local-$base_version.jar"
     if [ ! -f "$base_jar" ]; then
-        logAndRun wget --quiet "$url"
+        cu::log_then_run wget --quiet "$url"
     fi
 
     "$JCC" -show-packages -check-annotations -skip-internal-packages '\.(javassist|utils?|internal)(\.|$)' \
