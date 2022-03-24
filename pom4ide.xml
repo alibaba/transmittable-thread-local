@@ -287,7 +287,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<id>shade-when-package</id>
@@ -339,7 +339,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.5.3.0</version>
+				<version>4.6.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -383,7 +383,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.2.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -649,7 +649,7 @@
 						<!-- plugin docs: https://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.7</version>
+						<version>0.8.8</version>
 						<executions>
 							<execution>
 								<goals>
