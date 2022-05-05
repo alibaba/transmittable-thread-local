@@ -94,7 +94,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.6.0</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.0</spotbugs.annotations.version>
 		<kotlin.version>1.4.32</kotlin.version>
 		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
 	</properties>
