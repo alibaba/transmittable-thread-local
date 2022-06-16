@@ -8,7 +8,6 @@ source bash-buddy/lib/common_utils.sh
 readonly default_build_jdk_version=11
 # shellcheck disable=SC2034
 readonly PREPARE_JDKS_INSTALL_BY_SDKMAN=(
-  6
   8
   "$default_build_jdk_version"
   17

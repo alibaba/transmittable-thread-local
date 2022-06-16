@@ -92,11 +92,15 @@
 	</developers>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<spotbugs.annotations.version>4.7.0</spotbugs.annotations.version>
-		<kotlin.version>1.4.32</kotlin.version>
-		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
+
+		<kotlin.version>1.7.0</kotlin.version>
+		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
+		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
 	</properties>
 
 	<dependencies>
@@ -107,7 +111,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.23.2-GA</version>
+			<version>3.29.0-GA</version>
 			<optional>true</optional>
 		</dependency>
 		<!--
@@ -179,7 +183,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.5</version>
+			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -231,11 +235,6 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.10.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
 				<executions>
 					<!-- Replacing default-compile as it is treated specially by maven -->
 					<execution>
@@ -339,7 +338,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.6.0.0</version>
+				<version>4.7.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -349,7 +348,7 @@
 			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
