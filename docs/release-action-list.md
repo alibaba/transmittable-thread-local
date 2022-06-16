@@ -6,7 +6,6 @@
     2. 从`master`分支新建发布分支
     3. 在发布分支上，更新版本号及相关信息
         - 更新`POM`的版本号，去掉`SNAPSHOT`
-            - [`scripts/gen-pom4ide.sh`](../scripts/gen-pom4ide.sh) 重新生成 `pom4ide`
         - 更新`README`
             - 更新badge的引用，由master分支名改成Tag名  
                 - `sed 's/master/v2.x.y/g' -i README*`
@@ -28,5 +27,4 @@
     2. 修改`index.html`<https://alibaba.github.io/transmittable-thread-local/apidocs>的重定向到最新版本的`JavaDoc`
 7. 编写Release Note： <https://github.com/alibaba/transmittable-thread-local/releases>
 8. 升级`Master`分支的开发版本号
-    - [`scripts/gen-pom4ide.sh`](../scripts/gen-pom4ide.sh) 重新生成 `pom4ide`
     - 更新 `README`中的示例`Maven`依赖版本
