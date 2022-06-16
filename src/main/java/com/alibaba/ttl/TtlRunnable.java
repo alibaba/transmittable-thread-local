@@ -39,7 +39,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlRunnable(@NonNull Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
-        this.capturedRef = new AtomicReference<Object>(capture());
+        this.capturedRef = new AtomicReference<>(capture());
         this.runnable = runnable;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -190,7 +190,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == tasks) return Collections.emptyList();
 
-        List<TtlRunnable> copy = new ArrayList<TtlRunnable>();
+        List<TtlRunnable> copy = new ArrayList<>();
         for (Runnable task : tasks) {
             copy.add(TtlRunnable.get(task, releaseTtlValueReferenceAfterRun, idempotent));
         }
@@ -230,7 +230,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     public static List<Runnable> unwraps(@Nullable Collection<? extends Runnable> tasks) {
         if (null == tasks) return Collections.emptyList();
 
-        List<Runnable> copy = new ArrayList<Runnable>();
+        List<Runnable> copy = new ArrayList<>();
         for (Runnable task : tasks) {
             if (!(task instanceof TtlRunnable)) copy.add(task);
             else copy.add(((TtlRunnable) task).getRunnable());

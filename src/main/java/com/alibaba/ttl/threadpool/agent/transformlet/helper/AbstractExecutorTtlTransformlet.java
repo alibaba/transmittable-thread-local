@@ -47,7 +47,7 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
     protected final Set<String> executorClassNames;
     protected final boolean disableInheritableForThreadPool;
 
-    private final Map<String, String> paramTypeNameToDecorateMethodClass = new HashMap<String, String>();
+    private final Map<String, String> paramTypeNameToDecorateMethodClass = new HashMap<>();
 
     /**
      * @param executorClassNames the executor class names to be transformed

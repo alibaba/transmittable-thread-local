@@ -39,7 +39,7 @@ public class TtlWrappers {
     public static <T> Supplier<T> wrapSupplier(@Nullable Supplier<T> supplier) {
         if (supplier == null) return null;
         else if (supplier instanceof TtlEnhanced) return supplier;
-        else return new TtlSupplier<T>(supplier);
+        else return new TtlSupplier<>(supplier);
     }
 
     /**
@@ -118,7 +118,7 @@ public class TtlWrappers {
     public static <T> Consumer<T> wrapConsumer(@Nullable Consumer<T> consumer) {
         if (consumer == null) return null;
         else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlConsumer<T>(consumer);
+        else return new TtlConsumer<>(consumer);
     }
 
     /**
@@ -197,7 +197,7 @@ public class TtlWrappers {
     public static <T, U> BiConsumer<T, U> wrapBiConsumer(@Nullable BiConsumer<T, U> consumer) {
         if (consumer == null) return null;
         else if (consumer instanceof TtlEnhanced) return consumer;
-        else return new TtlBiConsumer<T, U>(consumer);
+        else return new TtlBiConsumer<>(consumer);
     }
 
     /**
@@ -276,7 +276,7 @@ public class TtlWrappers {
     public static <T, R> Function<T, R> wrapFunction(@Nullable Function<T, R> fn) {
         if (fn == null) return null;
         else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlFunction<T, R>(fn);
+        else return new TtlFunction<>(fn);
     }
 
     /**
@@ -355,7 +355,7 @@ public class TtlWrappers {
     public static <T, U, R> BiFunction<T, U, R> wrapBiFunction(@Nullable BiFunction<T, U, R> fn) {
         if (fn == null) return null;
         else if (fn instanceof TtlEnhanced) return fn;
-        else return new TtlBiFunction<T, U, R>(fn);
+        else return new TtlBiFunction<>(fn);
     }
 
     /**

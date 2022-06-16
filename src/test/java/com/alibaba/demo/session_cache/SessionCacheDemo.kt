@@ -18,7 +18,7 @@ class SessionCacheDemo {
         val bizService = BizService()
         val printer: () -> Unit = { System.out.printf("[%20s] cache: %s%n", Thread.currentThread().name, bizService.getCacheItem()) }
 
-        executorService.submit(Callable<Item> {
+        executorService.submit(Callable {
             bizService.getItemByCache().also { printer() }
         }).get()
 
@@ -36,7 +36,7 @@ class SessionCacheDemo {
 
         Flowable.just(bizService)
                 .observeOn(Schedulers.io())
-                .map<Item>(BizService::getItemByCache)
+                .map(BizService::getItemByCache)
                 .doOnNext(printer)
                 .blockingSubscribe(printer)
 

@@ -207,7 +207,7 @@ public final class TtlAgent {
 
             logger.info(logTtlAgentConfig());
 
-            final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
+            final List<TtlTransformlet> transformletList = new ArrayList<>();
 
             transformletList.add(new JdkExecutorTtlTransformlet());
             transformletList.add(new PriorityBlockingQueueTtlTransformlet());

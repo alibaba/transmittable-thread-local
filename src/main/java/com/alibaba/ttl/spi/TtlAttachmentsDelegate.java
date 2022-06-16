@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 2.11.0
  */
 public class TtlAttachmentsDelegate implements TtlAttachments {
-    private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<String, Object>();
+    private final ConcurrentMap<String, Object> attachments = new ConcurrentHashMap<>();
 
     @Override
     public void setTtlAttachment(@NonNull String key, Object value) {

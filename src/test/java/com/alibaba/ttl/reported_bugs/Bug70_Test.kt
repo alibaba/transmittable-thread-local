@@ -23,7 +23,7 @@ class Bug70_Test {
         val threadLocal = TransmittableThreadLocal<String>().apply { set(hello) }
         assertEquals(hello, threadLocal.get())
 
-        FutureTask<String> { threadLocal.get() }.also {
+        FutureTask { threadLocal.get() }.also {
             val runnable = if (noTtlAgentRun()) TtlRunnable.get(it) else it
             executorService.submit(runnable)
             assertEquals(hello, it.get())
@@ -31,7 +31,7 @@ class Bug70_Test {
 
         val taskRef = AtomicReference<FutureTask<String>>()
         thread(name = "the thread for run executor action") {
-            FutureTask<String> { threadLocal.get() }.also {
+            FutureTask { threadLocal.get() }.also {
                 val runnable = if (noTtlAgentRun()) TtlRunnable.get(it, false, false) else it
                 executorService.submit(runnable)
                 taskRef.set(it)

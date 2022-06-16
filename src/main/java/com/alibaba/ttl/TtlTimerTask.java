@@ -35,7 +35,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
     private final boolean releaseTtlValueReferenceAfterRun;
 
     private TtlTimerTask(@NonNull TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
-        this.capturedRef = new AtomicReference<Object>(capture());
+        this.capturedRef = new AtomicReference<>(capture());
         this.timerTask = timerTask;
         this.releaseTtlValueReferenceAfterRun = releaseTtlValueReferenceAfterRun;
     }
@@ -182,7 +182,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
     public static List<TimerTask> unwraps(@Nullable Collection<? extends TimerTask> tasks) {
         if (null == tasks) return Collections.emptyList();
 
-        List<TimerTask> copy = new ArrayList<TimerTask>();
+        List<TimerTask> copy = new ArrayList<>();
         for (TimerTask task : tasks) {
             if (!(task instanceof TtlTimerTask)) copy.add(task);
             else copy.add(((TtlTimerTask) task).getTimerTask());

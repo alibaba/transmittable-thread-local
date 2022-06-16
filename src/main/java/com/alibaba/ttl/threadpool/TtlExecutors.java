@@ -242,7 +242,7 @@ public final class TtlExecutors {
     public static Comparator<Runnable> getTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
         if (comparator == null || isTtlRunnableUnwrapComparator(comparator)) return comparator;
 
-        return new TtlUnwrapComparator<Runnable>(comparator);
+        return new TtlUnwrapComparator<>(comparator);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

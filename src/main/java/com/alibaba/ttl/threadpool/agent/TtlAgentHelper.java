@@ -93,7 +93,7 @@ final class TtlAgentHelper {
      */
     @NonNull
     static Map<String, String> splitCommaColonStringToKV(@Nullable final String commaColonString) {
-        final Map<String, String> ret = new HashMap<String, String>();
+        final Map<String, String> ret = new HashMap<>();
         if (commaColonString == null || commaColonString.trim().length() == 0) return ret;
 
         final String[] splitKvArray = commaColonString.trim().split("\\s*,\\s*");
@@ -113,7 +113,7 @@ final class TtlAgentHelper {
      */
     @NonNull
     static List<String> splitListStringToStringList(@Nullable String listString) {
-        final List<String> ret = new ArrayList<String>();
+        final List<String> ret = new ArrayList<>();
         if (listString == null || listString.trim().length() == 0) return ret;
 
         final String[] split = listString.trim().split("\\s*\\|\\s*");

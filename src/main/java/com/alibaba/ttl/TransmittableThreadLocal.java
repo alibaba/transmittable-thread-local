@@ -132,7 +132,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     public static <S> TransmittableThreadLocal<S> withInitial(@NonNull Supplier<? extends S> supplier) {
         if (supplier == null) throw new NullPointerException("supplier is null");
 
-        return new SuppliedTransmittableThreadLocal<S>(supplier, null, null);
+        return new SuppliedTransmittableThreadLocal<>(supplier, null, null);
     }
 
     /**
@@ -157,7 +157,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         if (supplier == null) throw new NullPointerException("supplier is null");
         if (copierForChildValueAndCopy == null) throw new NullPointerException("ttl copier is null");
 
-        return new SuppliedTransmittableThreadLocal<S>(supplier, copierForChildValueAndCopy, copierForChildValueAndCopy);
+        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValueAndCopy, copierForChildValueAndCopy);
     }
 
     /**
@@ -190,7 +190,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         if (copierForChildValue == null) throw new NullPointerException("ttl copier for child value is null");
         if (copierForCopy == null) throw new NullPointerException("ttl copier for copy value is null");
 
-        return new SuppliedTransmittableThreadLocal<S>(supplier, copierForChildValue, copierForCopy);
+        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValue, copierForCopy);
     }
 
     /**
@@ -321,7 +321,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             new InheritableThreadLocal<WeakHashMap<TransmittableThreadLocal<Object>, ?>>() {
                 @Override
                 protected WeakHashMap<TransmittableThreadLocal<Object>, ?> initialValue() {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>();
+                    return new WeakHashMap<>();
                 }
 
                 @Override
@@ -493,7 +493,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         private static HashMap<TransmittableThreadLocal<Object>, Object> captureTtlValues() {
-            HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<TransmittableThreadLocal<Object>, Object>();
+            HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
             for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 ttl2Value.put(threadLocal, threadLocal.copyValue());
             }
@@ -501,7 +501,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         private static HashMap<ThreadLocal<Object>, Object> captureThreadLocalValues() {
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
+            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 final TtlCopier<Object> copier = entry.getValue();
@@ -528,7 +528,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
         @NonNull
         private static HashMap<TransmittableThreadLocal<Object>, Object> replayTtlValues(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> captured) {
-            HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<TransmittableThreadLocal<Object>, Object>();
+            HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>();
 
             for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                 TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -554,7 +554,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         private static HashMap<ThreadLocal<Object>, Object> replayThreadLocalValues(@NonNull HashMap<ThreadLocal<Object>, Object> captured) {
-            final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<ThreadLocal<Object>, Object>();
+            final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>();
 
             for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -577,9 +577,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object clear() {
-            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<TransmittableThreadLocal<Object>, Object>();
+            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
 
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<ThreadLocal<Object>, Object>();
+            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal2Value.put(threadLocal, threadLocalClearMark);
@@ -730,7 +730,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             }
         }
 
-        private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>();
+        private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<>();
         private static final Object threadLocalHolderUpdateLock = new Object();
         private static final Object threadLocalClearMark = new Object();
 
@@ -813,7 +813,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             synchronized (threadLocalHolderUpdateLock) {
                 if (!force && threadLocalHolder.containsKey(threadLocal)) return false;
 
-                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
+                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
                 newHolder.put((ThreadLocal<Object>) threadLocal, (TtlCopier<Object>) copier);
                 threadLocalHolder = newHolder;
                 return true;
@@ -868,19 +868,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             synchronized (threadLocalHolderUpdateLock) {
                 if (!threadLocalHolder.containsKey(threadLocal)) return false;
 
-                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>>(threadLocalHolder);
+                WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
                 newHolder.remove(threadLocal);
                 threadLocalHolder = newHolder;
                 return true;
             }
         }
 
-        private static final TtlCopier<Object> shadowCopier = new TtlCopier<Object>() {
-            @Override
-            public Object copy(Object parentValue) {
-                return parentValue;
-            }
-        };
+        private static final TtlCopier<Object> shadowCopier = parentValue -> parentValue;
 
         private Transmitter() {
             throw new InstantiationError("Must not instantiate this class");
