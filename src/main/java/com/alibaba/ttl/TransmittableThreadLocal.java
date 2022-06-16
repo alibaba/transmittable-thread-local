@@ -2,6 +2,7 @@ package com.alibaba.ttl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -698,6 +699,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @see #restore(Object)
          * @since 2.3.1
          */
+        @SuppressFBWarnings("THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
         public static <R> R runCallableWithCaptured(@NonNull Object captured, @NonNull Callable<R> bizLogic) throws Exception {
             final Object backup = replay(captured);
             try {
@@ -718,6 +720,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @see #restore(Object)
          * @since 2.9.0
          */
+        @SuppressFBWarnings("THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
         public static <R> R runCallableWithClear(@NonNull Callable<R> bizLogic) throws Exception {
             final Object backup = clear();
             try {
