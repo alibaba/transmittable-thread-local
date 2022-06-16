@@ -38,7 +38,7 @@
             - [`Java Agent`的启动参数配置](#java-agent%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven依赖](#-maven%E4%BE%9D%E8%B5%96)
-- [🔨 关于编译构建与`IDE`开发](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA%E4%B8%8Eide%E5%BC%80%E5%8F%91)
+- [🔨 关于编译构建](#-%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)
 - [❓ FAQ](#-faq)
 - [✨ 使用`TTL`的好处与必要性](#-%E4%BD%BF%E7%94%A8ttl%E7%9A%84%E5%A5%BD%E5%A4%84%E4%B8%8E%E5%BF%85%E8%A6%81%E6%80%A7)
 - [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
@@ -388,7 +388,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 可以在 [search.maven.org](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local) 查看可用的版本。
 
-# 🔨 关于编译构建与`IDE`开发
+# 🔨 关于编译构建
 
 编译构建的环境要求： **_`JDK 8~11`_**；用`Maven`常规的方式执行编译构建即可：  
 \# 在工程中已经包含了符合版本要求的`Maven`，直接运行 **_工程根目录下的`mvnw`_**；并不需要先手动自己安装好`Maven`。
@@ -405,8 +405,6 @@ These paths are searched by the bootstrap class loader after the platform specif
 # 如果使用你自己安装的 maven，版本要求：maven 3.3.9+
 mvn install
 ```
-
-如何用`IDE`来开发时注意点，更多说明参见 [文档 如何用`IDE`开发 - Developer Guide](docs/developer-guide.md#%E5%A6%82%E4%BD%95%E7%94%A8ide%E5%BC%80%E5%8F%91)。
 
 # ❓ FAQ
 

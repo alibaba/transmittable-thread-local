@@ -26,7 +26,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [🔧 Functions](#-functions)
 - [🎨 Requirements](#-requirements)
 - [👥 User Guide](#-user-guide)
@@ -37,13 +36,11 @@
         - [2.3 Use Java Agent to decorate thread pool implementation class](#23-use-java-agent-to-decorate-thread-pool-implementation-class)
 - [🔌 Java API Docs](#-java-api-docs)
 - [🍪 Maven Dependency](#-maven-dependency)
-- [🔨 About compilation, build and dev](#-about-compilation-build-and-dev)
-    - [How to compile and build](#how-to-compile-and-build)
-    - [How to development by `IDE`](#how-to-development-by-ide)
+- [🔨 How to compile and build](#-how-to-compile-and-build)
 - [🗿 More Documentation](#-more-documentation)
-- [💝 Who used](#-who-used)
 - [📚 Related Resources](#-related-resources)
     - [JDK Core Classes](#jdk-core-classes)
+- [💝 Who used](#-who-used)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -314,9 +311,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 
 Check available version at [search.maven.org](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local).
 
-# 🔨 About compilation, build and dev
-
-## How to compile and build
+# 🔨 How to compile and build
 
 Compilation/build environment require **_`JDK 8~11`_**; Compilation can be performed in the normal way of `Maven`.
 
@@ -335,15 +330,6 @@ Compilation/build environment require **_`JDK 8~11`_**; Compilation can be perfo
 
 mvn install
 ```
-
-## How to development by `IDE`
-
-If you use `IDE` to develop (such as `IntelliJ IDEA`), note that:
-open **_the `pom4ide.xml` file in the root directory of the project_** instead of `pom.xml` via `IDE`;
-To avoid `IDE` complain using `JDK 8` standard library classes not found.
-
-The reason that `IDE` support is not good / have to change a `POM` file, is:  
-The code implementation of `TTL` uses the `JDK 8` standard library class, but it is compiled into a `Java 6` version class files.
 
 # 🗿 More Documentation
 
