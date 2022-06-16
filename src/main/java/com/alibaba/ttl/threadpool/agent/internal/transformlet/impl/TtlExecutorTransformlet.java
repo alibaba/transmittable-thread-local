@@ -35,8 +35,8 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
 public class TtlExecutorTransformlet implements JavassistTransformlet {
     private static final Logger logger = Logger.getLogger(TtlExecutorTransformlet.class);
 
-    private static final Set<String> EXECUTOR_CLASS_NAMES = new HashSet<String>();
-    private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<String, String>();
+    private static final Set<String> EXECUTOR_CLASS_NAMES = new HashSet<>();
+    private static final Map<String, String> PARAM_TYPE_NAME_TO_DECORATE_METHOD_CLASS = new HashMap<>();
 
     private static final String THREAD_POOL_EXECUTOR_CLASS_NAME = "java.util.concurrent.ThreadPoolExecutor";
     private static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";

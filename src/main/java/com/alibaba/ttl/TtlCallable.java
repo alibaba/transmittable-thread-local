@@ -43,7 +43,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
     private final boolean releaseTtlValueReferenceAfterCall;
 
     private TtlCallable(@NonNull Callable<V> callable, boolean releaseTtlValueReferenceAfterCall) {
-        this.capturedRef = new AtomicReference<Object>(capture());
+        this.capturedRef = new AtomicReference<>(capture());
         this.callable = callable;
         this.releaseTtlValueReferenceAfterCall = releaseTtlValueReferenceAfterCall;
     }
@@ -154,7 +154,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
             if (idempotent) return (TtlCallable<T>) callable;
             else throw new IllegalStateException("Already TtlCallable!");
         }
-        return new TtlCallable<T>(callable, releaseTtlValueReferenceAfterCall);
+        return new TtlCallable<>(callable, releaseTtlValueReferenceAfterCall);
     }
 
     /**
@@ -192,7 +192,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
         if (null == tasks) return Collections.emptyList();
 
-        List<TtlCallable<T>> copy = new ArrayList<TtlCallable<T>>();
+        List<TtlCallable<T>> copy = new ArrayList<>();
         for (Callable<T> task : tasks) {
             copy.add(TtlCallable.get(task, releaseTtlValueReferenceAfterCall, idempotent));
         }
@@ -232,7 +232,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
     public static <T> List<Callable<T>> unwraps(@Nullable Collection<? extends Callable<T>> tasks) {
         if (null == tasks) return Collections.emptyList();
 
-        List<Callable<T>> copy = new ArrayList<Callable<T>>();
+        List<Callable<T>> copy = new ArrayList<>();
         for (Callable<T> task : tasks) {
             if (!(task instanceof TtlCallable)) copy.add(task);
             else copy.add(((TtlCallable<T>) task).getCallable());

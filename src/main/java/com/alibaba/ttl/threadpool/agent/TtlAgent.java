@@ -133,7 +133,7 @@ public final class TtlAgent {
             logger.info("[TtlAgent.premain] begin, agentArgs: " + agentArgs + ", Instrumentation: " + inst);
             final boolean disableInheritableForThreadPool = isDisableInheritableForThreadPool();
 
-            final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
+            final List<JavassistTransformlet> transformletList = new ArrayList<>();
 
             transformletList.add(new TtlExecutorTransformlet(disableInheritableForThreadPool));
             transformletList.add(new TtlPriorityBlockingQueueTransformlet());
@@ -150,7 +150,7 @@ public final class TtlAgent {
 
             ttlAgentLoaded = true;
         } catch (Exception e) {
-            String msg = "Fail to load TtlAgent , cause: " + e.toString();
+            String msg = "Fail to load TtlAgent , cause: " + e;
             logger.log(Level.SEVERE, msg, e);
             throw new IllegalStateException(msg, e);
         }
@@ -215,7 +215,7 @@ public final class TtlAgent {
      */
     @NonNull
     static Map<String, String> splitCommaColonStringToKV(@Nullable final String commaColonString) {
-        final Map<String, String> ret = new HashMap<String, String>();
+        final Map<String, String> ret = new HashMap<>();
         if (commaColonString == null || commaColonString.trim().length() == 0) return ret;
 
         final String[] splitKvArray = commaColonString.trim().split("\\s*,\\s*");

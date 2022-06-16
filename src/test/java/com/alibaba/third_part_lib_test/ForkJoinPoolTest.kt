@@ -3,8 +3,8 @@ package com.alibaba.third_part_lib_test
 import com.alibaba.support.junit.conditional.BelowJava7
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.ForkJoinPool

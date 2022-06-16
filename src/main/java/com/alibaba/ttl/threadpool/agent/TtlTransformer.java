@@ -36,7 +36,7 @@ public class TtlTransformer implements ClassFileTransformer {
     // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
     private static final byte[] NO_TRANSFORM = null;
 
-    private final List<JavassistTransformlet> transformletList = new ArrayList<JavassistTransformlet>();
+    private final List<JavassistTransformlet> transformletList = new ArrayList<>();
 
     TtlTransformer(List<? extends JavassistTransformlet> transformletList) {
         for (JavassistTransformlet transformlet : transformletList) {
@@ -63,7 +63,7 @@ public class TtlTransformer implements ClassFileTransformer {
                 if (classInfo.isModified()) return classInfo.getCtClass().toBytecode();
             }
         } catch (Throwable t) {
-            String msg = "Fail to transform class " + classFile + ", cause: " + t.toString();
+            String msg = "Fail to transform class " + classFile + ", cause: " + t;
             logger.log(Level.SEVERE, msg, t);
             throw new IllegalStateException(msg, t);
         }
