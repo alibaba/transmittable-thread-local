@@ -13,9 +13,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -235,7 +237,7 @@ final class TtlExtensionTransformletManager {
         LinkedHashSet<String> names = new LinkedHashSet<>();
         try {
             inputStream = extensionFile.openStream();
-            reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
+            reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
             int lineNum = 1;
             while ((lineNum = parseLine(extensionFile, reader, lineNum, names)) >= 0) ;
         } catch (IOException x) {
