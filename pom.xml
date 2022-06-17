@@ -101,6 +101,10 @@
 		<kotlin.version>1.7.0</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
+
+		<!-- testing dependencies versions -->
+		<junit5.version>5.8.2</junit5.version>
+		<kotest.version>5.3.1</kotest.version>
 	</properties>
 
 	<dependencies>
@@ -110,6 +114,7 @@
 			<version>3.29.0-GA</version>
 			<optional>true</optional>
 		</dependency>
+
 		<!--
 			QA libs
 			make qa libs optional, 0-dependency and smaller deployment
@@ -132,19 +137,8 @@
 			<version>3.0.2</version>
 			<optional>true</optional>
 		</dependency>
+
 		<!-- Testing frameworks and related dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core</artifactId>
@@ -169,7 +163,92 @@
 			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit4-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit5-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-assertions-core-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-property-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--
+			Executing JUnit 4 and JUnit 5 tests in a same build
+				https://stackoverflow.com/a/47158584/922688
+		-->
+		<dependency>
+			<!--JUnit Jupiter Engine to depend on the JUnit5 engine and JUnit 5 API -->
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!--JUnit Jupiter Engine to depend on the JUnit4 engine and JUnit 4 API  -->
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- bom -->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!--
+				testing libs
+			-->
+			<!-- https://github.com/kotlintest/kotlintest -->
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-runner-junit4-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-runner-junit5-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-assertions-core-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-property-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<distributionManagement>
 		<snapshotRepository>
