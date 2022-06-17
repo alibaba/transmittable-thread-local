@@ -19,5 +19,3 @@ MVN_WITH_BASIC_OPTIONS -q \
   org.codehaus.mojo:versions-maven-plugin:2.8.1:set \
   -DgenerateBackupPoms=false \
   -DnewVersion="$bump_version"
-
-scripts/gen-pom4ide.sh

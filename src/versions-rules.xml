@@ -20,20 +20,6 @@
         <ignoreVersion type="regex">.*(-does)?-not-exist</ignoreVersion>
     </ignoreVersions>
     <rules>
-        <rule groupId="org.apache.commons" artifactId="commons-lang3">
-            <ignoreVersions>
-                <!-- locked to version 3.5, ignore 3.6+ -->
-                <ignoreVersion type="regex">3\.[6-9](\..*)?</ignoreVersion>
-                <ignoreVersion type="regex">3\.\d{2,}(\..*)?</ignoreVersion>
-            </ignoreVersions>
-        </rule>
-        <rule groupId="org.javassist" artifactId="javassist">
-            <!-- locked to version 3.23, ignore 3.24+ -->
-            <ignoreVersions>
-                <ignoreVersion type="regex">3.2[4-9](\..*)?</ignoreVersion>
-                <ignoreVersion type="regex">3.\d{3,}(\..*)?</ignoreVersion>
-            </ignoreVersions>
-        </rule>
         <rule groupId="org.jetbrains.kotlinx">
             <!-- ignore native dependency version like org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5-native-mt -->
             <ignoreVersions>
