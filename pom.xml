@@ -33,8 +33,8 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<ciManagement>
-		<system>travis-ci</system>
-		<url>https://travis-ci.org/github/alibaba/transmittable-thread-local</url>
+		<system>AppVeyor</system>
+		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
 	</ciManagement>
 	<organization>
 		<name>Alibaba</name>
@@ -104,10 +104,6 @@
 	</properties>
 
 	<dependencies>
-		<!--
-			javassist v3.23 is the last version support Java 6
-			DO NOT upgrade javassist version!
-		-->
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
@@ -115,27 +111,26 @@
 			<optional>true</optional>
 		</dependency>
 		<!--
-			JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
-			Please continue using findbugs’ one.
-			depend on spotbugs-annotations instead.
-			https://spotbugs.readthedocs.io/en/stable/migration.html
+			QA libs
+			make qa libs optional, 0-dependency and smaller deployment
 		-->
 		<dependency>
+			<!--
+				JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
+				Please continue using findbugs’ one.
+				depend on spotbugs-annotations instead.
+				https://spotbugs.readthedocs.io/en/stable/migration.html
+			-->
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<version>${spotbugs.annotations.version}</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-		<!--
-			make other qa libs
-				- optional, 0-dependency and smaller deployment
-				- runtime scope(no compile dependent), ensure no code usage
-		-->
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
@@ -168,11 +163,6 @@
 			<version>2.4.0</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-			commons-lang3 v3.5 is the last version support Java 6
-			https://commons.apache.org/proper/commons-lang/changes-report.html
-			DO NOT upgrade commons-lang3 version!
-		-->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
