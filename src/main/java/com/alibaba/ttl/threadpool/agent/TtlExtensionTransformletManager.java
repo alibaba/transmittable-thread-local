@@ -13,9 +13,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -47,15 +49,15 @@ final class TtlExtensionTransformletManager {
     }
 
     // NOTE: use WeakHashMap as a Set collection, value is always null.
-    private final WeakHashMap<ClassLoader, ?> collectedClassLoaderHistory = new WeakHashMap<ClassLoader, Object>(512);
+    private final WeakHashMap<ClassLoader, ?> collectedClassLoaderHistory = new WeakHashMap<>(512);
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(not include from parent classloader)
     private final WeakHashMap<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets =
-        new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
+            new WeakHashMap<>(512);
 
     // Map: ExtensionTransformlet ClassLoader -> ExtensionTransformlet ClassName -> ExtensionTransformlet instance(include from parent classloader)
     private final WeakHashMap<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL =
-        new WeakHashMap<ClassLoader, Map<String, TtlTransformlet>>(512);
+            new WeakHashMap<>(512);
 
     public void collectExtensionTransformlet(@NonNull final ClassInfo classInfo) throws IOException {
         final ClassLoader classLoader = classInfo.getClassLoader();
@@ -83,7 +85,7 @@ final class TtlExtensionTransformletManager {
     }
 
     // extension transformlet configuration file URL location string -> URL contained extension transformlet class names
-    private final Map<String, LinkedHashSet<String>> redExtensionTransformletFileHistory = new HashMap<String, LinkedHashSet<String>>();
+    private final Map<String, LinkedHashSet<String>> redExtensionTransformletFileHistory = new HashMap<>();
 
     private LinkedHashSet<String> readExtensionTransformletClassNames(ClassLoader classLoader) throws IOException {
         final Enumeration<URL> extensionFiles = classLoader.getResources(TTL_AGENT_EXTENSION_TRANSFORMLET_FILE);
@@ -105,11 +107,7 @@ final class TtlExtensionTransformletManager {
             final ClassLoader classLoader = entry.getKey();
             final Set<TtlTransformlet> transformlets = entry.getValue();
 
-            Map<String, TtlTransformlet> className2Transformlets = destination.get(classLoader);
-            if (className2Transformlets == null) {
-                className2Transformlets = new HashMap<String, TtlTransformlet>();
-                destination.put(classLoader, className2Transformlets);
-            }
+            Map<String, TtlTransformlet> className2Transformlets = destination.computeIfAbsent(classLoader, k -> new HashMap<>());
 
             for (TtlTransformlet t : transformlets) {
                 final String className = t.getClass().getName();
@@ -135,9 +133,9 @@ final class TtlExtensionTransformletManager {
     static Map<String, TtlTransformlet> childClassLoaderFirstMergeTransformlets(
         Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2Transformlet, ClassLoader classLoader
     ) {
-        Map<String, TtlTransformlet> ret = new HashMap<String, TtlTransformlet>();
+        Map<String, TtlTransformlet> ret = new HashMap<>();
 
-        final ArrayDeque<ClassLoader> chain = new ArrayDeque<ClassLoader>();
+        final ArrayDeque<ClassLoader> chain = new ArrayDeque<>();
         chain.add(classLoader);
         while (classLoader.getParent() != null) {
             classLoader = classLoader.getParent();
@@ -161,7 +159,7 @@ final class TtlExtensionTransformletManager {
         ClassLoader classLoader, LinkedHashSet<String> instanceClassNames, Class<T> superType,
         String foundMsgHead, String failLoadMsgHead
     ) {
-        Map<ClassLoader, Set<T>> ret = new HashMap<ClassLoader, Set<T>>();
+        Map<ClassLoader, Set<T>> ret = new HashMap<>();
 
         for (final String className : instanceClassNames) {
             try {
@@ -178,11 +176,7 @@ final class TtlExtensionTransformletManager {
                 Object instance = clazz.getDeclaredConstructor().newInstance();
 
                 final ClassLoader actualClassLoader = instance.getClass().getClassLoader();
-                Set<T> set = ret.get(actualClassLoader);
-                if (set == null) {
-                    set = new HashSet<T>();
-                    ret.put(actualClassLoader, set);
-                }
+                Set<T> set = ret.computeIfAbsent(actualClassLoader, k -> new HashSet<>());
                 set.add(superType.cast(instance));
 
                 final String msg = foundMsgHead + className
@@ -192,16 +186,8 @@ final class TtlExtensionTransformletManager {
             } catch (ClassNotFoundException e) {
                 final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
                 logger.warn(msg, e);
-            } catch (IllegalAccessException e) {
-                final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
-                logger.error(msg, e);
-            } catch (InstantiationException e) {
-                final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
-                logger.error(msg, e);
-            } catch (NoSuchMethodException e) {
-                final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
-                logger.error(msg, e);
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InstantiationException | NoSuchMethodException |
+                     InvocationTargetException e) {
                 final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
                 logger.error(msg, e);
             }
@@ -216,8 +202,8 @@ final class TtlExtensionTransformletManager {
         /* input */ @NonNull Enumeration<URL> extensionFiles,
         /* input/output, map url string -> content lines */ @NonNull Map<String, LinkedHashSet<String>> redExtensionFilesHistory
     ) {
-        final LinkedHashSet<String> mergedLines = new LinkedHashSet<String>();
-        final Set<String> stringUrls = new HashSet<String>();
+        final LinkedHashSet<String> mergedLines = new LinkedHashSet<>();
+        final Set<String> stringUrls = new HashSet<>();
 
         while (extensionFiles.hasMoreElements()) {
             final URL url = extensionFiles.nextElement();
@@ -237,7 +223,7 @@ final class TtlExtensionTransformletManager {
             mergedLines.addAll(lines);
         }
 
-        return new Pair<LinkedHashSet<String>, Set<String>>(mergedLines, stringUrls);
+        return new Pair<>(mergedLines, stringUrls);
     }
 
     /**
@@ -248,10 +234,10 @@ final class TtlExtensionTransformletManager {
         InputStream inputStream = null;
         BufferedReader reader = null;
 
-        LinkedHashSet<String> names = new LinkedHashSet<String>();
+        LinkedHashSet<String> names = new LinkedHashSet<>();
         try {
             inputStream = extensionFile.openStream();
-            reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
+            reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
             int lineNum = 1;
             while ((lineNum = parseLine(extensionFile, reader, lineNum, names)) >= 0) ;
         } catch (IOException x) {

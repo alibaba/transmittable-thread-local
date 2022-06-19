@@ -36,7 +36,7 @@ public class TtlTransformer implements ClassFileTransformer {
     private static final byte[] NO_TRANSFORM = null;
 
     private final TtlExtensionTransformletManager extensionTransformletManager;
-    private final List<TtlTransformlet> transformletList = new ArrayList<TtlTransformlet>();
+    private final List<TtlTransformlet> transformletList = new ArrayList<>();
     private final boolean logClassTransform;
 
     TtlTransformer(List<? extends TtlTransformlet> transformletList, boolean logClassTransform) {

@@ -10,7 +10,7 @@ import static org.junit.Assert.fail;
 public class UtilsTest {
     @Test
     public void test_get_unboxing_boolean_fromMap() {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         try {
             getUnboxingBoolean(map, "not_existed");

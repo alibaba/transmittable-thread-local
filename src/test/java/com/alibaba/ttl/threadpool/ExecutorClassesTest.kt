@@ -57,7 +57,7 @@ class ExecutorClassesTest {
 
         // child Inheritable
         assertChildTtlValues(tag, task.copied)
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 }

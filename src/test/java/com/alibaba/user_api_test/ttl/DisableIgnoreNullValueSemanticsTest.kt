@@ -1,4 +1,4 @@
-package com.alibaba.ttl.user_api_test
+package com.alibaba.user_api_test.ttl
 
 import com.alibaba.ttl.TransmittableThreadLocal
 import org.junit.Assert.assertEquals

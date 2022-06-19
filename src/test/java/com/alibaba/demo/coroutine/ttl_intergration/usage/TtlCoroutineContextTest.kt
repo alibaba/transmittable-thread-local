@@ -2,15 +2,18 @@ package com.alibaba.demo.coroutine.ttl_intergration.usage
 
 import com.alibaba.demo.coroutine.ttl_intergration.ttlContext
 import com.alibaba.ttl.TransmittableThreadLocal
+import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
-import org.junit.Test
 
-class TtlCoroutineContextTest {
+class TtlCoroutineContextTest : AnnotationSpec() {
+    private val logger = KotlinLogging.logger {}
+
     @Test
     fun threadContextElement_passByValue(): Unit = runBlocking {
         val mainValue = "main-${System.currentTimeMillis()}"
@@ -19,16 +22,16 @@ class TtlCoroutineContextTest {
         // String ThreadLocal, String is immutable value, can only be passed by value
         val threadLocal = TransmittableThreadLocal<String?>()
         threadLocal.set(mainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()}" }
 
         val job = launch(Dispatchers.Default + ttlContext()) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
@@ -38,13 +41,13 @@ class TtlCoroutineContextTest {
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()}" }
             assertEquals(reset, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
         }
         job.join()
 
-        println("after launch, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - after launch, thread local value: ${threadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
     }
 
@@ -58,16 +61,16 @@ class TtlCoroutineContextTest {
         // Reference ThreadLocal, mutable value, pass by reference
         val threadLocal = TransmittableThreadLocal<Reference>() // declare thread-local variable
         threadLocal.set(mainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()}" }
 
         val job = launch(Dispatchers.Default + ttlContext()) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
@@ -76,13 +79,13 @@ class TtlCoroutineContextTest {
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()}" }
             assertEquals(Reference(reset), threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
         }
         job.join()
 
-        println("after launch, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - after launch thread local value: ${threadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
     }
 
@@ -97,18 +100,17 @@ class TtlCoroutineContextTest {
 
         threadLocal.set(mainValue)
         anotherThreadLocal.set(anotherMainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
 
-        println()
         launch(Dispatchers.Default + ttlContext()) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertEquals(anotherMainValue, anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(mainValue, threadLocal.get())
             assertEquals(anotherMainValue, anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
@@ -117,17 +119,17 @@ class TtlCoroutineContextTest {
             threadLocal.set(resetA)
             val resetAnother = "job-reset-${anotherThreadLocal.get()}"
             anotherThreadLocal.set(resetAnother)
-            println("Before delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - before delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(resetA, threadLocal.get())
             assertEquals(resetAnother, anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
         }.join()
 
-        println("after launch2, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        logger.info { "test thread - after launch2, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
         assertEquals(anotherMainValue, anotherThreadLocal.get())
     }

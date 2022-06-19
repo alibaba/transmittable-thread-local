@@ -5,7 +5,7 @@
 
 	<groupId>com.alibaba</groupId>
 	<artifactId>transmittable-thread-local</artifactId>
-	<version>2.13.0-SNAPSHOT</version>
+	<version>2.13.x-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL)</name>
 	<description>
@@ -33,8 +33,8 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<ciManagement>
-		<system>travis-ci</system>
-		<url>https://travis-ci.org/github/alibaba/transmittable-thread-local</url>
+		<system>AppVeyor</system>
+		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
 	</ciManagement>
 	<organization>
 		<name>Alibaba</name>
@@ -92,67 +92,68 @@
 	</developers>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<spotbugs.annotations.version>4.7.0</spotbugs.annotations.version>
-		<kotlin.version>1.4.32</kotlin.version>
-		<kotlin.coroutine.version>1.4.3</kotlin.coroutine.version>
+
+		<kotlin.version>1.7.0</kotlin.version>
+		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
+		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
+
+		<slf4j.version>1.7.36</slf4j.version>
+
+		<!-- testing dependencies versions -->
+		<junit5.version>5.8.2</junit5.version>
+		<kotest.version>5.3.1</kotest.version>
+
+		<!--
+			slf4j simple logger configuration for test
+
+			the system properties are supported to configure the behavior of slf4j simple logger
+			https://www.slf4j.org/api/org/slf4j/simple/SimpleLogger.html
+		-->
+		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden in maven -D options -->
+		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}</argLine.slf4j.simple.logger.default.d.options>
+		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden in maven -D options -->
+		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options} ${argLine.slf4j.simple.logger.extra.d.options}</argLine.slf4j.simple.logger.d.options>
+
+		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- updated in profile -->
 	</properties>
 
 	<dependencies>
-		<!--
-			javassist v3.23 is the last version support Java 6
-			DO NOT upgrade javassist version!
-		-->
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.23.2-GA</version>
+			<version>3.29.0-GA</version>
 			<optional>true</optional>
 		</dependency>
-		<!--
-			JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
-			Please continue using findbugs’ one.
-			depend on spotbugs-annotations instead.
-			https://spotbugs.readthedocs.io/en/stable/migration.html
 
-			set scope to *provided* but without optional=true:
-				- no lib user runtime cost, *still* runtime 0-dependency
-				  not runtime/compile Transitive dependence
-				- more IDE friendly
-				  ensure to be able to jump to annotation classes(edu.umd.cs.findbugs.annotations.NonNull, etc)
-				  when user browse source code in IDE
+		<!--
+			QA libs
+			make qa libs optional, 0-dependency and smaller deployment
 		-->
 		<dependency>
+			<!--
+				JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
+				Please continue using findbugs’ one.
+				depend on spotbugs-annotations instead.
+				https://spotbugs.readthedocs.io/en/stable/migration.html
+			-->
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<version>${spotbugs.annotations.version}</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-		<!--
-			make other qa libs
-				- optional, 0-dependency and smaller deployment
-				- runtime scope(no compile dependent), ensure no code usage
-		-->
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
+
 		<!-- Testing frameworks and related dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core</artifactId>
@@ -171,18 +172,131 @@
 			<version>2.4.0</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-			commons-lang3 v3.5 is the last version support Java 6
-			https://commons.apache.org/proper/commons-lang/changes-report.html
-			DO NOT upgrade commons-lang3 version!
-		-->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.5</version>
+			<version>3.12.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- logging libs -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.github.microutils</groupId>
+			<artifactId>kotlin-logging-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- testing libs -->
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit4-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-runner-junit5-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-assertions-core-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.kotest</groupId>
+			<artifactId>kotest-property-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--
+			Executing JUnit 4 and JUnit 5 tests in a same build
+				https://stackoverflow.com/a/47158584/922688
+		-->
+		<dependency>
+			<!--JUnit Jupiter Engine to depend on the JUnit5 engine and JUnit 5 API -->
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!--JUnit Jupiter Engine to depend on the JUnit4 engine and JUnit 4 API  -->
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- bom -->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- logging libs -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.github.microutils</groupId>
+				<artifactId>kotlin-logging-jvm</artifactId>
+				<version>2.1.23</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!--
+				testing libs
+			-->
+			<!-- https://github.com/kotlintest/kotlintest -->
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-runner-junit4-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-runner-junit5-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-assertions-core-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.kotest</groupId>
+				<artifactId>kotest-property-jvm</artifactId>
+				<version>${kotest.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -231,11 +345,6 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.10.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
 				<executions>
 					<!-- Replacing default-compile as it is treated specially by maven -->
 					<execution>
@@ -339,7 +448,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.6.0.0</version>
+				<version>4.7.0.0</version>
 			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
@@ -349,7 +458,7 @@
 			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -399,7 +508,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.2</version>
+					<version>3.0.0-M7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
@@ -413,10 +522,116 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
+				<plugin>
+					<!--
+						https://www.mojohaus.org/exec-maven-plugin/
+						https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html
+					-->
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>3.0.0</version>
+					<configuration>
+						<executable>${java.home}/bin/java</executable>
+						<classpathScope>test</classpathScope>
+						<arguments>
+							<argument>-Xmx256m</argument>
+							<argument>-Xms256m</argument>
+							<argument>-ea</argument>
+							<argument>-server</argument>
+							<argument>-Duser.language=en</argument>
+							<argument>-Duser.country=US</argument>
+
+							<argument>-classpath</argument>
+							<classpath/>
+
+							<argument>${exec.mainClass}</argument>
+						</arguments>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 	<profiles>
+		<profile>
+			<id>config-for-jdk16+</id>
+			<activation>
+				<jdk>[16,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>**/*$*</exclude>
+								<exclude>**/JavassistTest*</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>enable-ttl-agent-for-test</id>
+			<properties>
+				<!-- https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html -->
+				<ttl.built.agent.jar>
+					${project.build.directory}/${project.artifactId}-${project.version}.jar
+				</ttl.built.agent.jar>
+				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
+				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
+				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
+				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
+				<ttl.agent.jvm.args>
+					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
+				</ttl.agent.jvm.args>
+				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!--
+							reference: https://github.com/EMResearch/EvoMaster/blob/95163fb042101a71289c17f6e433f91fc1f868ef/pom.xml#L851
+						-->
+						<configuration>
+							<forkCount>1</forkCount>
+							<redirectTestOutputToFile>true</redirectTestOutputToFile>
+							<classpathDependencyExcludes>
+								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
+								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
+								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
+							</classpathDependencyExcludes>
+							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<!--
+							https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html
+						-->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-Xmx256m</argument>
+								<argument>-Xms256m</argument>
+								<argument>-ea</argument>
+								<argument>-server</argument>
+								<argument>-Duser.language=en</argument>
+								<argument>-Duser.country=US</argument>
+
+								<argument>${ttl.agent.jvm.arg}</argument>
+
+								<argument>-classpath</argument>
+								<classpath/>
+
+								<argument>${exec.mainClass}</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>gen-src</id>
 			<activation>
@@ -429,14 +644,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 					<plugin>
 						<artifactId>maven-shade-plugin</artifactId>

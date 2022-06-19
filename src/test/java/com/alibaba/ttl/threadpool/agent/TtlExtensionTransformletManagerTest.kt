@@ -1,21 +1,17 @@
 package com.alibaba.ttl.threadpool.agent
 
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.IsAgentRun
+import com.alibaba.noTtlAgentRun
 import com.alibaba.ttl.threadpool.agent.logging.Logger
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.test.config.TestCaseConfig
 import org.junit.Assert.assertEquals
-import org.junit.BeforeClass
-import org.junit.Rule
-import org.junit.Test
-import java.util.*
 
-class TtlExtensionTransformletManagerTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class TtlExtensionTransformletManagerTest : AnnotationSpec() {
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun defaultTestCaseConfig(): TestCaseConfig =
+        TestCaseConfig(enabled = noTtlAgentRun())
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = IsAgentRun::class)
     fun test_readLines() {
         val classLoader = TtlExtensionTransformletManagerTest::class.java.classLoader
         val pair = TtlExtensionTransformletManager.readLinesFromExtensionFiles(
@@ -29,12 +25,8 @@ class TtlExtensionTransformletManagerTest {
         )
     }
 
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        @Suppress("unused")
-        fun beforeClass() {
-            Logger.setLoggerImplTypeIfNotSetYet("stderr")
-        }
+    @BeforeAll
+    fun beforeAll() {
+        Logger.setLoggerImplTypeIfNotSetYet("stderr")
     }
 }

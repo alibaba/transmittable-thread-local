@@ -2,8 +2,11 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-source ./ttl_build.sh
+cd ..
 
-logAndRun "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
-    "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
-    com.alibaba.demo.ttl.agent.AgentDemo
+readonly mainClass=${1:-com.alibaba.demo.ttl.agent.AgentDemo}
+
+./mvnw -Penable-ttl-agent-for-test \
+  package exec:exec \
+  -DskipTests \
+  -Dexec.mainClass="$mainClass"

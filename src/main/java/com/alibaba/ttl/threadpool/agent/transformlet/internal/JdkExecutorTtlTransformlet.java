@@ -20,7 +20,7 @@ import java.util.Set;
 public final class JdkExecutorTtlTransformlet extends AbstractExecutorTtlTransformlet implements TtlTransformlet {
 
     private static Set<String> getExecutorClassNames() {
-        Set<String> executorClassNames = new HashSet<String>();
+        Set<String> executorClassNames = new HashSet<>();
 
         executorClassNames.add(THREAD_POOL_EXECUTOR_CLASS_NAME);
         executorClassNames.add("java.util.concurrent.ScheduledThreadPoolExecutor");

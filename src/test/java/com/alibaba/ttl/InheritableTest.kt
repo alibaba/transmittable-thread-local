@@ -1,17 +1,12 @@
 package com.alibaba.ttl
 
-import com.alibaba.hasTtlTtlAgentRunWithDisableInheritableForThreadPool
-import com.alibaba.support.junit.conditional.BelowJava7
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
-import com.alibaba.support.junit.conditional.IsAgentRunOrBelowJava7
+import com.alibaba.hasTtlAgentRunWithDisableInheritableForThreadPool
 import com.alibaba.ttl.threadpool.TtlExecutors
 import com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Rule
-import org.junit.Test
+import com.alibaba.ttl.threadpool.agent.TtlAgent
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -21,10 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor
 private const val hello = "hello"
 private val defaultValue = "${Date()} ${Math.random()}"
 
-class InheritableTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class InheritableTest : AnnotationSpec() {
 
     // ===================================================
     // Executors
@@ -41,17 +33,17 @@ class InheritableTest {
 
             // get "hello" value is transmitted by InheritableThreadLocal function!
             // NOTE: Executors.newCachedThreadPool create thread lazily
-            assertEquals(hello, threadPool.submit(callable).get())
 
-            // current thread's TTL must be exist
-            assertEquals(hello, ttl.get())
+            threadPool.submit(callable).get() shouldBe hello
+
+            // current thread's TTL must be existed
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun disableInheritable_Executors_DisableInheritableThreadFactory() {
         val threadPool = Executors.newCachedThreadPool(TtlExecutors.getDefaultDisableInheritableThreadFactory())
         try {
@@ -60,20 +52,24 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertNull(threadPool.submit(callable).get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get().shouldBeNull()
+            }
 
-            // current thread's TTL must be exist when using DisableInheritableThreadFactory
-            assertEquals(hello, ttl.get())
+
+            // current thread's TTL must be existed when using DisableInheritableThreadFactory
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun disableInheritable_Executors_TtlDisableInheritableWithInitialValue() {
         val threadPool = Executors.newCachedThreadPool()
         try {
@@ -84,20 +80,24 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertNull(threadPool.submit(callable).get())
 
-            // current thread's TTL must be exist
-            assertEquals(hello, ttl.get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get().shouldBeNull()
+            }
+
+            // current thread's TTL must be existed
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun disableInheritable_Executors_TtlDefaultValue_TtlDisableInheritableWithInitialValue() {
         val threadPool = Executors.newCachedThreadPool()
         try {
@@ -109,20 +109,24 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertEquals(defaultValue, threadPool.submit(callable).get())
 
-            // current thread's TTL must be exist when using DisableInheritableThreadFactory
-            assertEquals(hello, ttl.get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: defaultValue
+                threadPool.submit(callable).get() shouldBe defaultValue
+            }
+
+            // current thread's TTL must be existed when using DisableInheritableThreadFactory
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun disableInheritable_Executors_TtlDefaultValue_DisableInheritableThreadFactory_TtlWithInitialValue() {
         val threadPool = Executors.newCachedThreadPool(TtlExecutors.getDefaultDisableInheritableThreadFactory())
         try {
@@ -134,13 +138,17 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertEquals(defaultValue, threadPool.submit(callable).get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: defaultValue
+                threadPool.submit(callable).get() shouldBe defaultValue
+            }
 
-            // current thread's TTL must be exist when using DisableInheritableThreadFactory
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed when using DisableInheritableThreadFactory
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
@@ -150,8 +158,9 @@ class InheritableTest {
     fun disableInheritable_Executors_ByAgent() {
         val threadPool = Executors.newCachedThreadPool() as ThreadPoolExecutor
         try {
-            assertEquals(hasTtlTtlAgentRunWithDisableInheritableForThreadPool(),
-                    TtlExecutors.isDisableInheritableThreadFactory(threadPool.threadFactory))
+            TtlExecutors.isDisableInheritableThreadFactory(threadPool.threadFactory) shouldBe
+                    hasTtlAgentRunWithDisableInheritableForThreadPool()
+
         } finally {
             threadPool.shutdown()
         }
@@ -162,7 +171,6 @@ class InheritableTest {
     // ===================================================
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun inheritable_ForkJoinPool() {
         val threadPool = ForkJoinPool(4)
         try {
@@ -173,39 +181,46 @@ class InheritableTest {
 
             // get "hello" value is transmitted by InheritableThreadLocal function!
             // NOTE: Executors.newCachedThreadPool create thread lazily
-            assertEquals(hello, threadPool.submit(callable).get())
+            threadPool.submit(callable).get() shouldBe hello
 
-            // current thread's TTL must be exist
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_DisableInheritableForkJoinWorkerThreadFactory() {
-        val threadPool = ForkJoinPool(4, TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
+        val threadPool = ForkJoinPool(
+            4,
+            TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(),
+            null,
+            false
+        )
         try {
             val ttl = TransmittableThreadLocal<String?>()
             ttl.set(hello)
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertNull(threadPool.submit(callable).get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get().shouldBeNull()
+            }
 
-            // current thread's TTL must be exist when using DisableInheritableForkJoinWorkerThreadFactory
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed when using DisableInheritableForkJoinWorkerThreadFactory
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_TtlDisableInheritableWithInitialValue() {
         val threadPool = ForkJoinPool(4)
         try {
@@ -216,20 +231,23 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertNull(threadPool.submit(callable).get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get().shouldBeNull()
+            }
 
-            // current thread's TTL must be exist
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_TtlDefaultValue_TtlDisableInheritableWithInitialValue() {
         val threadPool = ForkJoinPool(4)
         try {
@@ -240,23 +258,30 @@ class InheritableTest {
             ttl.set(hello)
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get() shouldBe defaultValue
+            }
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertEquals(defaultValue, threadPool.submit(callable).get())
-
-            // current thread's TTL must be exist
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRunOrBelowJava7::class)
     fun disableInheritable_ForkJoinPool_TtlDefaultValue_DisableInheritableForkJoinWorkerThreadFactory_TtlWithInitialValue() {
-        val threadPool = ForkJoinPool(4, TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(), null, false)
+        val threadPool = ForkJoinPool(
+            4,
+            TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory(),
+            null,
+            false
+        )
         try {
             val ttl = object : TransmittableThreadLocal<String>() {
                 override fun initialValue(): String = defaultValue
@@ -266,25 +291,28 @@ class InheritableTest {
 
             val callable = Callable { ttl.get() } // NO TtlWrapper(TtlCallable) here!!
 
-            // when ttl agent is loaded, Callable is wrapped when submit,
-            // so here value is "hello" transmitted by TtlCallable wrapper
-            // IGNORE this test case when TtlAgent is run.
-            assertEquals(defaultValue, threadPool.submit(callable).get())
+            if (TtlAgent.isTtlAgentLoaded()) {
+                // when ttl agent is loaded, Callable is wrapped when submitted,
+                // so here value is "hello" transmitted by TtlCallable wrapper
+                threadPool.submit(callable).get() shouldBe hello
+            } else {
+                // when ttl agent is not loaded: null
+                threadPool.submit(callable).get() shouldBe defaultValue
+            }
 
-            // current thread's TTL must be exist when using DisableInheritableForkJoinWorkerThreadFactory
-            assertEquals(hello, ttl.get())
+            // current thread's TTL must be existed when using DisableInheritableForkJoinWorkerThreadFactory
+            ttl.get() shouldBe hello
         } finally {
             threadPool.shutdown()
         }
     }
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun disableInheritable_ForkJoinPool_ByAgent() {
         val threadPool = ForkJoinPool(4)
         try {
-            assertEquals(hasTtlTtlAgentRunWithDisableInheritableForThreadPool(),
-                    TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(threadPool.factory))
+            TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(threadPool.factory) shouldBe
+                    hasTtlAgentRunWithDisableInheritableForThreadPool()
         } finally {
             threadPool.shutdown()
         }

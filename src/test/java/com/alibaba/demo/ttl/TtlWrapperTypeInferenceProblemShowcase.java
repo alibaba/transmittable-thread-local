@@ -1,6 +1,5 @@
 package com.alibaba.demo.ttl;
 
-import com.alibaba.ttl.TtlWrappers;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class TtlWrapperTypeInferenceProblemShowcase {
     }
 
     private List<Integer> buildSourceList(int length) {
-        List<Integer> l = new ArrayList<Integer>();
+        List<Integer> l = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
             l.add(i);
         }

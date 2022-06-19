@@ -53,6 +53,6 @@ class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced 
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " - " + executor.toString();
+        return this.getClass().getName() + " - " + executor;
     }
 }

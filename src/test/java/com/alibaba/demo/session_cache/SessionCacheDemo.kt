@@ -4,21 +4,22 @@ import com.alibaba.expandThreadPool
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.threadpool.TtlExecutors
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.reactivex.Flowable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import org.junit.*
-import org.junit.Assert.assertTrue
 import java.util.concurrent.*
 
 
-class SessionCacheDemo {
+class SessionCacheDemo : AnnotationSpec() {
     @Test
     fun invokeInThreadOfThreadPool() {
         val bizService = BizService()
-        val printer: () -> Unit = { System.out.printf("[%20s] cache: %s%n", Thread.currentThread().name, bizService.getCacheItem()) }
+        val printer: () -> Unit =
+            { System.out.printf("[%20s] cache: %s%n", Thread.currentThread().name, bizService.getCacheItem()) }
 
-        executorService.submit(Callable<Item> {
+        executorService.submit(Callable {
             bizService.getItemByCache().also { printer() }
         }).get()
 
@@ -32,17 +33,47 @@ class SessionCacheDemo {
     @Test
     fun invokeInThreadOfRxJava() {
         val bizService = BizService()
-        val printer: (Item) -> Unit = { System.out.printf("[%30s] cache: %s%n", Thread.currentThread().name, bizService.getCacheItem()) }
+        val printer: (Item) -> Unit =
+            { System.out.printf("[%30s] cache: %s%n", Thread.currentThread().name, bizService.getCacheItem()) }
 
         Flowable.just(bizService)
-                .observeOn(Schedulers.io())
-                .map<Item>(BizService::getItemByCache)
-                .doOnNext(printer)
-                .blockingSubscribe(printer)
+            .observeOn(Schedulers.io())
+            .map(BizService::getItemByCache)
+            .doOnNext(printer)
+            .blockingSubscribe(printer)
 
         // here service invocation will use item cache
         bizService.getItemByCache()
-                .let(printer)
+            .let(printer)
+    }
+
+    @BeforeAll
+    fun beforeAll() {
+        // expand Schedulers.io()
+        (0 until Runtime.getRuntime().availableProcessors() * 2)
+            .map {
+                FutureTask {
+                    Thread.sleep(10)
+                    it
+                }.apply { Schedulers.io().scheduleDirect(this) }
+            }
+            .forEach { it.get() }
+
+        // TTL integration for RxJava
+        RxJavaPlugins.setScheduleHandler(TtlRunnable::get)
+    }
+
+
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        // Fail to shut down thread pool
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
+    }
+
+    @After
+    fun tearDown() {
+        BizService.clearCache()
     }
 
     companion object {
@@ -51,37 +82,6 @@ class SessionCacheDemo {
             // TTL integration for thread pool
             TtlExecutors.getTtlExecutorService(it)!!
         }
-
-        @BeforeClass
-        @JvmStatic
-        @Suppress("unused")
-        fun beforeClass() {
-            // expand Schedulers.io()
-            (0 until Runtime.getRuntime().availableProcessors() * 2)
-                    .map {
-                        FutureTask {
-                            Thread.sleep(10)
-                            it
-                        }.apply { Schedulers.io().scheduleDirect(this) }
-                    }
-                    .forEach { it.get() }
-
-            // TTL integration for RxJava
-            RxJavaPlugins.setScheduleHandler(TtlRunnable::get)
-        }
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
-    }
-
-    @After
-    fun tearDown() {
-        BizService.clearCache()
     }
 }
 

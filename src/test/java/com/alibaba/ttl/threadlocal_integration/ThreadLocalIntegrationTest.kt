@@ -4,9 +4,11 @@ import com.alibaba.expandThreadPool
 import com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*
 import com.alibaba.ttl.TtlCopier
 import com.alibaba.ttl.threadpool.TtlExecutors
-import org.junit.AfterClass
-import org.junit.Assert.*
-import org.junit.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -14,11 +16,11 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
-class ThreadLocalIntegrationTest {
+class ThreadLocalIntegrationTest : AnnotationSpec() {
     @Test
     fun threadLocal_do_NOT_transmit() {
         val threadLocal = ThreadLocal<String>()
-        unregisterThreadLocal(threadLocal).also { assertFalse(it) }
+        unregisterThreadLocal(threadLocal).shouldBeFalse()
         threadLocal.set(PARENT)
 
         assertNotTransmit(threadLocal)
@@ -26,74 +28,74 @@ class ThreadLocalIntegrationTest {
 
     private fun assertNotTransmit(threadLocal: ThreadLocal<String>) {
         val future = executorService.submit {
-            assertNull(threadLocal.get())
+            threadLocal.get().shouldBeNull()
             threadLocal.set(CHILD)
         }
 
-        assertEquals(PARENT, threadLocal.get())
+        threadLocal.get() shouldBe PARENT
         future.get(100, TimeUnit.MILLISECONDS)
 
-        unregisterThreadLocal(threadLocal).also { assertFalse(it) }
+        unregisterThreadLocal(threadLocal).shouldBeFalse()
     }
 
     @Test
     fun threadLocal_registerThreadLocalWithShadowCopier_do_transmit() {
         val threadLocal = ThreadLocal<String>()
-        unregisterThreadLocal(threadLocal).also { assertFalse(it) }
+        unregisterThreadLocal(threadLocal).shouldBeFalse()
         threadLocal.set(PARENT)
 
-        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+        registerThreadLocalWithShadowCopier(threadLocal).shouldBeTrue()
         assertTransmitShadowCopy(threadLocal)
 
         // Unregister
-        unregisterThreadLocal(threadLocal).also { assertTrue(it) }
+        unregisterThreadLocal(threadLocal).shouldBeTrue()
         assertNotTransmit(threadLocal)
     }
 
 
     private fun assertTransmitShadowCopy(threadLocal: ThreadLocal<String>) {
         val future = executorService.submit {
-            assertEquals(PARENT, threadLocal.get())
+            threadLocal.get() shouldBe PARENT
             threadLocal.set(CHILD)
         }
 
-        assertEquals(PARENT, threadLocal.get())
+        threadLocal.get() shouldBe PARENT
         future.get(100, TimeUnit.MILLISECONDS)
     }
 
     @Test
     fun threadLocal_registerThreadLocal_and_force() {
         val threadLocal = ThreadLocal<String>()
-        unregisterThreadLocal(threadLocal).also { assertFalse(it) }
-        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER).also { assertTrue(it) }
+        unregisterThreadLocal(threadLocal).shouldBeFalse()
+        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER).shouldBeTrue()
 
         threadLocal.set(PARENT)
         assertTransmitSuffixCopy(threadLocal)
 
-        registerThreadLocalWithShadowCopier(threadLocal, true).also { assertTrue(it) }
+        registerThreadLocalWithShadowCopier(threadLocal, true).shouldBeTrue()
         // copier changed
         assertTransmitShadowCopy(threadLocal)
 
-        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER).also { assertFalse(it) }
+        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER).shouldBeFalse()
         // copier do not change
         assertTransmitShadowCopy(threadLocal)
 
-        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER, true).also { assertTrue(it) }
+        registerThreadLocal(threadLocal, APPEND_SUFFIX_COPIER, true).shouldBeTrue()
         // copier changed
         assertTransmitSuffixCopy(threadLocal)
 
         // Unregister
-        unregisterThreadLocal(threadLocal).also { assertTrue(it) }
+        unregisterThreadLocal(threadLocal).shouldBeTrue()
         assertNotTransmit(threadLocal)
     }
 
     private fun assertTransmitSuffixCopy(threadLocal: ThreadLocal<String>) {
         val future = executorService.submit {
-            assertEquals("$PARENT$COPY_SUFFIX", threadLocal.get())
+            threadLocal.get() shouldBe "$PARENT$COPY_SUFFIX"
             threadLocal.set(CHILD)
         }
 
-        assertEquals(PARENT, threadLocal.get())
+        threadLocal.get() shouldBe PARENT
         future.get(100, TimeUnit.MILLISECONDS)
     }
 
@@ -104,22 +106,22 @@ class ThreadLocalIntegrationTest {
         val threadLocal = object : ThreadLocal<String>() {
             override fun initialValue(): String = initValue
         }
-        assertEquals(initValue, threadLocal.get())
+        threadLocal.get() shouldBe initValue
         threadLocal.set(PARENT)
 
-        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+        registerThreadLocalWithShadowCopier(threadLocal).shouldBeTrue()
 
         runCallableWithClear {
             val future = executorService.submit {
-                assertEquals(initValue, threadLocal.get())
+                threadLocal.get() shouldBe initValue
                 threadLocal.set(CHILD)
             }
 
-            assertEquals(initValue, threadLocal.get())
+            threadLocal.get() shouldBe initValue
             future.get(100, TimeUnit.MILLISECONDS)
         }
 
-        assertEquals(PARENT, threadLocal.get())
+        threadLocal.get() shouldBe PARENT
     }
 
     @Test
@@ -129,14 +131,14 @@ class ThreadLocalIntegrationTest {
             override fun initialValue(): String = initValue
         }
         threadLocal.set(PARENT)
-        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+        registerThreadLocalWithShadowCopier(threadLocal).shouldBeTrue()
 
         val blockingQueue = LinkedBlockingQueue<String>(1)
         thread {
             blockingQueue.add(threadLocal.get())
         }
 
-        assertEquals(initValue, blockingQueue.take())
+        blockingQueue.take() shouldBe initValue
     }
 
     @Test
@@ -146,14 +148,21 @@ class ThreadLocalIntegrationTest {
             override fun initialValue(): String = initValue
         }
         threadLocal.set(PARENT)
-        registerThreadLocalWithShadowCopier(threadLocal).also { assertTrue(it) }
+        registerThreadLocalWithShadowCopier(threadLocal).shouldBeTrue()
 
         val blockingQueue = LinkedBlockingQueue<String>(1)
         thread {
             blockingQueue.add(threadLocal.get())
         }
 
-        assertEquals(PARENT, blockingQueue.take())
+        blockingQueue.take() shouldBe PARENT
+    }
+
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        // Fail to shut down thread pool
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
     }
 
     companion object {
@@ -166,13 +175,5 @@ class ThreadLocalIntegrationTest {
             expandThreadPool(it)
             TtlExecutors.getTtlExecutorService(it)
         }!!
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
     }
 }

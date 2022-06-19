@@ -1,14 +1,14 @@
 package com.alibaba.third_part_lib_test
 
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 
-class ExecutorsTest {
+class ExecutorsTest : AnnotationSpec() {
     @Test
     fun test_remove_of_ThreadPoolExecutor() {
         val size = 2

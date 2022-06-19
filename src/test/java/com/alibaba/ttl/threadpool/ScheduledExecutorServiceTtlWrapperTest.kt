@@ -4,17 +4,14 @@ import com.alibaba.*
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.testmodel.Call
 import com.alibaba.ttl.testmodel.Task
-import org.junit.After
-import org.junit.AfterClass
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
 import java.util.concurrent.*
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class ScheduledExecutorServiceTtlWrapperTest {
+class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
 
     private lateinit var ttlInstances: ConcurrentMap<String, TransmittableThreadLocal<String>>
 
@@ -25,7 +22,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
 
     @After
     fun tearDown() {
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
@@ -38,7 +35,6 @@ class ScheduledExecutorServiceTtlWrapperTest {
 
 
         executorService.execute(task)
-        Thread.sleep(10)
 
         // child Inheritable
         assertChildTtlValuesWithParentCreateAfterCreateChild("1", task.copied)
@@ -117,7 +113,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(listOf(call1, call2), 10, TimeUnit.MILLISECONDS)
+        val futures = executorService.invokeAll(listOf(call1, call2), 100, TimeUnit.MILLISECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -176,7 +172,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService.schedule(task, 10, TimeUnit.MILLISECONDS)
+        val future = executorService.schedule(task, 100, TimeUnit.MILLISECONDS)
         assertNull(future.get())
 
         // child Inheritable
@@ -190,7 +186,7 @@ class ScheduledExecutorServiceTtlWrapperTest {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService.schedule(call, 10, TimeUnit.MILLISECONDS)
+        val future = executorService.schedule(call, 100, TimeUnit.MILLISECONDS)
         assertEquals("ok", future.get())
 
         // child Inheritable
@@ -229,19 +225,17 @@ class ScheduledExecutorServiceTtlWrapperTest {
         assertChildTtlValuesWithParentCreateAfterCreateChild("1", task.copied)
     }
 
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+    }
+
     companion object {
         private val executorService: ScheduledExecutorService = ScheduledThreadPoolExecutor(3).let {
             it.setKeepAliveTime(10, TimeUnit.SECONDS)
             expandThreadPool(it)
             TtlExecutors.getTtlScheduledExecutorService(it)
         }!!
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
     }
 }
