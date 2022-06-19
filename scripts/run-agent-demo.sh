@@ -2,11 +2,11 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-source bash-buddy/lib/trap_error_info.sh
-source bash-buddy/lib/common_utils.sh
+cd ..
 
-source ./ttl_build.sh
+readonly mainClass=${1:-com.alibaba.demo.ttl.agent.AgentDemo}
 
-cu::log_then_run "${JAVA_CMD[@]}" -cp "$(getClasspathWithoutTtlJar)" \
-    "-javaagent:$(getTtlJarPath)=ttl.agent.logger:STDOUT" \
-    com.alibaba.demo.ttl.agent.AgentDemo
+./mvnw -Penable-ttl-agent-for-test \
+  package exec:exec \
+  -DskipTests \
+  -Dexec.mainClass="$mainClass"

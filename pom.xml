@@ -476,6 +476,32 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
+				<plugin>
+					<!--
+						https://www.mojohaus.org/exec-maven-plugin/
+						https://www.mojohaus.org/exec-maven-plugin/exec-mojo.html
+					-->
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>3.0.0</version>
+					<configuration>
+						<executable>${java.home}/bin/java</executable>
+						<classpathScope>test</classpathScope>
+						<arguments>
+							<argument>-Xmx256m</argument>
+							<argument>-Xms256m</argument>
+							<argument>-ea</argument>
+							<argument>-server</argument>
+							<argument>-Duser.language=en</argument>
+							<argument>-Duser.country=US</argument>
+
+							<argument>-classpath</argument>
+							<classpath/>
+
+							<argument>${exec.mainClass}</argument>
+						</arguments>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -509,11 +535,11 @@
 				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
 				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
 				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
-				<ttl.agent.opt>
-					-Drun-ttl-test-under-agent=true
-					${ttl.agent.extra.d.options}
-					-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}
-				</ttl.agent.opt>
+				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
+				<ttl.agent.jvm.args>
+					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
+				</ttl.agent.jvm.args>
+				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
 			</properties>
 			<build>
 				<plugins>
@@ -525,7 +551,31 @@
 						<configuration>
 							<forkCount>1</forkCount>
 							<redirectTestOutputToFile>true</redirectTestOutputToFile>
-							<argLine>@{argLine} ${ttl.agent.opt}</argLine>
+							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<!--
+							https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html
+						-->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-Xmx256m</argument>
+								<argument>-Xms256m</argument>
+								<argument>-ea</argument>
+								<argument>-server</argument>
+								<argument>-Duser.language=en</argument>
+								<argument>-Duser.country=US</argument>
+
+								<argument>${ttl.agent.jvm.arg}</argument>
+
+								<argument>-classpath</argument>
+								<classpath/>
+
+								<argument>${exec.mainClass}</argument>
+							</arguments>
 						</configuration>
 					</plugin>
 				</plugins>

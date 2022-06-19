@@ -5,13 +5,15 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
-source bash-buddy/lib/trap_error_info.sh
-source bash-buddy/lib/common_utils.sh
 
-source ./ttl_build.sh skipClean
-
-ttl_jar_path="$(readlink -f "$(getTtlJarPath)")"
 JCC="$(readlink -f "$(command -v japi-compliance-checker.pl)")"
+
+
+
+cd ..
+mvn clean package
+
+ttl_jar_path=$(echo "target/transmittable-thread-local-"*.jar)
 
 work_dir="target/japi-compliance-checker"
 mkdir -p $work_dir
