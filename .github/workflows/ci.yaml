@@ -1,0 +1,45 @@
+# Quickstart for GitHub Actions
+# https://docs.github.com/en/actions/quickstart
+
+name: CI
+on: [ push, pull_request ]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        java: [ 8, 11, 16, 17, 18 ]
+      fail-fast: false
+      max-parallel: 32
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
+          cache: 'maven'
+      - name: Build with Maven
+        run: ./mvnw -V --no-transfer-progress clean package
+      - name: Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool, Timer/TimerTask
+        run: >
+          ./mvnw -V --no-transfer-progress
+          -Penable-ttl-agent-for-test
+          surefire:test
+          '-Dttl.agent.extra.d.options=-Drun-ttl-test-under-agent-with-enable-timer-task=true'
+      - name: Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement
+        run: >
+          ./mvnw -V --no-transfer-progress
+          -Penable-ttl-agent-for-test
+          surefire:test
+          '-Dttl.agent.extra.args=ttl.agent.disable.inheritable.for.thread.pool:true'
+          '-Dttl.agent.extra.d.options=-Drun-ttl-test-under-agent-with-disable-inheritable=true'
+      - name: Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task"
+        run: >
+          ./mvnw -V --no-transfer-progress
+          -Penable-ttl-agent-for-test
+          surefire:test
+          '-Dttl.agent.extra.args=ttl.agent.enable.timer.task:true'
+          '-Dttl.agent.extra.d.options=-Drun-ttl-test-under-agent-with-enable-timer-task=true'
