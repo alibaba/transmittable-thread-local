@@ -1,7 +1,8 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 <p align="center">
-<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white" alt="Build Status"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/master?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
+<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
 <a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white" alt="Coverage Status"></a>
 <a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://img.shields.io/codeclimate/maintainability/alibaba/transmittable-thread-local?logo=codeclimate&logoColor=white" alt="Maintainability"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=java&logoColor=white" alt="JDK support"></a>
