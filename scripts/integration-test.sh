@@ -18,7 +18,6 @@ readonly PREPARE_JDKS_INSTALL_BY_SDKMAN=(
   8
   "$default_build_jdk_version"
   17
-  18
 )
 
 source "$BASH_BUDDY_ROOT/lib/prepare_jdks.sh"
@@ -70,13 +69,17 @@ for jdk in "${PREPARE_JDKS_INSTALL_BY_SDKMAN[@]}"; do
 
   cu::head_line_echo "test with TTL Agent and Java: $JAVA_HOME"
 
-  cu::blue_echo 'Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool'
-  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip
+  cu::blue_echo 'Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool, Timer/TimerTask'
+  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+    -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
 
   cu::blue_echo 'Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement'
   jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
     -Dttl.agent.extra.args='ttl.agent.disable.inheritable.for.thread.pool:true' \
     -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-disable-inheritable=true'
 
-  cu::log_then_run ./scripts/run-agent-test.sh skipClean
+  cu::blue_echo 'Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task"'
+  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+    -Dttl.agent.extra.args='ttl.agent.enable.timer.task:true' \
+    -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
 done
