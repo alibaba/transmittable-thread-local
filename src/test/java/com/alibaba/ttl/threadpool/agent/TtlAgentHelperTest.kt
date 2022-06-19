@@ -1,20 +1,19 @@
 package com.alibaba.ttl.threadpool.agent
 
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.threadpool.agent.TtlAgentHelper.*
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.test.config.TestCaseConfig
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.maps.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.Assert.*
-import org.junit.Rule
-import org.junit.Test
 
-class TtlAgentHelperTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class TtlAgentHelperTest : AnnotationSpec() {
+    override fun defaultTestCaseConfig(): TestCaseConfig =
+        TestCaseConfig(enabled = !TtlAgent.isTtlAgentLoaded())
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_isBooleanOptionSet() {
 
         // === test with KV config only  ===
@@ -87,7 +86,6 @@ class TtlAgentHelperTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_getOptionStringListValues() {
 
         // === test with KV config only  ===
@@ -139,48 +137,56 @@ class TtlAgentHelperTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_splitCommaColonStringToKV() {
-        assertEquals(emptyMap<String, String>(), splitCommaColonStringToKV(null))
-        assertEquals(emptyMap<String, String>(), splitCommaColonStringToKV(""))
-        assertEquals(emptyMap<String, String>(), splitCommaColonStringToKV("   "))
+        splitCommaColonStringToKV(null).shouldBeEmpty()
+        splitCommaColonStringToKV("").shouldBeEmpty()
+        splitCommaColonStringToKV("   ").shouldBeEmpty()
+
+        splitCommaColonStringToKV("k1,k2") shouldBe mapOf("k1" to "", "k2" to "")
+
+        splitCommaColonStringToKV("   k1,   k2 ") shouldBe mapOf("k1" to "", "k2" to "")
+
+        splitCommaColonStringToKV("ttl.agent.logger:STDOUT") shouldBe mapOf("ttl.agent.logger" to "STDOUT")
+        splitCommaColonStringToKV("k1:v1,ttl.agent.logger:STDOUT") shouldBe
+                mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT")
 
 
-        assertEquals(mapOf("k1" to "", "k2" to ""), splitCommaColonStringToKV(
-                "k1,k2"))
-        assertEquals(mapOf("k1" to "", "k2" to ""), splitCommaColonStringToKV(
-                "   k1,   k2 "))
+        splitCommaColonStringToKV("     k1     :v1  , ttl.agent.logger    :STDOUT   ") shouldBe
+                mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT")
 
-        assertEquals(mapOf("ttl.agent.logger" to "STDOUT"), splitCommaColonStringToKV(
-                "ttl.agent.logger:STDOUT"))
-        assertEquals(mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT"), splitCommaColonStringToKV(
-                "k1:v1,ttl.agent.logger:STDOUT"))
-
-        assertEquals(mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT"), splitCommaColonStringToKV(
-                "     k1     :v1  , ttl.agent.logger    :STDOUT   "))
-
-        assertEquals(mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT", "k3" to ""), splitCommaColonStringToKV(
-                "     k1     :v1  , ttl.agent.logger    :STDOUT   ,k3"))
+        splitCommaColonStringToKV("     k1     :v1  , ttl.agent.logger    :STDOUT   ,k3") shouldBe
+                mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT", "k3" to "")
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun test_splitListStringToStringList() {
-        assertEquals(emptyList<String>(), splitListStringToStringList(null))
-        assertEquals(emptyList<String>(), splitListStringToStringList(""))
-        assertEquals(emptyList<String>(), splitListStringToStringList("   "))
-        assertEquals(emptyList<String>(), splitListStringToStringList("   |"))
-        assertEquals(emptyList<String>(), splitListStringToStringList("   |  "))
-        assertEquals(emptyList<String>(), splitListStringToStringList("   | | "))
+        splitListStringToStringList(null).shouldBeEmpty()
+        splitListStringToStringList("").shouldBeEmpty()
+        splitListStringToStringList("   ").shouldBeEmpty()
+        splitListStringToStringList("   |").shouldBeEmpty()
+        splitListStringToStringList("   |  ").shouldBeEmpty()
+        splitListStringToStringList("   | | ").shouldBeEmpty()
 
-        assertEquals(listOf("v1", "v2"), splitListStringToStringList("v1|v2"))
-        assertEquals(listOf("v1", "v2", "v3"), splitListStringToStringList("  v1|v2  |v3  "))
+        splitListStringToStringList("v1|v2")
+            .shouldContainExactly("v1", "v2")
+        splitListStringToStringList("  v1|v2  |v3  ")
+            .shouldContainExactly("v1", "v2", "v3")
 
-        assertEquals(listOf("com.alibaba.ttl.TtlExecutorTransformlet"),
-            splitListStringToStringList("com.alibaba.ttl.TtlExecutorTransformlet"))
-        assertEquals(listOf("com.alibaba.ttl.TtlExecutorTransformlet", "com.alibaba.ttl.TtlForkJoinTransformlet", "v3"),
-            splitListStringToStringList("com.alibaba.ttl.TtlExecutorTransformlet|com.alibaba.ttl.TtlForkJoinTransformlet|v3"))
-        assertEquals(listOf("com.alibaba.ttl.TtlExecutorTransformlet", "com.alibaba.ttl.TtlForkJoinTransformlet", "v3"),
-            splitListStringToStringList("  com.alibaba.ttl.TtlExecutorTransformlet|  com.alibaba.ttl.TtlForkJoinTransformlet   |v3  "))
+        splitListStringToStringList("com.alibaba.ttl.TtlExecutorTransformlet")
+            .shouldContainExactly("com.alibaba.ttl.TtlExecutorTransformlet")
+
+        splitListStringToStringList("com.alibaba.ttl.TtlExecutorTransformlet|com.alibaba.ttl.TtlForkJoinTransformlet|v3")
+            .shouldContainExactly(
+                "com.alibaba.ttl.TtlExecutorTransformlet",
+                "com.alibaba.ttl.TtlForkJoinTransformlet",
+                "v3"
+            )
+
+        splitListStringToStringList("  com.alibaba.ttl.TtlExecutorTransformlet|  com.alibaba.ttl.TtlForkJoinTransformlet   |v3  ")
+            .shouldContainExactly(
+                "com.alibaba.ttl.TtlExecutorTransformlet",
+                "com.alibaba.ttl.TtlForkJoinTransformlet",
+                "v3"
+            )
     }
 }

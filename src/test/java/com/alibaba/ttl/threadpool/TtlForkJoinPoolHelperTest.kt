@@ -1,21 +1,12 @@
 package com.alibaba.ttl.threadpool
 
-import com.alibaba.support.junit.conditional.BelowJava7
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TtlUnwrap
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
-import org.junit.Rule
-import org.junit.Test
 import java.util.concurrent.ForkJoinPool
 
-class TtlForkJoinPoolHelperTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
-
+class TtlForkJoinPoolHelperTest : AnnotationSpec() {
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_DisableInheritableForkJoinWorkerThreadFactory() {
         TtlForkJoinPoolHelper.getDefaultDisableInheritableForkJoinWorkerThreadFactory().let {
             assertTrue(it is DisableInheritableForkJoinWorkerThreadFactory)
@@ -27,7 +18,6 @@ class TtlForkJoinPoolHelperTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_null() {
         assertFalse(TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(null))
         assertNull(TtlForkJoinPoolHelper.unwrap(null))

@@ -1,11 +1,11 @@
 package com.alibaba.ttl
 
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
-import org.junit.Test
 import java.util.*
 
 @Suppress("DEPRECATION")
-class TtlTimerTaskTest {
+class TtlTimerTaskTest : AnnotationSpec() {
     @Test
     fun test_get() {
         assertNull(TtlTimerTask.get(null))

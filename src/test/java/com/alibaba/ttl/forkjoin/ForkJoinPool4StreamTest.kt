@@ -1,28 +1,22 @@
 package com.alibaba.ttl.forkjoin
 
 import com.alibaba.expandThreadPool
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRunOrBelowJava8
-import com.alibaba.support.junit.conditional.NoAgentRunOrBelowJava8
 import com.alibaba.ttl.TransmittableThreadLocal
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Rule
-import org.junit.Test
+import com.alibaba.ttl.threadpool.agent.TtlAgent
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import java.util.concurrent.ForkJoinPool
 
 
 private const val hello = "hello"
 
-class ForkJoinPool4StreamTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class ForkJoinPool4StreamTest : AnnotationSpec() {
 
     @Test
-    @ConditionalIgnore(condition = NoAgentRunOrBelowJava8::class)
     fun test_stream_with_agent() {
+        if (!TtlAgent.isTtlAgentLoaded()) return
+
         expandThreadPool(ForkJoinPool.commonPool())
 
         val ttl = TransmittableThreadLocal<String?>()
@@ -30,22 +24,21 @@ class ForkJoinPool4StreamTest {
 
         (0..100).map {
             ForkJoinPool.commonPool().submit {
-                assertEquals(hello, ttl.get())
+                ttl.get() shouldBe hello
             }
         }.forEach { it.get() }
 
         (0..1000).toList().stream().parallel().mapToInt {
-            assertEquals(hello, ttl.get())
+            ttl.get() shouldBe hello
 
             it
-        }.sum().let {
-            assertEquals((0..1000).sum(), it)
-        }
+        }.sum() shouldBe (0..1000).sum()
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRunOrBelowJava8::class)
     fun test_stream_no_agent() {
+        if (TtlAgent.isTtlAgentLoaded()) return
+
         val name = Thread.currentThread().name
         expandThreadPool(ForkJoinPool.commonPool())
 
@@ -54,18 +47,16 @@ class ForkJoinPool4StreamTest {
 
         (0..100).map {
             ForkJoinPool.commonPool().submit {
-                if (Thread.currentThread().name == name) assertEquals(hello, ttl.get())
-                else assertNull(ttl.get())
+                if (Thread.currentThread().name == name) ttl.get() shouldBe hello
+                else ttl.get().shouldBeNull()
             }
         }.forEach { it.get() }
 
         (0..1000).toList().stream().parallel().mapToInt {
-            if (Thread.currentThread().name == name) assertEquals(hello, ttl.get())
-            else assertNull(ttl.get())
+            if (Thread.currentThread().name == name) ttl.get() shouldBe hello
+            else ttl.get().shouldBeNull()
 
             it
-        }.sum().let {
-            assertEquals((0..1000).sum(), it)
-        }
+        }.sum() shouldBe (0..1000).sum()
     }
 }

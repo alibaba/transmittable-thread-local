@@ -2,12 +2,13 @@ package com.alibaba.ttl
 
 import com.alibaba.*
 import com.alibaba.ttl.testmodel.Call
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.AfterClass
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.Assert.*
-import org.junit.Test
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class TtlCallableTest {
+class TtlCallableTest : AnnotationSpec() {
     @Test
     fun test_TtlCallable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
@@ -96,7 +97,7 @@ class TtlCallableTest {
         // child Inheritable
         assertChildTtlValues("1", call.copied)
 
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
@@ -110,14 +111,12 @@ class TtlCallableTest {
 
         assertEquals("ok", executorService.submit(ttlCallable).get())
 
-        try {
-            executorService.submit(ttlCallable).get()
-            fail()
-        } catch (expected: ExecutionException) {
-            assertThat<Throwable>(expected.cause, instanceOf(IllegalStateException::class.java))
-            assertThat<String>(expected.message, containsString("TTL value reference is released after call!"))
-        }
 
+        val exception = shouldThrow<ExecutionException> {
+            executorService.submit(ttlCallable).get()
+        }
+        exception.cause.shouldBeInstanceOf<IllegalStateException>()
+        exception.message shouldContain "TTL value reference is released after call!"
     }
 
     @Test
@@ -130,19 +129,16 @@ class TtlCallableTest {
     @Test
     fun test_get_idempotent() {
         val call = TtlCallable.get(Call("1"))
-        try {
-            TtlCallable.get(call)
-            fail()
-        } catch (e: IllegalStateException) {
-            assertThat<String>(e.message, containsString("Already TtlCallable"))
-        }
 
+        shouldThrow<java.lang.IllegalStateException> {
+            TtlCallable.get(call)
+        }.message shouldContain "Already TtlCallable"
     }
 
     @Test
     @Throws(Exception::class)
     fun test_get_nullInput() {
-        assertNull(TtlCallable.get<Any>(null))
+        TtlCallable.get<Any>(null).shouldBeNull()
     }
 
     @Test
@@ -152,13 +148,14 @@ class TtlCallableTest {
         val call3 = Call("3")
 
         val callList = TtlCallable.gets(
-            listOf<Callable<String>?>(call1, call2, null, call3))
+            listOf<Callable<String>?>(call1, call2, null, call3)
+        )
 
-        assertEquals(4, callList.size.toLong())
-        assertThat(callList[0], instanceOf(TtlCallable::class.java))
-        assertThat(callList[1], instanceOf(TtlCallable::class.java))
-        assertNull(callList[2])
-        assertThat(callList[3], instanceOf(TtlCallable::class.java))
+        callList.shouldHaveSize(4)
+        callList[0].shouldBeInstanceOf<TtlCallable<*>>()
+        callList[1].shouldBeInstanceOf<TtlCallable<*>>()
+        callList[2].shouldBeNull()
+        callList[3].shouldBeInstanceOf<TtlCallable<*>>()
     }
 
     @Test
@@ -182,15 +179,15 @@ class TtlCallableTest {
         assertEquals(listOf<Callable<String>>(), TtlCallable.unwraps<String>(null))
     }
 
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+    }
+
     companion object {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
     }
 }
+
+

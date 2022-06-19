@@ -1,15 +1,13 @@
 package com.alibaba.ttl.threadpool
 
+import com.alibaba.hasTtlAgentRun
 import com.alibaba.noTtlAgentRun
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.IsAgentRun
 import com.alibaba.ttl.TtlCallable
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.TtlUnwrap
 import com.alibaba.ttl.threadpool.TtlExecutors.*
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
-import org.junit.Rule
-import org.junit.Test
 import java.util.concurrent.*
 import java.util.concurrent.Executors.newScheduledThreadPool
 import java.util.concurrent.atomic.AtomicInteger
@@ -17,10 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class TtlExecutorsTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class TtlExecutorsTest : AnnotationSpec() {
 
     ///////////////////////////////////////////////
     // test getTtl*ExecutorService
@@ -184,8 +179,9 @@ class TtlExecutorsTest {
      * https://github.com/alibaba/transmittable-thread-local/issues/330
      */
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = IsAgentRun::class)
     fun test_reproduce_ClassCastException_of_issue_330() {
+        if (hasTtlAgentRun()) return
+
         val priorityBlockingQueue = PriorityBlockingQueue<Runnable>()
 
         Pair(
@@ -226,8 +222,9 @@ class TtlExecutorsTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = IsAgentRun::class)
     fun test_reproduce_ClassCastException_explicit_comparator() {
+        if (hasTtlAgentRun()) return
+
         val priorityBlockingQueue = PriorityBlockingQueue(11, compareBy<Runnable> { (it as BizOrderTask).order })
 
         Pair(

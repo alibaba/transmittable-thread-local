@@ -4,15 +4,12 @@
 // so agent will transform MyThreadPoolExecutor
 package com.alibaba.test.ttl.threadpool
 
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
-import com.alibaba.support.junit.conditional.NoAgentRun
+import com.alibaba.hasTtlAgentRun
+import com.alibaba.noTtlAgentRun
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.threadpool.TtlExecutors
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.*
 
@@ -47,8 +44,9 @@ class BeforeAndAfterExecuteMethodOfExecutorSubclassTest {
     private val count = 10
 
     @Test
-    @ConditionalIgnore(condition = NoAgentRun::class)
     fun underAgent() {
+        if (noTtlAgentRun()) return
+
         val myThreadPoolExecutor = MyThreadPoolExecutor(count)
 
         (0 until count).map {
@@ -66,8 +64,9 @@ class BeforeAndAfterExecuteMethodOfExecutorSubclassTest {
      * https://github.com/alibaba/transmittable-thread-local/issues/133#issuecomment-1068793261
      */
     @Test
-    @ConditionalIgnore(condition = NoAgentRun::class)
     fun underAgent_task_is_explicit_TtlRunnable__should_not_be_unwrapped() {
+        if (noTtlAgentRun()) return
+
         val myThreadPoolExecutor = MyThreadPoolExecutor(count)
 
         (0 until count).map {
@@ -82,8 +81,9 @@ class BeforeAndAfterExecuteMethodOfExecutorSubclassTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun noAgent_task_is_TtlRunnable() {
+        if (hasTtlAgentRun()) return
+
         val myThreadPoolExecutor = MyThreadPoolExecutor(count)
         val ttlExecutorService = TtlExecutors.getTtlExecutorService(myThreadPoolExecutor)!!
 
@@ -98,8 +98,9 @@ class BeforeAndAfterExecuteMethodOfExecutorSubclassTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class)
     fun noAgent_task_is_NOT_TtlRunnable() {
+        if (hasTtlAgentRun()) return
+
         val myThreadPoolExecutor = MyThreadPoolExecutor(count)
 
         (0 until count).map {
@@ -111,8 +112,4 @@ class BeforeAndAfterExecuteMethodOfExecutorSubclassTest {
         assertEquals(count * 2, myThreadPoolExecutor.runnableList.size)
         assertTrue(myThreadPoolExecutor.runnableList.all { it is MyRunnable })
     }
-
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
 }
