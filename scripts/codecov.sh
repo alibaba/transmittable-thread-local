@@ -14,6 +14,6 @@ prepare_jdks::switch_to_jdk 8
 # about codecov: example-java-maven
 # https://github.com/codecov/example-java-maven/blob/master/.travis.yml
 
-jvb::mvn_cmd -Pgen-code-cov clean cobertura:cobertura
+jvb::mvn_cmd -Pgen-code-cov clean test
 
 bash <(curl -s https://codecov.io/bash)
