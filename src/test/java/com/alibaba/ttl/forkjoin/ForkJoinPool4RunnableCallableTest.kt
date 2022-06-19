@@ -1,27 +1,19 @@
 package com.alibaba.ttl.forkjoin
 
 import com.alibaba.*
-import com.alibaba.support.junit.conditional.BelowJava7
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TtlCallable
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.testmodel.Call
 import com.alibaba.ttl.testmodel.Task
-import org.junit.Assert
-import org.junit.Rule
-import org.junit.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import java.util.concurrent.ForkJoinPool
 
 private val pool = ForkJoinPool()
 
-class ForkJoinPool4RunnableCallableTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class ForkJoinPool4RunnableCallableTest : AnnotationSpec() {
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_Runnable() {
         val ttlInstances = createParentTtlInstances()
 
@@ -50,7 +42,6 @@ class ForkJoinPool4RunnableCallableTest {
     }
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_Callable() {
         val ttlInstances = createParentTtlInstances()
 
@@ -67,7 +58,7 @@ class ForkJoinPool4RunnableCallableTest {
             createParentTtlInstancesAfterCreateChild(ttlInstances)
         }
 
-        Assert.assertEquals("ok", future.get())
+        future.get() shouldBe "ok"
 
 
         // child Inheritable

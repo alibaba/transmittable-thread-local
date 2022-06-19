@@ -1,27 +1,19 @@
 package com.alibaba.third_part_lib_test
 
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
-import com.alibaba.support.junit.conditional.IsAgentRun
+import io.kotest.assertions.fail
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import javassist.ClassPool
 import javassist.CtClass
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
-import org.junit.Rule
-import org.junit.Test
 
 /**
  * [simplify the try-finally code gen by javassist, do not need copy method #115](https://github.com/alibaba/transmittable-thread-local/issues/115)
  */
-class JavassistTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class JavassistTest : AnnotationSpec() {
 
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class) // skip unit test for Javassist on agent, because Javassist is repackaged
     fun insertAfter_as_finally() {
         val classPool = ClassPool(true)
         val ctClass = classPool.getCtClass("com.alibaba.third_part_lib_test.DemoRunnable")
@@ -30,19 +22,18 @@ class JavassistTest {
 
         val instance = ctClass.toClass().getDeclaredConstructor().newInstance()
 
-        assertEquals(0, (instance as Supplier).get())
+        (instance as Supplier).get() shouldBe 0
 
         (instance as Runnable).let {
             try {
                 it.run()
-
-                fail()
+                fail("must not run to here")
             } catch (e: RuntimeException) {
-                assertEquals("Intended", e.message)
+                e.message shouldBe "Intended"
             }
         }
 
-        assertEquals(42, (instance as Supplier).get())
+        (instance as Supplier).get() shouldBe 42
     }
 
     /**
@@ -52,7 +43,6 @@ class JavassistTest {
      * If the second parameter asFinally to insertAfter() is true, the declared local variable is not visible from the code inserted by insertAfter().
      */
     @Test
-    @ConditionalIgnore(condition = IsAgentRun::class) // skip unit test for Javassist on agent, because Javassist is repackaged
     fun insertAfter_as_finally_fail_with_local_var() {
         val classPool = ClassPool(true)
         val ctClass = classPool.getCtClass("com.alibaba.third_part_lib_test.DemoRunnable2")
@@ -63,14 +53,10 @@ class JavassistTest {
             insertAfter("value = 40 + var;", true)
         }
 
-        try {
-            (ctClass.toClass().getDeclaredConstructor().newInstance() as Runnable).run()
 
-            fail()
-        } catch (e: VerifyError) {
-            e.printStackTrace()
-            assertThat<String>(e.message, containsString("Bad local variable type"))
-        }
+        shouldThrow<VerifyError> {
+            (ctClass.toClass().getDeclaredConstructor().newInstance() as Runnable).run()
+        }.message shouldContain "Bad local variable type"
     }
 }
 

@@ -1,13 +1,9 @@
 package com.alibaba.ttl.forkjoin.recursive_action
 
 import com.alibaba.*
-import com.alibaba.support.junit.conditional.BelowJava7
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule.ConditionalIgnore
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRecursiveAction
-import org.junit.Rule
-import org.junit.Test
+import io.kotest.core.spec.style.AnnotationSpec
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ForkJoinPool
 
@@ -21,19 +17,13 @@ private val singleThreadPool = ForkJoinPool(1)
  * @author LNAmp
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class TtlRecursiveActionTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
-
+class TtlRecursiveActionTest : AnnotationSpec() {
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_TtlRecursiveTask_asyncWithForkJoinPool() {
         run_test_with_pool(pool)
     }
 
     @Test
-    @ConditionalIgnore(condition = BelowJava7::class)
     fun test_TtlRecursiveTask_asyncWithSingleThreadForkJoinPool_changeValue() {
         run_test_with_pool(singleThreadPool)
     }
@@ -73,7 +63,7 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
             printAction.rightSubAction.copied
     )
 
-    // child do not effect parent
+    // child do not affect parent
     assertTtlValues(
             mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
                     PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD,
@@ -103,11 +93,11 @@ private class PrintAction(private val numbers: IntRange,
             if (numbers.count() <= 10) {
                 println("print numbers: $numbers")
             } else {
-                val mid = numbers.start + numbers.count() / 2
+                val mid = numbers.first + numbers.count() / 2
 
                 // left -> change! right -> not change.
-                val left = PrintAction(numbers.start until mid, ttlMap, true)
-                val right = PrintAction(mid..numbers.endInclusive, ttlMap, false)
+                val left = PrintAction(numbers.first until mid, ttlMap, true)
+                val right = PrintAction(mid..numbers.last, ttlMap, false)
                 leftSubAction = left
                 rightSubAction = right
 

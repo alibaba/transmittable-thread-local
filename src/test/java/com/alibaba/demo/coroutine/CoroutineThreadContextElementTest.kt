@@ -1,10 +1,10 @@
 package com.alibaba.demo.coroutine
 
+import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.coroutines.*
 import org.junit.Assert.*
-import org.junit.Test
 
-class CoroutineThreadContextElementTest {
+class CoroutineThreadContextElementTest : AnnotationSpec() {
     @Test
     fun threadContextElement_passByValue(): Unit = runBlocking {
         val mainValue = "main-${System.currentTimeMillis()}"

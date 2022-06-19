@@ -5,12 +5,13 @@ import com.alibaba.ttl.testmodel.DeepCopyFooTransmittableThreadLocal
 import com.alibaba.ttl.testmodel.FooPojo
 import com.alibaba.ttl.testmodel.FooTask
 import com.alibaba.ttl.testmodel.Task
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.AfterClass
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.Assert.*
-import org.junit.Test
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class TtlRunnableTest {
+class TtlRunnableTest : AnnotationSpec() {
     @Test
     fun test_ttlRunnable_runInCurrentThread() {
         val ttlInstances = createParentTtlInstances()
@@ -150,7 +151,8 @@ class TtlRunnableTest {
         counterTtl.set("Foo")
 
         // do copy when decorate runnable
-        val ttlRunnable1 = if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
+        val ttlRunnable1 =
+            if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
         assertEquals(if (noTtlAgentRun()) 1 else 0, counterTtl.copyCounter.get())
         assertEquals(0, counterTtl.beforeExecuteCounter.get())
         assertEquals(0, counterTtl.afterExecuteCounter.get())
@@ -170,7 +172,8 @@ class TtlRunnableTest {
         assertEquals(2, counterTtl.afterExecuteCounter.get())
 
         // do copy when decorate runnable
-        val ttlRunnable2 = if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
+        val ttlRunnable2 =
+            if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
         assertEquals(if (noTtlAgentRun()) 2 else 2, counterTtl.copyCounter.get())
         assertEquals(2, counterTtl.beforeExecuteCounter.get())
         Thread.sleep(1)
@@ -238,14 +241,11 @@ class TtlRunnableTest {
 
         assertNull(executorService.submit(ttlRunnable).get())
 
-        try {
+        val exception = shouldThrow<ExecutionException> {
             executorService.submit(ttlRunnable).get()
-            fail()
-        } catch (expected: ExecutionException) {
-            assertThat<Throwable>(expected.cause, instanceOf(IllegalStateException::class.java))
-            assertThat<String>(expected.message, containsString("TTL value reference is released after run!"))
         }
-
+        exception.cause.shouldBeInstanceOf<IllegalStateException>()
+        exception.message shouldContain "TTL value reference is released after run!"
     }
 
     @Test
@@ -258,13 +258,10 @@ class TtlRunnableTest {
     @Test
     fun test_get_idempotent() {
         val task = TtlRunnable.get(Task("1"))
-        try {
-            TtlRunnable.get(task)
-            fail()
-        } catch (e: IllegalStateException) {
-            assertThat<String>(e.message, containsString("Already TtlRunnable"))
-        }
 
+        shouldThrow<IllegalStateException> {
+            TtlRunnable.get(task)
+        }.message shouldContain "Already TtlRunnable"
     }
 
     @Test
@@ -280,11 +277,12 @@ class TtlRunnableTest {
 
         val taskList = TtlRunnable.gets(listOf<Runnable?>(task1, task2, null, task3))
 
-        assertEquals(4, taskList.size.toLong())
-        assertThat(taskList[0], instanceOf(TtlRunnable::class.java))
-        assertThat(taskList[1], instanceOf(TtlRunnable::class.java))
-        assertNull(taskList[2])
-        assertThat(taskList[3], instanceOf(TtlRunnable::class.java))
+        taskList.shouldHaveSize(4)
+
+        taskList[0].shouldBeInstanceOf<TtlRunnable>()
+        taskList[1].shouldBeInstanceOf<TtlRunnable>()
+        taskList[2].shouldBeNull()
+        taskList[3].shouldBeInstanceOf<TtlRunnable>()
     }
 
     @Test
@@ -308,15 +306,13 @@ class TtlRunnableTest {
         assertEquals(listOf<Runnable>(), TtlRunnable.unwraps(null))
     }
 
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+    }
+
     companion object {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
     }
 }

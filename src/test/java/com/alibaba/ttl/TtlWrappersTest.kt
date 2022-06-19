@@ -1,26 +1,18 @@
 package com.alibaba.ttl
 
 import com.alibaba.expandThreadPool
-import com.alibaba.support.junit.conditional.BelowJava8
-import com.alibaba.support.junit.conditional.ConditionalIgnoreRule
 import com.alibaba.ttl.TtlUnwrap.unwrap
 import com.alibaba.ttl.TtlWrappers.*
-import org.junit.AfterClass
+import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
-import org.junit.Rule
-import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.function.*
 import java.util.function.Function
 
-class TtlWrappersTest {
-    @Rule
-    @JvmField
-    val rule = ConditionalIgnoreRule()
+class TtlWrappersTest : AnnotationSpec() {
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_null() {
         val supplier: Supplier<String>? = null
         @Suppress("DEPRECATION")
@@ -54,7 +46,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun wrap_ReWrap_Unwrap_same() {
         // Supplier
         val supplier = Supplier { 42 }
@@ -138,7 +129,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_Supplier() {
         val ttl = TransmittableThreadLocal<String>()
 
@@ -172,7 +162,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_Consumer() {
         fun Consumer<String>.ttlWrapThenAsRunnable(): Runnable {
             @Suppress("DEPRECATION")
@@ -204,7 +193,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_BiConsumer() {
         fun BiConsumer<String, String>.ttlWrapThenAsRunnable(): Runnable {
             @Suppress("DEPRECATION")
@@ -236,7 +224,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_Function() {
         fun Function<String, String>.ttlWrapThenAsRunnable(): Runnable {
             @Suppress("DEPRECATION")
@@ -270,7 +257,6 @@ class TtlWrappersTest {
     }
 
     @Test
-    @ConditionalIgnoreRule.ConditionalIgnore(condition = BelowJava8::class)
     fun test_BiFunction() {
         fun BiFunction<String, String, String>.ttlWrapThenAsRunnable(): Runnable {
             @Suppress("DEPRECATION")
@@ -303,15 +289,13 @@ class TtlWrappersTest {
         }
     }
 
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdown()
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+    }
+
     companion object {
         private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
-
-        @AfterClass
-        @JvmStatic
-        @Suppress("unused")
-        fun afterClass() {
-            executorService.shutdown()
-            assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
-        }
     }
 }

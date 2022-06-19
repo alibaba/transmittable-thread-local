@@ -2,15 +2,15 @@ package com.alibaba.demo.coroutine.ttl_intergration.usage
 
 import com.alibaba.demo.coroutine.ttl_intergration.ttlContext
 import com.alibaba.ttl.TransmittableThreadLocal
+import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
-import org.junit.Test
 
-class TtlCoroutineContextTest {
+class TtlCoroutineContextTest : AnnotationSpec() {
     @Test
     fun threadContextElement_passByValue(): Unit = runBlocking {
         val mainValue = "main-${System.currentTimeMillis()}"
