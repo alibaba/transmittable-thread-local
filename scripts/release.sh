@@ -2,7 +2,6 @@
 set -eEuo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 readonly BASE="$(pwd)"
-. ./ttl_build.sh
 
 update_version=false
 deploy_maven=false
