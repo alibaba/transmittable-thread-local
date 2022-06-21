@@ -30,7 +30,7 @@ test_script:
   - scripts/integration-test.sh
 
 after_test:
-  - scripts/codecov.sh
+  - scripts/codecov.sh -s
   # remove self maven install
   - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local*
   - rm -rf $HOME/.m2/repository/com/alibaba/ttl*
