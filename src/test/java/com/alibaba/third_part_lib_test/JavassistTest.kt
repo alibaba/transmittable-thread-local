@@ -1,8 +1,10 @@
 package com.alibaba.third_part_lib_test
 
+import com.alibaba.noTtlAgentRun
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.core.test.config.TestCaseConfig
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import javassist.ClassPool
@@ -12,6 +14,13 @@ import javassist.CtClass
  * [simplify the try-finally code gen by javassist, do not need copy method #115](https://github.com/alibaba/transmittable-thread-local/issues/115)
  */
 class JavassistTest : AnnotationSpec() {
+    /**
+     * when run unit test under TTL agent,
+     * javassist is repackaged and excluded.
+     *
+     * skip this test case.
+     */
+    override fun defaultTestCaseConfig(): TestCaseConfig = TestCaseConfig(enabled = noTtlAgentRun())
 
     @Test
     fun insertAfter_as_finally() {

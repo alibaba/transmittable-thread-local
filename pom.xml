@@ -551,6 +551,11 @@
 						<configuration>
 							<forkCount>1</forkCount>
 							<redirectTestOutputToFile>true</redirectTestOutputToFile>
+							<classpathDependencyExcludes>
+								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
+								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
+								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
+							</classpathDependencyExcludes>
 							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
 						</configuration>
 					</plugin>

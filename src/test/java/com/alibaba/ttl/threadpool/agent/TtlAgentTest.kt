@@ -1,5 +1,6 @@
 package com.alibaba.ttl.threadpool.agent
 
+import com.alibaba.noTtlAgentRun
 import com.alibaba.ttl.threadpool.agent.TtlAgent.splitCommaColonStringToKV
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.test.config.TestCaseConfig
@@ -8,7 +9,7 @@ import io.kotest.matchers.shouldBe
 
 class TtlAgentTest : AnnotationSpec() {
     override fun defaultTestCaseConfig(): TestCaseConfig =
-        TestCaseConfig(enabled = !TtlAgent.isTtlAgentLoaded())
+        TestCaseConfig(enabled = noTtlAgentRun())
 
     @Test
     fun test_splitCommaColonStringToKV() {
