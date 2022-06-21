@@ -14,6 +14,10 @@ prepare_jdks::switch_to_jdk 8
 # about codecov: example-java-maven
 # https://github.com/codecov/example-java-maven/blob/master/.travis.yml
 
-jvb::mvn_cmd -Pgen-code-cov clean test
+if [ "${1:-}" = "-s" ]; then
+  jvb::mvn_cmd -Pgen-code-cov jacoco:prepare-agent surefire:test jacoco:report
+else
+  jvb::mvn_cmd -Pgen-code-cov clean test
+fi
 
 bash <(curl -s https://codecov.io/bash)
