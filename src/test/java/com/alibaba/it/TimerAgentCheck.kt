@@ -38,19 +38,15 @@ class TimerAgentCheckTest : AnnotationSpec() {
         val tag = "1"
         val task = Task(tag, ttlInstances)
 
-        val latch = CountDownLatch(1)
         val timerTask = object : TimerTask() {
             override fun run() {
                 task.run()
-                latch.countDown()
             }
         }
         timer.schedule(timerTask, 0)
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
-
-        latch.await(100, TimeUnit.MILLISECONDS)
 
         // child Inheritable
         assertChildTtlValues(tag, task.copied)
