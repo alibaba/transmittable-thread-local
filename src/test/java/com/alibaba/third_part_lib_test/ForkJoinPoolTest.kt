@@ -30,28 +30,28 @@ class ForkJoinPoolTest : AnnotationSpec() {
         // Fail to shut down thread pool
         pool.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
     }
-}
 
+    private class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
+        val execCounter = AtomicInteger(0)
 
-internal class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
-    val execCounter = AtomicInteger(0)
+        override fun compute(): Long {
+            execCounter.incrementAndGet()
 
-    override fun compute(): Long {
-        execCounter.incrementAndGet()
+            return if (numbers.count() <= 16) {
+                // compute directly
+                numbers.sum()
+            } else {
+                // split task
+                val middle = numbers.first + numbers.count() / 2
 
-        return if (numbers.count() <= 16) {
-            // compute directly
-            numbers.sum()
-        } else {
-            // split task
-            val middle = numbers.first + numbers.count() / 2
+                val taskLeft = SumTask(numbers.first until middle)
+                val taskRight = SumTask(middle..numbers.last)
 
-            val taskLeft = SumTask(numbers.first until middle)
-            val taskRight = SumTask(middle..numbers.last)
-
-            taskLeft.fork()
-            taskRight.fork()
-            taskLeft.join() + taskRight.join()
+                taskLeft.fork()
+                taskRight.fork()
+                taskLeft.join() + taskRight.join()
+            }
         }
     }
+
 }

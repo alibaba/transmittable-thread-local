@@ -8,6 +8,7 @@ import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 
 class TtlAgentTest : AnnotationSpec() {
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun defaultTestCaseConfig(): TestCaseConfig =
         TestCaseConfig(enabled = noTtlAgentRun())
 
