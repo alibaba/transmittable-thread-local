@@ -35,7 +35,6 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
 
 
         executorService.execute(task)
-        Thread.sleep(10)
 
         // child Inheritable
         assertChildTtlValuesWithParentCreateAfterCreateChild("1", task.copied)
@@ -114,7 +113,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(listOf(call1, call2), 10, TimeUnit.MILLISECONDS)
+        val futures = executorService.invokeAll(listOf(call1, call2), 100, TimeUnit.MILLISECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -173,7 +172,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val future = executorService.schedule(task, 10, TimeUnit.MILLISECONDS)
+        val future = executorService.schedule(task, 100, TimeUnit.MILLISECONDS)
         assertNull(future.get())
 
         // child Inheritable
@@ -187,7 +186,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
-        val future = executorService.schedule(call, 10, TimeUnit.MILLISECONDS)
+        val future = executorService.schedule(call, 100, TimeUnit.MILLISECONDS)
         assertEquals("ok", future.get())
 
         // child Inheritable
