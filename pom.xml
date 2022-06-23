@@ -102,11 +102,24 @@
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
 
+		<slf4j.version>1.7.36</slf4j.version>
+
 		<!-- testing dependencies versions -->
 		<junit5.version>5.8.2</junit5.version>
 		<kotest.version>5.3.1</kotest.version>
 
-		<argLine/> <!-- overridden in profile -->
+		<!--
+			slf4j simple logger configuration for test
+
+			the system properties are supported to configure the behavior of slf4j simple logger
+			https://www.slf4j.org/api/org/slf4j/simple/SimpleLogger.html
+		-->
+		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden in maven -D options -->
+		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}</argLine.slf4j.simple.logger.default.d.options>
+		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden in maven -D options -->
+		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options} ${argLine.slf4j.simple.logger.extra.d.options}</argLine.slf4j.simple.logger.d.options>
+
+		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- updated in profile -->
 	</properties>
 
 	<dependencies>
@@ -166,6 +179,19 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- logging libs -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.github.microutils</groupId>
+			<artifactId>kotlin-logging-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- testing libs -->
 		<dependency>
 			<groupId>io.kotest</groupId>
 			<artifactId>kotest-runner-junit4-jvm</artifactId>
@@ -221,6 +247,26 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- logging libs -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.github.microutils</groupId>
+				<artifactId>kotlin-logging-jvm</artifactId>
+				<version>2.1.23</version>
+				<scope>test</scope>
+			</dependency>
+
 			<!--
 				testing libs
 			-->

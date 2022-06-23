@@ -2,9 +2,12 @@ package com.alibaba.demo.coroutine
 
 import io.kotest.core.spec.style.AnnotationSpec
 import kotlinx.coroutines.*
+import mu.KotlinLogging
 import org.junit.Assert.*
 
 class CoroutineThreadContextElementTest : AnnotationSpec() {
+    private val logger = KotlinLogging.logger {}
+
     @Test
     fun threadContextElement_passByValue(): Unit = runBlocking {
         val mainValue = "main-${System.currentTimeMillis()}"
@@ -14,16 +17,16 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
         // String ThreadLocal, String is immutable value, can only be passed by value
         val threadLocal = ThreadLocal<String?>()
         threadLocal.set(mainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()}" }
 
         val job = launch(Dispatchers.Default + threadLocal.asContextElement(value = launchValue)) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()}" }
             assertEquals(launchValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()}" }
             assertEquals(launchValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
@@ -33,7 +36,7 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()}" }
             // !!! After suspended delay function, reset ThreadLocal value is lost !!!
             // assertEquals(reset, threadLocal.get())
             assertEquals(launchValue, threadLocal.get())
@@ -41,7 +44,8 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
         }
         job.join()
 
-        println("after launch, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - after launch, thread local value: ${threadLocal.get()}" }
+
         assertEquals(mainValue, threadLocal.get())
     }
 
@@ -56,16 +60,16 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
         // Reference ThreadLocal, mutable value, pass by reference
         val threadLocal = ThreadLocal<Reference>() // declare thread-local variable
         threadLocal.set(mainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()}" }
 
         val job = launch(Dispatchers.Default + threadLocal.asContextElement(value = launchValue)) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()}" }
             assertEquals(launchValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()}" }
             assertEquals(launchValue, threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
@@ -74,13 +78,13 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()}" }
             assertEquals(Reference(reset), threadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
         }
         job.join()
 
-        println("after launch, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()}")
+        logger.info { "test thread - after launch in test thread, thread local value: ${threadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
     }
 
@@ -95,19 +99,17 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
 
         threadLocal.set(mainValue)
         anotherThreadLocal.set(anotherMainValue)
-        println("test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        logger.info { "test thread - thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
 
-        println()
         val launch1Value = "aLaunch1"
         launch(Dispatchers.Default + threadLocal.asContextElement(value = launch1Value)) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
             assertEquals(launch1Value, threadLocal.get())
             assertNull(anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(launch1Value, threadLocal.get())
             assertNull(anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
@@ -116,11 +118,11 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
             threadLocal.set(resetA)
             val resetAnother = "job-reset-${anotherThreadLocal.get()}"
             anotherThreadLocal.set(resetAnother)
-            println("Before delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - before delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             // !!! After suspended delay function, reset ThreadLocal value is lost !!!
             // assertEquals(resetA, threadLocal.get())
             assertEquals(launch1Value, threadLocal.get())
@@ -129,22 +131,25 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
             assertNotEquals(testThread, Thread.currentThread())
         }.join()
 
-        println("after launch1, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        logger.info { "test thread - after launch1, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
         assertEquals(anotherMainValue, anotherThreadLocal.get())
 
-        println()
         val launch2Value = "aLaunch2"
         val anotherLaunch2Value = "anotherLaunch2"
-        launch(Dispatchers.Default + threadLocal.asContextElement(value = launch2Value) + anotherThreadLocal.asContextElement(value = anotherLaunch2Value)) {
-            println("Launch start, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        launch(
+            Dispatchers.Default + threadLocal.asContextElement(value = launch2Value) + anotherThreadLocal.asContextElement(
+                value = anotherLaunch2Value
+            )
+        ) {
+            logger.info { "launch thread - launch start, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(launch2Value, threadLocal.get())
             assertEquals(anotherLaunch2Value, anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
 
             delay(5)
 
-            println("After delay, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             assertEquals(launch2Value, threadLocal.get())
             assertEquals(anotherLaunch2Value, anotherThreadLocal.get())
             assertNotEquals(testThread, Thread.currentThread())
@@ -153,11 +158,11 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
             threadLocal.set(resetA)
             val resetAnother = "job-reset-${anotherThreadLocal.get()}"
             anotherThreadLocal.set(resetAnother)
-            println("Before delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - before delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
 
             delay(5)
 
-            println("After delay set reset, current thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+            logger.info { "launch thread - after delay set reset, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
             // !!! After suspended delay function, reset ThreadLocal value is lost !!!
             // assertEquals(resetA, threadLocal.get())
             // assertEquals(resetAnother, anotherThreadLocal.get())
@@ -166,7 +171,7 @@ class CoroutineThreadContextElementTest : AnnotationSpec() {
             assertNotEquals(testThread, Thread.currentThread())
         }.join()
 
-        println("after launch2, test thread: ${Thread.currentThread()}, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}")
+        logger.info { "test thread - after launch2, thread local value: ${threadLocal.get()} | ${anotherThreadLocal.get()}" }
         assertEquals(mainValue, threadLocal.get())
         assertEquals(anotherMainValue, anotherThreadLocal.get())
     }

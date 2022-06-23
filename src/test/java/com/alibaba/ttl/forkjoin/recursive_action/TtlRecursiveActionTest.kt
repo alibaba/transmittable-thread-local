@@ -4,6 +4,7 @@ import com.alibaba.*
 import com.alibaba.ttl.TransmittableThreadLocal
 import com.alibaba.ttl.TtlRecursiveAction
 import io.kotest.core.spec.style.AnnotationSpec
+import mu.KotlinLogging
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ForkJoinPool
 
@@ -44,31 +45,40 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
 
     // child Inheritable
     assertTtlValues(
-            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
-                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/),
-            printAction.copied
+        mapOf(
+            PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/
+        ),
+        printAction.copied
     )
 
     // left grand Task Inheritable, changed value
     assertTtlValues(
-            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
-                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */),
-            printAction.leftSubAction.copied
+        mapOf(
+            PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD + PrintAction.CHANGE_POSTFIX /* CHANGED */
+        ),
+        printAction.leftSubAction.copied
     )
 
     // right grand Task Inheritable, not change value
     assertTtlValues(
-            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
-                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/),
-            printAction.rightSubAction.copied
+        mapOf(
+            PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD /* Not change*/
+        ),
+        printAction.rightSubAction.copied
     )
 
     // child do not affect parent
     assertTtlValues(
-            mapOf(PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
-                    PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD,
-                    PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD),
-            copyTtlValues(ttlInstances))
+        mapOf(
+            PARENT_CREATE_UNMODIFIED_IN_CHILD to PARENT_CREATE_UNMODIFIED_IN_CHILD,
+            PARENT_CREATE_MODIFIED_IN_CHILD to PARENT_CREATE_MODIFIED_IN_CHILD,
+            PARENT_CREATE_AFTER_CREATE_CHILD to PARENT_CREATE_AFTER_CREATE_CHILD
+        ),
+        copyTtlValues(ttlInstances)
+    )
 }
 
 
@@ -77,8 +87,13 @@ private fun run_test_with_pool(forkJoinPool: ForkJoinPool) {
  *
  * @author LNAmp
  */
-private class PrintAction(private val numbers: IntRange,
-                          private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>, private val changeTtlValue: Boolean = false) : TtlRecursiveAction() {
+private class PrintAction(
+    private val numbers: IntRange,
+    private val ttlMap: ConcurrentMap<String, TransmittableThreadLocal<String>>,
+    private val changeTtlValue: Boolean = false
+) : TtlRecursiveAction() {
+    private val logger = KotlinLogging.logger {}
+
 
     lateinit var copied: Map<String, Any>
     lateinit var leftSubAction: PrintAction
@@ -91,7 +106,7 @@ private class PrintAction(private val numbers: IntRange,
 
         try {
             if (numbers.count() <= 10) {
-                println("print numbers: $numbers")
+                logger.info { "print numbers: $numbers" }
             } else {
                 val mid = numbers.first + numbers.count() / 2
 
