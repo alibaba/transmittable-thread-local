@@ -5,7 +5,7 @@
     1. 如`POM`中有降开发版本，注意 修改 新加`API`的 **_`@since`_** ！！
     2. 从`master`分支新建发布分支
     3. 在发布分支上，更新版本号及相关信息
-        - 更新`POM`的版本号，去掉`SNAPSHOT`
+        - 更新`POM`的版本号成要发布的版本号，去掉`SNAPSHOT`
         - 更新`README`
             - 更新badge的引用，由master分支名改成Tag名  
                 - `sed 's/master/v2.x.y/g' -i README*`

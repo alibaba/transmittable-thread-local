@@ -13,7 +13,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<ttl.version>2.13.0-SNAPSHOT</ttl.version>
+		<ttl.version>3.x-SNAPSHOT</ttl.version>
 	</properties>
 
 	<dependencies>

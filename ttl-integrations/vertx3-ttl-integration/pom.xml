@@ -39,7 +39,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<vertx.version>3.5.4</vertx.version>
-		<ttl.version>2.13.0-SNAPSHOT</ttl.version>
+		<ttl.version>3.x-SNAPSHOT</ttl.version>
 	</properties>
 
 	<dependencies>
