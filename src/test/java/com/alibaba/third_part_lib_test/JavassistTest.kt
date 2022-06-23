@@ -20,6 +20,7 @@ class JavassistTest : AnnotationSpec() {
      *
      * skip this test case.
      */
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun defaultTestCaseConfig(): TestCaseConfig = TestCaseConfig(enabled = noTtlAgentRun())
 
     @Test

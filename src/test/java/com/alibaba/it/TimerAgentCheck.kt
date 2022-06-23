@@ -1,4 +1,4 @@
-package com.alibaba.test.ttl.threadpool.agent.check.timer
+package com.alibaba.it
 
 import com.alibaba.*
 import com.alibaba.ttl.testmodel.Task
@@ -17,15 +17,9 @@ import java.util.concurrent.TimeUnit
  * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet
  */
 class TimerAgentCheckTest : AnnotationSpec() {
-    override fun defaultTestCaseConfig(): TestCaseConfig {
-        val testEnableKey = "run-ttl-test-under-agent-with-enable-timer-task"
-        if (System.getProperties().containsKey(testEnableKey)) {
-            TtlAgent.isTtlAgentLoaded().shouldBeTrue()
-            TtlAgent.isEnableTimerTask().shouldBeTrue()
-        }
-
-        return TestCaseConfig(enabled = TtlAgent.isTtlAgentLoaded() && TtlAgent.isEnableTimerTask())
-    }
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun defaultTestCaseConfig(): TestCaseConfig =
+        TestCaseConfig(enabled = hasTtlAgentRunWithEnableTimerTask())
 
     @Test
     fun check() {

@@ -7,6 +7,7 @@ import io.kotest.core.test.config.TestCaseConfig
 import org.junit.Assert.assertEquals
 
 class TtlExtensionTransformletManagerTest : AnnotationSpec() {
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun defaultTestCaseConfig(): TestCaseConfig =
         TestCaseConfig(enabled = noTtlAgentRun())
 

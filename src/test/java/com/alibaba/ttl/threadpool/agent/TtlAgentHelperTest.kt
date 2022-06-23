@@ -10,6 +10,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.Assert.*
 
 class TtlAgentHelperTest : AnnotationSpec() {
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun defaultTestCaseConfig(): TestCaseConfig =
         TestCaseConfig(enabled = !TtlAgent.isTtlAgentLoaded())
 

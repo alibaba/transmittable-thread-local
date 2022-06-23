@@ -1,6 +1,6 @@
 package com.alibaba.ttl
 
-import com.alibaba.hasTtlTtlAgentRunWithDisableInheritableForThreadPool
+import com.alibaba.hasTtlAgentRunWithDisableInheritableForThreadPool
 import com.alibaba.ttl.threadpool.TtlExecutors
 import com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper
 import com.alibaba.ttl.threadpool.agent.TtlAgent
@@ -159,7 +159,7 @@ class InheritableTest : AnnotationSpec() {
         val threadPool = Executors.newCachedThreadPool() as ThreadPoolExecutor
         try {
             TtlExecutors.isDisableInheritableThreadFactory(threadPool.threadFactory) shouldBe
-                    hasTtlTtlAgentRunWithDisableInheritableForThreadPool()
+                    hasTtlAgentRunWithDisableInheritableForThreadPool()
 
         } finally {
             threadPool.shutdown()
@@ -312,7 +312,7 @@ class InheritableTest : AnnotationSpec() {
         val threadPool = ForkJoinPool(4)
         try {
             TtlForkJoinPoolHelper.isDisableInheritableForkJoinWorkerThreadFactory(threadPool.factory) shouldBe
-                    hasTtlTtlAgentRunWithDisableInheritableForThreadPool()
+                    hasTtlAgentRunWithDisableInheritableForThreadPool()
         } finally {
             threadPool.shutdown()
         }
