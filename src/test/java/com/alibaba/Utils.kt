@@ -7,11 +7,15 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import mu.KotlinLogging
 import java.lang.Thread.sleep
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.ThreadPoolExecutor
+
+
+private val logger = KotlinLogging.logger {}
 
 
 /**
@@ -26,10 +30,6 @@ fun expandThreadPool(executor: ExecutorService) {
     (0 until count).map {
         executor.submit { sleep(10) }
     }.forEach { it.get() }
-}
-
-fun printHead(title: String) {
-    println("======================================\n$title\n======================================")
 }
 
 ////////////////////////////////////////////////////////////////////////////////

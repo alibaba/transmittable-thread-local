@@ -40,7 +40,7 @@ class TtlRunnableTest : AnnotationSpec() {
         // child Inheritable
         assertChildTtlValues("1", task.copied)
 
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
@@ -62,7 +62,7 @@ class TtlRunnableTest : AnnotationSpec() {
         // child Inheritable
         assertChildTtlValues("1", task.copied)
 
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
@@ -120,7 +120,7 @@ class TtlRunnableTest : AnnotationSpec() {
         // child Inheritable
         assertChildTtlValues("1", task.copied)
 
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 

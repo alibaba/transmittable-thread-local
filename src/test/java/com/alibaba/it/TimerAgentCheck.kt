@@ -2,10 +2,10 @@ package com.alibaba.it
 
 import com.alibaba.*
 import com.alibaba.ttl.testmodel.Task
-import com.alibaba.ttl.threadpool.agent.TtlAgent
-import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.core.test.config.TestCaseConfig
-import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.common.ExperimentalKotest
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.test.TestScope
+import io.kotest.engine.test.logging.info
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
@@ -16,13 +16,13 @@ import java.util.concurrent.TimeUnit
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet
  */
-class TimerAgentCheckTest : AnnotationSpec() {
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun defaultTestCaseConfig(): TestCaseConfig =
-        TestCaseConfig(enabled = hasTtlAgentRunWithEnableTimerTask())
+@ExperimentalKotest
+class TimerAgentCheckTest : FunSpec({
+    fun TestScope.printHead(title: String) {
+        info { "======================================\n$title\n======================================" }
+    }
 
-    @Test
-    fun check() {
+    test("check").config(enabled = hasTtlAgentRunWithEnableTimerTask()) {
         val timer = Timer(true)
 
         printHead("TimerAgentCheck")
@@ -49,4 +49,4 @@ class TimerAgentCheckTest : AnnotationSpec() {
 
         printHead("TimerAgentCheck OK!")
     }
-}
+})
