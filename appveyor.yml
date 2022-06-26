@@ -38,6 +38,7 @@ after_test:
   - rm -rf $HOME/.m2/wrapper/dists/*/*/*.zip
   # # remove sdkman install file
   - rm -rf $HOME/.sdkman/archives/*
+  - rm -rf $HOME/.sdkman/tmp/*
 
 cache:
   # if cache size is exceed appveyor limit:
