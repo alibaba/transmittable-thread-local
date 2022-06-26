@@ -2,21 +2,21 @@
 
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/2.x?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
-<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/2.x?logo=appveyor&amp;logoColor=white" alt="Appveyor Build Status"></a>
-<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/2.x"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/2.x?logo=codecov&amp;logoColor=white" alt="Coverage Status"></a>
-<a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://api.codeclimate.com/v1/badges/de6af6136e538cf1557c/maintainability" alt="Maintainability"></a>
-<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=java&amp;logoColor=white" alt="JDK support"></a>
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97" alt="License"></a>
-<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&amp;color=3d7c47&amp;logo=microsoft-academic&amp;logoColor=white" alt="Javadocs"></a>
-<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&amp;logo=apache-maven&amp;logoColor=white" alt="Maven Central"></a>
+<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/2.x?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
+<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/2.x"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/2.x?logo=codecov&logoColor=white" alt="Coverage Status"></a>
+<a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://img.shields.io/codeclimate/maintainability/alibaba/transmittable-thread-local?logo=codeclimate&logoColor=white" alt="Maintainability"></a>
+<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=java&logoColor=white" alt="JDK support"></a>
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
+<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
+<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
-<a href="https://gitter.im/alibaba/transmittable-thread-local?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://img.shields.io/gitter/room/alibaba/transmittable-thread-local?color=46BC99&amp;logo=gitter&amp;logoColor=white" alt="Chat at gitter.im"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/network/dependents"><img src="https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos" alt="user repos"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/github/repo-size/alibaba/transmittable-thread-local" alt="GitHub repo size"></a>
+<a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready--to--code-green?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
 
 
@@ -51,8 +51,7 @@
 # 🔧 Functions
 
 👉 `TransmittableThreadLocal`(`TTL`): The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
-provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components.
-Support `Java` 17/16/15/14/13/12/11/10/9/8/7/6.
+provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components. Support `Java 6~19`.
 
 Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
@@ -61,6 +60,9 @@ But when use thread pool, thread is cached up and used repeatedly. Transmitting 
 Application need transmit value from the time task is created to the time task is executed.
 
 If you have problem or question, please [submit Issue](https://github.com/alibaba/transmittable-thread-local/issues) or play [fork](https://github.com/alibaba/transmittable-thread-local/fork) and pull request dance.
+
+> From `TTL v2.13+` upgrade to `Java 8`.  
+> If you need `Java 6` support, use version `2.12.x` <a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 
 # 🎨 Requirements
 
@@ -314,7 +316,7 @@ Check available version at [search.maven.org](https://search.maven.org/artifact/
 
 # 🔨 How to compile and build
 
-Compilation/build environment require **_`JDK 8~11`_**; Compilation can be performed in the normal way of `Maven`.
+Compilation/build environment require **_`JDK 8+`_**; Compilation can be performed in the normal way of `Maven`.
 
 \# The project already contains `Maven` that satisfied the required version, directly run **_`mvnw` in the project root directory_**; there is no need to manually install `Maven` by yourself.
 
@@ -352,12 +354,14 @@ Some open-source projects used `TTL`:
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
-    - [`acmenlt/dynamic-threadpool` ![](https://img.shields.io/github/stars/acmenlt/dynamic-threadpool.svg?style=social&label=Star)](https://github.com/acmenlt/dynamic-threadpool) [![star](https://gitee.com/acmenlt/dynamic-threadpool/badge/star.svg?theme=gray)](https://gitee.com/acmenlt/dynamic-threadpool)  
-      Powerful dynamic thread pool, does not rely on any middleware, with monitoring and alarm function
-    - [`lyh200/dynamic-tp` ![](https://img.shields.io/github/stars/lyh200/dynamic-tp.svg?style=social&label=Star)](https://github.com/lyh200/dynamic-tp) [![star](https://gitee.com/yanhom/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/yanhom/dynamic-tp)  
+    - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       Lightweight dynamic threadpool, with monitoring and alarming functions, base on popular config centers (already support Nacos、Apollo、Zookeeper, can be customized through SPI)
+    - [`mabaiwan/hippo4j` ![](https://img.shields.io/github/stars/mabaiwan/hippo4j.svg?style=social&label=Star)](https://github.com/mabaiwan/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
+      Powerful dynamic thread pool, does not rely on any middleware, with monitoring and alarm function
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       microservice route gateway(zuul-plus)
+    - [`huaweicloud/Sermant` ![](https://img.shields.io/github/stars/huaweicloud/Sermant.svg?style=social&label=Star)](https://github.com/huaweicloud/Sermant)  
+      Sermant, a proxyless service mesh solution based on Javaagent.
     - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
       ZTO Message Service
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
@@ -385,8 +389,6 @@ Some open-source projects used `TTL`:
       一个java分布式日志组件，支持百亿级别
     - [`minbox-projects/minbox-logging` ![](https://img.shields.io/github/stars/minbox-projects/minbox-logging.svg?style=social&label=Star)](https://github.com/minbox-projects/minbox-logging) [![star](https://gitee.com/minbox-projects/minbox-logging/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/minbox-logging)  
       分布式零侵入式、链路式请求日志分析框架。提供Admin端点进行采集日志、分析日志、日志告警通知、服务性能分析等。通过Admin Ui可查看实时链路日志信息、在线业务服务列表
-        - [`minbox-projects/bulldog` ![](https://img.shields.io/github/stars/minbox-projects/bulldog.svg?style=social&label=Star)](https://github.com/minbox-projects/bulldog) [![star](https://gitee.com/minbox-projects/bulldog/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/bulldog)  
-          一款分布式链路日志跟踪监控框架，支持Openfeign、RestTemplate、Retrofit、HttpClient、OkHttp、RabbitMQ等方式透传链路信息
         - [`minbox-projects/api-boot` ![](https://img.shields.io/github/stars/minbox-projects/api-boot.svg?style=social&label=Star)](https://github.com/minbox-projects/api-boot) [![star](https://gitee.com/minbox-projects/api-boot/badge/star.svg?theme=gray)](https://gitee.com/minbox-projects/api-boot)  
           为接口服务而生的，基于“ SpringBoot”完成扩展和自动配置，内部封装了一系列的开箱即用Starters
     - [`ofpay/logback-mdc-ttl` ![](https://img.shields.io/github/stars/ofpay/logback-mdc-ttl.svg?style=social&label=Star)](https://github.com/ofpay/logback-mdc-ttl)  
@@ -401,10 +403,14 @@ Some open-source projects used `TTL`:
       An open source RESTful API platform for banks that supports Open Banking, XS2A and PSD2 through access to accounts, transactions, counterparties, payments, entitlements and metadata - plus a host of internal banking and management APIs
     - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
       JooLun微信商城
+    - [`gz-yami/mall4j` ![](https://img.shields.io/github/stars/gz-yami/mall4j.svg?style=social&label=Star)](https://github.com/gz-yami/mall4j) [![star](https://gitee.com/gz-yami/mall4j/badge/star.svg?theme=gray)](https://gitee.com/gz-yami/mall4j)  
+      电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
       基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
+    - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot)  
+      一款的低代码快速平台，零代码开发，致力于做更简洁的后台管理系统
     - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
       一个基于spring cloud Greenwich的简单秒杀电子商城项目
 - **Tool product**
