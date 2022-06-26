@@ -53,7 +53,7 @@
 
 # 🔧 功能
 
-👉 `TransmittableThreadLocal`(`TTL`)：在使用线程池等会池化复用线程的执行组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java` 17/16/15/14/13/12/11/10/9/8/7/6。
+👉 `TransmittableThreadLocal`(`TTL`)：在使用线程池等会池化复用线程的执行组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java 6~19`。
 
 `JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
@@ -65,6 +65,9 @@
 
 - 建议和提问，[提交 Issue](https://github.com/alibaba/transmittable-thread-local/issues/new)
 - 贡献和改进，[Fork 后提通过 Pull Request 贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
+
+> 从`TTL v2.13+`开始，升级到`Java 8`。  
+> 如果需要`Java 6`的支持，使用版本`2.12.x` <a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 
 # 🎨 需求场景
 
@@ -390,7 +393,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 # 🔨 关于编译构建
 
-编译构建的环境要求： **_`JDK 8~11`_**；用`Maven`常规的方式执行编译构建即可：  
+编译构建的环境要求： **_`JDK 8+`_**；用`Maven`常规的方式执行编译构建即可：  
 \# 在工程中已经包含了符合版本要求的`Maven`，直接运行 **_工程根目录下的`mvnw`_**；并不需要先手动自己安装好`Maven`。
 
 ```bash
@@ -504,9 +507,9 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
-    - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/yanhom/dynamic-tp)  
+    - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       轻量级动态线程池，内置监控告警功能，支持线程池上下文传递，基于主流配置中心（已支持Nacos、Apollo，Zookeeper，可通过SPI自定义实现）
-    - [`longtai-cn/hippo4j` ![](https://img.shields.io/github/stars/longtai-cn/hippo4j.svg?style=social&label=Star)](https://github.com/longtai-cn/hippo4j) [![star](https://gitee.com/longtai-cn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/longtai-cn/hippo4j)  
+    - [`mabaiwan/hippo4j` ![](https://img.shields.io/github/stars/mabaiwan/hippo4j.svg?style=social&label=Star)](https://github.com/mabaiwan/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
       强大的动态线程池，附带监控报警功能（没有依赖中间件），完全遵循阿里巴巴编码规范
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       微服务路由网关（zuul-plus）

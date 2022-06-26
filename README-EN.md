@@ -50,8 +50,7 @@
 # 🔧 Functions
 
 👉 `TransmittableThreadLocal`(`TTL`): The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
-provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components.
-Support `Java` 17/16/15/14/13/12/11/10/9/8/7/6.
+provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components. Support `Java 6~19`.
 
 Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
@@ -60,6 +59,9 @@ But when use thread pool, thread is cached up and used repeatedly. Transmitting 
 Application need transmit value from the time task is created to the time task is executed.
 
 If you have problem or question, please [submit Issue](https://github.com/alibaba/transmittable-thread-local/issues) or play [fork](https://github.com/alibaba/transmittable-thread-local/fork) and pull request dance.
+
+> From `TTL v2.13+` upgrade to `Java 8`.  
+> If you need `Java 6` support, use version `2.12.x` <a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 
 # 🎨 Requirements
 
@@ -313,7 +315,7 @@ Check available version at [search.maven.org](https://search.maven.org/artifact/
 
 # 🔨 How to compile and build
 
-Compilation/build environment require **_`JDK 8~11`_**; Compilation can be performed in the normal way of `Maven`.
+Compilation/build environment require **_`JDK 8+`_**; Compilation can be performed in the normal way of `Maven`.
 
 \# The project already contains `Maven` that satisfied the required version, directly run **_`mvnw` in the project root directory_**; there is no need to manually install `Maven` by yourself.
 
@@ -351,9 +353,9 @@ Some open-source projects used `TTL`:
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
-    - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/yanhom/dynamic-tp)  
+    - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       Lightweight dynamic threadpool, with monitoring and alarming functions, base on popular config centers (already support Nacos、Apollo、Zookeeper, can be customized through SPI)
-    - [`longtai-cn/hippo4j` ![](https://img.shields.io/github/stars/longtai-cn/hippo4j.svg?style=social&label=Star)](https://github.com/longtai-cn/hippo4j) [![star](https://gitee.com/longtai-cn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/longtai-cn/hippo4j)  
+    - [`mabaiwan/hippo4j` ![](https://img.shields.io/github/stars/mabaiwan/hippo4j.svg?style=social&label=Star)](https://github.com/mabaiwan/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
       Powerful dynamic thread pool, does not rely on any middleware, with monitoring and alarm function
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       microservice route gateway(zuul-plus)
