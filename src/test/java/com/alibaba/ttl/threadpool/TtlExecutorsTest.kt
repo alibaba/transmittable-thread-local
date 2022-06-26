@@ -6,7 +6,10 @@ import com.alibaba.ttl.TtlCallable
 import com.alibaba.ttl.TtlRunnable
 import com.alibaba.ttl.TtlUnwrap
 import com.alibaba.ttl.threadpool.TtlExecutors.*
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.string.shouldContain
 import org.junit.Assert.*
 import java.util.concurrent.*
 import java.util.concurrent.Executors.newScheduledThreadPool
@@ -194,12 +197,12 @@ class TtlExecutorsTest : AnnotationSpec() {
 
         BizComparableTask().also { priorityBlockingQueue.put(it) }
 
-        try {
-            BizComparableTask().also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
-            fail()
-        } catch (e: ClassCastException) {
-            assertClassCastException(e, TtlRunnable::class.java, Comparable::class.java)
+
+        val exception = shouldThrow<ClassCastException> {
+            val task = BizComparableTask()
+            priorityBlockingQueue.put(TtlRunnable.get(task)!!)
         }
+        assertClassCastException(exception, TtlRunnable::class.java, Comparable::class.java)
     }
 
     @Test
@@ -237,12 +240,12 @@ class TtlExecutorsTest : AnnotationSpec() {
 
         BizOrderTask(3).also { priorityBlockingQueue.put(it) }
 
-        try {
-            BizOrderTask(4).also { priorityBlockingQueue.put(TtlRunnable.get(it)!!) }
-            fail()
-        } catch (e: ClassCastException) {
-            assertClassCastException(e, TtlRunnable::class.java, BizOrderTask::class.java)
+
+        val exception = shouldThrow<ClassCastException> {
+            val task = BizOrderTask(4)
+            priorityBlockingQueue.put(TtlRunnable.get(task)!!)
         }
+        assertClassCastException(exception, TtlRunnable::class.java, BizOrderTask::class.java)
     }
 
     @Test
@@ -264,15 +267,10 @@ class TtlExecutorsTest : AnnotationSpec() {
     }
 
     private fun assertClassCastException(e: ClassCastException, actualClass: Class<*>, targetClass: Class<*>) {
-        // java 8
-        val msg1 = "${actualClass.name} cannot be cast to ${targetClass.name}"
-        // java 11
-        val msg2 = "class ${actualClass.name} cannot be cast to class ${targetClass.name}"
-
-        assertTrue(
-            "${e.message}, actual: ${actualClass.name}, target: ${targetClass.name}",
-            msg1 == e.message || e.message!!.startsWith(msg2)
-        )
+        withClue("ClassCastException.message: ${e.message}") {
+            e.message shouldContain actualClass.name
+            e.message shouldContain targetClass.name
+        }
     }
 
     /**
