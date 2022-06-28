@@ -6,6 +6,7 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,6 +111,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static TtlRunnable get(@Nullable Runnable runnable) {
         return get(runnable, false, false);
     }
@@ -123,6 +125,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
     @Nullable
+    @Contract("null, _ -> null; !null, _ -> !null")
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
         return get(runnable, releaseTtlValueReferenceAfterRun, false);
     }
@@ -139,6 +142,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
     @Nullable
+    @Contract("null, _, _ -> null; !null, _, _ -> !null")
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == runnable) return null;
 
@@ -210,6 +214,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @since 2.10.2
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static Runnable unwrap(@Nullable Runnable runnable) {
         if (!(runnable instanceof TtlRunnable)) return runnable;
         else return ((TtlRunnable) runnable).getRunnable();

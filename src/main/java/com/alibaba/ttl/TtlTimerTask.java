@@ -4,6 +4,7 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -113,6 +114,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
      * @return Wrapped {@link TimerTask}
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static TtlTimerTask get(@Nullable TimerTask timerTask) {
         return get(timerTask, false, false);
     }
@@ -127,6 +129,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
      * @return Wrapped {@link TimerTask}
      */
     @Nullable
+    @Contract("null, _ -> null; !null, _ -> !null")
     public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun) {
         return get(timerTask, releaseTtlValueReferenceAfterRun, false);
     }
@@ -142,6 +145,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
      * @return Wrapped {@link TimerTask}
      */
     @Nullable
+    @Contract("null, _, _ -> null; !null, _, _ -> !null")
     public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == timerTask) return null;
 
@@ -163,6 +167,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
      * @since 2.10.2
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static TimerTask unwrap(@Nullable TimerTask timerTask) {
         if (!(timerTask instanceof TtlTimerTask)) return timerTask;
         else return ((TtlTimerTask) timerTask).getTimerTask();

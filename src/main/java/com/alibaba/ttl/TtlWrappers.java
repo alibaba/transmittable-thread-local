@@ -4,6 +4,7 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.function.*;
 
@@ -36,6 +37,7 @@ public class TtlWrappers {
      * @since 2.12.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T> Supplier<T> wrapSupplier(@Nullable Supplier<T> supplier) {
         if (supplier == null) return null;
         else if (supplier instanceof TtlEnhanced) return supplier;
@@ -55,6 +57,7 @@ public class TtlWrappers {
      */
     @Deprecated
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T> Supplier<T> wrap(@Nullable Supplier<T> supplier) {
         return wrapSupplier(supplier);
     }
@@ -115,6 +118,7 @@ public class TtlWrappers {
      * @since 2.12.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T> Consumer<T> wrapConsumer(@Nullable Consumer<T> consumer) {
         if (consumer == null) return null;
         else if (consumer instanceof TtlEnhanced) return consumer;
@@ -134,6 +138,7 @@ public class TtlWrappers {
      */
     @Deprecated
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T> Consumer<T> wrap(@Nullable Consumer<T> consumer) {
         return wrapConsumer(consumer);
     }
@@ -194,6 +199,7 @@ public class TtlWrappers {
      * @since 2.12.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, U> BiConsumer<T, U> wrapBiConsumer(@Nullable BiConsumer<T, U> consumer) {
         if (consumer == null) return null;
         else if (consumer instanceof TtlEnhanced) return consumer;
@@ -213,6 +219,7 @@ public class TtlWrappers {
      */
     @Deprecated
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, U> BiConsumer<T, U> wrap(@Nullable BiConsumer<T, U> consumer) {
         return wrapBiConsumer(consumer);
     }
@@ -273,6 +280,7 @@ public class TtlWrappers {
      * @since 2.12.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, R> Function<T, R> wrapFunction(@Nullable Function<T, R> fn) {
         if (fn == null) return null;
         else if (fn instanceof TtlEnhanced) return fn;
@@ -292,6 +300,7 @@ public class TtlWrappers {
      */
     @Deprecated
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, R> Function<T, R> wrap(@Nullable Function<T, R> fn) {
         return wrapFunction(fn);
     }
@@ -352,6 +361,7 @@ public class TtlWrappers {
      * @since 2.12.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, U, R> BiFunction<T, U, R> wrapBiFunction(@Nullable BiFunction<T, U, R> fn) {
         if (fn == null) return null;
         else if (fn instanceof TtlEnhanced) return fn;
@@ -371,6 +381,7 @@ public class TtlWrappers {
      */
     @Deprecated
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static <T, U, R> BiFunction<T, U, R> wrap(@Nullable BiFunction<T, U, R> fn) {
         return wrapBiFunction(fn);
     }

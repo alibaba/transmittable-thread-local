@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
@@ -32,6 +33,7 @@ public class TtlForkJoinPoolHelper {
      * @since 2.10.1
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static ForkJoinWorkerThreadFactory getDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (threadFactory == null || isDisableInheritableForkJoinWorkerThreadFactory(threadFactory))
             return threadFactory;
@@ -72,6 +74,7 @@ public class TtlForkJoinPoolHelper {
      * @since 2.10.1
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     public static ForkJoinWorkerThreadFactory unwrap(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (!isDisableInheritableForkJoinWorkerThreadFactory(threadFactory)) return threadFactory;
 

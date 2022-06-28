@@ -2,6 +2,7 @@ package com.alibaba.ttl;
 
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Util methods for TTL Wrapper: unwrap TTL Wrapper and check TTL Wrapper.
@@ -46,6 +47,7 @@ public class TtlUnwrap {
      * @since 2.11.4
      */
     @Nullable
+    @Contract("null -> null; !null -> !null")
     @SuppressWarnings("unchecked")
     public static <T> T unwrap(@Nullable T obj) {
         if (!isWrapper(obj)) return obj;

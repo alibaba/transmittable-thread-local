@@ -152,7 +152,13 @@
 			<version>3.0.2</version>
 			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>23.0.0</version>
+			<optional>true</optional>
+		</dependency>
 		<!-- Testing frameworks and related dependencies -->
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
