@@ -869,14 +869,14 @@
 								<goals>
 									<goal>report</goal>
 								</goals>
-								<configuration>
-									<excludes>
-										<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
-										<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
-									</excludes>
-								</configuration>
 							</execution>
 						</executions>
+						<configuration>
+							<excludes>
+								<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
+								<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
+							</excludes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
