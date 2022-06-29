@@ -5,6 +5,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -754,6 +755,23 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier) {
             return registerThreadLocal(threadLocal, copier, false);
+        }
+
+        public static <T> boolean registerThreadLocal(@NonNull Class<?> clazz, @NonNull String staticFieldName, @NonNull TtlCopier<T> copier) throws NoSuchFieldException, IllegalAccessException {
+            ThreadLocal<T> threadLocal = getThreadLocalFromStaticField(clazz, staticFieldName);
+            return registerThreadLocal(threadLocal, copier, false);
+        }
+
+        private static <T> ThreadLocal<T> getThreadLocalFromStaticField(@NonNull Class<?> clazz, @NonNull String staticFieldName) throws NoSuchFieldException, IllegalAccessException {
+            Field field = clazz.getDeclaredField(staticFieldName);
+            field.setAccessible(true);
+
+            @SuppressWarnings("unchecked")
+            ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
+            if (threadLocal == null) {
+                throw new IllegalStateException("ThreadLocal field is null value!");
+            }
+            return threadLocal;
         }
 
         /**
