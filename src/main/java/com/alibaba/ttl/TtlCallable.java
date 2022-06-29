@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
- * {@link TtlCallable} decorate {@link Callable}, so as to get {@link TransmittableThreadLocal}
+ * {@link TtlCallable} decorate {@link Callable} to get {@link TransmittableThreadLocal} value
  * and transmit it to the time of {@link Callable} execution, needed when use {@link Callable} to thread pool.
  * <p>
  * Use factory method {@link #get(Callable)} to get decorated instance.

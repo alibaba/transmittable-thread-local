@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
- * {@link TtlRunnable} decorate {@link Runnable}, so as to get {@link TransmittableThreadLocal}
+ * {@link TtlRunnable} decorate {@link Runnable} to get {@link TransmittableThreadLocal} value
  * and transmit it to the time of {@link Runnable} execution, needed when use {@link Runnable} to thread pool.
  * <p>
  * Use factory methods {@link #get} / {@link #gets} to create instance.
