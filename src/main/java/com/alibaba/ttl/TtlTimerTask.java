@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
 
 /**
- * {@link TtlTimerTask} decorate {@link TimerTask}, so as to get {@link TransmittableThreadLocal}
+ * {@link TtlTimerTask} decorate {@link TimerTask} to get {@link TransmittableThreadLocal} value
  * and transmit it to the time of {@link TtlTimerTask} execution, needed when use {@link TtlTimerTask} to {@link java.util.TimerTask}.
  * <p>
  * Use factory method {@link #get(TimerTask)} to create instance.
