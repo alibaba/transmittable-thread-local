@@ -111,7 +111,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
     @Nullable
-    @Contract("null -> null; !null -> !null")
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static TtlRunnable get(@Nullable Runnable runnable) {
         return get(runnable, false, false);
     }
@@ -125,7 +125,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already.
      */
     @Nullable
-    @Contract("null, _ -> null; !null, _ -> !null")
+    @Contract(value = "null, _ -> null; !null, _ -> !null", pure = true)
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun) {
         return get(runnable, releaseTtlValueReferenceAfterRun, false);
     }
@@ -142,7 +142,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @throws IllegalStateException when input is {@link TtlRunnable} already and not idempotent.
      */
     @Nullable
-    @Contract("null, _, _ -> null; !null, _, _ -> !null")
+    @Contract(value = "null, _, _ -> null; !null, _, _ -> !null", pure = true)
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
         if (null == runnable) return null;
 
@@ -214,7 +214,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      * @since 2.10.2
      */
     @Nullable
-    @Contract("null -> null; !null -> !null")
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static Runnable unwrap(@Nullable Runnable runnable) {
         if (!(runnable instanceof TtlRunnable)) return runnable;
         else return ((TtlRunnable) runnable).getRunnable();
