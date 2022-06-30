@@ -33,7 +33,7 @@ public class TtlForkJoinPoolHelper {
      * @since 2.10.1
      */
     @Nullable
-    @Contract("null -> null; !null -> !null")
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static ForkJoinWorkerThreadFactory getDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (threadFactory == null || isDisableInheritableForkJoinWorkerThreadFactory(threadFactory))
             return threadFactory;
@@ -74,7 +74,7 @@ public class TtlForkJoinPoolHelper {
      * @since 2.10.1
      */
     @Nullable
-    @Contract("null -> null; !null -> !null")
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     public static ForkJoinWorkerThreadFactory unwrap(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (!isDisableInheritableForkJoinWorkerThreadFactory(threadFactory)) return threadFactory;
 

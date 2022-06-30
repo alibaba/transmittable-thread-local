@@ -47,7 +47,7 @@ public class TtlUnwrap {
      * @since 2.11.4
      */
     @Nullable
-    @Contract("null -> null; !null -> !null")
+    @Contract(value = "null -> null; !null -> !null", pure = true)
     @SuppressWarnings("unchecked")
     public static <T> T unwrap(@Nullable T obj) {
         if (!isWrapper(obj)) return obj;
