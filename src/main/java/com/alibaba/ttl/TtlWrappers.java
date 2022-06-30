@@ -27,7 +27,7 @@ import static com.alibaba.ttl.TransmittableThreadLocal.Transmitter.*;
  * @see TtlWrapper
  * @since 2.11.4
  */
-public class TtlWrappers {
+public final class TtlWrappers {
     /**
      * wrap {@link Supplier} to TTL wrapper.
      *

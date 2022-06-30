@@ -30,8 +30,8 @@ class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced 
         executor.execute(TtlRunnable.get(command, false, idempotent));
     }
 
-    @Override
     @NonNull
+    @Override
     public Executor unwrap() {
         return executor;
     }

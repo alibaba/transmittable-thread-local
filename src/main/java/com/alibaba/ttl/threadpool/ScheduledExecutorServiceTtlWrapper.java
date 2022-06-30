@@ -53,8 +53,8 @@ class ScheduledExecutorServiceTtlWrapper extends ExecutorServiceTtlWrapper imple
         return scheduledExecutorService.scheduleWithFixedDelay(TtlRunnable.get(command, false, idempotent), initialDelay, delay, unit);
     }
 
-    @Override
     @NonNull
+    @Override
     public ScheduledExecutorService unwrap() {
         return scheduledExecutorService;
     }
