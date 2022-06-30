@@ -3,6 +3,7 @@ package com.alibaba.ttl;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -361,6 +362,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     /**
      * Debug only method!
      */
+    @TestOnly
     static void dump(@Nullable String title) {
         if (title != null && title.length() > 0) {
             System.out.printf("Start TransmittableThreadLocal[%s] Dump...%n", title);
@@ -377,6 +379,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     /**
      * Debug only method!
      */
+    @TestOnly
     static void dump() {
         dump(null);
     }

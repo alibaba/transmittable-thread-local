@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadFactory;
  * @see TtlExecutors
  * @since 2.10.1
  */
-public class TtlForkJoinPoolHelper {
+public final class TtlForkJoinPoolHelper {
     /**
      * Wrapper of {@link ForkJoinWorkerThreadFactory}, disable inheritable.
      *

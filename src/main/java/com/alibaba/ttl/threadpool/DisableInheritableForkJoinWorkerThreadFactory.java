@@ -15,7 +15,7 @@ public interface DisableInheritableForkJoinWorkerThreadFactory extends ForkJoinW
     /**
      * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
      */
-    @Override
     @NonNull
+    @Override
     ForkJoinWorkerThreadFactory unwrap();
 }

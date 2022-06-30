@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Contract;
  * @see TtlWrappers
  * @since 2.11.4
  */
-public class TtlUnwrap {
+public final class TtlUnwrap {
     /**
      * Generic unwrap method, unwrap {@link TtlWrapper} to the original/underneath one.
      * <p>
