@@ -472,6 +472,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *
      * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
      * Transmitter.unregisterThreadLocal(aThreadLocal);}</pre>
+     * <p>
+     * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
+     * so the {@code ThreadLocal} instances need be got by reflection, for example:
+     *
+     * <pre>{@code
+     * Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
+     * field.setAccessible(true);
+     * @SuppressWarnings("unchecked")
+     * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
+     * }</pre>
      *
      * <B><I>Caution:</I></B><br>
      * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
