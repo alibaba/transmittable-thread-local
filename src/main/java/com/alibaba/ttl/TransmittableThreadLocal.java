@@ -472,6 +472,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      *
      * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
      * Transmitter.unregisterThreadLocal(aThreadLocal);}</pre>
+     * <p>
+     * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
+     * so the {@code ThreadLocal} instances need be got by reflection, for example:
+     *
+     * <pre>{@code
+     * Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
+     * field.setAccessible(true);
+     * @SuppressWarnings("unchecked")
+     * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
+     * }</pre>
      *
      * <B><I>Caution:</I></B><br>
      * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
@@ -745,15 +755,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          * <p>
-         * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
-         * so the {@code ThreadLocal} instances need be got by reflection, for example:
-         *
-         * <pre>{@code Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
-         * field.setAccessible(true);
-         * @SuppressWarnings("unchecked")
-         * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
-         * }</pre>
-         * <p>
          * <B><I>Caution:</I></B><br>
          * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
          * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
@@ -780,15 +781,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
          * <p>
-         * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
-         * so the {@code ThreadLocal} instances need be got by reflection, for example:
-         *
-         * <pre>{@code Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
-         * field.setAccessible(true);
-         * @SuppressWarnings("unchecked")
-         * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
-         * }</pre>
-         * <p>
          * <B><I>Caution:</I></B><br>
          * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
          * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
@@ -811,15 +803,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
-         * <p>
-         * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
-         * so the {@code ThreadLocal} instances need be got by reflection, for example:
-         *
-         * <pre>{@code Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
-         * field.setAccessible(true);
-         * @SuppressWarnings("unchecked")
-         * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
-         * }</pre>
          * <p>
          * <B><I>Caution:</I></B><br>
          * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
@@ -861,15 +844,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * If the registered {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
          * since a {@link TransmittableThreadLocal} instance itself has the {@code Transmittable} ability,
          * it is unnecessary to register a {@link TransmittableThreadLocal} instance.
-         * <p>
-         * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
-         * so the {@code ThreadLocal} instances need be got by reflection, for example:
-         *
-         * <pre>{@code Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
-         * field.setAccessible(true);
-         * @SuppressWarnings("unchecked")
-         * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
-         * }</pre>
          * <p>
          * <B><I>Caution:</I></B><br>
          * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
