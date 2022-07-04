@@ -97,7 +97,7 @@ import java.util.Map;
  * <p>
  * Enable logging the transform class received by TTL Agent by key {@code ttl.agent.log.class.transform},
  * default is {@code false}(aka. do <b>NOT</b> logging the transform class received by TTL Agent).
- * Since version {@code 2.13.0}.
+ * Since version {@code 3.0.0}.
  * <p>
  * Configuration example:
  *
@@ -156,7 +156,7 @@ public final class TtlAgent {
      * the TTL agent configuration key: Log Type
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static final String TTL_AGENT_LOGGER_KEY = "ttl.agent.logger";
 
@@ -164,7 +164,7 @@ public final class TtlAgent {
      * the TTL agent configuration key: Disable inheritable for thread pool
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY = "ttl.agent.disable.inheritable.for.thread.pool";
 
@@ -172,7 +172,7 @@ public final class TtlAgent {
      * the TTL agent configuration key: Enable TimerTask class decoration
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
@@ -180,7 +180,7 @@ public final class TtlAgent {
      * the TTL agent configuration key: logging the transform class received by TTL Agent
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static final String TTL_AGENT_LOG_CLASS_TRANSFORM_KEY = "ttl.agent.log.class.transform";
 
@@ -292,7 +292,7 @@ public final class TtlAgent {
      * @see TtlAgent
      * @see #isBooleanOptionSet(String)
      * @see #TTL_AGENT_LOG_CLASS_TRANSFORM_KEY
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static boolean isLogClassTransform() {
         return isBooleanOptionSet(TTL_AGENT_LOG_CLASS_TRANSFORM_KEY);
@@ -309,7 +309,7 @@ public final class TtlAgent {
      * @see TtlAgent
      * @see #getStringOptionValue(String, String)
      * @see #TTL_AGENT_LOGGER_KEY
-     * @since 2.13.0
+     * @since 3.0.0
      */
     @NonNull
     public static String getLoggerType() {
@@ -325,7 +325,7 @@ public final class TtlAgent {
      *
      * @see #isBooleanOptionSet(String, boolean)
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static boolean isBooleanOptionSet(@NonNull String key) {
         return isBooleanOptionSet(key, false);
@@ -335,7 +335,7 @@ public final class TtlAgent {
      * Generic Option Getters for {@code boolean type} option.
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static boolean isBooleanOptionSet(@NonNull String key, boolean defaultValueIfKeyAbsent) {
         return TtlAgentHelper.isBooleanOptionSet(kvs, key, defaultValueIfKeyAbsent);
@@ -351,7 +351,7 @@ public final class TtlAgent {
      * {@code getOptionValue("ttl.agent.logger")} return {@code STDOUT}.
      *
      * @see TtlAgent
-     * @since 2.13.0
+     * @since 3.0.0
      */
     @NonNull
     public static String getStringOptionValue(@NonNull String key, @NonNull String defaultValue) {

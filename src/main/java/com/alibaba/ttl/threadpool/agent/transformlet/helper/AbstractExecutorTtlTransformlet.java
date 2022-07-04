@@ -30,7 +30,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.Executors
  * @see com.alibaba.ttl.threadpool.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet
- * @since 2.13.0
+ * @since 3.0.0
  */
 public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet {
     protected static final String RUNNABLE_CLASS_NAME = "java.lang.Runnable";

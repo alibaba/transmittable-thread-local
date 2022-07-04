@@ -20,7 +20,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * Do <b>NOT</b> load {@link Class} which is transforming, or the transform will lose effectiveness.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @since 2.13.0
+ * @since 3.0.0
  */
 public class ClassInfo {
     private final String transformerClassFile;

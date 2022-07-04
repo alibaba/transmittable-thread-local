@@ -33,7 +33,7 @@ public class TtlAttachmentsDelegate implements TtlAttachments {
 
     /**
      * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static boolean isAutoWrapper(@Nullable Object ttlAttachments) {
         if (!(ttlAttachments instanceof TtlAttachments)) return false;
@@ -46,7 +46,7 @@ public class TtlAttachmentsDelegate implements TtlAttachments {
 
     /**
      * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
-     * @since 2.13.0
+     * @since 3.0.0
      */
     public static void setAutoWrapperAttachment(@Nullable Object ttlAttachment) {
         if (!(ttlAttachment instanceof TtlAttachments)) return;
@@ -56,7 +56,7 @@ public class TtlAttachmentsDelegate implements TtlAttachments {
 
     /**
      * @see TtlAttachments#KEY_IS_AUTO_WRAPPER
-     * @since 2.13.0
+     * @since 3.0.0
      */
     @Nullable
     public static <T> T unwrapIfIsAutoWrapper(@Nullable T obj) {
