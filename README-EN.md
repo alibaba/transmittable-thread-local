@@ -300,7 +300,7 @@ More info:
 
 # 🔌 Java API Docs
 
-The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.13.0/index.html>
+The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.13.2/index.html>
 
 # 🍪 Maven Dependency
 
@@ -308,7 +308,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.13.0</version>
+    <version>2.13.2</version>
 </dependency>
 ```
 
