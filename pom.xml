@@ -650,6 +650,9 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
+						<configuration>
+							<attach>false</attach>
+						</configuration>
 					</plugin>
 					<plugin>
 						<artifactId>maven-shade-plugin</artifactId>
@@ -677,14 +680,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadoc</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
 						<configuration>
 							<source>8</source>
 							<show>protected</show>
