@@ -676,6 +676,11 @@
 					<value>true</value>
 				</property>
 			</activation>
+			<properties>
+				<javadoc.default.exclude.packages>
+					*.internal:*.internal.*:*.internal.*.*:*.internal.*.*.*:*.internal.*.*.*.*
+				</javadoc.default.exclude.packages>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -686,13 +691,19 @@
 							<charset>UTF-8</charset>
 							<encoding>UTF-8</encoding>
 							<docencoding>UTF-8</docencoding>
+							<quiet>true</quiet>
+							<!--
+								How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
+								https://stackoverflow.com/questions/39616344
+							-->
+							<doclint>all,-missing</doclint>
+							<overview>src/api/overview.html</overview>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
-							<excludePackageNames>*.internal.*</excludePackageNames>
+							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
 							<sourceFileExcludes>
 								<!-- exclude deprecated TtlEnhanced from javadoc -->
 								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
 							</sourceFileExcludes>
-							<overview>src/api/overview.html</overview>
 							<isOffline>true</isOffline>
 							<offlineLinks>
 								<!--
@@ -728,15 +739,8 @@
 								<additionalJOption>--no-module-directories</additionalJOption>
 
 								<additionalJOption>-html5</additionalJOption>
-								<additionalJOption>-quiet</additionalJOption>
 								<additionalJOption>-J-Duser.language=en</additionalJOption>
 								<additionalJOption>-J-Duser.country=US</additionalJOption>
-
-								<!--
-									How to disable Javadoc warnings in Maven Javadoc Plugin? - Stack Overflow
-									https://stackoverflow.com/questions/39616344
-								-->
-								<additionalJOption>-Xdoclint:-missing</additionalJOption>
 							</additionalJOptions>
 						</configuration>
 					</plugin>

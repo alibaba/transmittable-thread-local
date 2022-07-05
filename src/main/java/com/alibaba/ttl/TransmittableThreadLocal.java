@@ -76,7 +76,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * Default constructor. Create a {@link TransmittableThreadLocal} instance with "Ignore-Null-Value Semantics".
      * <p>
      * About "Ignore-Null-Value Semantics":
-     * <p>
+     *
      * <ol>
      *     <li>If value is {@code null}(check by {@link #get()} method), do NOT transmit this {@code ThreadLocal}.</li>
      *     <li>If set {@code null} value, also remove value(invoke {@link #remove()} method).</li>
@@ -476,12 +476,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
      * so the {@code ThreadLocal} instances need be got by reflection, for example:
      *
-     * <pre>{@code
+     * <pre>
      * Field field = TheClassStoredThreadLocal.class.getDeclaredField(staticFieldName);
      * field.setAccessible(true);
-     * @SuppressWarnings("unchecked")
-     * ThreadLocal<T> threadLocal = (ThreadLocal<T>) field.get(null);
-     * }</pre>
+     * {@code @SuppressWarnings("unchecked")}
+     * {@code ThreadLocal<T>} threadLocal = {@code (ThreadLocal<T>)} field.get(null);</pre>
      *
      * <B><I>Caution:</I></B><br>
      * If the registered {@link ThreadLocal} instance is not {@link InheritableThreadLocal},
