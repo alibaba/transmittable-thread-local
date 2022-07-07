@@ -98,7 +98,7 @@
 
 		<spotbugs.annotations.version>4.7.1</spotbugs.annotations.version>
 
-		<kotlin.version>1.7.0</kotlin.version>
+		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
 
