@@ -106,7 +106,7 @@
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.0</junit5.version>
-		<kotest.version>5.4.0</kotest.version>
+		<kotest.version>5.4.1</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
