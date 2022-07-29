@@ -583,8 +583,18 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         /**
          * Clear all {@link TransmittableThreadLocal} and registered {@link ThreadLocal} values in the current thread,
          * and return the backup {@link TransmittableThreadLocal} values in the current thread before clear.
+         * <p>
+         * Semantically, the code {@code `Object backup = clear();`} is same as {@code `Object backup = replay(EMPTY_CAPTURE);`}.
+         * <p>
+         * The reason for providing this method is:
+         *
+         * <ol>
+         * <li>lead to more readable code</li>
+         * <li>need not provide the constant {@code EMPTY_CAPTURE}.</li>
+         * </ol>
          *
          * @return the backup {@link TransmittableThreadLocal} values before clear
+         * @see #replay(Object)
          * @since 2.9.0
          */
         @NonNull
