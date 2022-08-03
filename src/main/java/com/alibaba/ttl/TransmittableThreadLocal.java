@@ -6,11 +6,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -501,11 +499,15 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object capture() {
-            return new Snapshot(captureTtlValues(), captureThreadLocalValues());
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeList.size());
+            for (Transmittee<Object, Object> transmittee : transmitteeList) {
+                transmittee2Value.put(transmittee, transmittee.capture());
+            }
+            return new Snapshot(transmittee2Value);
         }
 
         private static HashMap<TransmittableThreadLocal<Object>, Object> captureTtlValues() {
-            HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
+            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
             for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 ttl2Value.put(threadLocal, threadLocal.copyValue());
             }
@@ -535,12 +537,18 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         @NonNull
         public static Object replay(@NonNull Object captured) {
             final Snapshot capturedSnapshot = (Snapshot) captured;
-            return new Snapshot(replayTtlValues(capturedSnapshot.ttl2Value), replayThreadLocalValues(capturedSnapshot.threadLocal2Value));
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(capturedSnapshot.transmittee2Value.size());
+            for (Map.Entry<Transmittee<Object, Object>, Object> entry : capturedSnapshot.transmittee2Value.entrySet()) {
+                Transmittee<Object, Object> transmittee = entry.getKey();
+                Object transmitteeCaptured = entry.getValue();
+                transmittee2Value.put(transmittee, transmittee.replay(transmitteeCaptured));
+            }
+            return new Snapshot(transmittee2Value);
         }
 
         @NonNull
         private static HashMap<TransmittableThreadLocal<Object>, Object> replayTtlValues(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> captured) {
-            HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>();
+            final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>();
 
             for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                 TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -599,15 +607,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object clear() {
-            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
-
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
-            for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
-                final ThreadLocal<Object> threadLocal = entry.getKey();
-                threadLocal2Value.put(threadLocal, threadLocalClearMark);
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeList.size());
+            for (Transmittee<Object, Object> transmittee : transmitteeList) {
+                transmittee2Value.put(transmittee, transmittee.clear());
             }
-
-            return replay(new Snapshot(ttl2Value, threadLocal2Value));
+            return new Snapshot(transmittee2Value);
         }
 
         /**
@@ -620,9 +624,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @since 2.3.0
          */
         public static void restore(@NonNull Object backup) {
-            final Snapshot backupSnapshot = (Snapshot) backup;
-            restoreTtlValues(backupSnapshot.ttl2Value);
-            restoreThreadLocalValues(backupSnapshot.threadLocal2Value);
+            for (Map.Entry<Transmittee<Object, Object>, Object> entry : ((Snapshot) backup).transmittee2Value.entrySet()) {
+                entry.getKey().restore(entry.getValue());
+            }
         }
 
         private static void restoreTtlValues(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> backup) {
@@ -659,13 +663,108 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         private static class Snapshot {
-            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value;
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value;
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value;
 
-            private Snapshot(HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value, HashMap<ThreadLocal<Object>, Object> threadLocal2Value) {
-                this.ttl2Value = ttl2Value;
-                this.threadLocal2Value = threadLocal2Value;
+            public Snapshot(HashMap<Transmittee<Object, Object>, Object> transmittee2Value) {
+                this.transmittee2Value = transmittee2Value;
             }
+        }
+
+        /**
+         * The transmittee, extension point for other {@code ThreadLocal}.
+         *
+         * @param <C> the transmittee capture data type
+         * @param <B> the transmittee backup data type
+         * @since 2.13.3
+         */
+        public interface Transmittee<C, B> {
+            /**
+             * @return the capture data of transmittee
+             */
+            C capture();
+
+            /**
+             * @param captured the capture data of transmittee
+             * @return the backup data of transmittee
+             * @since 2.13.3
+             */
+            B replay(C captured);
+
+            /**
+             * @return the backup data of transmittee
+             * @since 2.13.3
+             */
+            B clear();
+
+            /**
+             * @param backup the backup data of transmittee
+             * @since 2.13.3
+             */
+            void restore(B backup);
+        }
+
+        private static final Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>> ttlTransmittee =
+                new Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>>() {
+                    @Override
+                    public HashMap<TransmittableThreadLocal<Object>, Object> capture() {
+                        return captureTtlValues();
+                    }
+
+                    @Override
+                    public HashMap<TransmittableThreadLocal<Object>, Object> replay(HashMap<TransmittableThreadLocal<Object>, Object> captured) {
+                        return replayTtlValues(captured);
+                    }
+
+                    @Override
+                    public HashMap<TransmittableThreadLocal<Object>, Object> clear() {
+                        return replay(new HashMap<>());
+                    }
+
+                    @Override
+                    public void restore(HashMap<TransmittableThreadLocal<Object>, Object> backup) {
+                        restoreTtlValues(backup);
+                    }
+                };
+
+        private static final Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>> threadLocalTransmittee =
+                new Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>>() {
+                    @Override
+                    public HashMap<ThreadLocal<Object>, Object> capture() {
+                        return captureThreadLocalValues();
+                    }
+
+                    @Override
+                    public HashMap<ThreadLocal<Object>, Object> replay(HashMap<ThreadLocal<Object>, Object> captured) {
+                        return replayThreadLocalValues(captured);
+                    }
+
+                    @Override
+                    public HashMap<ThreadLocal<Object>, Object> clear() {
+                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
+
+                        for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
+                            final ThreadLocal<Object> threadLocal = entry.getKey();
+                            threadLocal2Value.put(threadLocal, threadLocalClearMark);
+                        }
+
+                        return replay(threadLocal2Value);
+                    }
+
+                    @Override
+                    public void restore(HashMap<ThreadLocal<Object>, Object> backup) {
+                        restoreThreadLocalValues(backup);
+                    }
+                };
+
+        private static final List<Transmittee<Object, Object>> transmitteeList = new CopyOnWriteArrayList<>();
+
+        static {
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            final Transmittee<Object, Object> t1 = (Transmittee) ttlTransmittee;
+            transmitteeList.add(t1);
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            final Transmittee<Object, Object> t2 = (Transmittee) threadLocalTransmittee;
+            transmitteeList.add(t2);
         }
 
         /**
