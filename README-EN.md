@@ -355,7 +355,7 @@ Some open-source projects used `TTL`:
       Distributed transaction solutions
     - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       Lightweight dynamic threadpool, with monitoring and alarming functions, base on popular config centers (already support Nacos、Apollo、Zookeeper, can be customized through SPI)
-    - [`mabaiwan/hippo4j` ![](https://img.shields.io/github/stars/mabaiwan/hippo4j.svg?style=social&label=Star)](https://github.com/mabaiwan/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
+    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
       Powerful dynamic thread pool, does not rely on any middleware, with monitoring and alarm function
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       microservice route gateway(zuul-plus)
@@ -366,6 +366,8 @@ Some open-source projects used `TTL`:
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
       The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms.
 - **Middleware/Data**
+    - [`FiboAI/FiboRule` ![](https://img.shields.io/github/stars/FiboAI/FiboRule.svg?style=social&label=Star)](https://github.com/FiboAI/FiboRule)  
+      斐波那契 FiboRule - 实时AI智能决策引擎、规则引擎、风控引擎、数据流引擎
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
@@ -412,11 +414,15 @@ Some open-source projects used `TTL`:
       一款的低代码快速平台，零代码开发，致力于做更简洁的后台管理系统
     - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
       一个基于spring cloud Greenwich的简单秒杀电子商城项目
+    - [`Newspiral/newspiral-business` ![](https://img.shields.io/github/stars/Newspiral/newspiral-business.svg?style=social&label=Star)](https://github.com/Newspiral/newspiral-business)  
+      联盟区块链底层平台
 - **Tool product**
     - [`ssssssss-team/spider-flow` ![](https://img.shields.io/github/stars/ssssssss-team/spider-flow.svg?style=social&label=Star)](https://github.com/ssssssss-team/spider-flow) [![star](https://gitee.com/ssssssss-team/spider-flow/badge/star.svg?theme=gray)](https://gitee.com/ssssssss-team/spider-flow)  
       新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫
     - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
       🍰 一个可视化的爬虫平台
+    - [`martin-chips/DimpleBlog` ![](https://img.shields.io/github/stars/martin-chips/DimpleBlog.svg?style=social&label=Star)](https://github.com/martin-chips/DimpleBlog)  
+      基于`SpringBoot2`搭建的个人博客系统
     - [`zjcscut/octopus` ![](https://img.shields.io/github/stars/zjcscut/octopus.svg?style=social&label=Star)](https://github.com/zjcscut/octopus)  
       长链接压缩为短链接的服务
     - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/molicloud/mqr/badge/star.svg?theme=gray)](https://gitee.com/molicloud/mqr)  
@@ -441,6 +447,8 @@ Some open-source projects used `TTL`:
           打造一套兼顾 SpringBoot 和 SpringCloud 项目的公共工具类
     - [`YunaiV/ruoyi-vue-pro` ![](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Star)](https://github.com/YunaiV/ruoyi-vue-pro)  [![star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  
       一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能。
+    - [`YunaiV/yudao-cloud` ![](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Star)](https://github.com/YunaiV/yudao-cloud)  [![star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/yudao-cloud)  
+      RuoYi-Vue 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue & Element 实现的后台管理系统 + 用户小程序，支持 RBAC 动态权限、多租户、数据权限、工作流、三方登录、支付、短信、商城等功能
     - [`matevip/matecloud` ![](https://img.shields.io/github/stars/matevip/matecloud.svg?style=social&label=Star)](https://github.com/matevip/matecloud) [![star](https://gitee.com/matevip/matecloud/badge/star.svg?theme=gray)](https://gitee.com/matevip/matecloud)  
       一款基于Spring Cloud Alibaba的微服务架构
     - [`gavenwangcn/vole` ![](https://img.shields.io/github/stars/gavenwangcn/vole.svg?style=social&label=Star)](https://github.com/gavenwangcn/vole)  
