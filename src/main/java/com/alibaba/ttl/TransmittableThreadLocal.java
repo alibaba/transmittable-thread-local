@@ -8,7 +8,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -499,8 +499,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object capture() {
-            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeList.size());
-            for (Transmittee<Object, Object> transmittee : transmitteeList) {
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
+            for (Transmittee<Object, Object> transmittee : transmitteeSet) {
                 transmittee2Value.put(transmittee, transmittee.capture());
             }
             return new Snapshot(transmittee2Value);
@@ -547,8 +547,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object clear() {
-            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeList.size());
-            for (Transmittee<Object, Object> transmittee : transmitteeList) {
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
+            for (Transmittee<Object, Object> transmittee : transmitteeSet) {
                 transmittee2Value.put(transmittee, transmittee.clear());
             }
             return new Snapshot(transmittee2Value);
@@ -608,6 +608,28 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
              * @since 2.13.3
              */
             void restore(B backup);
+        }
+
+        /**
+         * @param <C> the transmittee capture data type
+         * @param <B> the transmittee backup data type
+         * @return true if the input transmittee is not registered
+         * @since 2.13.3
+         */
+        @SuppressWarnings("unchecked")
+        public static <C, B> boolean registerTransmittee(@NonNull Transmittee<C, B> transmittee) {
+            return transmitteeSet.add((Transmittee<Object, Object>) transmittee);
+        }
+
+        /**
+         * @param <C> the transmittee capture data type
+         * @param <B> the transmittee backup data type
+         * @return true if the input transmittee is registered
+         * @since 2.13.3
+         */
+        @SuppressWarnings("unchecked")
+        public static <C, B> boolean unregisterTransmittee(@NonNull Transmittee<C, B> transmittee) {
+            return transmitteeSet.remove((Transmittee<Object, Object>) transmittee);
         }
 
         private static final Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>> ttlTransmittee =
@@ -732,15 +754,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     }
                 };
 
-        private static final List<Transmittee<Object, Object>> transmitteeList = new CopyOnWriteArrayList<>();
+        private static final Set<Transmittee<Object, Object>> transmitteeSet = new CopyOnWriteArraySet<>();
 
         static {
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            final Transmittee<Object, Object> t1 = (Transmittee) ttlTransmittee;
-            transmitteeList.add(t1);
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            final Transmittee<Object, Object> t2 = (Transmittee) threadLocalTransmittee;
-            transmitteeList.add(t2);
+            registerTransmittee(ttlTransmittee);
+            registerTransmittee(threadLocalTransmittee);
         }
 
         /**
