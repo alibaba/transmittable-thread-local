@@ -100,7 +100,7 @@
 
 		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<kotlin.coroutine.version>1.6.2</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
 
 		<slf4j.version>1.7.36</slf4j.version>
 
@@ -126,62 +126,46 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.29.0-GA</version>
 			<optional>true</optional>
 		</dependency>
 
-		<!--
-			QA libs
-			make qa libs optional, 0-dependency and smaller deployment
-		-->
+		<!-- QA libs -->
 		<dependency>
-			<!--
-				JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
-				Please continue using findbugs’ one.
-				depend on spotbugs-annotations instead.
-				https://spotbugs.readthedocs.io/en/stable/migration.html
-			-->
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>${spotbugs.annotations.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>23.0.0</version>
 			<optional>true</optional>
 		</dependency>
-		<!-- Testing frameworks and related dependencies -->
+
+		<!-- test scope dependencies -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>${kotlin.coroutine.version}</version>
+			<artifactId>kotlinx-coroutines-core-jvm</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>2.2.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxkotlin</artifactId>
-			<version>2.4.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -223,13 +207,13 @@
 				https://stackoverflow.com/a/47158584/922688
 		-->
 		<dependency>
-			<!--JUnit Jupiter Engine to depend on the JUnit5 engine and JUnit 5 API -->
+			<!-- JUnit Jupiter Engine to depend on the JUnit5 engine and JUnit 5 API -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<!--JUnit Jupiter Engine to depend on the JUnit4 engine and JUnit 4 API  -->
+			<!-- JUnit Jupiter Engine to depend on the JUnit4 engine and JUnit 4 API  -->
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
@@ -238,11 +222,71 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!--
+				QA libs
+				make qa libs optional, 0-dependency and smaller deployment
+			-->
+			<dependency>
+				<!--
+					JSR305 is already Dormant status, so SpotBugs does not release jsr305 jar file.
+					Please continue using findbugs’ one.
+					depend on spotbugs-annotations instead.
+					https://spotbugs.readthedocs.io/en/stable/migration.html
+				-->
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-annotations</artifactId>
+				<version>${spotbugs.annotations.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>3.0.2</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
+				<groupId>org.jetbrains</groupId>
+				<artifactId>annotations</artifactId>
+				<version>23.0.0</version>
+				<optional>true</optional>
+			</dependency>
+
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>3.29.0-GA</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.12.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.reactivex.rxjava2</groupId>
+				<artifactId>rxjava</artifactId>
+				<version>2.2.21</version>
+			</dependency>
+			<dependency>
+				<groupId>io.reactivex.rxjava2</groupId>
+				<artifactId>rxkotlin</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+
 			<!-- bom -->
 			<dependency>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-bom</artifactId>
 				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kotlinx-coroutines-bom</artifactId>
+				<version>${kotlin.coroutine.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -322,7 +366,6 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -350,7 +393,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
 				<executions>
 					<!-- Replacing default-compile as it is treated specially by maven -->
 					<execution>
@@ -380,7 +422,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.2</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -402,7 +443,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<id>shade-when-package</id>
@@ -435,27 +475,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.13</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-			<!--
-				https://spotbugs.github.io/
-				https://spotbugs.readthedocs.io/en/latest/introduction.html
-				https://spotbugs.readthedocs.io/en/latest/maven.html
-			-->
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.7.0.0</version>
-			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
 
@@ -464,7 +483,6 @@
 			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -481,18 +499,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<!--
-					config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074
-				-->
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.11.0</version>
-				<configuration>
-					<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
-					<generateBackupPoms>false</generateBackupPoms>
-				</configuration>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -505,6 +511,27 @@
 					<version>3.3.0</version>
 				</plugin>
 				<plugin>
+					<groupId>org.jetbrains.kotlin</groupId>
+					<artifactId>kotlin-maven-plugin</artifactId>
+					<version>${kotlin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.10.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M7</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>3.2.1</version>
 				</plugin>
@@ -513,8 +540,8 @@
 					<version>3.4.0</version>
 				</plugin>
 				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M7</version>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
@@ -527,6 +554,30 @@
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>3.0.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>io.github.git-commit-id</groupId>
+					<artifactId>git-commit-id-maven-plugin</artifactId>
+					<version>5.0.0</version>
+				</plugin>
+				<!--
+					https://spotbugs.github.io/
+					https://spotbugs.readthedocs.io/en/latest/introduction.html
+					https://spotbugs.readthedocs.io/en/latest/maven.html
+				-->
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>4.7.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.8</version>
 				</plugin>
 				<plugin>
 					<!--
@@ -552,6 +603,23 @@
 
 							<argument>${exec.mainClass}</argument>
 						</arguments>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.13</version>
+				</plugin>
+				<plugin>
+					<!--
+						config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074
+					-->
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.11.0</version>
+					<configuration>
+						<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
+						<generateBackupPoms>false</generateBackupPoms>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -759,7 +827,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -820,7 +887,6 @@
 					<plugin>
 						<groupId>io.github.git-commit-id</groupId>
 						<artifactId>git-commit-id-maven-plugin</artifactId>
-						<version>5.0.0</version>
 						<executions>
 							<execution>
 								<id>get-the-git-infos</id>
@@ -861,7 +927,6 @@
 						<!-- plugin docs: https://eclemma.org/jacoco/trunk/doc/ -->
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.8</version>
 						<executions>
 							<execution>
 								<goals>
@@ -917,6 +982,29 @@
 								</configuration>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>deploy-settings</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
