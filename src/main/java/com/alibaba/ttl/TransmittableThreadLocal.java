@@ -636,7 +636,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                 new Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>>() {
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> capture() {
-                        final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>();
+                        final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>(holder.get().size());
                         for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                             ttl2Value.put(threadLocal, threadLocal.copyValue());
                         }
@@ -645,7 +645,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> replay(HashMap<TransmittableThreadLocal<Object>, Object> captured) {
-                        final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>();
+                        final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>(holder.get().size());
 
                         for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                             TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -672,7 +672,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> clear() {
-                        return replay(new HashMap<>());
+                        return replay(new HashMap<>(0));
                     }
 
                     @Override
@@ -707,7 +707,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                 new Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>>() {
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> capture() {
-                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
+                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
                         for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
                             final TtlCopier<Object> copier = entry.getValue();
@@ -719,7 +719,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> replay(HashMap<ThreadLocal<Object>, Object> captured) {
-                        final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>();
+                        final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>(captured.size());
 
                         for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -735,7 +735,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> clear() {
-                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>();
+                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
 
                         for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
