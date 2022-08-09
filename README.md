@@ -511,7 +511,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
     - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       轻量级动态线程池，内置监控告警功能，支持线程池上下文传递，基于主流配置中心（已支持Nacos、Apollo，Zookeeper，可通过SPI自定义实现）
     - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/mabaiwancn/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/mabaiwancn/hippo4j)  
-      强大的动态线程池，附带监控报警功能（没有依赖中间件），完全遵循阿里巴巴编码规范
+      强大的动态线程池框架，附带监控报警功能，支持 JDK、Tomcat、Jetty、Undertow 线程池；Apache RocketMQ、Dubbo、RabbitMQ、Hystrix 消费线程池（更多框架线程池还在适配中）。内置两种使用模式：轻量级依赖配置中心以及无中间件依赖版本
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       微服务路由网关（zuul-plus）
     - [`huaweicloud/Sermant` ![](https://img.shields.io/github/stars/huaweicloud/Sermant.svg?style=social&label=Star)](https://github.com/huaweicloud/Sermant)  
