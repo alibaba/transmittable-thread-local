@@ -96,7 +96,7 @@
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.7.1</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
 		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
@@ -105,8 +105,8 @@
 		<slf4j.version>1.7.36</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.0</junit5.version>
-		<kotest.version>5.4.1</kotest.version>
+		<junit5.version>5.9.1</junit5.version>
+		<kotest.version>5.4.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -290,7 +290,7 @@
 			<dependency>
 				<groupId>io.github.microutils</groupId>
 				<artifactId>kotlin-logging-jvm</artifactId>
-				<version>2.1.23</version>
+				<version>3.0.0</version>
 			</dependency>
 
 			<!--
@@ -327,7 +327,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.13</version>
+				<version>1.12.17</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -532,11 +532,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
@@ -544,7 +544,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.4.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
@@ -623,7 +623,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.11.0</version>
+					<version>2.12.0</version>
 					<configuration>
 						<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
