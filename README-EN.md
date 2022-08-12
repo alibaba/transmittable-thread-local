@@ -126,7 +126,7 @@ String value = context.get();
 ```
 
 **_NOTE_**：  
-Even when the same `Runnable` task is submitted to the thread pool multiple times, the decoration operation (ie： `TtlRunnable.get(task)`) is required for each submission to capture the value of the `TransmittableThreadLocal` context at submission time; That is, if the same task is submitted next time without reperforming decoration and still using the last `TtlRunnable`, the submitted task will run in the context of the last captured context. The sample code is as follows:
+Even when the same `Runnable` task is submitted to the thread pool multiple times, the decoration operations(ie： `TtlRunnable.get(task)`) is required for each submission to capture the value of the `TransmittableThreadLocal` context at submission time; That is, if the same task is submitted next time without reperforming decoration and still using the last `TtlRunnable`, the submitted task will run in the context of the last captured context. The sample code is as follows:
 
 
 ```java
