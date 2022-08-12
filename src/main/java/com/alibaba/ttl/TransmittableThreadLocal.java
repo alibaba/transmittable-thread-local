@@ -383,14 +383,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     /**
-     * {@link Transmitter} transmit all {@link TransmittableThreadLocal}
+     * {@link Transmitter Transmitter} transmit all {@link TransmittableThreadLocal}
      * and registered {@link ThreadLocal} values of the current thread to other thread.
      * <p>
      * Transmittance is completed by static methods {@link #capture()} =&gt;
-     * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operation);
+     * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations);
      * {@link ThreadLocal} instances are registered by {@link Transmitter#registerThreadLocal}).
      * <p>
-     * {@link Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
+     * {@link Transmitter Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application codes</i>!
      *
      * <h2>Framework/Middleware integration to TTL transmittance</h2>
@@ -421,7 +421,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code samples.
      * <p>
-     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operation can be simplified by util methods
+     * Of course, {@link #replay(Object)} and {@link #restore(Object)} operations can be simplified by util methods
      * {@link #runCallableWithCaptured(Object, Callable)} or {@link #runSupplierWithCaptured(Object, Supplier)}
      * and the adorable {@code Java 8 lambda syntax}.
      * <p>
@@ -578,42 +578,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * The transmittee, extension point for other {@code ThreadLocal}.
+         * Register the transmittee({@code CRR}), the extension point for other {@code ThreadLocal}.
          *
          * @param <C> the transmittee capture data type
          * @param <B> the transmittee backup data type
-         * @since 2.13.3
-         */
-        public interface Transmittee<C, B> {
-            /**
-             * @return the capture data of transmittee
-             */
-            C capture();
-
-            /**
-             * @param captured the capture data of transmittee
-             * @return the backup data of transmittee
-             * @since 2.13.3
-             */
-            B replay(C captured);
-
-            /**
-             * @return the backup data of transmittee
-             * @since 2.13.3
-             */
-            B clear();
-
-            /**
-             * @param backup the backup data of transmittee
-             * @since 2.13.3
-             */
-            void restore(B backup);
-        }
-
-        /**
-         * @param <C> the transmittee capture data type
-         * @param <B> the transmittee backup data type
          * @return true if the input transmittee is not registered
+         * @see #unregisterTransmittee(Transmittee)
          * @since 2.13.3
          */
         @SuppressWarnings("unchecked")
@@ -622,9 +592,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
+         * Unregister the transmittee({@code CRR}), the extension point for other {@code ThreadLocal}.
+         *
          * @param <C> the transmittee capture data type
          * @param <B> the transmittee backup data type
          * @return true if the input transmittee is registered
+         * @see #registerTransmittee(Transmittee)
          * @since 2.13.3
          */
         @SuppressWarnings("unchecked")
@@ -632,8 +605,74 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             return transmitteeSet.remove((Transmittee<Object, Object>) transmittee);
         }
 
+        /**
+         * The transmittee, containing methods {@link #capture()} =&gt;
+         * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations),
+         * is the extension point for other {@code ThreadLocal}s
+         * which are registered by {@link #registerTransmittee(Transmittee) registerTransmittee} method.
+         *
+         * @param <C> the transmittee capture data type
+         * @param <B> the transmittee backup data type
+         * @see #registerTransmittee(Transmittee)
+         * @see #unregisterTransmittee(Transmittee)
+         * @since 2.13.3
+         */
+        public interface Transmittee<C, B> {
+            /**
+             * Capture.
+             * <p>
+             * <B><I>NOTE:</I></B><br>
+             * return value do NOT be {@code null}.
+             *
+             * @return the capture data of transmittee
+             * @since 2.13.3
+             */
+            @NonNull
+            C capture();
+
+            /**
+             * Replay.
+             * <p>
+             * <B><I>NOTE:</I></B><br>
+             * return value do NOT be {@code null}.
+             *
+             * @param captured the capture data of transmittee
+             * @return the backup data of transmittee
+             * @since 2.13.3
+             */
+            @NonNull
+            B replay(@NonNull C captured);
+
+            /**
+             * Clear.
+             * <p>
+             * Semantically, the code {@code `B backup = clear();`} is same as {@code `B backup = replay(EMPTY_CAPTURE);`}.
+             * <p>
+             * The reason for providing this method is:
+             *
+             * <ol>
+             * <li>lead to more readable code</li>
+             * <li>need not provide the constant {@code EMPTY_CAPTURE}.</li>
+             * </ol>
+             *
+             * @return the backup data of transmittee
+             * @since 2.13.3
+             */
+            @NonNull
+            B clear();
+
+            /**
+             * Restore.
+             *
+             * @param backup the backup data of transmittee
+             * @since 2.13.3
+             */
+            void restore(@NonNull B backup);
+        }
+
         private static final Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>> ttlTransmittee =
                 new Transmittee<HashMap<TransmittableThreadLocal<Object>, Object>, HashMap<TransmittableThreadLocal<Object>, Object>>() {
+                    @NonNull
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> capture() {
                         final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>(holder.get().size());
@@ -643,8 +682,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                         return ttl2Value;
                     }
 
+                    @NonNull
                     @Override
-                    public HashMap<TransmittableThreadLocal<Object>, Object> replay(HashMap<TransmittableThreadLocal<Object>, Object> captured) {
+                    public HashMap<TransmittableThreadLocal<Object>, Object> replay(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> captured) {
                         final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>(holder.get().size());
 
                         for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
@@ -670,13 +710,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                         return backup;
                     }
 
+                    @NonNull
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> clear() {
                         return replay(new HashMap<>(0));
                     }
 
                     @Override
-                    public void restore(HashMap<TransmittableThreadLocal<Object>, Object> backup) {
+                    public void restore(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> backup) {
                         // call afterExecute callback
                         doExecuteCallback(false);
 
@@ -705,6 +746,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
         private static final Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>> threadLocalTransmittee =
                 new Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>>() {
+                    @NonNull
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> capture() {
                         final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
@@ -717,8 +759,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                         return threadLocal2Value;
                     }
 
+                    @NonNull
                     @Override
-                    public HashMap<ThreadLocal<Object>, Object> replay(HashMap<ThreadLocal<Object>, Object> captured) {
+                    public HashMap<ThreadLocal<Object>, Object> replay(@NonNull HashMap<ThreadLocal<Object>, Object> captured) {
                         final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>(captured.size());
 
                         for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
@@ -733,6 +776,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                         return backup;
                     }
 
+                    @NonNull
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> clear() {
                         final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
@@ -746,7 +790,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     }
 
                     @Override
-                    public void restore(HashMap<ThreadLocal<Object>, Object> backup) {
+                    public void restore(@NonNull HashMap<ThreadLocal<Object>, Object> backup) {
                         for (Map.Entry<ThreadLocal<Object>, Object> entry : backup.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
                             threadLocal.set(entry.getValue());
@@ -762,7 +806,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
+         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operations.
          *
          * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
          * @param bizLogic biz logic
@@ -783,7 +827,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operation.
+         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operations.
          *
          * @param bizLogic biz logic
          * @param <R>      the return type of biz logic
@@ -802,7 +846,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operation.
+         * Util method for simplifying {@link #replay(Object)} and {@link #restore(Object)} operations.
          *
          * @param captured captured {@link TransmittableThreadLocal} values from other thread from {@link #capture()}
          * @param bizLogic biz logic
@@ -825,7 +869,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operation.
+         * Util method for simplifying {@link #clear()} and {@link #restore(Object)} operations.
          *
          * @param bizLogic biz logic
          * @param <R>      the return type of biz logic
