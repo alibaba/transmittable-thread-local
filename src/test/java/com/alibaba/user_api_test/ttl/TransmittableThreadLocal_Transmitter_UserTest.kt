@@ -2,6 +2,7 @@ package com.alibaba.user_api_test.ttl
 
 import com.alibaba.expandThreadPool
 import com.alibaba.ttl.TransmittableThreadLocal
+import com.alibaba.ttl.TransmittableThreadLocal.Transmitter
 import io.kotest.core.spec.style.AnnotationSpec
 import org.junit.Assert.*
 import java.util.*
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 /**
- * Test [TransmittableThreadLocal.Transmitter] from user code(different package)
+ * Test [Transmitter] from user code(different package)
  */
 class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
@@ -19,16 +20,16 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
         val ttl = TransmittableThreadLocal<String>()
         ttl.set(PARENT)
 
-        val capture = TransmittableThreadLocal.Transmitter.capture()
+        val capture = Transmitter.capture()
 
         val future = executorService.submit {
             ttl.set(CHILD)
 
-            val backup = TransmittableThreadLocal.Transmitter.replay(capture)
+            val backup = Transmitter.replay(capture)
 
             assertEquals(PARENT, ttl.get())
 
-            TransmittableThreadLocal.Transmitter.restore(backup)
+            Transmitter.restore(backup)
 
             assertEquals(CHILD, ttl.get())
         }
@@ -48,11 +49,11 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
         val future = executorService.submit {
             ttl.set(CHILD)
 
-            val backup = TransmittableThreadLocal.Transmitter.clear()
+            val backup = Transmitter.clear()
 
             assertNull(ttl.get())
 
-            TransmittableThreadLocal.Transmitter.restore(backup)
+            Transmitter.restore(backup)
 
             assertEquals(CHILD, ttl.get())
         }
@@ -69,11 +70,11 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
         val ttl = TransmittableThreadLocal<String>()
         ttl.set(PARENT)
 
-        val capture = TransmittableThreadLocal.Transmitter.capture()
+        val capture = Transmitter.capture()
 
         val future = executorService.submit {
             ttl.set("child")
-            TransmittableThreadLocal.Transmitter.runSupplierWithCaptured(capture) {
+            Transmitter.runSupplierWithCaptured(capture) {
                 assertEquals(PARENT, ttl.get())
                 ttl.get()
             }
@@ -93,7 +94,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         val future = executorService.submit {
             ttl.set("child")
-            TransmittableThreadLocal.Transmitter.runSupplierWithClear {
+            Transmitter.runSupplierWithClear {
                 assertNull(ttl.get())
                 ttl.get()
             }
@@ -111,12 +112,12 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
         val ttl = TransmittableThreadLocal<String>()
         ttl.set(PARENT)
 
-        val capture = TransmittableThreadLocal.Transmitter.capture()
+        val capture = Transmitter.capture()
 
         val future = executorService.submit {
             ttl.set("child")
             try {
-                TransmittableThreadLocal.Transmitter.runCallableWithCaptured(capture) {
+                Transmitter.runCallableWithCaptured(capture) {
                     assertEquals(PARENT, ttl.get())
                     ttl.get()
                 }
@@ -140,7 +141,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
         val future = executorService.submit {
             ttl.set("child")
             try {
-                TransmittableThreadLocal.Transmitter.runCallableWithClear {
+                Transmitter.runCallableWithClear {
                     assertNull(ttl.get())
                     ttl.get()
                 }
