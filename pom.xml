@@ -106,7 +106,7 @@
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.0</junit5.version>
-		<kotest.version>5.4.1</kotest.version>
+		<kotest.version>5.4.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -545,7 +545,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.0</version>
+					<version>3.12.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
