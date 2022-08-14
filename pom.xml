@@ -675,6 +675,7 @@
 								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
 								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
 								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
+								<classpathDependencyExclude>org.jetbrains:annotations</classpathDependencyExclude>
 							</classpathDependencyExcludes>
 							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
 						</configuration>
