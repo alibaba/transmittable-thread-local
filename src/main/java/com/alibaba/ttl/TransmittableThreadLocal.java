@@ -584,7 +584,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param <B> the transmittee backup data type
          * @return true if the input transmittee is not registered
          * @see #unregisterTransmittee(Transmittee)
-         * @since 2.13.3
+         * @since 2.14.0
          */
         @SuppressWarnings("unchecked")
         public static <C, B> boolean registerTransmittee(@NonNull Transmittee<C, B> transmittee) {
@@ -598,7 +598,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param <B> the transmittee backup data type
          * @return true if the input transmittee is registered
          * @see #registerTransmittee(Transmittee)
-         * @since 2.13.3
+         * @since 2.14.0
          */
         @SuppressWarnings("unchecked")
         public static <C, B> boolean unregisterTransmittee(@NonNull Transmittee<C, B> transmittee) {
@@ -615,17 +615,20 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          * @param <B> the transmittee backup data type
          * @see #registerTransmittee(Transmittee)
          * @see #unregisterTransmittee(Transmittee)
-         * @since 2.13.3
+         * @since 2.14.0
          */
         public interface Transmittee<C, B> {
             /**
              * Capture.
              * <p>
-             * <B><I>NOTE:</I></B><br>
-             * return value do NOT be {@code null}.
+             * <B><I>NOTE:</I></B>
+             * <ul>
+             * <li>do NOT return {@code null}.</li>
+             * <li>do NOT throw any exceptions, just ignored.</li>
+             * </ul>
              *
              * @return the capture data of transmittee
-             * @since 2.13.3
+             * @since 2.14.0
              */
             @NonNull
             C capture();
@@ -633,12 +636,15 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             /**
              * Replay.
              * <p>
-             * <B><I>NOTE:</I></B><br>
-             * return value do NOT be {@code null}.
+             * <B><I>NOTE:</I></B>
+             * <ul>
+             * <li>do NOT return {@code null}.</li>
+             * <li>do NOT throw any exceptions, just ignored.</li>
+             * </ul>
              *
-             * @param captured the capture data of transmittee
+             * @param captured the capture data of transmittee, the return value of method {@link #capture()}
              * @return the backup data of transmittee
-             * @since 2.13.3
+             * @since 2.14.0
              */
             @NonNull
             B replay(@NonNull C captured);
@@ -648,24 +654,34 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
              * <p>
              * Semantically, the code {@code `B backup = clear();`} is same as {@code `B backup = replay(EMPTY_CAPTURE);`}.
              * <p>
+             * <B><I>NOTE:</I></B>
+             * <ul>
+             * <li>do NOT return {@code null}.</li>
+             * <li>do NOT throw any exceptions, just ignored.</li>
+             * </ul>
+             * <p>
              * The reason for providing this method is:
-             *
              * <ol>
              * <li>lead to more readable code</li>
              * <li>need not provide the constant {@code EMPTY_CAPTURE}.</li>
              * </ol>
              *
              * @return the backup data of transmittee
-             * @since 2.13.3
+             * @since 2.14.0
              */
             @NonNull
             B clear();
 
             /**
              * Restore.
+             * <p>
+             * <B><I>NOTE:</I></B><br>
+             * do NOT throw any exceptions, just ignored.
              *
-             * @param backup the backup data of transmittee
-             * @since 2.13.3
+             * @param backup the backup data of transmittee, the return value of methods {@link #replay(Object)} or {@link #clear()}
+             * @see #replay(Object)
+             * @see #clear()
+             * @since 2.14.0
              */
             void restore(@NonNull B backup);
         }
