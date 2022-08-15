@@ -388,7 +388,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * <p>
      * Transmittance is completed by static methods {@link #capture()} =&gt;
      * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations);
-     * {@link ThreadLocal} instances are registered by {@link Transmitter#registerThreadLocal}).
+     * {@link ThreadLocal} instances are registered by method {@link Transmitter#registerThreadLocal Transmitter#registerThreadLocal}.
      * <p>
      * {@link Transmitter Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
      * In general, you will <b><i>never</i></b> use it in the <i>biz/application codes</i>!
@@ -636,10 +636,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         }
 
         /**
-         * The transmittee, containing methods {@link #capture()} =&gt;
-         * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations),
-         * is the extension point for other {@code ThreadLocal}s
+         * The transmittee is the extension point for other {@code ThreadLocal}s
          * which are registered by {@link #registerTransmittee(Transmittee) registerTransmittee} method.
+         * Transmittance is completed by by methods {@link #capture() capture()} =&gt;
+         * {@link #replay(Object) replay(Object)} =&gt; {@link #restore(Object) restore(Object)} (aka {@code CRR} operations),
          *
          * @param <C> the transmittee capture data type
          * @param <B> the transmittee backup data type
@@ -682,13 +682,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             /**
              * Clear.
              * <p>
-             * Semantically, the code {@code `B backup = clear();`} is same as {@code `B backup = replay(EMPTY_CAPTURE);`}.
-             * <p>
              * <B><I>NOTE:</I></B>
              * <ul>
              * <li>do NOT return {@code null}.</li>
              * <li>do NOT throw any exceptions, just ignored.</li>
              * </ul>
+             * <p>
+             * Semantically, the code {@code `B backup = clear();`} is same as {@code `B backup = replay(EMPTY_CAPTURE);`}.
              * <p>
              * The reason for providing this method is:
              * <ol>

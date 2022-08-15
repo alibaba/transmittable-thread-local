@@ -1,8 +1,8 @@
 package com.alibaba.ttl;
 
 /**
- * {@code TtlCopier} copies the value when {@link TransmittableThreadLocal.Transmitter#capture()},
- * use the copied value when {@link TransmittableThreadLocal.Transmitter#replay(Object)}
+ * {@code TtlCopier} copies the value when {@link TransmittableThreadLocal.Transmitter#capture() Transmitter#capture()},
+ * use the copied value when {@link TransmittableThreadLocal.Transmitter#replay(Object) Transmitter#replay(Object)}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TransmittableThreadLocal.Transmitter
@@ -19,7 +19,7 @@ public interface TtlCopier<T> {
      * <p>
      * This method is called from {@link TtlRunnable} or
      * {@link TtlCallable} when it create, before the task is started
-     * (aka. called when {@link TransmittableThreadLocal.Transmitter#capture()}).
+     * (aka. called when {@link TransmittableThreadLocal.Transmitter#capture() Transmitter#capture()}).
      *
      * @see TransmittableThreadLocal.Transmitter#registerThreadLocal(ThreadLocal, TtlCopier)
      * @see TransmittableThreadLocal.Transmitter#registerThreadLocalWithShadowCopier(ThreadLocal)
