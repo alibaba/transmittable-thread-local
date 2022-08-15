@@ -501,7 +501,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         public static Object capture() {
             final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
             for (Transmittee<Object, Object> transmittee : transmitteeSet) {
-                transmittee2Value.put(transmittee, transmittee.capture());
+                try {
+                    transmittee2Value.put(transmittee, transmittee.capture());
+                } catch (Throwable t) {
+                    if (logger.isLoggable(Level.WARNING)) {
+                        logger.log(Level.WARNING, "exception when Transmitter.capture for transmittee " + transmittee +
+                                "(class " + transmittee.getClass().getName() + "), just ignored; cause: " + t, t);
+                    }
+                }
             }
             return new Snapshot(transmittee2Value);
         }
@@ -522,8 +529,15 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
             final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(capturedSnapshot.transmittee2Value.size());
             for (Map.Entry<Transmittee<Object, Object>, Object> entry : capturedSnapshot.transmittee2Value.entrySet()) {
                 Transmittee<Object, Object> transmittee = entry.getKey();
-                Object transmitteeCaptured = entry.getValue();
-                transmittee2Value.put(transmittee, transmittee.replay(transmitteeCaptured));
+                try {
+                    Object transmitteeCaptured = entry.getValue();
+                    transmittee2Value.put(transmittee, transmittee.replay(transmitteeCaptured));
+                } catch (Throwable t) {
+                    if (logger.isLoggable(Level.WARNING)) {
+                        logger.log(Level.WARNING, "exception when Transmitter.replay for transmittee " + transmittee +
+                                "(class " + transmittee.getClass().getName() + "), just ignored; cause: " + t, t);
+                    }
+                }
             }
             return new Snapshot(transmittee2Value);
         }
@@ -549,7 +563,14 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         public static Object clear() {
             final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
             for (Transmittee<Object, Object> transmittee : transmitteeSet) {
-                transmittee2Value.put(transmittee, transmittee.clear());
+                try {
+                    transmittee2Value.put(transmittee, transmittee.clear());
+                } catch (Throwable t) {
+                    if (logger.isLoggable(Level.WARNING)) {
+                        logger.log(Level.WARNING, "exception when Transmitter.clear for transmittee " + transmittee +
+                                "(class " + transmittee.getClass().getName() + "), just ignored; cause: " + t, t);
+                    }
+                }
             }
             return new Snapshot(transmittee2Value);
         }
@@ -565,7 +586,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         public static void restore(@NonNull Object backup) {
             for (Map.Entry<Transmittee<Object, Object>, Object> entry : ((Snapshot) backup).transmittee2Value.entrySet()) {
-                entry.getKey().restore(entry.getValue());
+                Transmittee<Object, Object> transmittee = entry.getKey();
+                try {
+                    Object transmitteeBackup = entry.getValue();
+                    transmittee.restore(transmitteeBackup);
+                } catch (Throwable t) {
+                    if (logger.isLoggable(Level.WARNING)) {
+                        logger.log(Level.WARNING, "exception when Transmitter.restore for transmittee " + transmittee +
+                                "(class " + transmittee.getClass().getName() + "), just ignored; cause: " + t, t);
+                    }
+                }
             }
         }
 
