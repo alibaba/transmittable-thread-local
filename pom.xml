@@ -324,6 +324,14 @@
 
 			<!-- bom -->
 			<dependency>
+				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-parent</artifactId>
+				<version>1.12.13</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-bom</artifactId>
 				<version>${kotlin.version}</version>
