@@ -275,29 +275,6 @@
 				<version>2.4.0</version>
 			</dependency>
 
-			<!-- bom -->
-			<dependency>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-bom</artifactId>
-				<version>${kotlin.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains.kotlinx</groupId>
-				<artifactId>kotlinx-coroutines-bom</artifactId>
-				<version>${kotlin.coroutine.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit5.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 			<!-- logging libs -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -314,7 +291,6 @@
 				<groupId>io.github.microutils</groupId>
 				<artifactId>kotlin-logging-jvm</artifactId>
 				<version>2.1.23</version>
-				<scope>test</scope>
 			</dependency>
 
 			<!--
@@ -344,6 +320,29 @@
 				<artifactId>kotest-property-jvm</artifactId>
 				<version>${kotest.version}</version>
 				<scope>test</scope>
+			</dependency>
+
+			<!-- bom -->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kotlinx-coroutines-bom</artifactId>
+				<version>${kotlin.coroutine.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
