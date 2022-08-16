@@ -598,7 +598,7 @@
 						<executable>${java.home}/bin/java</executable>
 						<classpathScope>test</classpathScope>
 						<arguments>
-							<argument>-Xmx256m</argument>
+							<argument>-Xmx1g</argument>
 							<argument>-Xms256m</argument>
 							<argument>-ea</argument>
 							<argument>-server</argument>
@@ -695,7 +695,7 @@
 						<artifactId>exec-maven-plugin</artifactId>
 						<configuration>
 							<arguments>
-								<argument>-Xmx256m</argument>
+								<argument>-Xmx1g</argument>
 								<argument>-Xms256m</argument>
 								<argument>-ea</argument>
 								<argument>-server</argument>
