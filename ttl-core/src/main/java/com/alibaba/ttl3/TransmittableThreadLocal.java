@@ -26,10 +26,10 @@ import java.util.function.Supplier;
  * since threads in thread pooling components is pre-created and pooled, these threads is <b>neutral</b> to biz logic/data.
  * <br>
  * Disable inheritable for thread pooling components by wrapping thread factories using methods
- * {@link com.alibaba.ttl3.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory} /
+ * {@link TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory} /
  * {@link TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
- * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl3.threadpool.agent.TtlAgent}
+ * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl3.agent.TtlAgent}
  * so as to wrap thread factories for thread pooling components automatically and transparently.
  * <p>
  * ❷ In other cases, disable inheritable by overriding method {@link #childValue(Object)}.
@@ -52,15 +52,15 @@ import java.util.function.Supplier;
  * @see <a href="https://github.com/alibaba/transmittable-thread-local">user guide docs and code repo of TransmittableThreadLocal(TTL)</a>
  * @see TtlRunnable
  * @see TtlCallable
- * @see com.alibaba.ttl3.threadpool.TtlExecutors
- * @see com.alibaba.ttl3.threadpool.TtlExecutors#getTtlExecutor(java.util.concurrent.Executor)
- * @see com.alibaba.ttl3.threadpool.TtlExecutors#getTtlExecutorService(java.util.concurrent.ExecutorService)
- * @see com.alibaba.ttl3.threadpool.TtlExecutors#getTtlScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
- * @see com.alibaba.ttl3.threadpool.TtlExecutors#getDefaultDisableInheritableThreadFactory()
- * @see com.alibaba.ttl3.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+ * @see TtlExecutors
+ * @see TtlExecutors#getTtlExecutor(java.util.concurrent.Executor)
+ * @see TtlExecutors#getTtlExecutorService(java.util.concurrent.ExecutorService)
+ * @see TtlExecutors#getTtlScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+ * @see TtlExecutors#getDefaultDisableInheritableThreadFactory()
+ * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
  * @see TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
  * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
- * @see com.alibaba.ttl3.threadpool.agent.TtlAgent
+ * @see com.alibaba.ttl3.agent.TtlAgent
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     private final boolean disableIgnoreNullValueSemantics;
