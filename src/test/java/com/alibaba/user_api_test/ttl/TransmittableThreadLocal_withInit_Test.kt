@@ -83,7 +83,7 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
         executorService.shutdown()
         assertTrue(
             "Fail to shutdown thread pool",
-            executorService.awaitTermination(100, TimeUnit.MILLISECONDS)
+            executorService.awaitTermination(1, TimeUnit.SECONDS)
         )
     }
 

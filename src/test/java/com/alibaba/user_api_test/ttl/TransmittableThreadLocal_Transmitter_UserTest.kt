@@ -36,7 +36,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -60,7 +60,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -82,7 +82,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -102,7 +102,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -128,7 +128,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -152,7 +152,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
         assertEquals(PARENT, ttl.get())
 
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         assertEquals(PARENT, ttl.get())
     }
@@ -161,7 +161,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
     @AfterAll
     fun afterAll() {
         executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
     }
 
     companion object {

@@ -32,7 +32,7 @@ class ExecutorsTest : AnnotationSpec() {
         futures.forEach { it.get() }
 
         threadPool.shutdown()
-        assertTrue("Fail to shutdown thread pool", threadPool.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", threadPool.awaitTermination(1, TimeUnit.SECONDS))
     }
 }
 

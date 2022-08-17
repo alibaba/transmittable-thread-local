@@ -6,24 +6,34 @@ import com.alibaba.ttl.testmodel.FooPojo
 import com.alibaba.ttl.testmodel.FooTask
 import com.alibaba.ttl.testmodel.Task
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.assertions.timing.eventually
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.Assert.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class TtlRunnableTest : AnnotationSpec() {
-    @Test
-    fun test_ttlRunnable_runInCurrentThread() {
+class TtlRunnableTest : FunSpec({
+    lateinit var executorService: ExecutorService
+
+    beforeSpec {
+        executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
+    }
+
+    afterSpec {
+        executorService.shutdown()
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
+    }
+
+    test("runInCurrentThread") {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -44,8 +54,7 @@ class TtlRunnableTest : AnnotationSpec() {
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
-    @Test
-    fun test_ttlRunnable_asyncRunByNewThread() {
+    test("asyncRunByNewThread") {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -66,8 +75,7 @@ class TtlRunnableTest : AnnotationSpec() {
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
-    @Test
-    fun test_TtlRunnable_asyncRunByExecutorService() {
+    test("asyncRunByExecutorService") {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -90,12 +98,11 @@ class TtlRunnableTest : AnnotationSpec() {
         // child Inheritable
         assertChildTtlValues("1", task.copied)
 
-        // child do not effect parent
+        // child do not affect parent
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
-    @Test
-    fun test_remove_sameAsNotSet() {
+    test("remove_sameAsNotSet") {
         val ttlInstances = createParentTtlInstances()
 
         // add and remove !!
@@ -124,29 +131,7 @@ class TtlRunnableTest : AnnotationSpec() {
         assertParentTtlValues(copyTtlValues(ttlInstances))
     }
 
-    @Test
-    fun test_callback_copy_beforeExecute_afterExecute() {
-        class CounterTransmittableThreadLocal : TransmittableThreadLocal<String?>() {
-            val copyCounter = AtomicInteger()
-            val beforeExecuteCounter = AtomicInteger()
-            val afterExecuteCounter = AtomicInteger()
-
-            override fun copy(parentValue: String?): String? {
-                copyCounter.incrementAndGet()
-                return super.copy(parentValue)
-            }
-
-            override fun beforeExecute() {
-                beforeExecuteCounter.incrementAndGet()
-                super.beforeExecute()
-            }
-
-            override fun afterExecute() {
-                afterExecuteCounter.incrementAndGet()
-                super.afterExecute()
-            }
-        }
-
+    test("callback_copy_beforeExecute_afterExecute") {
         val counterTtl = CounterTransmittableThreadLocal()
         counterTtl.set("Foo")
 
@@ -161,34 +146,38 @@ class TtlRunnableTest : AnnotationSpec() {
         executorService.submit(ttlRunnable1).get()
         assertEquals(1, counterTtl.copyCounter.get())
         assertEquals(1, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
+        eventually(1.seconds) {
+            counterTtl.afterExecuteCounter.get() shouldBe 1
+        }
         assertEquals(1, counterTtl.afterExecuteCounter.get())
 
         // do before/after when run
         executorService.submit(ttlRunnable1).get()
         assertEquals(if (noTtlAgentRun()) 1 else 2, counterTtl.copyCounter.get())
         assertEquals(2, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
-        assertEquals(2, counterTtl.afterExecuteCounter.get())
+        eventually(1.seconds) {
+            counterTtl.afterExecuteCounter.get() shouldBe 2
+        }
 
         // do copy when decorate runnable
         val ttlRunnable2 =
             if (noTtlAgentRun()) TtlRunnable.get { /* do nothing Runnable */ } else Runnable { /* do nothing Runnable */ }
         assertEquals(if (noTtlAgentRun()) 2 else 2, counterTtl.copyCounter.get())
         assertEquals(2, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
-        assertEquals(2, counterTtl.afterExecuteCounter.get())
+        eventually(1.seconds) {
+            counterTtl.afterExecuteCounter.get() shouldBe 2
+        }
 
         // do before/after when run
         executorService.submit(ttlRunnable2).get()
         assertEquals(if (noTtlAgentRun()) 2 else 3, counterTtl.copyCounter.get())
         assertEquals(3, counterTtl.beforeExecuteCounter.get())
-        Thread.sleep(1)
-        assertEquals(3, counterTtl.afterExecuteCounter.get())
+        eventually(1.seconds) {
+            counterTtl.afterExecuteCounter.get() shouldBe 3
+        }
     }
 
-    @Test
-    fun test_TtlRunnable_copyObject() {
+    test("copyObject") {
         val ttlInstances = ConcurrentHashMap<String, TransmittableThreadLocal<FooPojo>>()
 
         val parent = DeepCopyFooTransmittableThreadLocal()
@@ -224,7 +213,7 @@ class TtlRunnableTest : AnnotationSpec() {
         assertEquals(FooPojo(PARENT_CREATE_MODIFIED_IN_CHILD + "1", 2), task.copied[PARENT_CREATE_MODIFIED_IN_CHILD])
         assertEquals(FooPojo(CHILD_CREATE + 1, 3), task.copied[CHILD_CREATE + 1])
 
-        // child do not effect parent
+        // child do not affect parent
         val copied = copyTtlValues(ttlInstances)
         assertEquals(3, copied.size.toLong())
         assertEquals(FooPojo(PARENT_CREATE_UNMODIFIED_IN_CHILD, 1), copied[PARENT_CREATE_UNMODIFIED_IN_CHILD])
@@ -232,8 +221,7 @@ class TtlRunnableTest : AnnotationSpec() {
         assertEquals(FooPojo(PARENT_CREATE_AFTER_CREATE_CHILD, 4), copied[PARENT_CREATE_AFTER_CREATE_CHILD])
     }
 
-    @Test
-    fun test_releaseTtlValueReferenceAfterRun() {
+    test("releaseTtlValueReferenceAfterRun") {
         val ttlInstances = createParentTtlInstances()
 
         val task = Task("1", ttlInstances)
@@ -248,15 +236,13 @@ class TtlRunnableTest : AnnotationSpec() {
         exception.message shouldContain "TTL value reference is released after run!"
     }
 
-    @Test
-    fun test_get_same() {
+    test("get_same") {
         val task = Task("1")
         val ttlRunnable = TtlRunnable.get(task)!!
         assertSame(task, ttlRunnable.runnable)
     }
 
-    @Test
-    fun test_get_idempotent() {
+    test("get_idempotent") {
         val task = TtlRunnable.get(Task("1"))
 
         shouldThrow<IllegalStateException> {
@@ -264,13 +250,11 @@ class TtlRunnableTest : AnnotationSpec() {
         }.message shouldContain "Already TtlRunnable"
     }
 
-    @Test
-    fun test_get_nullInput() {
+    test("et_nullInput") {
         assertNull(TtlRunnable.get(null))
     }
 
-    @Test
-    fun test_gets() {
+    test("gets") {
         val task1 = Task("1")
         val task2 = Task("2")
         val task3 = Task("3")
@@ -285,8 +269,7 @@ class TtlRunnableTest : AnnotationSpec() {
         taskList[3].shouldBeInstanceOf<TtlRunnable>()
     }
 
-    @Test
-    fun test_unwrap() {
+    test("unwrap") {
         assertNull(TtlRunnable.unwrap(null))
 
         val runnable = Runnable {}
@@ -305,14 +288,25 @@ class TtlRunnableTest : AnnotationSpec() {
         assertEquals(listOf(runnable, runnable), TtlRunnable.unwraps(listOf(ttlRunnable, runnable)))
         assertEquals(listOf<Runnable>(), TtlRunnable.unwraps(null))
     }
+})
 
-    @AfterAll
-    fun afterAll() {
-        executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+private class CounterTransmittableThreadLocal : TransmittableThreadLocal<String?>() {
+    val copyCounter = AtomicInteger()
+    val beforeExecuteCounter = AtomicInteger()
+    val afterExecuteCounter = AtomicInteger()
+
+    override fun copy(parentValue: String?): String? {
+        copyCounter.incrementAndGet()
+        return super.copy(parentValue)
     }
 
-    companion object {
-        private val executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
+    override fun beforeExecute() {
+        beforeExecuteCounter.incrementAndGet()
+        super.beforeExecute()
+    }
+
+    override fun afterExecute() {
+        afterExecuteCounter.incrementAndGet()
+        super.afterExecute()
     }
 }

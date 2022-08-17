@@ -28,7 +28,7 @@ class ForkJoinPoolTest : AnnotationSpec() {
         pool.shutdown()
 
         // Fail to shut down thread pool
-        pool.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
+        pool.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
     }
 
     private class SumTask(private val numbers: LongRange) : RecursiveTask<Long>() {
