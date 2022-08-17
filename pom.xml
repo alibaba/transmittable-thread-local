@@ -3,11 +3,11 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.alibaba</groupId>
-	<artifactId>transmittable-thread-local</artifactId>
+	<groupId>com.alibaba.ttl3</groupId>
+	<artifactId>ttl3-parent</artifactId>
 	<version>3.x-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>TransmittableThreadLocal(TTL)</name>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
 	<description>
 		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
 		provide an enhanced InheritableThreadLocal that transmits values between threads even using thread pooling components.
@@ -40,63 +40,17 @@
 		<name>Alibaba</name>
 		<url>https://www.alibaba.com</url>
 	</organization>
-	<developers>
-		<developer>
-			<name>Jerry Lee</name>
-			<id>oldratlee</id>
-			<email>oldratlee(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/oldratlee</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Yang Fang</name>
-			<id>driventokill</id>
-			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/driventokill</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>wuwen</name>
-			<id>wuwen5</id>
-			<email>wuwen.55(AT)aliyun(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/wuwen5</url>
-			<organization>ofpay</organization>
-			<organizationUrl>https://www.ofpay.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>David Dai</name>
-			<id>LNAmp</id>
-			<email>351450944(AT)qq(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/LNAmp</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-	</developers>
+
+	<modules>
+		<module>ttl2-compatible</module>
+	</modules>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.7.1</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
 		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
@@ -105,7 +59,7 @@
 		<slf4j.version>1.7.36</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.0</junit5.version>
+		<junit5.version>5.9.1</junit5.version>
 		<kotest.version>5.4.2</kotest.version>
 
 		<!--
@@ -123,12 +77,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 		<!-- QA libs -->
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
@@ -144,29 +92,6 @@
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- test scope dependencies -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core-jvm</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxjava</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxkotlin</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- logging libs -->
@@ -255,7 +180,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.29.0-GA</version>
+				<version>3.29.2-GA</version>
 				<optional>true</optional>
 			</dependency>
 			<dependency>
@@ -290,7 +215,7 @@
 			<dependency>
 				<groupId>io.github.microutils</groupId>
 				<artifactId>kotlin-logging-jvm</artifactId>
-				<version>2.1.23</version>
+				<version>3.0.0</version>
 			</dependency>
 
 			<!--
@@ -327,7 +252,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.13</version>
+				<version>1.12.17</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -427,61 +352,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<!--
-								Instrumentation Specification
-									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html (this doc for java 8)
-									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
-								JAR Manifest - JAR File Specification
-									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
-							-->
-							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
-							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
-							<Can-Redefine-Classes>false</Can-Redefine-Classes>
-							<Can-Retransform-Classes>true</Can-Retransform-Classes>
-							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-shade-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>shade-when-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<relocations>
-								<relocation>
-									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.javassist</shadedPattern>
-								</relocation>
-							</relocations>
-							<artifactSet>
-								<includes>
-									<include>org.javassist:javassist</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>org.javassist:javassist</artifact>
-									<excludes>
-										<exclude>META-INF/MANIFEST.MF</exclude>
-									</excludes>
-								</filter>
-							</filters>
-							<shadeSourcesContent>true</shadeSourcesContent>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<!--
 				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
 
@@ -532,11 +402,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
@@ -623,7 +493,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.11.0</version>
+					<version>2.12.0</version>
 					<configuration>
 						<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
@@ -633,87 +503,6 @@
 		</pluginManagement>
 	</build>
 	<profiles>
-		<profile>
-			<id>config-for-jdk16+</id>
-			<activation>
-				<jdk>[16,)</jdk>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<excludes>
-								<exclude>**/*$*</exclude>
-								<exclude>**/JavassistTest*</exclude>
-							</excludes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>enable-ttl-agent-for-test</id>
-			<properties>
-				<!-- https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html -->
-				<ttl.built.agent.jar>
-					${project.build.directory}/${project.artifactId}-${project.version}.jar
-				</ttl.built.agent.jar>
-				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
-				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
-				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
-				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
-				<ttl.agent.jvm.args>
-					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
-				</ttl.agent.jvm.args>
-				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<!--
-							reference: https://github.com/EMResearch/EvoMaster/blob/95163fb042101a71289c17f6e433f91fc1f868ef/pom.xml#L851
-						-->
-						<configuration>
-							<forkCount>1</forkCount>
-							<redirectTestOutputToFile>true</redirectTestOutputToFile>
-							<classpathDependencyExcludes>
-								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
-								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
-								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
-								<classpathDependencyExclude>org.jetbrains:annotations</classpathDependencyExclude>
-							</classpathDependencyExcludes>
-							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
-						</configuration>
-					</plugin>
-					<plugin>
-						<!--
-							https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html
-						-->
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<configuration>
-							<arguments>
-								<argument>-Xmx1g</argument>
-								<argument>-Xms256m</argument>
-								<argument>-ea</argument>
-								<argument>-server</argument>
-								<argument>-Duser.language=en</argument>
-								<argument>-Duser.country=US</argument>
-
-								<argument>${ttl.agent.jvm.arg}</argument>
-
-								<argument>-classpath</argument>
-								<classpath/>
-
-								<argument>${exec.mainClass}</argument>
-							</arguments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 		<profile>
 			<id>gen-src</id>
 			<activation>
@@ -726,20 +515,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
-						<configuration>
-							<attach>false</attach>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-shade-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>shade-when-package</id>
-								<configuration>
-									<createSourcesJar>true</createSourcesJar>
-								</configuration>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -776,37 +551,6 @@
 							<overview>src/api/overview.html</overview>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
-							<sourceFileExcludes>
-								<!-- exclude deprecated TtlEnhanced from javadoc -->
-								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
-							</sourceFileExcludes>
-							<isOffline>true</isOffline>
-							<offlineLinks>
-								<!--
-									Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
-									https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
-
-									more infos about link setting:
-									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
-									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
-									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-
-									About package-list vs.element-list
-									- Can't link to JDK10 in Javadoc comments
-									  https://stackoverflow.com/a/49498219/922688
-									- Missing javadoc/package-list for release 5.1
-									  https://github.com/gradle/gradle/issues/8183
-									  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
-								-->
-								<offlineLink>
-									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${project.basedir}/src/package-list/java/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
-									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
-								</offlineLink>
-							</offlineLinks>
 							<additionalJOptions>
 								<!--
 									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
@@ -949,12 +693,6 @@
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
-							<excludes>
-								<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
-								<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
-							</excludes>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
