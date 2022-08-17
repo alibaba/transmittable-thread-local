@@ -43,12 +43,19 @@
 
 	<modules>
 		<module>ttl2-compatible</module>
+
+		<module>ttl-integrations/vertx4-ttl-integration</module>
+		<module>ttl-integrations/vertx3-ttl-integration</module>
+
+		<module>ttl-integrations/sample-ttl-agent-extension-transformlet</module>
 	</modules>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- overridden by submodule that need skip deploy -->
+		<maven.deploy.skip>false</maven.deploy.skip>
 
 		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
@@ -69,9 +76,13 @@
 			https://www.slf4j.org/api/org/slf4j/simple/SimpleLogger.html
 		-->
 		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}</argLine.slf4j.simple.logger.default.d.options>
+		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err
+			-Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
+		</argLine.slf4j.simple.logger.default.d.options>
 		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options} ${argLine.slf4j.simple.logger.extra.d.options}</argLine.slf4j.simple.logger.d.options>
+		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options}
+			${argLine.slf4j.simple.logger.extra.d.options}
+		</argLine.slf4j.simple.logger.d.options>
 
 		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- updated in profile -->
 	</properties>
@@ -663,7 +674,9 @@
 								</validationProperty>
 							</validationProperties>
 							<generateGitPropertiesFile>true</generateGitPropertiesFile>
-							<generateGitPropertiesFilename>${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties</generateGitPropertiesFilename>
+							<generateGitPropertiesFilename>
+								${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties
+							</generateGitPropertiesFilename>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -746,10 +759,29 @@
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<extensions>true</extensions>
+						<!--
+							In multi-module builds using the deploy-at-end feature,
+							the deployment of all components is performed in the last module based on the reactor order.
+							If this property is set to true in the last module,
+							all staging deployment for all modules will be skipped.
+							so, we'll config nexus deploy after every moudle's deploy phase
+
+							see: https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin#configuring-the-plugin
+						-->
 						<configuration>
 							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<!--
+								If you are deploying to Maven Central, it is the Nexus Staging Plugin that is
+								doing the deployment instead of the Deploy plugin,
+								so the configuration of the deploy plugin has no effect.
+								To make the Nexus deploy plugin skip, set skipNexusStagingDeployMojo
+								in its configuration to true.
+
+								see: https://stackoverflow.com/questions/59552549/preventing-maven-modules-from-being-deployed
+							-->
+							<skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
 						</configuration>
 					</plugin>
 				</plugins>
