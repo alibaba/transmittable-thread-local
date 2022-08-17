@@ -292,7 +292,7 @@ class TtlWrappersTest : AnnotationSpec() {
     @AfterAll
     fun afterAll() {
         executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
     }
 
     companion object {

@@ -36,6 +36,6 @@ class TpsCounter internal constructor(private val threadCount: Int) {
         stopped = true
 
         executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
     }
 }

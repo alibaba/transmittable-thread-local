@@ -33,7 +33,7 @@ class ThreadLocalIntegrationTest : AnnotationSpec() {
         }
 
         threadLocal.get() shouldBe PARENT
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
         unregisterThreadLocal(threadLocal).shouldBeFalse()
     }
@@ -60,7 +60,7 @@ class ThreadLocalIntegrationTest : AnnotationSpec() {
         }
 
         threadLocal.get() shouldBe PARENT
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
     }
 
     @Test
@@ -96,7 +96,7 @@ class ThreadLocalIntegrationTest : AnnotationSpec() {
         }
 
         threadLocal.get() shouldBe PARENT
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
     }
 
     @Test
@@ -118,7 +118,7 @@ class ThreadLocalIntegrationTest : AnnotationSpec() {
             }
 
             threadLocal.get() shouldBe initValue
-            future.get(100, TimeUnit.MILLISECONDS)
+            future.get(1, TimeUnit.SECONDS)
         }
 
         threadLocal.get() shouldBe PARENT
@@ -162,7 +162,7 @@ class ThreadLocalIntegrationTest : AnnotationSpec() {
     fun afterAll() {
         executorService.shutdown()
         // Fail to shut down thread pool
-        executorService.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
+        executorService.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
     }
 
     companion object {

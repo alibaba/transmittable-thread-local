@@ -15,10 +15,10 @@ class Task(
     private val ttlInstances: ConcurrentMap<String, TransmittableThreadLocal<String>> = ConcurrentHashMap()
 ) : Runnable {
 
-    private val queue = ArrayBlockingQueue<Map<String, String>>(1);
+    private val queue = ArrayBlockingQueue<Map<String, String>>(1)
 
     val copied: Map<String, String>
-        get() = queue.poll(100, TimeUnit.MILLISECONDS)!!
+        get() = queue.poll(1, TimeUnit.SECONDS)!!
 
     override fun run() {
         val map = createChildTtlInstancesAndModifyParentTtlInstances(tag, ttlInstances)

@@ -12,9 +12,11 @@ private const val POOL_SIZE = 3
 
 val threadFactory = ThreadFactory { Thread(it).apply { isDaemon = true } }
 
-val executorService = ThreadPoolExecutor(POOL_SIZE, POOL_SIZE,
-        10L, TimeUnit.SECONDS,
-        LinkedBlockingQueue(), threadFactory)
+val executorService = ThreadPoolExecutor(
+    POOL_SIZE, POOL_SIZE,
+    10L, TimeUnit.SECONDS,
+    LinkedBlockingQueue(), threadFactory
+)
 
 val scheduledExecutorService = ScheduledThreadPoolExecutor(POOL_SIZE, threadFactory)
 
@@ -37,7 +39,7 @@ class ExecutorClassesTest {
         }
 
         // wait sleep task finished.
-        futures.forEach { it.get(100, TimeUnit.MILLISECONDS) }
+        futures.forEach { it.get(1, TimeUnit.SECONDS) }
     }
 
     @Test
@@ -46,13 +48,17 @@ class ExecutorClassesTest {
 
         val tag = "2"
         val task = Task(tag, ttlInstances)
-        val future = scheduledExecutorService.schedule(if (noTtlAgentRun()) TtlRunnable.get(task) else task, 10, TimeUnit.MILLISECONDS)
+        val future = scheduledExecutorService.schedule(
+            if (noTtlAgentRun()) TtlRunnable.get(task) else task,
+            10,
+            TimeUnit.MILLISECONDS
+        )
 
         // create after new Task, won't see parent value in in task!
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        future.get(200, TimeUnit.MILLISECONDS)
+        future.get(1, TimeUnit.SECONDS)
 
 
         // child Inheritable

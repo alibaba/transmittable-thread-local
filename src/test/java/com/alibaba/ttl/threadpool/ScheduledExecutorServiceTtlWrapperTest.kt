@@ -113,7 +113,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val futures = executorService.invokeAll(listOf(call1, call2), 100, TimeUnit.MILLISECONDS)
+        val futures = executorService.invokeAll(listOf(call1, call2), 1, TimeUnit.SECONDS)
         for (future in futures) {
             assertEquals("ok", future.get())
         }
@@ -152,7 +152,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
         createParentTtlInstancesAfterCreateChild(ttlInstances)
 
 
-        val s = executorService.invokeAny(listOf(call1, call2), 10, TimeUnit.SECONDS)
+        val s = executorService.invokeAny(listOf(call1, call2), 1, TimeUnit.SECONDS)
         assertEquals("ok", s)
 
         assertTrue(call1.isCopied || call2.isCopied)
@@ -228,7 +228,7 @@ class ScheduledExecutorServiceTtlWrapperTest : AnnotationSpec() {
     @AfterAll
     fun afterAll() {
         executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
     }
 
     companion object {
