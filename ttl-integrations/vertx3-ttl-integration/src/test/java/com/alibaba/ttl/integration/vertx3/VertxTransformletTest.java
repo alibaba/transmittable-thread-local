@@ -1,4 +1,4 @@
-package com.alibaba.ttl.integration.vertx4;
+package com.alibaba.ttl.integration.vertx3;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.threadpool.agent.TtlAgent;
@@ -6,6 +6,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import org.junit.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -70,11 +71,11 @@ public class VertxTransformletTest {
         transmittableThreadLocal.set(transmittedData);
         inheritableThreadLocal.set(inheritedData);
 
-        vertx.createHttpClient().get(80, "baidu.com", "/", event -> {
-            System.out.println("receive msg from baidu:" + event.statusCode());
+        vertx.createHttpClient().get(80, "bing.com", "/", event -> {
+            System.out.println("receive msg:" + event.statusCode());
             System.out.println("===================callback=====================");
             event.bodyHandler(body -> {
-                System.out.println("receive response body from www.baidu.com" + body.toString("utf8"));
+                System.out.println("receive response body: " + body.toString(UTF_8));
             });
 
             if (TtlAgent.isTtlAgentLoaded()) {
