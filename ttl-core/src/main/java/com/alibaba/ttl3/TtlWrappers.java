@@ -57,9 +57,9 @@ public final class TtlWrappers {
      *
      * @see TtlRunnable#unwrap(Runnable)
      * @see TtlCallable#unwrap(java.util.concurrent.Callable)
-     * @see com.alibaba.ttl3.threadpool.TtlExecutors#unwrapExecutor(java.util.concurrent.Executor)
-     * @see com.alibaba.ttl3.threadpool.TtlExecutors#unwrapThreadFactory(java.util.concurrent.ThreadFactory)
-     * @see com.alibaba.ttl3.threadpool.TtlExecutors#unwrapComparator(java.util.Comparator)
+     * @see TtlExecutors#unwrapExecutor(java.util.concurrent.Executor)
+     * @see TtlExecutors#unwrapThreadFactory(java.util.concurrent.ThreadFactory)
+     * @see TtlExecutors#unwrapComparator(java.util.Comparator)
      * @see TtlExecutors#unwrapForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see TtlWrappers#wrapSupplier(Supplier)
      * @see TtlWrappers#wrapConsumer(Consumer)

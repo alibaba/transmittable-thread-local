@@ -43,6 +43,7 @@
 
 	<modules>
 		<module>ttl-core</module>
+		<module>ttl-agent</module>
 
 		<module>ttl2-compatible</module>
 

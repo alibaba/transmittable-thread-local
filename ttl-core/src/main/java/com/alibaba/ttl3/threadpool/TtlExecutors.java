@@ -3,7 +3,7 @@ package com.alibaba.ttl3.threadpool;
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import com.alibaba.ttl3.spi.TtlEnhanced;
 import com.alibaba.ttl3.spi.TtlWrapper;
-import com.alibaba.ttl3.threadpool.agent.TtlAgent;
+import com.alibaba.ttl3.agent.TtlAgent;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
