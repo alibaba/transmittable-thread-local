@@ -21,13 +21,13 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * <p>
  * <b>NOTE:</b>
  * The {@link TtlTimerTask} make the method {@link TimerTask#scheduledExecutionTime()} in
- * the origin {@link TimerTask} lose effectiveness! Use {@link com.alibaba.ttl3.threadpool.agent.TtlAgent} instead.
+ * the origin {@link TimerTask} lose effectiveness! Use {@link com.alibaba.ttl3.agent.TtlAgent} instead.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Timer
  * @see TimerTask
  * @see <a href="https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency">Alibaba Java Coding Guidelines - Concurrency - Item 10: [Mandatory] Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions.</a>
- * @see com.alibaba.ttl3.threadpool.agent.TtlAgent
+ * @see com.alibaba.ttl3.agent.TtlAgent
  * @deprecated Use {@link TtlRunnable}, {@link java.util.concurrent.ScheduledExecutorService} instead of {@link Timer}, {@link TimerTask}.
  */
 @Deprecated

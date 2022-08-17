@@ -11,14 +11,14 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
 /**
  * A recursive result-bearing {@link ForkJoinTask} enhanced by {@link TransmittableThreadLocal}.
  * <p>
- * Recommend to use {@link com.alibaba.ttl3.threadpool.agent.TtlAgent};
+ * Recommend to use {@link com.alibaba.ttl3.agent.TtlAgent};
  * Specially for {@code Java 8} {@link java.util.stream.Stream} and {@link java.util.concurrent.CompletableFuture},
  * these async task are executed by {@link java.util.concurrent.ForkJoinPool} via {@link ForkJoinTask} at the bottom.
  *
  * @author LNAmp
  * @see java.util.concurrent.RecursiveTask
  * @see com.alibaba.ttl3.threadpool.TtlExecutors
- * @see com.alibaba.ttl3.threadpool.agent.TtlAgent
+ * @see com.alibaba.ttl3.agent.TtlAgent
  */
 public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> implements TtlEnhanced {
 

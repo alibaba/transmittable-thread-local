@@ -1,6 +1,5 @@
 package com.alibaba.ttl3.threadpool.agent.transformlet.helper;
 
-import com.alibaba.ttl3.threadpool.TtlExecutors;
 import com.alibaba.ttl3.threadpool.agent.logging.Logger;
 import com.alibaba.ttl3.threadpool.agent.transformlet.ClassInfo;
 import com.alibaba.ttl3.threadpool.agent.transformlet.TtlTransformlet;
@@ -120,7 +119,7 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
     }
 
     /**
-     * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+     * @see com.alibaba.ttl3.threadpool.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
      */
     private void updateConstructorDisableInheritable(@NonNull final CtClass clazz) throws NotFoundException, CannotCompileException {
         for (CtConstructor constructor : clazz.getDeclaredConstructors()) {
