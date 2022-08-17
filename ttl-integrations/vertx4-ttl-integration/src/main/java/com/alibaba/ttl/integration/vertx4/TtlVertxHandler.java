@@ -43,7 +43,7 @@ public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, T
     }
 
     /**
-     * wrap method {@link Handler#handle(E)}.
+     * wrap method {@link Handler#handle(Object)}.
      */
     @Override
     public void handle(E event) {
@@ -69,7 +69,7 @@ public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, T
     }
 
     /**
-     * unwrap to original/unwrapped {@link Handler<E>}.
+     * unwrap to original/unwrapped {@link Handler}.
      *
      * @see com.alibaba.ttl.TtlUnwrap#unwrap(Object)
      */
