@@ -42,6 +42,8 @@
 	</organization>
 
 	<modules>
+		<module>ttl-core</module>
+
 		<module>ttl2-compatible</module>
 
 		<module>ttl-integrations/vertx4-ttl-integration</module>
