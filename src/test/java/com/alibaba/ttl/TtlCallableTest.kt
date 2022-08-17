@@ -136,7 +136,6 @@ class TtlCallableTest : AnnotationSpec() {
     }
 
     @Test
-    @Throws(Exception::class)
     fun test_get_nullInput() {
         TtlCallable.get<Any>(null).shouldBeNull()
     }
@@ -182,7 +181,7 @@ class TtlCallableTest : AnnotationSpec() {
     @AfterAll
     fun afterAll() {
         executorService.shutdown()
-        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(100, TimeUnit.MILLISECONDS))
+        assertTrue("Fail to shutdown thread pool", executorService.awaitTermination(1, TimeUnit.SECONDS))
     }
 
     companion object {

@@ -68,7 +68,7 @@ class SessionCacheDemo : AnnotationSpec() {
     fun afterAll() {
         executorService.shutdown()
         // Fail to shut down thread pool
-        executorService.awaitTermination(100, TimeUnit.MILLISECONDS).shouldBeTrue()
+        executorService.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
     }
 
     @After
