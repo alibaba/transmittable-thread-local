@@ -36,12 +36,28 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.2</version>
 				</plugin>
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<source>8</source>
+						<show>protected</show>
+						<charset>UTF-8</charset>
+						<encoding>UTF-8</encoding>
+						<docencoding>UTF-8</docencoding>
+						<quiet>true</quiet>
+						<doclint>all,-missing</doclint>
+						<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
+						<excludePackageNames>*.internal:*.internal.*:*.internal.*.*:*.internal.*.*.*:*.internal.*.*.*.*</excludePackageNames>
+						<additionalJOptions>
+							<additionalJOption>-J-Duser.language=en</additionalJOption>
+							<additionalJOption>-J-Duser.country=US</additionalJOption>
+						</additionalJOptions>
+					</configuration>
+				</plugin>
+				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
