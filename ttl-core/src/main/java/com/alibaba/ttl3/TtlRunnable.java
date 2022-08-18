@@ -27,7 +27,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * Other TTL Wrapper for common {@code Functional Interface} see {@link TtlWrappers}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see com.alibaba.ttl3.threadpool.TtlExecutors
+ * @see com.alibaba.ttl3.executor.TtlExecutors
  * @see TtlWrappers
  * @see java.util.concurrent.Executor
  * @see java.util.concurrent.ExecutorService

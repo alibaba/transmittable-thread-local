@@ -1,6 +1,6 @@
 package com.alibaba.ttl3;
 
-import com.alibaba.ttl3.threadpool.TtlExecutors;
+import com.alibaba.ttl3.executor.TtlExecutors;
 import com.alibaba.ttl3.transmitter.Transmittee;
 import com.alibaba.ttl3.transmitter.Transmitter;
 import edu.umd.cs.findbugs.annotations.NonNull;
