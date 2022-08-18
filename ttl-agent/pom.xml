@@ -127,6 +127,13 @@
 							</artifactSet>
 							<filters>
 								<filter>
+									<artifact>org.javassist:javassist</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>com.alibaba.ttl3:ttl-core</artifact>
 									<excludes>
 										<exclude>META-INF/MANIFEST.MF</exclude>
 									</excludes>
@@ -284,11 +291,11 @@
 								-->
 								<offlineLink>
 									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${project.basedir}/src/package-list/java/</location>
+									<location>${project.basedir}/../src/package-list/java/</location>
 								</offlineLink>
 								<offlineLink>
 									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
-									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
+									<location>${project.basedir}/../src/package-list/spotbugs-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
 						</configuration>
