@@ -17,7 +17,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  *
  * @author LNAmp
  * @see java.util.concurrent.RecursiveTask
- * @see com.alibaba.ttl3.threadpool.TtlExecutors
+ * @see com.alibaba.ttl3.executor.TtlExecutors
  * @see com.alibaba.ttl3.agent.TtlAgent
  */
 public abstract class TtlRecursiveTask<V> extends ForkJoinTask<V> implements TtlEnhanced {
