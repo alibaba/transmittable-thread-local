@@ -1,7 +1,7 @@
 package com.alibaba.ttl3.spi;
 
-import com.alibaba.ttl3.threadpool.DisableInheritableForkJoinWorkerThreadFactory;
-import com.alibaba.ttl3.threadpool.DisableInheritableThreadFactory;
+import com.alibaba.ttl3.executor.DisableInheritableForkJoinWorkerThreadFactory;
+import com.alibaba.ttl3.executor.DisableInheritableThreadFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -10,7 +10,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Used to mark wrapper types, for example:
  * <ul>
  *     <li>{@link com.alibaba.ttl3.TtlCallable}</li>
- *     <li>{@link com.alibaba.ttl3.threadpool.TtlExecutors}</li>
+ *     <li>{@link com.alibaba.ttl3.executor.TtlExecutors}</li>
  *     <li>{@link DisableInheritableThreadFactory}</li>
  * </ul>
  *
@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see com.alibaba.ttl3.TtlWrappers#unwrap
  * @see com.alibaba.ttl3.TtlCallable
  * @see com.alibaba.ttl3.TtlRunnable
- * @see com.alibaba.ttl3.threadpool.TtlExecutors
+ * @see com.alibaba.ttl3.executor.TtlExecutors
  * @see DisableInheritableThreadFactory
  * @see DisableInheritableForkJoinWorkerThreadFactory
  */
