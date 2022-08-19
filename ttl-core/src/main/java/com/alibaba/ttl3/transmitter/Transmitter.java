@@ -87,7 +87,7 @@ import java.util.function.Supplier;
  * </ol>
  * <p>
  * If you need the different {@code throws Exception} type,
- * you can define your own util method(function interface({@code lambda}))
+ * you can define your own util method alike for function interface({@code lambda})
  * with your own {@code throws Exception} type.
  *
  * <h2>Other ThreadLocal Integration</h2>
