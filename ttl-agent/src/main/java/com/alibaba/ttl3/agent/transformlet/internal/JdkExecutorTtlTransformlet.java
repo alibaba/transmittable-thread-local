@@ -1,8 +1,8 @@
-package com.alibaba.ttl3.executor.agent.transformlet.internal;
+package com.alibaba.ttl3.agent.transformlet.internal;
 
-import com.alibaba.ttl3.executor.agent.TtlAgent;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
-import com.alibaba.ttl3.executor.agent.transformlet.helper.AbstractExecutorTtlTransformlet;
+import com.alibaba.ttl3.agent.TtlAgent;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.helper.AbstractExecutorTtlTransformlet;
 
 import java.util.HashSet;
 import java.util.Set;

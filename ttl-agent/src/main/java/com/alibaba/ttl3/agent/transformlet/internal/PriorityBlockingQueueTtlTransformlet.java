@@ -1,9 +1,9 @@
-package com.alibaba.ttl3.executor.agent.transformlet.internal;
+package com.alibaba.ttl3.agent.transformlet.internal;
 
+import com.alibaba.ttl3.agent.logging.Logger;
+import com.alibaba.ttl3.agent.transformlet.ClassInfo;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
 import com.alibaba.ttl3.executor.TtlExecutors;
-import com.alibaba.ttl3.executor.agent.logging.Logger;
-import com.alibaba.ttl3.executor.agent.transformlet.ClassInfo;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -13,7 +13,7 @@ import javassist.NotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
 
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
 /**
  * TTL {@link TtlTransformlet} for {@link java.util.concurrent.PriorityBlockingQueue PriorityBlockingQueue}.

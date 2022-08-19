@@ -28,7 +28,6 @@ public interface TtlAttachments extends TtlEnhanced {
      * The attachment key of TTL task, weather this task is a auto wrapper task.
      * <p>
      * so the value of this attachment is a {@code boolean}.
-     *
      */
     String KEY_IS_AUTO_WRAPPER = "ttl.is.auto.wrapper";
 }

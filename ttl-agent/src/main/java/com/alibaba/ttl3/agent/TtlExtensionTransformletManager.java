@@ -1,8 +1,8 @@
-package com.alibaba.ttl3.executor.agent;
+package com.alibaba.ttl3.agent;
 
-import com.alibaba.ttl3.executor.agent.logging.Logger;
-import com.alibaba.ttl3.executor.agent.transformlet.ClassInfo;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.logging.Logger;
+import com.alibaba.ttl3.agent.transformlet.ClassInfo;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -74,12 +74,12 @@ final class TtlExtensionTransformletManager {
         final String foundMsgHead = "[TtlExtensionTransformletCollector] found TTL Extension Transformlet class ";
         final String failLoadMsgHead = "[TtlExtensionTransformletCollector] fail to load TTL Extension Transformlet ";
         final Map<ClassLoader, Set<TtlTransformlet>> loadedTransformlet =
-            loadExtensionInstances(classLoader, extensionTransformletClassNames, TtlTransformlet.class, foundMsgHead, failLoadMsgHead);
+                loadExtensionInstances(classLoader, extensionTransformletClassNames, TtlTransformlet.class, foundMsgHead, failLoadMsgHead);
 
         mergeToClassLoader2ExtensionTransformlet(classLoader2ExtensionTransformlets, loadedTransformlet);
 
         updateClassLoader2ExtensionTransformletsIncludeParentCL(
-            classLoader2ExtensionTransformlets, classLoader2ExtensionTransformletsIncludeParentCL);
+                classLoader2ExtensionTransformlets, classLoader2ExtensionTransformletsIncludeParentCL);
     }
 
     // extension transformlet configuration file URL location string -> URL contained extension transformlet class names
@@ -93,13 +93,13 @@ final class TtlExtensionTransformletManager {
         final Set<String> stringUrls = pair.second;
         if (!stringUrls.isEmpty())
             logger.info("[TtlExtensionTransformletCollector] found TTL Extension Transformlet configuration files from classloader "
-                + classLoader + " : " + stringUrls);
+                    + classLoader + " : " + stringUrls);
 
         return extensionTransformletClassNames;
     }
 
     private static void mergeToClassLoader2ExtensionTransformlet(
-        Map<ClassLoader, Map<String, TtlTransformlet>> destination, Map<ClassLoader, Set<TtlTransformlet>> loadedTransformlets
+            Map<ClassLoader, Map<String, TtlTransformlet>> destination, Map<ClassLoader, Set<TtlTransformlet>> loadedTransformlets
     ) {
         for (Map.Entry<ClassLoader, Set<TtlTransformlet>> entry : loadedTransformlets.entrySet()) {
             final ClassLoader classLoader = entry.getKey();
@@ -118,8 +118,8 @@ final class TtlExtensionTransformletManager {
     }
 
     static void updateClassLoader2ExtensionTransformletsIncludeParentCL(
-        Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets,
-        Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL
+            Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformlets,
+            Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2ExtensionTransformletsIncludeParentCL
     ) {
         for (Map.Entry<ClassLoader, Map<String, TtlTransformlet>> entry : classLoader2ExtensionTransformlets.entrySet()) {
             final ClassLoader classLoader = entry.getKey();
@@ -129,7 +129,7 @@ final class TtlExtensionTransformletManager {
     }
 
     static Map<String, TtlTransformlet> childClassLoaderFirstMergeTransformlets(
-        Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2Transformlet, ClassLoader classLoader
+            Map<ClassLoader, Map<String, TtlTransformlet>> classLoader2Transformlet, ClassLoader classLoader
     ) {
         Map<String, TtlTransformlet> ret = new HashMap<>();
 
@@ -154,8 +154,8 @@ final class TtlExtensionTransformletManager {
     // ======== Extension load util methods ========
 
     static <T> Map<ClassLoader, Set<T>> loadExtensionInstances(
-        ClassLoader classLoader, LinkedHashSet<String> instanceClassNames, Class<T> superType,
-        String foundMsgHead, String failLoadMsgHead
+            ClassLoader classLoader, LinkedHashSet<String> instanceClassNames, Class<T> superType,
+            String foundMsgHead, String failLoadMsgHead
     ) {
         Map<ClassLoader, Set<T>> ret = new HashMap<>();
 
@@ -164,9 +164,9 @@ final class TtlExtensionTransformletManager {
                 final Class<?> clazz = classLoader.loadClass(className);
                 if (!superType.isAssignableFrom(clazz)) {
                     final String msg = foundMsgHead + className
-                        + " from classloader " + classLoader
-                        + " at location " + getLocationUrlOfClass(clazz)
-                        + ", but NOT subtype of " + superType.getName() + ", ignored!";
+                            + " from classloader " + classLoader
+                            + " at location " + getLocationUrlOfClass(clazz)
+                            + ", but NOT subtype of " + superType.getName() + ", ignored!";
                     logger.error(msg);
                     continue;
                 }
@@ -178,8 +178,8 @@ final class TtlExtensionTransformletManager {
                 set.add(superType.cast(instance));
 
                 final String msg = foundMsgHead + className
-                    + ", and loaded from classloader " + classLoader
-                    + " at location " + getLocationUrlOfClass(clazz);
+                        + ", and loaded from classloader " + classLoader
+                        + " at location " + getLocationUrlOfClass(clazz);
                 logger.info(msg);
             } catch (ClassNotFoundException e) {
                 final String msg = failLoadMsgHead + className + " from classloader " + classLoader + ", cause: " + e.toString();
@@ -197,8 +197,8 @@ final class TtlExtensionTransformletManager {
     // return: read lines from URL, url strings
     @NonNull
     static Pair<LinkedHashSet<String>, Set<String>> readLinesFromExtensionFiles(
-        /* input */ @NonNull Enumeration<URL> extensionFiles,
-        /* input/output, map url string -> content lines */ @NonNull Map<String, LinkedHashSet<String>> redExtensionFilesHistory
+            /* input */ @NonNull Enumeration<URL> extensionFiles,
+            /* input/output, map url string -> content lines */ @NonNull Map<String, LinkedHashSet<String>> redExtensionFilesHistory
     ) {
         final LinkedHashSet<String> mergedLines = new LinkedHashSet<>();
         final Set<String> stringUrls = new HashSet<>();
