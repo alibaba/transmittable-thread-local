@@ -3,8 +3,8 @@ package com.alibaba.crr;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Transmittance is completed by by methods {@link #capture() capture()} =&gt;
- * {@link #replay(Object) replay(Object)} =&gt; {@link #restore(Object) restore(Object)} (aka {@code CRR} operations),
+ * Transmittance process is represented by methods {@link #capture()} =&gt;
+ * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations).
  *
  * @param <C> the capture data type of transmittance
  * @param <B> the backup data type of transmittance

@@ -638,7 +638,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         /**
          * The transmittee is the extension point for other {@code ThreadLocal}s
          * which are registered by {@link #registerTransmittee(Transmittee) registerTransmittee} method.
-         * Transmittance is completed by by methods {@link #capture() capture()} =&gt;
+         * Transmittance is completed by methods {@link #capture() capture()} =&gt;
          * {@link #replay(Object) replay(Object)} =&gt; {@link #restore(Object) restore(Object)} (aka {@code CRR} operations),
          *
          * @param <C> the transmittee capture data type

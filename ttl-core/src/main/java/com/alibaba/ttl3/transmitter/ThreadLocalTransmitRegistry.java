@@ -43,6 +43,7 @@ import java.util.logging.Logger;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Transmitter
  * @see Transmitter#registerTransmittee(Transmittee)
+ * @see Transmittee
  */
 public final class ThreadLocalTransmitRegistry {
     private static final Logger logger = Logger.getLogger(ThreadLocalTransmitRegistry.class.getName());
