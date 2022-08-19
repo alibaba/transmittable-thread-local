@@ -5,6 +5,7 @@ import com.alibaba.crr.composite.Capture;
 import com.alibaba.crr.composite.CompositeCrrTransmit;
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import com.alibaba.ttl3.TtlCallable;
+import com.alibaba.ttl3.TtlCopier;
 import com.alibaba.ttl3.TtlRunnable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -13,14 +14,15 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 /**
- * {@link Transmitter Transmitter} transmit all {@link TransmittableThreadLocal}
- * and registered {@link ThreadLocal} values of the current thread to other thread.
+ * {@link Transmitter} transmit all {@link TransmittableThreadLocal}
+ * and other registered {@link ThreadLocal} values of the current thread to other thread.
  * <p>
  * Transmittance is completed by static methods {@link #capture()} =&gt;
  * {@link #replay(Capture)} =&gt; {@link #restore(Backup)} (aka {@code CRR} operations).
- * {@link ThreadLocal} instances are registered via {@link ThreadLocalTransmitRegistry}.
+ * {@code JDK} {@link ThreadLocal} instances can be registered via {@link ThreadLocalTransmitRegistry}.
  * <p>
- * {@link Transmitter Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
+ * {@link Transmitter Transmitter} is <b><i>internal</i></b> manipulation api
+ * for <b><i>framework/middleware integration</i></b>;
  * In general, you will <b><i>never</i></b> use it in the <i>biz/application codes</i>!
  *
  * <h2>Framework/Middleware integration to TTL transmittance</h2>
@@ -49,10 +51,12 @@ import java.util.function.Supplier;
  *     Transmitter.restore(backup); // (3)
  * }}</pre>
  * <p>
- * see the implementation code of {@link TtlRunnable} and {@link TtlCallable} for more actual code samples.
+ * see the implementation code of {@link TtlRunnable} and {@link TtlCallable}
+ * for more actual code samples.
  * <p>
- * Of course, {@link #replay(Capture)} and {@link #restore(Backup)} operations can be simplified by util methods
- * {@link #runCallableWithCaptured(Capture, Callable)} or {@link #runSupplierWithCaptured(Capture, Supplier)}
+ * Of course, {@link #replay(Capture)} and {@link #restore(Backup)} operations
+ * can be simplified by util methods {@link #runCallableWithCaptured(Capture, Callable)}
+ * or {@link #runSupplierWithCaptured(Capture, Supplier)}
  * and the adorable {@code Java 8 lambda syntax}.
  * <p>
  * Below is the example code:
@@ -86,10 +90,16 @@ import java.util.function.Supplier;
  * you can define your own util method(function interface({@code lambda}))
  * with your own {@code throws Exception} type.
  *
- * <h2>ThreadLocal Integration</h2>
- * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
- * register the {@link ThreadLocal} instances via {@link ThreadLocalTransmitRegistry}
+ * <h2>Other ThreadLocal Integration</h2>
+ * <p>
+ * If you can not rewrite the existed code which use {@code JDK} {@link ThreadLocal}
+ * to {@link TransmittableThreadLocal}, register the {@link ThreadLocal} instances
+ * via {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, TtlCopier)}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
+ * <p>
+ * For other {@code ThreadLocal}s integration(e.g. {@code FastThreadLocal} of {@code Netty}),
+ * you can implement your own {@code XxxThreadLocalRegistry}
+ * (e.g. {@code FastThreadLocalRegistry}) like {@link ThreadLocalTransmitRegistry}.
  *
  * @author Yang Fang (snoop dot fy at gmail dot com)
  * @author Jerry Lee (oldratlee at gmail dot com)
