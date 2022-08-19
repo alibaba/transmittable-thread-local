@@ -10,21 +10,22 @@ import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 /**
- * ThreadLocalTransmitRegister, ThreadLocal Integration.
+ * ThreadLocalTransmitRegister, ThreadLocal Integration to {@link Transmitter}.
  * <p>
  * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
  * register the {@link ThreadLocal} instances via the methods
- * {@link ThreadLocalTransmitRegister#registerThreadLocal(ThreadLocal, TtlCopier)}/{@link ThreadLocalTransmitRegister#registerThreadLocalWithShadowCopier(ThreadLocal)}
+ * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, TtlCopier)}
+ * / {@link ThreadLocalTransmitRegistry#registerThreadLocalWithShadowCopier(ThreadLocal)}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
  * <p>
  * Below is the example code:
  *
  * <pre>{@code
  * // the value of this ThreadLocal instance will be transmitted after registered
- * Transmitter.registerThreadLocal(aThreadLocal, copyLambda);
+ * ThreadLocalTransmitRegistry.registerThreadLocal(aThreadLocal, copier);
  *
  * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
- * Transmitter.unregisterThreadLocal(aThreadLocal);}</pre>
+ * ThreadLocalTransmitRegistry.unregisterThreadLocal(aThreadLocal);}</pre>
  * <p>
  * The fields stored the {@code ThreadLocal} instances are generally {@code private static},
  * so the {@code ThreadLocal} instances need be got by reflection, for example:
@@ -40,9 +41,11 @@ import java.util.logging.Logger;
  * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
+ * @see Transmitter
+ * @see Transmitter#registerTransmittee(Transmittee)
  */
-public final class ThreadLocalTransmitRegister {
-    private static final Logger logger = Logger.getLogger(ThreadLocalTransmitRegister.class.getName());
+public final class ThreadLocalTransmitRegistry {
+    private static final Logger logger = Logger.getLogger(ThreadLocalTransmitRegistry.class.getName());
 
     private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<>();
 
@@ -186,6 +189,7 @@ public final class ThreadLocalTransmitRegister {
         }
     }
 
+
     private static class ThreadLocalTransmittee implements Transmittee<HashMap<ThreadLocal<Object>, Object>, HashMap<ThreadLocal<Object>, Object>> {
         private static final Object threadLocalClearMark = new Object();
 
@@ -247,7 +251,7 @@ public final class ThreadLocalTransmitRegister {
         Transmitter.registerTransmittee(threadLocalTransmittee);
     }
 
-    private ThreadLocalTransmitRegister() {
+    private ThreadLocalTransmitRegistry() {
         throw new InstantiationError("Must not instantiate this class");
     }
 }

@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * <p>
  * Transmittance is completed by static methods {@link #capture()} =&gt;
  * {@link #replay(Capture)} =&gt; {@link #restore(Backup)} (aka {@code CRR} operations).
- * {@link ThreadLocal} instances are registered via {@link ThreadLocalTransmitRegister}.
+ * {@link ThreadLocal} instances are registered via {@link ThreadLocalTransmitRegistry}.
  * <p>
  * {@link Transmitter Transmitter} is <b><i>internal</i></b> manipulation api for <b><i>framework/middleware integration</i></b>;
  * In general, you will <b><i>never</i></b> use it in the <i>biz/application codes</i>!
@@ -88,14 +88,14 @@ import java.util.function.Supplier;
  *
  * <h2>ThreadLocal Integration</h2>
  * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
- * register the {@link ThreadLocal} instances via {@link ThreadLocalTransmitRegister}
+ * register the {@link ThreadLocal} instances via {@link ThreadLocalTransmitRegistry}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
  *
  * @author Yang Fang (snoop dot fy at gmail dot com)
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
- * @see ThreadLocalTransmitRegister
+ * @see ThreadLocalTransmitRegistry
  */
 public final class Transmitter {
     private static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit();
