@@ -4,10 +4,14 @@ import com.alibaba.crr.CrrTransmit;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The transmittee is the extension point for other {@code ThreadLocal}s
- * which are registered by {@link Transmitter#registerTransmittee(Transmittee)} method.
- * Transmittance is completed by by methods {@link #capture() capture()} =&gt;
- * {@link #replay(Object)} =&gt; {@link #restore(Object) restore(Object)} (aka {@code CRR} operations),
+ * The transmittee is the extension point to transmit {@code ThreadLocal}s
+ * (e.g. {@code JDK} {@link ThreadLocal}, {@code FastThreadLocal} of {@code Netty}).
+ * <p>
+ * {@code ThreadLocal} transmittance is registered
+ * by {@link Transmitter#registerTransmittee(Transmittee)} method.
+ * <p>
+ * Transmittance process is represented by methods {@link #capture()} =&gt;
+ * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations).
  *
  * @param <C> the transmittee capture data type
  * @param <B> the transmittee backup data type
