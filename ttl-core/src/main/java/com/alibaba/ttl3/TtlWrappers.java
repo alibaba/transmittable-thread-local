@@ -2,9 +2,9 @@ package com.alibaba.ttl3;
 
 import com.alibaba.crr.composite.Backup;
 import com.alibaba.crr.composite.Capture;
+import com.alibaba.ttl3.executor.TtlExecutors;
 import com.alibaba.ttl3.spi.TtlEnhanced;
 import com.alibaba.ttl3.spi.TtlWrapper;
-import com.alibaba.ttl3.executor.TtlExecutors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -17,14 +17,17 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * Util methods for TTL Wrapper.
  *
  * <ul>
- * <li>wrap common {@code Functional Interface}.</li>
- * <li>unwrap TTL Wrapper and check TTL Wrapper.</li>
+ * <li>wrap common {@code Functional Interface}.<br>
+ *     if missing your desired wrapper util method,
+ *     you need implement your own util method alike.
+ * </li>
+ * <li>unwrap TTL Wrapper and check whether it is TTL Wrapper.</li>
  * </ul>
  * <p>
  * <b><i>Note:</i></b>
  * <ul>
  * <li>all methods is {@code null}-safe, when input parameter is {@code null}, return {@code null}.</li>
- * <li>all wrap method skip wrap (aka. just return input parameter), when input parameter is already wrapped.</li>
+ * <li>all wrap method skip wrapping (aka. just return input parameter), when input parameter is already wrapped.</li>
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -47,42 +50,6 @@ public final class TtlWrappers {
         if (supplier == null) return null;
         else if (supplier instanceof TtlEnhanced) return supplier;
         else return new TtlSupplier<>(supplier);
-    }
-
-    /**
-     * Generic unwrap method, unwrap {@link TtlWrapper} to the original/underneath one.
-     * <p>
-     * this method is {@code null}-safe, when input parameter is {@code null}, return {@code null};
-     * if input parameter is not a {@link TtlWrapper} just return input.
-     *
-     * @see TtlRunnable#unwrap(Runnable)
-     * @see TtlCallable#unwrap(java.util.concurrent.Callable)
-     * @see TtlExecutors#unwrapExecutor(java.util.concurrent.Executor)
-     * @see TtlExecutors#unwrapThreadFactory(java.util.concurrent.ThreadFactory)
-     * @see TtlExecutors#unwrapComparator(java.util.Comparator)
-     * @see TtlExecutors#unwrapForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
-     * @see TtlWrappers#wrapSupplier(Supplier)
-     * @see TtlWrappers#wrapConsumer(Consumer)
-     * @see TtlWrappers#wrapBiConsumer(BiConsumer)
-     * @see TtlWrappers#wrapFunction(Function)
-     * @see TtlWrappers#wrapBiFunction(BiFunction)
-     * @see #isWrapper(Object)
-     */
-    @Nullable
-    @Contract(value = "null -> null; !null -> !null", pure = true)
-    @SuppressWarnings("unchecked")
-    public static <T> T unwrap(@Nullable T obj) {
-        if (!isWrapper(obj)) return obj;
-        else return ((TtlWrapper<T>) obj).unwrap();
-    }
-
-    /**
-     * check the input object is a {@code TtlWrapper} or not.
-     *
-     * @see #unwrap(Object)
-     */
-    public static <T> boolean isWrapper(@Nullable T obj) {
-        return obj instanceof TtlWrapper;
     }
 
     private static class TtlSupplier<T> implements Supplier<T>, TtlWrapper<Supplier<T>>, TtlEnhanced {
@@ -379,6 +346,41 @@ public final class TtlWrappers {
         }
     }
 
+    /**
+     * Generic unwrap method, unwrap {@link TtlWrapper} to the original/underneath one.
+     * <p>
+     * this method is {@code null}-safe, when input parameter is {@code null}, return {@code null};
+     * if input parameter is not a {@link TtlWrapper} just return input.
+     *
+     * @see TtlRunnable#unwrap(Runnable)
+     * @see TtlCallable#unwrap(java.util.concurrent.Callable)
+     * @see TtlExecutors#unwrapExecutor(java.util.concurrent.Executor)
+     * @see TtlExecutors#unwrapThreadFactory(java.util.concurrent.ThreadFactory)
+     * @see TtlExecutors#unwrapComparator(java.util.Comparator)
+     * @see TtlExecutors#unwrapForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see TtlWrappers#wrapSupplier(Supplier)
+     * @see TtlWrappers#wrapConsumer(Consumer)
+     * @see TtlWrappers#wrapBiConsumer(BiConsumer)
+     * @see TtlWrappers#wrapFunction(Function)
+     * @see TtlWrappers#wrapBiFunction(BiFunction)
+     * @see #isWrapper(Object)
+     */
+    @Nullable
+    @Contract(value = "null -> null; !null -> !null", pure = true)
+    @SuppressWarnings("unchecked")
+    public static <T> T unwrap(@Nullable T obj) {
+        if (!isWrapper(obj)) return obj;
+        else return ((TtlWrapper<T>) obj).unwrap();
+    }
+
+    /**
+     * check the input object is a {@code TtlWrapper} or not.
+     *
+     * @see #unwrap(Object)
+     */
+    public static <T> boolean isWrapper(@Nullable T obj) {
+        return obj instanceof TtlWrapper;
+    }
 
     private TtlWrappers() {
         throw new InstantiationError("Must not instantiate this class");
