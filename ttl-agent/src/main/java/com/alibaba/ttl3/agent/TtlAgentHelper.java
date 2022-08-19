@@ -1,4 +1,4 @@
-package com.alibaba.ttl3.executor.agent;
+package com.alibaba.ttl3.agent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -13,15 +13,15 @@ final class TtlAgentHelper {
     // ======== Option Getter Methods ========
 
     static boolean isBooleanOptionSet(
-        @Nullable final Map<String, String> kvs, @NonNull String key,
-        boolean defaultValueIfKeyAbsent
+            @Nullable final Map<String, String> kvs, @NonNull String key,
+            boolean defaultValueIfKeyAbsent
     ) {
         return isBooleanOptionSet(kvs, key, defaultValueIfKeyAbsent, true);
     }
 
     static boolean isBooleanOptionSet(
-        @Nullable final Map<String, String> kvs, @NonNull String key,
-        boolean defaultValueIfKeyAbsent, boolean defaultValueIfValueAbsent
+            @Nullable final Map<String, String> kvs, @NonNull String key,
+            boolean defaultValueIfKeyAbsent, boolean defaultValueIfValueAbsent
     ) {
         final String value;
 
@@ -45,8 +45,8 @@ final class TtlAgentHelper {
 
     @NonNull
     static String getStringOptionValue(
-        @Nullable final Map<String, String> kvs, @NonNull String key,
-        @NonNull String defaultValue
+            @Nullable final Map<String, String> kvs, @NonNull String key,
+            @NonNull String defaultValue
     ) {
         final String value;
 

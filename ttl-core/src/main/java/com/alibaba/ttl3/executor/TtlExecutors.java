@@ -1,9 +1,9 @@
 package com.alibaba.ttl3.executor;
 
 import com.alibaba.ttl3.TransmittableThreadLocal;
+import com.alibaba.ttl3.agent.TtlAgentStatus;
 import com.alibaba.ttl3.spi.TtlEnhanced;
 import com.alibaba.ttl3.spi.TtlWrapper;
-import com.alibaba.ttl3.agent.TtlAgent;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -71,7 +71,7 @@ public final class TtlExecutors {
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static Executor getTtlExecutor(@Nullable Executor executor) {
-        if (TtlAgent.isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
+        if (TtlAgentStatus.getInstance().isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
             return executor;
         }
         return new ExecutorTtlWrapper(executor, true);
@@ -97,7 +97,7 @@ public final class TtlExecutors {
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static ExecutorService getTtlExecutorService(@Nullable ExecutorService executorService) {
-        if (TtlAgent.isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
+        if (TtlAgentStatus.getInstance().isTtlAgentLoaded() || executorService == null || executorService instanceof TtlEnhanced) {
             return executorService;
         }
         return new ExecutorServiceTtlWrapper(executorService, true);
@@ -124,7 +124,7 @@ public final class TtlExecutors {
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static ScheduledExecutorService getTtlScheduledExecutorService(@Nullable ScheduledExecutorService scheduledExecutorService) {
-        if (TtlAgent.isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof TtlEnhanced) {
+        if (TtlAgentStatus.getInstance().isTtlAgentLoaded() || scheduledExecutorService == null || scheduledExecutorService instanceof TtlEnhanced) {
             return scheduledExecutorService;
         }
         return new ScheduledExecutorServiceTtlWrapper(scheduledExecutorService, true);

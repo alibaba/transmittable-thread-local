@@ -1,10 +1,10 @@
-package com.alibaba.ttl3.executor.agent.transformlet.helper;
+package com.alibaba.ttl3.agent.transformlet.helper;
 
-import com.alibaba.ttl3.executor.agent.logging.Logger;
-import com.alibaba.ttl3.executor.agent.transformlet.ClassInfo;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.logging.Logger;
+import com.alibaba.ttl3.agent.transformlet.ClassInfo;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
 import com.alibaba.ttl3.spi.TtlAttachmentsDelegate;
-import com.alibaba.ttl3.executor.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.*;
@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.isClassAtPackageJavaUtil;
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassAtPackageJavaUtil;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.signatureOfMethod;
 
 /**
  * Abstract {@link TtlTransformlet} for {@link java.util.concurrent.Executor} and its subclass.
@@ -105,7 +105,7 @@ public abstract class AbstractExecutorTtlTransformlet implements TtlTransformlet
             if (paramTypeNameToDecorateMethodClass.containsKey(paramTypeName)) {
                 String code = String.format(
                         // auto decorate to TTL wrapper
-                        "$%d = com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.doAutoWrap($%<d);",
+                        "$%d = helper.transformlet.com.alibaba.ttl3.agent.TtlTransformletHelper.doAutoWrap($%<d);",
                         i + 1);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);

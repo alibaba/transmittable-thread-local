@@ -245,7 +245,6 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
 
     /**
      * see {@link TtlAttachments#setTtlAttachment(String, Object)}
-     *
      */
     @Override
     public void setTtlAttachment(@NonNull String key, Object value) {
@@ -254,7 +253,6 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
 
     /**
      * see {@link TtlAttachments#getTtlAttachment(String)}
-     *
      */
     @Override
     public <T> T getTtlAttachment(@NonNull String key) {

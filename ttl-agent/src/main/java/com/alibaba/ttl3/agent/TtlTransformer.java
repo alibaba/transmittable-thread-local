@@ -1,8 +1,8 @@
-package com.alibaba.ttl3.executor.agent;
+package com.alibaba.ttl3.agent;
 
-import com.alibaba.ttl3.executor.agent.logging.Logger;
-import com.alibaba.ttl3.executor.agent.transformlet.ClassInfo;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.logging.Logger;
+import com.alibaba.ttl3.agent.transformlet.ClassInfo;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -12,7 +12,7 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -29,7 +29,7 @@ public class TtlTransformer implements ClassFileTransformer {
      * see {@code @return} of {@link ClassFileTransformer#transform(ClassLoader, String, Class, ProtectionDomain, byte[])}
      */
     @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    // [ERROR] com.alibaba.ttl3.executor.agent.TtlTransformer.transform(ClassLoader, String, Class, ProtectionDomain, byte[])
+    // [ERROR] com.alibaba.ttl3.agent.TtlTransformer.transform(ClassLoader, String, Class, ProtectionDomain, byte[])
     //         may expose internal representation by returning TtlTransformer.NO_TRANSFORM
     // the value is null, so there is NO "EI_EXPOSE_REP" problem actually.
     private static final byte[] NO_TRANSFORM = null;

@@ -247,7 +247,6 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
 
     /**
      * see {@link TtlAttachments#setTtlAttachment(String, Object)}
-     *
      */
     @Override
     public void setTtlAttachment(@NonNull String key, Object value) {
@@ -256,7 +255,6 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
 
     /**
      * see {@link TtlAttachments#getTtlAttachment(String)}
-     *
      */
     @Override
     public <T> T getTtlAttachment(@NonNull String key) {

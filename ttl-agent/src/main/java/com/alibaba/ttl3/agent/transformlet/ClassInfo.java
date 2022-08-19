@@ -1,4 +1,4 @@
-package com.alibaba.ttl3.executor.agent.transformlet;
+package com.alibaba.ttl3.agent.transformlet;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -11,7 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import static com.alibaba.ttl3.executor.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.getLocationUrlOfClass;
 
 /**
  * Class Info for {@link TtlTransformlet}.
@@ -28,7 +28,7 @@ public class ClassInfo {
     private final ClassLoader loader;
 
     // SuppressFBWarnings for classFileBuffer/loader parameter:
-    //   [ERROR] new com.alibaba.ttl3.executor.agent.transformlet.ClassInfo(String, byte[], ClassLoader)
+    //   [ERROR] new com.alibaba.ttl3.agent.transformlet.ClassInfo(String, byte[], ClassLoader)
     //   may expose internal representation by storing an externally mutable object
     //   into ClassInfo.classFileBuffer/loader
     public ClassInfo(@NonNull String transformerClassFile,
@@ -53,9 +53,9 @@ public class ClassInfo {
 
     @NonNull
     @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    // [ERROR] Medium: com.alibaba.ttl3.executor.agent.transformlet.ClassInfo.getCtClass()
+    // [ERROR] Medium: com.alibaba.ttl3.agent.transformlet.ClassInfo.getCtClass()
     // may expose internal representation
-    // by returning ClassInfo.ctClass [com.alibaba.ttl3.executor.agent.transformlet.ClassInfo]
+    // by returning ClassInfo.ctClass [com.alibaba.ttl3.agent.transformlet.ClassInfo]
     public CtClass getCtClass() throws IOException {
         if (ctClass != null) return ctClass;
 
@@ -84,9 +84,9 @@ public class ClassInfo {
     }
 
     @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    // [ERROR] Medium: com.alibaba.ttl3.executor.agent.transformlet.ClassInfo.getClassLoader()
+    // [ERROR] Medium: com.alibaba.ttl3.agent.transformlet.ClassInfo.getClassLoader()
     // may expose internal representation
-    // by returning ClassInfo.loader [com.alibaba.ttl3.executor.agent.transformlet.ClassInfo]
+    // by returning ClassInfo.loader [com.alibaba.ttl3.agent.transformlet.ClassInfo]
     public ClassLoader getClassLoader() {
         return loader;
     }
