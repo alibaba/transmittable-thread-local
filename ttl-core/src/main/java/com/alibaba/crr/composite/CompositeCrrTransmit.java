@@ -17,14 +17,16 @@ import java.util.logging.Logger;
  * Transmittance is completed by methods {@link #capture()} =&gt;
  * {@link #replay(Capture)} =&gt; {@link #restore(Backup)} (aka {@code CRR} operations).
  * <p>
- * <B><I>NOTE:</I></B><br>
- * This implementation ignore the exception from {@code CRR} operations
- * of registered {@link CrrTransmit}.
+ * <B><I>CAUTION:</I></B><br>
+ * This implementation just ignore all exception thrown by
+ * {@code CRR} operations of registered {@link CrrTransmit}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
 public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
     private static final Logger logger = Logger.getLogger(CompositeCrrTransmit.class.getName());
+
+    private static final Set<CrrTransmit<Object, Object>> registeredCrrTransmitSet = new CopyOnWriteArraySet<>();
 
     /**
      * Capture all {@link CrrTransmit}.
@@ -33,8 +35,8 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @NonNull
     public Capture capture() {
-        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(crrTransmitSet.size());
-        for (CrrTransmit<Object, Object> crrTransmit : crrTransmitSet) {
+        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(registeredCrrTransmitSet.size());
+        for (CrrTransmit<Object, Object> crrTransmit : registeredCrrTransmitSet) {
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.capture());
             } catch (Throwable t) {
@@ -92,8 +94,8 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @NonNull
     public Backup clear() {
-        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(crrTransmitSet.size());
-        for (CrrTransmit<Object, Object> crrTransmit : crrTransmitSet) {
+        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(registeredCrrTransmitSet.size());
+        for (CrrTransmit<Object, Object> crrTransmit : registeredCrrTransmitSet) {
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.clear());
             } catch (Throwable t) {
@@ -131,7 +133,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
     private static class Snapshot implements Capture, Backup {
         final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value;
 
-        public Snapshot(HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value) {
+        Snapshot(HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value) {
             this.crrTransmit2Value = crrTransmit2Value;
         }
     }
@@ -147,11 +149,11 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @SuppressWarnings("unchecked")
     public <C, B> boolean registerCrrTransmit(@NonNull CrrTransmit<C, B> crrTransmit) {
-        return crrTransmitSet.add((CrrTransmit<Object, Object>) crrTransmit);
+        return registeredCrrTransmitSet.add((CrrTransmit<Object, Object>) crrTransmit);
     }
 
     /**
-     * Unregister the CrrTransmit({@code CRR}).
+     * Unregister the CrrTransmit.
      *
      * @param <C> the CrrTransmit capture data type
      * @param <B> the CrrTransmit backup data type
@@ -160,8 +162,6 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @SuppressWarnings("unchecked")
     public <C, B> boolean unregisterCrrTransmit(@NonNull CrrTransmit<C, B> crrTransmit) {
-        return crrTransmitSet.remove((CrrTransmit<Object, Object>) crrTransmit);
+        return registeredCrrTransmitSet.remove((CrrTransmit<Object, Object>) crrTransmit);
     }
-
-    private static final Set<CrrTransmit<Object, Object>> crrTransmitSet = new CopyOnWriteArraySet<>();
 }
