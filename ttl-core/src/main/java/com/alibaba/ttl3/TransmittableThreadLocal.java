@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * {@link TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory} /
  * {@link TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
- * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl3.agent.TtlAgent}
+ * Or you can turn on "disable inheritable for thread pool" by {@code TTL Java Agent}
  * so as to wrap thread factories for thread pooling components automatically and transparently.
  * <p>
  * ❷ In other cases, disable inheritable by overriding method {@link #childValue(Object)}.
@@ -60,7 +60,6 @@ import java.util.function.Supplier;
  * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
  * @see TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
  * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
- * @see com.alibaba.ttl3.agent.TtlAgent
  */
 public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     private final boolean disableIgnoreNullValueSemantics;

@@ -1,6 +1,6 @@
-package com.alibaba.ttl3.executor.agent.transformlet;
+package com.alibaba.ttl3.agent.transformlet;
 
-import com.alibaba.ttl3.executor.agent.TtlTransformer;
+import com.alibaba.ttl3.agent.TtlTransformer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;

@@ -1,11 +1,11 @@
-package com.alibaba.ttl3.executor.agent;
+package com.alibaba.ttl3.agent;
 
-import com.alibaba.ttl3.executor.agent.logging.Logger;
-import com.alibaba.ttl3.executor.agent.transformlet.TtlTransformlet;
-import com.alibaba.ttl3.executor.agent.transformlet.internal.ForkJoinTtlTransformlet;
-import com.alibaba.ttl3.executor.agent.transformlet.internal.JdkExecutorTtlTransformlet;
-import com.alibaba.ttl3.executor.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
-import com.alibaba.ttl3.executor.agent.transformlet.internal.TimerTaskTtlTransformlet;
+import com.alibaba.ttl3.agent.logging.Logger;
+import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.internal.ForkJoinTtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.internal.JdkExecutorTtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
+import com.alibaba.ttl3.agent.transformlet.internal.TimerTaskTtlTransformlet;
 import com.alibaba.ttl3.executor.DisableInheritableForkJoinWorkerThreadFactory;
 import com.alibaba.ttl3.executor.DisableInheritableThreadFactory;
 import com.alibaba.ttl3.executor.TtlExecutors;
@@ -152,7 +152,7 @@ import java.util.Map;
  * @see java.util.concurrent.ForkJoinPool
  * @see java.util.TimerTask
  */
-public final class TtlAgent {
+public final class TtlAgent implements TtlAgentStatus {
 
     /**
      * the TTL agent configuration key: Log Type
@@ -230,17 +230,16 @@ public final class TtlAgent {
 
     private static String logTtlAgentConfig() {
         return "TTL Agent configurations:"
-            + "\n    " + TTL_AGENT_LOGGER_KEY + "=" + getLoggerType()
-            + "\n    " + TTL_AGENT_LOG_CLASS_TRANSFORM_KEY + "=" + isLogClassTransform()
-            + "\n    " + TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY + "=" + isDisableInheritableForThreadPool()
-            + "\n    " + TTL_AGENT_ENABLE_TIMER_TASK_KEY + "=" + isEnableTimerTask();
+                + "\n    " + TTL_AGENT_LOGGER_KEY + "=" + getLoggerType()
+                + "\n    " + TTL_AGENT_LOG_CLASS_TRANSFORM_KEY + "=" + isLogClassTransform()
+                + "\n    " + TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY + "=" + isDisableInheritableForThreadPool()
+                + "\n    " + TTL_AGENT_ENABLE_TIMER_TASK_KEY + "=" + isEnableTimerTask();
     }
 
     /**
      * Whether TTL agent is loaded.
-     *
      */
-    public static boolean isTtlAgentLoaded() {
+    public boolean isTtlAgentLoaded() {
         return ttlAgentLoaded;
     }
 
