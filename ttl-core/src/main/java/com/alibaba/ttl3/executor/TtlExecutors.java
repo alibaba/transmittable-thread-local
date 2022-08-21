@@ -15,10 +15,10 @@ import java.util.concurrent.*;
  * Util methods for TTL wrapper of jdk executors.
  *
  * <ol>
- *     <li>wrap(factory)/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
- *     <li>Util methods to wrap/unwrap/check methods to disable Inheritable for {@link ForkJoinPool.ForkJoinWorkerThreadFactory}.</li>
- *     <li>wrap/unwrap/check methods to disable Inheritable for {@link ThreadFactory}.</li>
- *     <li>wrap/unwrap/check methods to {@code TtlRunnableUnwrapComparator} for {@link PriorityBlockingQueue}.</li>
+ *     <li>wrap/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
+ *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ThreadFactory}.</li>
+ *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ForkJoinPool.ForkJoinWorkerThreadFactory}.</li>
+ *     <li>wrap/check/unwrap methods for {@code TtlRunnableUnwrapComparator} wrapper of {@link PriorityBlockingQueue}.</li>
  * </ol>
  * <p>
  * <b><i>Note:</i></b>
@@ -35,15 +35,12 @@ import java.util.concurrent.*;
  * @see ThreadPoolExecutor
  * @see ScheduledThreadPoolExecutor
  * @see Executors
- * @see CompletionService
- * @see ExecutorCompletionService
  * @see ThreadFactory
  * @see Executors#defaultThreadFactory()
  * @see PriorityBlockingQueue
  * @see ForkJoinPool
  * @see ForkJoinPool.ForkJoinWorkerThreadFactory
  * @see ForkJoinPool#defaultForkJoinWorkerThreadFactory
- * @see java.util.stream.Stream
  */
 public final class TtlExecutors {
 
@@ -55,13 +52,6 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link Executor},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable}
      * to the execution time of {@link Runnable}.
-     * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapped Executor is changed to true,
-     * so the wrapped Executor can be cooperated with the usage of "Decorate Runnable and Callable".
-     * <p>
-     * About idempotency: if is idempotent,
-     * it's allowed to submit the {@link com.alibaba.ttl3.TtlRunnable}/{@link com.alibaba.ttl3.TtlCallable} to the wrapped Executor;
-     * otherwise throw {@link IllegalStateException}.
      *
      * @param executor input Executor
      * @return wrapped Executor
@@ -81,13 +71,6 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link ExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link Callable}
      * to the execution time of {@link Runnable} or {@link Callable}.
-     * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapped ExecutorService is changed to true,
-     * so the wrapped ExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
-     * <p>
-     * About idempotency: if is idempotent,
-     * it's allowed to submit the {@link com.alibaba.ttl3.TtlRunnable}/{@link com.alibaba.ttl3.TtlCallable} to the wrapped ExecutorService;
-     * otherwise throw {@link IllegalStateException}.
      *
      * @param executorService input ExecutorService
      * @return wrapped ExecutorService
@@ -108,13 +91,6 @@ public final class TtlExecutors {
      * {@link TransmittableThreadLocal} Wrapper of {@link ScheduledExecutorService},
      * transmit the {@link TransmittableThreadLocal} from the task submit time of {@link Runnable} or {@link Callable}
      * to the execution time of {@link Runnable} or {@link Callable}.
-     * <p>
-     * NOTE: sine v2.12.0 the idempotency of return wrapped ScheduledExecutorService is changed to true,
-     * so the wrapped ScheduledExecutorService can be cooperated with the usage of "Decorate Runnable and Callable".
-     * <p>
-     * About idempotency: if is idempotent,
-     * it's allowed to submit the {@link com.alibaba.ttl3.TtlRunnable}/{@link com.alibaba.ttl3.TtlCallable} to the wrapped ScheduledExecutorService;
-     * otherwise throw {@link IllegalStateException}.
      *
      * @param scheduledExecutorService input scheduledExecutorService
      * @return wrapped scheduledExecutorService
@@ -142,9 +118,9 @@ public final class TtlExecutors {
      * @see #getTtlExecutor(Executor)
      * @see #getTtlExecutorService(ExecutorService)
      * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
-     * @see #unwrapExecutor(Executor)
+     * @see #unwrapTtlExecutor(Executor)
      */
-    public static <T extends Executor> boolean isTtlExecutorWrapper(@Nullable T executor) {
+    public static <T extends Executor> boolean isTtlExecutor(@Nullable T executor) {
         return executor instanceof TtlWrapper;
     }
 
@@ -161,14 +137,14 @@ public final class TtlExecutors {
      * @see #getTtlExecutor(Executor)
      * @see #getTtlExecutorService(ExecutorService)
      * @see #getTtlScheduledExecutorService(ScheduledExecutorService)
-     * @see #isTtlExecutorWrapper(Executor)
+     * @see #isTtlExecutor(Executor)
      * @see com.alibaba.ttl3.TtlWrappers#unwrap(Object)
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
     @SuppressWarnings("unchecked")
-    public static <T extends Executor> T unwrapExecutor(@Nullable T executor) {
-        if (!isTtlExecutorWrapper(executor)) return executor;
+    public static <T extends Executor> T unwrapTtlExecutor(@Nullable T executor) {
+        if (!isTtlExecutor(executor)) return executor;
 
         return (T) ((ExecutorTtlWrapper) executor).unwrap();
     }
@@ -177,7 +153,6 @@ public final class TtlExecutors {
      * Wrapper of {@link ThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
-     * @see DisableInheritableThreadFactory
      * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory
      */
     @Nullable
@@ -200,32 +175,30 @@ public final class TtlExecutors {
     }
 
     /**
-     * check the {@link ThreadFactory} is {@link DisableInheritableThreadFactory} or not.
+     * check the {@link ThreadFactory} is {@code DisableInheritableThreadFactory} or not.
      *
      * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory
      * @see #getDefaultDisableInheritableThreadFactory()
-     * @see DisableInheritableThreadFactory
      */
     public static boolean isDisableInheritableThreadFactory(@Nullable ThreadFactory threadFactory) {
-        return threadFactory instanceof DisableInheritableThreadFactory;
+        return threadFactory instanceof DisableInheritableThreadFactoryWrapper;
     }
 
     /**
-     * Unwrap {@link DisableInheritableThreadFactory} to the original/underneath one.
+     * Unwrap {@code DisableInheritableThreadFactory} to the original/underneath one.
      *
      * @see #getDisableInheritableThreadFactory(ThreadFactory)
      * @see #getDefaultDisableInheritableThreadFactory()
      * @see #isDisableInheritableThreadFactory(ThreadFactory)
-     * @see TtlExecutors#unwrapForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
-     * @see DisableInheritableThreadFactory
+     * @see TtlExecutors#unwrapDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see com.alibaba.ttl3.TtlWrappers#unwrap(Object)
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    public static ThreadFactory unwrapThreadFactory(@Nullable ThreadFactory threadFactory) {
+    public static ThreadFactory unwrapDisableInheritableThreadFactory(@Nullable ThreadFactory threadFactory) {
         if (!isDisableInheritableThreadFactory(threadFactory)) return threadFactory;
 
-        return ((DisableInheritableThreadFactory) threadFactory).unwrap();
+        return ((DisableInheritableThreadFactoryWrapper) threadFactory).unwrap();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -236,7 +209,6 @@ public final class TtlExecutors {
      * Wrapper of {@link ForkJoinPool.ForkJoinWorkerThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
-     * @see DisableInheritableForkJoinWorkerThreadFactory
      * @see TtlExecutors#getDisableInheritableThreadFactory(ThreadFactory)
      */
     @Nullable
@@ -260,29 +232,27 @@ public final class TtlExecutors {
     }
 
     /**
-     * check the {@link ForkJoinPool.ForkJoinWorkerThreadFactory} is {@link DisableInheritableForkJoinWorkerThreadFactory} or not.
+     * check the {@link ForkJoinPool.ForkJoinWorkerThreadFactory} is {@code DisableInheritableForkJoinWorkerThreadFactory} or not.
      *
      * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
      * @see #getDefaultDisableInheritableForkJoinWorkerThreadFactory()
-     * @see DisableInheritableForkJoinWorkerThreadFactory
      */
     public static boolean isDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
-        return threadFactory instanceof DisableInheritableForkJoinWorkerThreadFactory;
+        return threadFactory instanceof DisableInheritableForkJoinWorkerThreadFactoryWrapper;
     }
 
     /**
-     * Unwrap {@link DisableInheritableForkJoinWorkerThreadFactory} to the original/underneath one.
+     * Unwrap {@code DisableInheritableForkJoinWorkerThreadFactory} to the original/underneath one.
      *
      * @see com.alibaba.ttl3.TtlWrappers#unwrap(Object)
-     * @see DisableInheritableForkJoinWorkerThreadFactory
-     * @see TtlExecutors#unwrapThreadFactory(ThreadFactory)
+     * @see TtlExecutors#unwrapDisableInheritableThreadFactory(ThreadFactory)
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    public static ForkJoinPool.ForkJoinWorkerThreadFactory unwrapForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
+    public static ForkJoinPool.ForkJoinWorkerThreadFactory unwrapDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
         if (!isDisableInheritableForkJoinWorkerThreadFactory(threadFactory)) return threadFactory;
 
-        return ((DisableInheritableForkJoinWorkerThreadFactory) threadFactory).unwrap();
+        return ((DisableInheritableForkJoinWorkerThreadFactoryWrapper) threadFactory).unwrap();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -348,7 +318,7 @@ public final class TtlExecutors {
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    public static Comparator<Runnable> unwrapComparator(@Nullable Comparator<Runnable> comparator) {
+    public static Comparator<Runnable> unwrapTtlRunnableUnwrapComparator(@Nullable Comparator<Runnable> comparator) {
         if (!isTtlRunnableUnwrapComparator(comparator)) return comparator;
 
         return ((TtlUnwrapComparator<Runnable>) comparator).unwrap();

@@ -1,6 +1,7 @@
 package com.alibaba.ttl3.executor;
 
 import com.alibaba.crr.composite.Backup;
+import com.alibaba.ttl3.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.util.concurrent.ForkJoinPool;
@@ -13,7 +14,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.restore;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements DisableInheritableForkJoinWorkerThreadFactory {
+class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements ForkJoinWorkerThreadFactory, TtlWrapper<ForkJoinWorkerThreadFactory> {
     private final ForkJoinWorkerThreadFactory threadFactory;
 
     DisableInheritableForkJoinWorkerThreadFactoryWrapper(@NonNull ForkJoinWorkerThreadFactory threadFactory) {

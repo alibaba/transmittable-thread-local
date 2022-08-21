@@ -9,7 +9,7 @@ import java.util.Comparator;
 /**
  * @see TtlExecutors#getTtlRunnableUnwrapComparator(Comparator)
  * @see TtlExecutors#isTtlRunnableUnwrapComparator(Comparator)
- * @see TtlExecutors#unwrapComparator(Comparator)
+ * @see TtlExecutors#unwrapTtlRunnableUnwrapComparator(Comparator)
  */
 final class TtlUnwrapComparator<T> implements Comparator<T>, TtlWrapper<Comparator<T>> {
     private final Comparator<T> comparator;
