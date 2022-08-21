@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * CompositeCrrTransmit transmit all {@link CrrTransmit}
+ * {@link CompositeCrrTransmit} transmit all {@link CrrTransmit}
  * registered by {@link #registerCrrTransmit(CrrTransmit)}.
  * <p>
  * Transmittance is completed by methods {@link #capture()} =&gt;
