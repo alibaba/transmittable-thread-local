@@ -6,8 +6,6 @@ import com.alibaba.ttl3.agent.transformlet.internal.ForkJoinTtlTransformlet;
 import com.alibaba.ttl3.agent.transformlet.internal.JdkExecutorTtlTransformlet;
 import com.alibaba.ttl3.agent.transformlet.internal.PriorityBlockingQueueTtlTransformlet;
 import com.alibaba.ttl3.agent.transformlet.internal.TimerTaskTtlTransformlet;
-import com.alibaba.ttl3.executor.DisableInheritableForkJoinWorkerThreadFactory;
-import com.alibaba.ttl3.executor.DisableInheritableThreadFactory;
 import com.alibaba.ttl3.executor.TtlExecutors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -62,12 +60,12 @@ import java.util.Map;
  * <ul>
  * <li>rewrite the {@link java.util.concurrent.ThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ThreadPoolExecutor}
- * to {@link DisableInheritableThreadFactory}
+ * to {@code DisableInheritableThreadFactory}
  * by util method {@link TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) getDisableInheritableThreadFactory}.
  * </li>
  * <li>rewrite the {@link java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory} constructor parameter
  * of {@link java.util.concurrent.ForkJoinPool}
- * to {@link DisableInheritableForkJoinWorkerThreadFactory}
+ * to {@code DisableInheritableForkJoinWorkerThreadFactory}
  * by util method {@link TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory) getDisableInheritableForkJoinWorkerThreadFactory}.
  * </li>
  * </ul>
@@ -150,6 +148,10 @@ import java.util.Map;
  * @see java.util.concurrent.ThreadPoolExecutor
  * @see java.util.concurrent.ScheduledThreadPoolExecutor
  * @see java.util.concurrent.ForkJoinPool
+ * @see TtlExecutors#getDefaultDisableInheritableThreadFactory()
+ * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
+ * @see TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
+ * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
  * @see java.util.TimerTask
  */
 public final class TtlAgent implements TtlAgentStatus {
@@ -250,10 +252,8 @@ public final class TtlAgent implements TtlAgentStatus {
      *
      * @see TtlExecutors#getDefaultDisableInheritableThreadFactory()
      * @see TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
-     * @see DisableInheritableThreadFactory
      * @see TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory()
      * @see TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
-     * @see DisableInheritableForkJoinWorkerThreadFactory
      * @see com.alibaba.ttl3.TransmittableThreadLocal
      * @see TtlAgent
      * @see #isBooleanOptionSet(String)
