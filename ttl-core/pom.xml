@@ -95,6 +95,20 @@
 		</developer>
 	</developers>
 
+	<dependencies>
+		<!-- test scope dependencies -->
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxjava</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxkotlin</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<profiles>
 		<profile>
 			<id>gen-javadoc</id>
