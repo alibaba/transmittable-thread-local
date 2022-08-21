@@ -224,7 +224,9 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * <p>
      * <b>Note</b>:<br>
      * This method is overridden, merely call {@link #transmitteeValue(Object)};
-     * and should be overridden if a different behavior is desired.
+     * In most cases, the logic of determining the child value({@link #childValue(Object)})
+     * the transmitting value({@link #transmitteeValue(Object)}) should be the same,
+     * so NOT recommend to override this method in subclass.
      *
      * @param parentValue the parent thread's value
      * @return the child thread's initial value
