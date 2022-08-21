@@ -1,5 +1,6 @@
 /**
- * TTL SPI
+ * TTL SPI contains internal types for {@code TTL} developer to integrate with {@code TTL};
+ * You will <b><i>never</i></b> need use this package in the <i>biz/application codes</i>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see com.alibaba.ttl3.spi.TtlEnhanced
