@@ -2,7 +2,7 @@ package com.alibaba.ttl3;
 
 import com.alibaba.ttl3.executor.TtlExecutors;
 import com.alibaba.ttl3.transmitter.Transmittee;
-import com.alibaba.ttl3.transmitter.Transmitter;
+import com.alibaba.ttl3.transmitter.TransmitteeRegistry;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -393,6 +393,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     private static final TtlTransmittee ttlTransmittee = new TtlTransmittee();
 
     static {
-        Transmitter.registerTransmittee(ttlTransmittee);
+        TransmitteeRegistry.registerTransmittee(ttlTransmittee);
     }
 }
