@@ -7,7 +7,6 @@ import com.alibaba.crr.composite.CompositeCrrTransmit;
 import com.alibaba.crr.composite.CompositeCrrTransmitCallback;
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import com.alibaba.ttl3.TtlCallable;
-import com.alibaba.ttl3.TtlCopier;
 import com.alibaba.ttl3.TtlRunnable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -27,7 +26,7 @@ import java.util.function.Supplier;
  * for <b><i>framework/middleware integration</i></b>;
  * In general, you will <b><i>never</i></b> use it in the <i>biz/application codes</i>!
  *
- * <h2>Framework/Middleware integration to TTL transmittance</h2>
+ * <h2>Executor framework/middleware integration to TTL transmittance</h2>
  * Below is the example code:
  *
  * <pre>{@code
@@ -95,8 +94,8 @@ import java.util.function.Supplier;
  * <h2>Other ThreadLocal Integration</h2>
  * <p>
  * If you can not rewrite the existed code which use {@code JDK} {@link ThreadLocal}
- * to {@link TransmittableThreadLocal}, register the {@link ThreadLocal} instances
- * via {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, TtlCopier)}
+ * to {@link TransmittableThreadLocal}, register the {@link ThreadLocal} instances via method
+ * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, com.alibaba.ttl3.TtlCopier) ThreadLocalTransmitRegistry#registerThreadLocal}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
  * <p>
  * For other {@code ThreadLocal}s integration(e.g. {@code FastThreadLocal} of {@code Netty}),
@@ -107,12 +106,12 @@ import java.util.function.Supplier;
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see TtlRunnable
  * @see TtlCallable
- * @see ThreadLocalTransmitRegistry
+ * @see TransmitteeRegistry
  */
 public final class Transmitter {
     private static final CompositeCrrTransmitCallback compositeCallback = new CompositeCrrTransmitCallback();
 
-    private static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit(compositeCallback);
+    static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit(compositeCallback);
 
     /**
      * Capture all {@link TransmittableThreadLocal} and registered {@link ThreadLocal} values in the current thread.
@@ -248,30 +247,6 @@ public final class Transmitter {
         } finally {
             restore(backup);
         }
-    }
-
-    /**
-     * Register the transmittee({@code CRR}), the extension point for other {@code ThreadLocal}.
-     *
-     * @param <C> the transmittee capture data type
-     * @param <B> the transmittee backup data type
-     * @return true if the input transmittee is not registered
-     * @see #unregisterTransmittee(Transmittee)
-     */
-    public static <C, B> boolean registerTransmittee(@NonNull Transmittee<C, B> transmittee) {
-        return compositeCrrTransmit.registerCrrTransmit(transmittee);
-    }
-
-    /**
-     * Unregister the transmittee({@code CRR}), the extension point for other {@code ThreadLocal}.
-     *
-     * @param <C> the transmittee capture data type
-     * @param <B> the transmittee backup data type
-     * @return true if the input transmittee is registered
-     * @see #registerTransmittee(Transmittee)
-     */
-    public static <C, B> boolean unregisterTransmittee(@NonNull Transmittee<C, B> transmittee) {
-        return compositeCrrTransmit.unregisterCrrTransmit(transmittee);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.alibaba.user_api_test.ttl3
 
 import com.alibaba.ttl3.transmitter.Transmittee
+import com.alibaba.ttl3.transmitter.TransmitteeRegistry
 import com.alibaba.ttl3.transmitter.Transmitter
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -30,7 +31,7 @@ class TransmittableThreadLocal_Transmitter_registerTransmittee_UserTest : Annota
             // ========================================
             // 1. mock record(aka. invocation)
             // ========================================
-            Transmitter.registerTransmittee(transmittee).shouldBeTrue()
+            TransmitteeRegistry.registerTransmittee(transmittee).shouldBeTrue()
 
             val captured = Transmitter.capture()
             val backup = Transmitter.replay(captured)
@@ -46,7 +47,7 @@ class TransmittableThreadLocal_Transmitter_registerTransmittee_UserTest : Annota
             }
             confirmVerified(transmittee)
         } finally {
-            Transmitter.unregisterTransmittee(transmittee).shouldBeTrue()
+            TransmitteeRegistry.unregisterTransmittee(transmittee).shouldBeTrue()
         }
     }
 
@@ -69,7 +70,7 @@ class TransmittableThreadLocal_Transmitter_registerTransmittee_UserTest : Annota
             // ========================================
             // 1. mock record(aka. invocation)
             // ========================================
-            Transmitter.registerTransmittee(transmittee).shouldBeTrue()
+            TransmitteeRegistry.registerTransmittee(transmittee).shouldBeTrue()
 
             val backup = Transmitter.clear()
             Transmitter.restore(backup)
@@ -83,7 +84,7 @@ class TransmittableThreadLocal_Transmitter_registerTransmittee_UserTest : Annota
             }
             confirmVerified(transmittee)
         } finally {
-            Transmitter.unregisterTransmittee(transmittee).shouldBeTrue()
+            TransmitteeRegistry.unregisterTransmittee(transmittee).shouldBeTrue()
         }
     }
 }

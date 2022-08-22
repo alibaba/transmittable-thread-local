@@ -10,13 +10,18 @@ import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 /**
- * ThreadLocalTransmitRegister, ThreadLocal Integration to {@link Transmitter}.
+ * {@code ThreadLocalTransmitRegistry}, {@code ThreadLocal} transmit integration.
  * <p>
  * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
  * register the {@link ThreadLocal} instances via the methods
  * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, TtlCopier)}
  * / {@link ThreadLocalTransmitRegistry#registerThreadLocalWithShadowCopier(ThreadLocal)}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
+ * <p>
+ * {@code ThreadLocalTransmitRegistry} implement a {@link Transmittee}  internally,
+ * and register the {@link Transmittee} by {@link TransmitteeRegistry#registerTransmittee(Transmittee)}
+ * to transmit all registered {@link ThreadLocal} instances.
+ *
  * <p>
  * Below is the example code:
  *
@@ -41,9 +46,7 @@ import java.util.logging.Logger;
  * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see Transmitter
- * @see Transmitter#registerTransmittee(Transmittee)
- * @see Transmittee
+ * @see TransmitteeRegistry#registerTransmittee(Transmittee)
  */
 public final class ThreadLocalTransmitRegistry {
     private static final Logger logger = Logger.getLogger(ThreadLocalTransmitRegistry.class.getName());
@@ -249,7 +252,7 @@ public final class ThreadLocalTransmitRegistry {
     private static final ThreadLocalTransmittee threadLocalTransmittee = new ThreadLocalTransmittee();
 
     static {
-        Transmitter.registerTransmittee(threadLocalTransmittee);
+        TransmitteeRegistry.registerTransmittee(threadLocalTransmittee);
     }
 
     private ThreadLocalTransmitRegistry() {
