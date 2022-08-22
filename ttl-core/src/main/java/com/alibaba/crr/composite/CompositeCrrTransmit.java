@@ -1,6 +1,7 @@
 package com.alibaba.crr.composite;
 
 import com.alibaba.crr.CrrTransmit;
+import com.alibaba.crr.CrrTransmitCallback;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.util.HashMap;
@@ -26,7 +27,13 @@ import java.util.logging.Logger;
 public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
     private static final Logger logger = Logger.getLogger(CompositeCrrTransmit.class.getName());
 
-    private static final Set<CrrTransmit<Object, Object>> registeredCrrTransmitSet = new CopyOnWriteArraySet<>();
+    private final Set<CrrTransmit<Object, Object>> registeredCrrTransmitSet = new CopyOnWriteArraySet<>();
+
+    private final CrrTransmitCallback callback;
+
+    public CompositeCrrTransmit(CrrTransmitCallback callback) {
+        this.callback = callback;
+    }
 
     /**
      * Capture all {@link CrrTransmit}.
@@ -59,6 +66,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @NonNull
     public Backup replay(@NonNull Capture captured) {
+        callback.beforeReplay();
         final Snapshot capturedSnapshot = (Snapshot) captured;
 
         final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(capturedSnapshot.crrTransmit2Value.size());
@@ -74,6 +82,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
                 }
             }
         }
+        callback.afterReplay();
         return new Snapshot(crrTransmit2Value);
     }
 
@@ -94,6 +103,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      */
     @NonNull
     public Backup clear() {
+        callback.beforeReplay();
         final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(registeredCrrTransmitSet.size());
         for (CrrTransmit<Object, Object> crrTransmit : registeredCrrTransmitSet) {
             try {
@@ -105,6 +115,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
                 }
             }
         }
+        callback.afterReplay();
         return new Snapshot(crrTransmit2Value);
     }
 
@@ -116,6 +127,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
      * @see #clear()
      */
     public void restore(@NonNull Backup backup) {
+        callback.beforeRestore();
         for (Map.Entry<CrrTransmit<Object, Object>, Object> entry : ((Snapshot) backup).crrTransmit2Value.entrySet()) {
             CrrTransmit<Object, Object> crrTransmit = entry.getKey();
             try {
@@ -128,6 +140,7 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
                 }
             }
         }
+        callback.afterRestore();
     }
 
     private static class Snapshot implements Capture, Backup {
