@@ -5,10 +5,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * The transmittee is the extension point to transmit {@code ThreadLocal}s
- * (e.g. {@code JDK} {@link ThreadLocal}, {@code FastThreadLocal} of {@code Netty}).
+ * ({@code JDK} {@link ThreadLocal}, {@code FastThreadLocal} of {@code Netty}, etc).
  * <p>
  * {@code ThreadLocal} transmittance is registered
- * by {@link Transmitter#registerTransmittee(Transmittee)} method.
+ * by {@link TransmitteeRegistry#registerTransmittee(Transmittee)} method.
  * <p>
  * Transmittance process is represented by methods {@link #capture()} =&gt;
  * {@link #replay(Object)} =&gt; {@link #restore(Object)} (aka {@code CRR} operations).
@@ -16,8 +16,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <C> the transmittee capture data type
  * @param <B> the transmittee backup data type
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see Transmitter#registerTransmittee(Transmittee)
- * @see Transmitter#unregisterTransmittee(Transmittee)
+ * @see TransmitteeRegistry#registerTransmittee(Transmittee)
+ * @see TransmitteeRegistry#unregisterTransmittee(Transmittee)
  */
 public interface Transmittee<C, B> extends CrrTransmit<C, B> {
     /**
