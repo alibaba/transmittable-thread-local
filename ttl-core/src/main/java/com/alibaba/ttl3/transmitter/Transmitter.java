@@ -1,8 +1,10 @@
 package com.alibaba.ttl3.transmitter;
 
+import com.alibaba.crr.CrrTransmitCallback;
 import com.alibaba.crr.composite.Backup;
 import com.alibaba.crr.composite.Capture;
 import com.alibaba.crr.composite.CompositeCrrTransmit;
+import com.alibaba.crr.composite.CompositeCrrTransmitCallback;
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import com.alibaba.ttl3.TtlCallable;
 import com.alibaba.ttl3.TtlCopier;
@@ -108,7 +110,9 @@ import java.util.function.Supplier;
  * @see ThreadLocalTransmitRegistry
  */
 public final class Transmitter {
-    private static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit();
+    private static final CompositeCrrTransmitCallback compositeCallback = new CompositeCrrTransmitCallback();
+
+    private static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit(compositeCallback);
 
     /**
      * Capture all {@link TransmittableThreadLocal} and registered {@link ThreadLocal} values in the current thread.
@@ -268,6 +272,26 @@ public final class Transmitter {
      */
     public static <C, B> boolean unregisterTransmittee(@NonNull Transmittee<C, B> transmittee) {
         return compositeCrrTransmit.unregisterCrrTransmit(transmittee);
+    }
+
+    /**
+     * Register the {@link CrrTransmitCallback}.
+     *
+     * @return true if the input callback is not registered
+     * @see #unregisterCallback(CrrTransmitCallback)
+     */
+    public boolean registerCallback(@NonNull CrrTransmitCallback callback) {
+        return compositeCallback.registerCallback(callback);
+    }
+
+    /**
+     * Unregister the {@link CrrTransmitCallback}.
+     *
+     * @return true if the input callback is registered
+     * @see #registerCallback(CrrTransmitCallback)
+     */
+    public boolean unregisterCallback(@NonNull CrrTransmitCallback callback) {
+        return compositeCallback.unregisterCallback(callback);
     }
 
     private Transmitter() {
