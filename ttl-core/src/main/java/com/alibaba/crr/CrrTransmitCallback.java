@@ -10,20 +10,24 @@ public interface CrrTransmitCallback {
     /**
      * @see CrrTransmit#replay(Object)
      */
-    void beforeReplay();
+    default void beforeReplay() {
+    }
 
     /**
      * @see CrrTransmit#replay(Object)
      */
-    void afterReplay();
+    default void afterReplay() {
+    }
 
     /**
      * @see CrrTransmit#restore(Object)
      */
-    void beforeRestore();
+    default void beforeRestore() {
+    }
 
     /**
      * @see CrrTransmit#restore(Object)
      */
-    void afterRestore();
+    default void afterRestore() {
+    }
 }
