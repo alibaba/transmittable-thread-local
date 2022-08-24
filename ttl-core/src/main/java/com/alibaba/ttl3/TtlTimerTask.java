@@ -19,7 +19,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * <p>
  * Use factory method {@link #get(TimerTask)} to create instance.
  * <p>
- * <b>NOTE:</b>
+ * <B><I>CAUTION:</I></B><br>
  * The {@link TtlTimerTask} make the method {@link TimerTask#scheduledExecutionTime()} in
  * the origin {@link TimerTask} lose effectiveness! Use {@code TTL Java Agent} instead.
  *
