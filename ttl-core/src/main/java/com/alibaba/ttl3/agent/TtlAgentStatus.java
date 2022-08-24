@@ -1,5 +1,7 @@
 package com.alibaba.ttl3.agent;
 
+import static com.alibaba.ttl3.agent.EmptyTtlAgentStatus.getLoadedAgentOrEmpty;
+
 public interface TtlAgentStatus {
     /**
      * Whether TTL agent is loaded.
@@ -7,6 +9,6 @@ public interface TtlAgentStatus {
     boolean isTtlAgentLoaded();
 
     static TtlAgentStatus getInstance() {
-        return EmptyTtlAgentStatus.getInstance();
+        return getLoadedAgentOrEmpty();
     }
 }

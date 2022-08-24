@@ -9,11 +9,14 @@ final class EmptyTtlAgentStatus implements TtlAgentStatus {
     private EmptyTtlAgentStatus() {
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
     // Singleton maintenance logic
+    ///////////////////////////////////////////////////////////////////////////
 
     private static volatile TtlAgentStatus ttlAgentStatus = null;
 
-    static TtlAgentStatus getInstance() {
+    static TtlAgentStatus getLoadedAgentOrEmpty() {
         if (ttlAgentStatus != null) return ttlAgentStatus;
 
         synchronized (EmptyTtlAgentStatus.class) {
