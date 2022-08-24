@@ -175,25 +175,4 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
         if (!(timerTask instanceof TtlTimerTask)) return timerTask;
         else return ((TtlTimerTask) timerTask).getTimerTask();
     }
-
-    /**
-     * Unwrap {@link TtlTimerTask} to the original/underneath one.
-     * <p>
-     * Invoke {@link #unwrap(TimerTask)} for each element in input collection.
-     * <p>
-     * This method is {@code null}-safe, when input {@code TimerTask} parameter is {@code null}, return a empty list.
-     *
-     * @see #unwrap(TimerTask)
-     */
-    @NonNull
-    public static List<TimerTask> unwraps(@Nullable Collection<? extends TimerTask> tasks) {
-        if (null == tasks) return Collections.emptyList();
-
-        List<TimerTask> copy = new ArrayList<>();
-        for (TimerTask task : tasks) {
-            if (!(task instanceof TtlTimerTask)) copy.add(task);
-            else copy.add(((TtlTimerTask) task).getTimerTask());
-        }
-        return copy;
-    }
 }
