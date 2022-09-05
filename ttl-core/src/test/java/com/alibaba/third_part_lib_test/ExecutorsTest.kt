@@ -1,11 +1,11 @@
 package com.alibaba.third_part_lib_test
 
+import com.alibaba.shutdownForTest
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 
 class ExecutorsTest : AnnotationSpec() {
@@ -32,8 +32,7 @@ class ExecutorsTest : AnnotationSpec() {
         // wait sleep task finished.
         futures.forEach { it.get() }
 
-        threadPool.shutdown()
-        threadPool.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
+        threadPool.shutdownForTest()
     }
 }
 

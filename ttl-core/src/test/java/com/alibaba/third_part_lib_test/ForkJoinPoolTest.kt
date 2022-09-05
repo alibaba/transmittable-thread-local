@@ -1,11 +1,10 @@
 package com.alibaba.third_part_lib_test
 
+import com.alibaba.shutdownForTest
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.RecursiveTask
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class ForkJoinPoolTest : AnnotationSpec() {
@@ -23,11 +22,7 @@ class ForkJoinPoolTest : AnnotationSpec() {
 
         sumTask.execCounter.get() shouldBe 1
 
-        // close
-        pool.shutdown()
-
-        // Fail to shut down thread pool
-        pool.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
+        pool.shutdownForTest()
     }
 }
 
