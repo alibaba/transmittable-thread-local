@@ -1,15 +1,15 @@
 package com.alibaba.user_api_test.ttl3
 
 import com.alibaba.expandThreadPool
+import com.alibaba.getForTest
+import com.alibaba.shutdownForTest
 import com.alibaba.ttl3.TransmittableThreadLocal
 import com.alibaba.ttl3.executor.TtlExecutors
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
@@ -31,7 +31,7 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
         atomicInteger.set(-1)
         executorService.submit {
             atomicInteger.set(ttl.get())
-        }.get()
+        }.getForTest()
         atomicInteger.get() shouldBe 42
     }
 
@@ -53,7 +53,7 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
         atomicInteger.set(-1)
         executorService.submit {
             atomicInteger.set(ttl.get())
-        }.get()
+        }.getForTest()
         atomicInteger.get() shouldBe 142
     }
 
@@ -76,20 +76,23 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
         atomicInteger.set(-1)
         executorService.submit {
             atomicInteger.set(ttl.get())
-        }.get()
+        }.getForTest()
         atomicInteger.get() shouldBe 1042
     }
 
-    @AfterAll
-    fun afterClass() {
-        executorService.shutdown()
-        executorService.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
-    }
 
-    companion object {
-        private val executorService: ExecutorService = Executors.newFixedThreadPool(3).let {
+    private lateinit var executorService: ExecutorService
+
+    @BeforeAll
+    fun beforeAll() {
+        executorService = Executors.newFixedThreadPool(3).let {
             expandThreadPool(it)
             TtlExecutors.getTtlExecutorService(it)!!
         }
+    }
+
+    @AfterAll
+    fun afterAll() {
+        executorService.shutdownForTest()
     }
 }
