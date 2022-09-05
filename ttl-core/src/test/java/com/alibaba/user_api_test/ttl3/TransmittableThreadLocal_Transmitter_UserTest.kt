@@ -1,17 +1,16 @@
 package com.alibaba.user_api_test.ttl3
 
 import com.alibaba.expandThreadPool
+import com.alibaba.getForTest
+import com.alibaba.shutdownForTest
 import com.alibaba.ttl3.TransmittableThreadLocal
 import com.alibaba.ttl3.transmitter.Transmitter
 import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.Assert.assertNull
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 /**
  * Test [Transmitter] from user code(different package)
@@ -21,36 +20,36 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
     @Test
     fun test_crr() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val capture = Transmitter.capture()
 
         val future = executorService.submit {
-            ttl.set(CHILD)
+            ttl.set(childValue)
 
             val backup = Transmitter.replay(capture)
 
-            ttl.get() shouldBe PARENT
+            ttl.get() shouldBe parentValue
 
             Transmitter.restore(backup)
 
-            ttl.get() shouldBe CHILD
+            ttl.get() shouldBe childValue
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
     @Test
     fun test_clear_restore() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val future = executorService.submit {
-            ttl.set(CHILD)
+            ttl.set(childValue)
 
             val backup = Transmitter.clear()
 
@@ -59,62 +58,62 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
 
             Transmitter.restore(backup)
 
-            ttl.get() shouldBe CHILD
+            ttl.get() shouldBe childValue
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
     @Test
     fun test_runSupplierWithCaptured() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val capture = Transmitter.capture()
 
         val future = executorService.submit {
             ttl.set("child")
             Transmitter.runSupplierWithCaptured(capture) {
-                ttl.get() shouldBe PARENT
+                ttl.get() shouldBe parentValue
                 ttl.get()
             }
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
     @Test
     fun test_runSupplierWithClear() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val future = executorService.submit {
             ttl.set("child")
             Transmitter.runSupplierWithClear {
-                assertNull(ttl.get())
+                ttl.get().shouldBeNull()
                 ttl.get()
             }
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
     @Test
     fun test_runCallableWithCaptured() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val capture = Transmitter.capture()
 
@@ -122,7 +121,7 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
             ttl.set("child")
             try {
                 Transmitter.runCallableWithCaptured(capture) {
-                    ttl.get() shouldBe PARENT
+                    ttl.get() shouldBe parentValue
                     ttl.get()
                 }
             } catch (e: Exception) {
@@ -130,17 +129,17 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
             }
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
     @Test
     fun test_runCallableWithClear() {
         val ttl = TransmittableThreadLocal<String>()
-        ttl.set(PARENT)
+        ttl.set(parentValue)
 
         val future = executorService.submit {
             ttl.set("child")
@@ -154,24 +153,24 @@ class TransmittableThreadLocal_Transmitter_UserTest : AnnotationSpec() {
             }
         }
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
 
-        future.get(1, TimeUnit.SECONDS)
+        future.getForTest()
 
-        ttl.get() shouldBe PARENT
+        ttl.get() shouldBe parentValue
     }
 
+    private val parentValue = "parent: " + Date()
+    private val childValue = "child: " + Date()
+    private lateinit var executorService: ExecutorService
+
+    @BeforeAll
+    fun beforeAll() {
+        executorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
+    }
 
     @AfterAll
     fun afterAll() {
-        executorService.shutdown()
-        executorService.awaitTermination(1, TimeUnit.SECONDS).shouldBeTrue()
-    }
-
-    companion object {
-        private val PARENT = "parent: " + Date()
-        private val CHILD = "child: " + Date()
-
-        private val executorService: ExecutorService = Executors.newFixedThreadPool(3).also { expandThreadPool(it) }
+        executorService.shutdownForTest()
     }
 }

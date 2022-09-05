@@ -1,9 +1,10 @@
 package com.alibaba.user_api_test.ttl3
 
+import com.alibaba.getForTest
 import com.alibaba.ttl3.TransmittableThreadLocal
+import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.Test
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
@@ -11,7 +12,7 @@ import kotlin.concurrent.thread
 /**
  * Test the "Ignore-Null-Value Semantics" of [TransmittableThreadLocal] from user code(different package)
  */
-class DisableIgnoreNullValueSemanticsTest {
+class DisableIgnoreNullValueSemanticsTest : AnnotationSpec() {
     @Test
     fun test_TTL_not_disableIgnoreNullValueSemantics_defaultTtlBehavior() {
         val ttl = object : TransmittableThreadLocal<String?>() {
@@ -48,7 +49,7 @@ class DisableIgnoreNullValueSemanticsTest {
         thread { task2.run() }.join()
 
         ttl.get() shouldBe "init"
-        task2.get() shouldBe "init + child"
+        task2.getForTest() shouldBe "init + child"
     }
 
     @Test
@@ -97,7 +98,7 @@ class DisableIgnoreNullValueSemanticsTest {
         thread { task.run() }.join()
 
         ttl.get().shouldBeNull()
-        task.get() shouldBe "null + child"
+        task.getForTest() shouldBe "null + child"
 
         //////////////////////////////////////
 
@@ -107,7 +108,7 @@ class DisableIgnoreNullValueSemanticsTest {
         thread { task2.run() }.join()
 
         ttl.get().shouldBeNull()
-        task.get() shouldBe "null + child"
+        task.getForTest() shouldBe "null + child"
     }
 
     @Test
@@ -132,7 +133,7 @@ class DisableIgnoreNullValueSemanticsTest {
         thread { task.run() }.join()
 
         ttl.get().shouldBeNull()
-        task.get() shouldBe "null + child"
+        task.getForTest() shouldBe "null + child"
 
         //////////////////////////////////////
 
@@ -142,6 +143,6 @@ class DisableIgnoreNullValueSemanticsTest {
         thread { task2.run() }.join()
 
         ttl.get().shouldBeNull()
-        task.get() shouldBe "null + child"
+        task.getForTest() shouldBe "null + child"
     }
 }
