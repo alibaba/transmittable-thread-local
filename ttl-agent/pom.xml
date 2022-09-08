@@ -12,7 +12,7 @@
 	<artifactId>ttl-agent</artifactId>
 	<packaging>jar</packaging>
 	<name>TransmittableThreadLocal(TTL) Agent</name>
-	<description>TransmittableThreadLocal(TTL) Agent</description>
+	<description>${project.name}</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2022</inceptionYear>
 
