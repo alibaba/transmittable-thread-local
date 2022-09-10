@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.Comparator;
 import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 
 /**
  * Util methods for TTL wrapper of jdk executors.
@@ -17,7 +18,7 @@ import java.util.concurrent.*;
  * <ol>
  *     <li>wrap/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
  *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ThreadFactory}.</li>
- *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ForkJoinPool.ForkJoinWorkerThreadFactory}.</li>
+ *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ForkJoinWorkerThreadFactory}.</li>
  *     <li>wrap/check/unwrap methods for {@code TtlRunnableUnwrapComparator} wrapper of {@link PriorityBlockingQueue}.</li>
  * </ol>
  * <p>
@@ -39,7 +40,7 @@ import java.util.concurrent.*;
  * @see Executors#defaultThreadFactory()
  * @see PriorityBlockingQueue
  * @see ForkJoinPool
- * @see ForkJoinPool.ForkJoinWorkerThreadFactory
+ * @see ForkJoinWorkerThreadFactory
  * @see ForkJoinPool#defaultForkJoinWorkerThreadFactory
  */
 public final class TtlExecutors {
@@ -190,7 +191,7 @@ public final class TtlExecutors {
      * @see #getDisableInheritableThreadFactory(ThreadFactory)
      * @see #getDefaultDisableInheritableThreadFactory()
      * @see #isDisableInheritableThreadFactory(ThreadFactory)
-     * @see TtlExecutors#unwrapDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see TtlExecutors#unwrapDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
      * @see com.alibaba.ttl3.TtlWrappers#unwrap(Object)
      */
     @Nullable
@@ -206,14 +207,14 @@ public final class TtlExecutors {
     ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Wrapper of {@link ForkJoinPool.ForkJoinWorkerThreadFactory}, disable inheritable.
+     * Wrapper of {@link ForkJoinWorkerThreadFactory}, disable inheritable.
      *
      * @param threadFactory input thread factory
      * @see TtlExecutors#getDisableInheritableThreadFactory(ThreadFactory)
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    public static ForkJoinPool.ForkJoinWorkerThreadFactory getDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
+    public static ForkJoinWorkerThreadFactory getDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (threadFactory == null || isDisableInheritableForkJoinWorkerThreadFactory(threadFactory))
             return threadFactory;
 
@@ -223,21 +224,21 @@ public final class TtlExecutors {
     /**
      * Wrapper of {@link ForkJoinPool#defaultForkJoinWorkerThreadFactory}, disable inheritable.
      *
-     * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
      * @see TtlExecutors#getDefaultDisableInheritableThreadFactory()
      */
     @NonNull
-    public static ForkJoinPool.ForkJoinWorkerThreadFactory getDefaultDisableInheritableForkJoinWorkerThreadFactory() {
+    public static ForkJoinWorkerThreadFactory getDefaultDisableInheritableForkJoinWorkerThreadFactory() {
         return getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.defaultForkJoinWorkerThreadFactory);
     }
 
     /**
-     * check the {@link ForkJoinPool.ForkJoinWorkerThreadFactory} is {@code DisableInheritableForkJoinWorkerThreadFactory} or not.
+     * check the {@link ForkJoinWorkerThreadFactory} is {@code DisableInheritableForkJoinWorkerThreadFactory} or not.
      *
-     * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinPool.ForkJoinWorkerThreadFactory)
+     * @see #getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
      * @see #getDefaultDisableInheritableForkJoinWorkerThreadFactory()
      */
-    public static boolean isDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
+    public static boolean isDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         return threadFactory instanceof DisableInheritableForkJoinWorkerThreadFactoryWrapper;
     }
 
@@ -249,7 +250,7 @@ public final class TtlExecutors {
      */
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
-    public static ForkJoinPool.ForkJoinWorkerThreadFactory unwrapDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinPool.ForkJoinWorkerThreadFactory threadFactory) {
+    public static ForkJoinWorkerThreadFactory unwrapDisableInheritableForkJoinWorkerThreadFactory(@Nullable ForkJoinWorkerThreadFactory threadFactory) {
         if (!isDisableInheritableForkJoinWorkerThreadFactory(threadFactory)) return threadFactory;
 
         return ((DisableInheritableForkJoinWorkerThreadFactoryWrapper) threadFactory).unwrap();
