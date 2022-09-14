@@ -102,7 +102,7 @@
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
 
-		<slf4j.version>1.7.36</slf4j.version>
+		<slf4j.version>2.0.1</slf4j.version>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.0</junit5.version>
