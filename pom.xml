@@ -96,7 +96,7 @@
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.7.1</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
 		<kotlin.version>1.7.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
