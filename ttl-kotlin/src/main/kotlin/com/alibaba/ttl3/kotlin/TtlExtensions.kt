@@ -22,7 +22,8 @@ import java.util.function.Function
  *
  * @see TtlRunnable.get
  */
-fun Runnable.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun Runnable.ttlWrap(
     releaseTtlValueReferenceAfterRun: Boolean = false,
     idempotent: Boolean = false
 ): TtlRunnable = TtlRunnable.get(this, releaseTtlValueReferenceAfterRun, idempotent) as TtlRunnable
@@ -32,7 +33,8 @@ fun Runnable.ttlWrap(
  *
  * @see TtlRunnable.ttlUnwrap
  */
-fun Runnable.ttlUnwrap(): Runnable = TtlRunnable.unwrap(this) as Runnable
+@Suppress("NOTHING_TO_INLINE")
+inline fun Runnable.ttlUnwrap(): Runnable = TtlRunnable.unwrap(this) as Runnable
 
 /**
  * wrap input [Runnable] collection to [TtlRunnable] collection.
@@ -40,7 +42,8 @@ fun Runnable.ttlUnwrap(): Runnable = TtlRunnable.unwrap(this) as Runnable
  * @see TtlRunnable.gets
  */
 @JvmName("ttlWrapRunnableCollection")
-fun Collection<Runnable>?.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun Collection<Runnable>?.ttlWrap(
     releaseTtlValueReferenceAfterRun: Boolean = false,
     idempotent: Boolean = false
 ): List<TtlRunnable> = TtlRunnable.gets(this, releaseTtlValueReferenceAfterRun, idempotent)
@@ -51,7 +54,8 @@ fun Collection<Runnable>?.ttlWrap(
  * @see TtlRunnable.gets
  */
 @JvmName("ttlWrapNullableRunnableCollection")
-fun Collection<Runnable?>?.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun Collection<Runnable?>?.ttlWrap(
     releaseTtlValueReferenceAfterRun: Boolean = false,
     idempotent: Boolean = false
 ): List<TtlRunnable?> = TtlRunnable.gets(this, releaseTtlValueReferenceAfterRun, idempotent)
@@ -62,7 +66,8 @@ fun Collection<Runnable?>?.ttlWrap(
  * @see TtlRunnable.unwraps
  */
 @JvmName("ttlUnwrapRunnableCollection")
-fun Collection<Runnable>?.ttlUnwrap(): List<Runnable> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Collection<Runnable>?.ttlUnwrap(): List<Runnable> =
     TtlRunnable.unwraps(this)
 
 /**
@@ -71,7 +76,8 @@ fun Collection<Runnable>?.ttlUnwrap(): List<Runnable> =
  * @see TtlRunnable.unwraps
  */
 @JvmName("ttlUnwrapNullableRunnableCollection")
-fun Collection<Runnable?>?.ttlUnwrap(): List<Runnable?> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Collection<Runnable?>?.ttlUnwrap(): List<Runnable?> =
     TtlRunnable.unwraps(this)
 
 
@@ -84,7 +90,8 @@ fun Collection<Runnable?>?.ttlUnwrap(): List<Runnable?> =
  *
  * @see TtlCallable.get
  */
-fun <V> Callable<V>.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Callable<V>.ttlWrap(
     releaseTtlValueReferenceAfterCall: Boolean = false,
     idempotent: Boolean = false
 ): TtlCallable<V> = TtlCallable.get(this, releaseTtlValueReferenceAfterCall, idempotent) as TtlCallable<V>
@@ -94,7 +101,8 @@ fun <V> Callable<V>.ttlWrap(
  *
  * @see TtlCallable.ttlUnwrap
  */
-fun <V> Callable<V>.ttlUnwrap(): Callable<V> = TtlCallable.unwrap(this) as Callable<V>
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Callable<V>.ttlUnwrap(): Callable<V> = TtlCallable.unwrap(this) as Callable<V>
 
 /**
  * wrap input [Callable] collection to [TtlCallable] collection.
@@ -102,7 +110,8 @@ fun <V> Callable<V>.ttlUnwrap(): Callable<V> = TtlCallable.unwrap(this) as Calla
  * @see TtlCallable.gets
  */
 @JvmName("ttlWrapCallableCollection")
-fun <V> Collection<Callable<V>>?.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Collection<Callable<V>>?.ttlWrap(
     releaseTtlValueReferenceAfterCall: Boolean = false,
     idempotent: Boolean = false
 ): List<TtlCallable<V>> = TtlCallable.gets(this, releaseTtlValueReferenceAfterCall, idempotent)
@@ -113,7 +122,8 @@ fun <V> Collection<Callable<V>>?.ttlWrap(
  * @see TtlCallable.gets
  */
 @JvmName("ttlWrapNullableCallableCollection")
-fun <V> Collection<Callable<V>?>?.ttlWrap(
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Collection<Callable<V>?>?.ttlWrap(
     releaseTtlValueReferenceAfterCall: Boolean = false,
     idempotent: Boolean = false
 ): List<TtlCallable<V>?> = TtlCallable.gets(this, releaseTtlValueReferenceAfterCall, idempotent)
@@ -124,7 +134,8 @@ fun <V> Collection<Callable<V>?>?.ttlWrap(
  * @see TtlCallable.unwraps
  */
 @JvmName("ttlUnwrapCallableCollection")
-fun <V> Collection<Callable<V>>?.ttlUnwrap(): List<Callable<V>> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Collection<Callable<V>>?.ttlUnwrap(): List<Callable<V>> =
     TtlCallable.unwraps(this)
 
 /**
@@ -133,7 +144,8 @@ fun <V> Collection<Callable<V>>?.ttlUnwrap(): List<Callable<V>> =
  * @see TtlCallable.unwraps
  */
 @JvmName("ttlUnwrapNullableCallableCollection")
-fun <V> Collection<Callable<V>?>?.ttlUnwrap(): List<Callable<V>?> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun <V> Collection<Callable<V>?>?.ttlUnwrap(): List<Callable<V>?> =
     TtlCallable.unwraps(this)
 
 
@@ -146,28 +158,32 @@ fun <V> Collection<Callable<V>?>?.ttlUnwrap(): List<Callable<V>?> =
  *
  * @see TtlWrappers.wrapSupplier
  */
-fun <T> Supplier<T>.ttlWrap(): Supplier<T> = TtlWrappers.wrapSupplier(this) as Supplier<T>
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Supplier<T>.ttlWrap(): Supplier<T> = TtlWrappers.wrapSupplier(this) as Supplier<T>
 
 /**
  * wrap [Consumer] to TTL wrapper.
  *
  * @see TtlWrappers.wrapConsumer
  */
-fun <T> Consumer<T>.ttlWrap(): Consumer<T> = TtlWrappers.wrapConsumer(this) as Consumer<T>
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Consumer<T>.ttlWrap(): Consumer<T> = TtlWrappers.wrapConsumer(this) as Consumer<T>
 
 /**
  * wrap [BiConsumer] to TTL wrapper.
  *
  * @see TtlWrappers.wrapBiConsumer
  */
-fun <T, U> BiConsumer<T, U>.ttlWrap(): BiConsumer<T, U> = TtlWrappers.wrapBiConsumer(this) as BiConsumer<T, U>
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T, U> BiConsumer<T, U>.ttlWrap(): BiConsumer<T, U> = TtlWrappers.wrapBiConsumer(this) as BiConsumer<T, U>
 
 /**
  * wrap [Function] to TTL wrapper.
  *
  * @see TtlWrappers.wrapFunction
  */
-fun <T, R> Function<T, R>.ttlWrap(): Function<T, R> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T, R> Function<T, R>.ttlWrap(): Function<T, R> =
     TtlWrappers.wrapFunction(this) as Function<T, R>
 
 /**
@@ -175,7 +191,8 @@ fun <T, R> Function<T, R>.ttlWrap(): Function<T, R> =
  *
  * @see TtlWrappers.wrapFunction
  */
-fun <T, U, R> BiFunction<T, U, R>.ttlWrap(): BiFunction<T, U, R> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T, U, R> BiFunction<T, U, R>.ttlWrap(): BiFunction<T, U, R> =
     TtlWrappers.wrapBiFunction(this) as BiFunction<T, U, R>
 
 
@@ -305,15 +322,16 @@ fun <P1, P2, P3, P4, R> ((P1, P2, P3, P4) -> R).ttlWrap(): (P1, P2, P3, P4) -> R
  *
  * @see TtlWrappers.unwrap
  */
-@Suppress("UNCHECKED_CAST")
-fun <T> T.ttlUnwrap(): T = TtlWrappers.unwrap(this) as T
+@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
+inline fun <T> T.ttlUnwrap(): T = TtlWrappers.unwrap(this) as T
 
 /**
  * check the input object is a `TtlWrapper` or not.
  *
  * @see TtlWrappers.isWrapper
  */
-fun <T> T.isTtlWrapper(): Boolean = TtlWrappers.isWrapper(this)
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> T.isTtlWrapper(): Boolean = TtlWrappers.isWrapper(this)
 
 
 ////////////////////////////////////////
@@ -325,7 +343,8 @@ fun <T> T.isTtlWrapper(): Boolean = TtlWrappers.isWrapper(this)
  *
  * @see TtlExecutors.getTtlExecutor
  */
-fun Executor.ttlWrap(): Executor =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Executor.ttlWrap(): Executor =
     TtlExecutors.getTtlExecutor(this) as Executor
 
 /**
@@ -333,7 +352,8 @@ fun Executor.ttlWrap(): Executor =
  *
  * @see TtlExecutors.getTtlExecutorService
  */
-fun ExecutorService.ttlWrap(): ExecutorService =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ExecutorService.ttlWrap(): ExecutorService =
     TtlExecutors.getTtlExecutorService(this) as ExecutorService
 
 /**
@@ -341,20 +361,23 @@ fun ExecutorService.ttlWrap(): ExecutorService =
  *
  * @see TtlExecutors.getTtlScheduledExecutorService
  */
-fun ScheduledExecutorService.ttlWrap(): ScheduledExecutorService =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ScheduledExecutorService.ttlWrap(): ScheduledExecutorService =
     TtlExecutors.getTtlScheduledExecutorService(this) as ScheduledExecutorService
 
 /**
  * check the executor is a TTL executor wrapper or not.
  */
-fun Executor?.isTtlExecutor(): Boolean = TtlExecutors.isTtlExecutor(this)
+@Suppress("NOTHING_TO_INLINE")
+inline fun Executor?.isTtlExecutor(): Boolean = TtlExecutors.isTtlExecutor(this)
 
 /**
  * unwrap `TtlExecutor` to the original/underneath one.
  *
  * @see TtlExecutors.unwrapTtlExecutor
  */
-fun <E : Executor> E.ttlUnwrap(): E = TtlExecutors.unwrapTtlExecutor(this) as E
+@Suppress("NOTHING_TO_INLINE")
+inline fun <E : Executor> E.ttlUnwrap(): E = TtlExecutors.unwrapTtlExecutor(this) as E
 
 
 ////////////////////////////////////////
@@ -366,7 +389,8 @@ fun <E : Executor> E.ttlUnwrap(): E = TtlExecutors.unwrapTtlExecutor(this) as E
  *
  * @see TtlExecutors.getDisableInheritableThreadFactory
  */
-fun ThreadFactory.ttlWrapToDisableInheritableThreadFactory(): ThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ThreadFactory.ttlWrapToDisableInheritableThreadFactory(): ThreadFactory =
     TtlExecutors.getDisableInheritableThreadFactory(this) as ThreadFactory
 
 /**
@@ -374,7 +398,8 @@ fun ThreadFactory.ttlWrapToDisableInheritableThreadFactory(): ThreadFactory =
  *
  * @see TtlExecutors.getDefaultDisableInheritableThreadFactory
  */
-fun getDefaultDisableInheritableThreadFactory(): ThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun getDefaultDisableInheritableThreadFactory(): ThreadFactory =
     TtlExecutors.getDefaultDisableInheritableThreadFactory()
 
 /**
@@ -382,7 +407,8 @@ fun getDefaultDisableInheritableThreadFactory(): ThreadFactory =
  *
  * @see TtlExecutors.isDisableInheritableThreadFactory
  */
-fun ThreadFactory?.isDisableInheritableThreadFactory(): Boolean =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ThreadFactory?.isDisableInheritableThreadFactory(): Boolean =
     TtlExecutors.isDisableInheritableThreadFactory(this)
 
 /**
@@ -390,7 +416,8 @@ fun ThreadFactory?.isDisableInheritableThreadFactory(): Boolean =
  *
  * @see TtlExecutors.unwrapDisableInheritableThreadFactory
  */
-fun ThreadFactory.ttlUnwrapDisableInheritableThreadFactory(): ThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ThreadFactory.ttlUnwrapDisableInheritableThreadFactory(): ThreadFactory =
     TtlExecutors.unwrapDisableInheritableThreadFactory(this) as ThreadFactory
 
 
@@ -399,7 +426,8 @@ fun ThreadFactory.ttlUnwrapDisableInheritableThreadFactory(): ThreadFactory =
  *
  * @see TtlExecutors.getDisableInheritableForkJoinWorkerThreadFactory
  */
-fun ForkJoinWorkerThreadFactory.ttlWrapToDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ForkJoinWorkerThreadFactory.ttlWrapToDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
     TtlExecutors.getDisableInheritableForkJoinWorkerThreadFactory(this) as ForkJoinWorkerThreadFactory
 
 /**
@@ -407,7 +435,8 @@ fun ForkJoinWorkerThreadFactory.ttlWrapToDisableInheritableForkJoinWorkerThreadF
  *
  * @see TtlExecutors.getDefaultDisableInheritableForkJoinWorkerThreadFactory
  */
-fun getDefaultDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun getDefaultDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
     TtlExecutors.getDefaultDisableInheritableForkJoinWorkerThreadFactory()
 
 /**
@@ -415,7 +444,8 @@ fun getDefaultDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThr
  *
  * @see TtlExecutors.isDisableInheritableForkJoinWorkerThreadFactory
  */
-fun ForkJoinWorkerThreadFactory?.isDisableInheritableForkJoinWorkerThreadFactory(): Boolean =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ForkJoinWorkerThreadFactory?.isDisableInheritableForkJoinWorkerThreadFactory(): Boolean =
     TtlExecutors.isDisableInheritableForkJoinWorkerThreadFactory(this)
 
 /**
@@ -423,7 +453,8 @@ fun ForkJoinWorkerThreadFactory?.isDisableInheritableForkJoinWorkerThreadFactory
  *
  * @see TtlExecutors.unwrapDisableInheritableForkJoinWorkerThreadFactory
  */
-fun ForkJoinWorkerThreadFactory.ttlUnwrapDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
+@Suppress("NOTHING_TO_INLINE")
+inline fun ForkJoinWorkerThreadFactory.ttlUnwrapDisableInheritableForkJoinWorkerThreadFactory(): ForkJoinWorkerThreadFactory =
     TtlExecutors.unwrapDisableInheritableForkJoinWorkerThreadFactory(this) as ForkJoinWorkerThreadFactory
 
 
@@ -437,7 +468,8 @@ fun ForkJoinWorkerThreadFactory.ttlUnwrapDisableInheritableForkJoinWorkerThreadF
  *
  * @see TtlExecutors.getTtlRunnableUnwrapComparator
  */
-fun Comparator<Runnable>.ttlWrapToTtlRunnableUnwrapComparator() =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Comparator<Runnable>.ttlWrapToTtlRunnableUnwrapComparator() =
     TtlExecutors.getTtlRunnableUnwrapComparator(this) as Comparator<Runnable>
 
 /**
@@ -445,7 +477,8 @@ fun Comparator<Runnable>.ttlWrapToTtlRunnableUnwrapComparator() =
  *
  * @see TtlExecutors.getTtlRunnableUnwrapComparatorForComparableRunnable
  */
-fun getTtlRunnableUnwrapComparatorForComparableRunnable(): Comparator<Runnable> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun getTtlRunnableUnwrapComparatorForComparableRunnable(): Comparator<Runnable> =
     TtlExecutors.getTtlRunnableUnwrapComparatorForComparableRunnable()
 
 /**
@@ -453,7 +486,8 @@ fun getTtlRunnableUnwrapComparatorForComparableRunnable(): Comparator<Runnable> 
  *
  * @see TtlExecutors.isTtlRunnableUnwrapComparator
  */
-fun Comparator<Runnable>?.isTtlRunnableUnwrapComparator(): Boolean =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Comparator<Runnable>?.isTtlRunnableUnwrapComparator(): Boolean =
     TtlExecutors.isTtlRunnableUnwrapComparator(this)
 
 /**
@@ -461,5 +495,6 @@ fun Comparator<Runnable>?.isTtlRunnableUnwrapComparator(): Boolean =
  *
  * @see TtlExecutors.unwrapTtlRunnableUnwrapComparator
  */
-fun Comparator<Runnable>.ttlUnwrapTtlRunnableUnwrapComparator(): Comparator<Runnable> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun Comparator<Runnable>.ttlUnwrapTtlRunnableUnwrapComparator(): Comparator<Runnable> =
     TtlExecutors.unwrapTtlRunnableUnwrapComparator(this) as Comparator<Runnable>
