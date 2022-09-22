@@ -18,6 +18,7 @@ import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeSameInstanceAs
@@ -51,14 +52,13 @@ class TtlExtensionsTests : FunSpec({
 
         r.ttlWrap().let { wrap ->
             wrap.ttlWrap(idempotent = true) shouldBeSameInstanceAs wrap
+            r.ttlWrap() shouldNotBeSameInstanceAs wrap
+            r.ttlWrap() shouldNotBe wrap
 
             wrap.ttlUnwrap() shouldBeSameInstanceAs r
             wrap.unwrap() shouldBeSameInstanceAs r
             wrap.runnable shouldBeSameInstanceAs r
             (wrap as Any).ttlUnwrap() shouldBeSameInstanceAs r
-
-            wrap shouldNotBeSameInstanceAs r.ttlWrap()
-            wrap shouldBe r.ttlWrap()
 
             wrap.isTtlWrapper().shouldBeTrue()
 
@@ -119,6 +119,8 @@ class TtlExtensionsTests : FunSpec({
 
         c.ttlWrap().let { wrap ->
             wrap.ttlWrap(idempotent = true) shouldBeSameInstanceAs wrap
+            c.ttlWrap() shouldNotBeSameInstanceAs wrap
+            c.ttlWrap() shouldNotBe wrap
 
             wrap.ttlUnwrap() shouldBeSameInstanceAs c
             wrap.unwrap() shouldBeSameInstanceAs c
@@ -126,7 +128,7 @@ class TtlExtensionsTests : FunSpec({
             (wrap as Any).ttlUnwrap() shouldBeSameInstanceAs c
 
             wrap shouldNotBeSameInstanceAs c.ttlWrap()
-            wrap shouldBe c.ttlWrap()
+            wrap shouldNotBe c.ttlWrap()
 
             wrap.isTtlWrapper().shouldBeTrue()
 
@@ -201,10 +203,18 @@ class TtlExtensionsTests : FunSpec({
             checkLogicInBody()
             "Hello"
         }
-        supplier.let {
-            val w = it.ttlWrap()
+        supplier.ttlUnwrap() shouldBeSameInstanceAs supplier
+        supplier.isTtlWrapper().shouldBeFalse()
+
+        supplier.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            supplier.ttlWrap() shouldNotBeSameInstanceAs w
+            supplier.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs supplier
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs supplier
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun {
             supplier.get()
@@ -213,10 +223,18 @@ class TtlExtensionsTests : FunSpec({
         val consumer = Consumer<String> {
             checkLogicInBody()
         }
-        consumer.let {
-            val w = it.ttlWrap()
+        consumer.ttlUnwrap() shouldBeSameInstanceAs consumer
+        consumer.isTtlWrapper().shouldBeFalse()
+
+        consumer.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            consumer.ttlWrap() shouldNotBeSameInstanceAs w
+            consumer.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs consumer
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs consumer
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun {
             consumer.accept("")
@@ -225,10 +243,15 @@ class TtlExtensionsTests : FunSpec({
         val biConsumer = BiConsumer<String, String> { _, _ ->
             checkLogicInBody()
         }
-        biConsumer.let {
-            val w = it.ttlWrap()
+        biConsumer.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            biConsumer.ttlWrap() shouldNotBeSameInstanceAs w
+            biConsumer.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs biConsumer
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs biConsumer
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun {
             biConsumer.accept("", "")
@@ -237,10 +260,15 @@ class TtlExtensionsTests : FunSpec({
         val function = Function<String, Unit> {
             checkLogicInBody()
         }
-        function.let {
-            val w = it.ttlWrap()
+        function.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            function.ttlWrap() shouldNotBeSameInstanceAs w
+            function.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs function
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs function
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun {
             function.apply("")
@@ -249,58 +277,87 @@ class TtlExtensionsTests : FunSpec({
         val biFunction = BiFunction<String, String, Unit> { _, _ ->
             checkLogicInBody()
         }
-        biFunction.let {
-            val w = it.ttlWrap()
+        biFunction.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            biFunction.ttlWrap() shouldNotBeSameInstanceAs w
+            biFunction.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs biFunction
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs biFunction
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun {
             biFunction.apply("", "")
         }
     }
 
-
     test("kotlin function types") {
         ttl.set(parentValue)
 
 
         val f0: () -> Unit = { checkLogicInBody() }
-        f0.let {
-            val w = it.ttlWrap()
+        f0.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            f0.ttlWrap() shouldNotBeSameInstanceAs w
+            f0.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs f0
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs f0
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun(f0)
 
         val f1: (String) -> Unit = { checkLogicInBody() }
-        f1.let {
-            val w = it.ttlWrap()
+        f1.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            f1.ttlWrap() shouldNotBeSameInstanceAs w
+            f1.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs f1
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs f1
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun { f1("") }
 
         val f2: (String, Int) -> Unit = { _, _ -> checkLogicInBody() }
-        f2.let {
-            val w = it.ttlWrap()
+        f2.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            f2.ttlWrap() shouldNotBeSameInstanceAs w
+            f2.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs f2
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs f2
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun { f2("", 1) }
 
         val f3: (String, Int, Double) -> Unit = { _, _, _ -> checkLogicInBody() }
-        f3.let {
-            val w = it.ttlWrap()
+        f3.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            f3.ttlWrap() shouldNotBeSameInstanceAs w
+            f3.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs f3
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs f3
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun { f3("", 1, 1.0) }
 
         val f4: (String, Int, Double, Regex) -> Unit = { _, _, _, _ -> checkLogicInBody() }
-        f4.let {
-            val w = it.ttlWrap()
+        f4.ttlWrap().let { w ->
+            w.ttlWrap() shouldBeSameInstanceAs w
+            f4.ttlWrap() shouldNotBeSameInstanceAs w
+            f4.ttlWrap() shouldNotBe w
+
+            w.ttlUnwrap() shouldBeSameInstanceAs f4
+            (w as Any).ttlUnwrap() shouldBeSameInstanceAs f4
+
             w.isTtlWrapper().shouldBeTrue()
-            (w as Any).ttlUnwrap() shouldBeSameInstanceAs it
         }
         checkLogicAfterRun { f4("", 1, 1.0, Regex(".")) }
     }
@@ -313,6 +370,8 @@ class TtlExtensionsTests : FunSpec({
 
         executor.ttlWrap().let { wrap ->
             wrap.ttlWrap() shouldBeSameInstanceAs wrap
+            executor.ttlWrap() shouldNotBeSameInstanceAs wrap
+            executor.ttlWrap() shouldBe wrap
 
             wrap.ttlUnwrap() shouldBeSameInstanceAs executor
             (wrap as Any).ttlUnwrap() shouldBeSameInstanceAs executor
@@ -331,6 +390,8 @@ class TtlExtensionsTests : FunSpec({
 
         es.ttlWrap().let { wrap: ExecutorService ->
             wrap.ttlWrap() shouldBeSameInstanceAs wrap
+            es.ttlWrap() shouldNotBeSameInstanceAs wrap
+            es.ttlWrap() shouldBe wrap
 
             wrap.ttlUnwrap() shouldBeSameInstanceAs es
             (wrap as Any).ttlUnwrap() shouldBeSameInstanceAs es
@@ -349,6 +410,8 @@ class TtlExtensionsTests : FunSpec({
 
         scheduledExecutorService.ttlWrap().let { wrap ->
             wrap.ttlWrap() shouldBeSameInstanceAs wrap
+            scheduledExecutorService.ttlWrap() shouldNotBeSameInstanceAs wrap
+            scheduledExecutorService.ttlWrap() shouldBe wrap
 
             wrap.ttlUnwrap() shouldBeSameInstanceAs scheduledExecutorService
             (wrap as Any).ttlUnwrap() shouldBeSameInstanceAs scheduledExecutorService

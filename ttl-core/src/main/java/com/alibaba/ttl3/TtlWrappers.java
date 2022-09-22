@@ -181,21 +181,6 @@ public final class TtlWrappers {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TtlSupplier<?> that = (TtlSupplier<?>) o;
-
-            return supplier.equals(that.supplier);
-        }
-
-        @Override
-        public int hashCode() {
-            return supplier.hashCode();
-        }
-
-        @Override
         public String toString() {
             return this.getClass().getName() + " - " + supplier.toString();
         }
@@ -224,21 +209,6 @@ public final class TtlWrappers {
         @Override
         public Consumer<T> unwrap() {
             return consumer;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TtlConsumer<?> that = (TtlConsumer<?>) o;
-
-            return consumer.equals(that.consumer);
-        }
-
-        @Override
-        public int hashCode() {
-            return consumer.hashCode();
         }
 
         @Override
@@ -273,21 +243,6 @@ public final class TtlWrappers {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TtlBiConsumer<?, ?> that = (TtlBiConsumer<?, ?>) o;
-
-            return consumer.equals(that.consumer);
-        }
-
-        @Override
-        public int hashCode() {
-            return consumer.hashCode();
-        }
-
-        @Override
         public String toString() {
             return this.getClass().getName() + " - " + consumer.toString();
         }
@@ -319,21 +274,6 @@ public final class TtlWrappers {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TtlFunction<?, ?> that = (TtlFunction<?, ?>) o;
-
-            return fn.equals(that.fn);
-        }
-
-        @Override
-        public int hashCode() {
-            return fn.hashCode();
-        }
-
-        @Override
         public String toString() {
             return this.getClass().getName() + " - " + fn.toString();
         }
@@ -362,21 +302,6 @@ public final class TtlWrappers {
         @Override
         public BiFunction<T, U, R> unwrap() {
             return fn;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TtlBiFunction<?, ?, ?> that = (TtlBiFunction<?, ?, ?>) o;
-
-            return fn.equals(that.fn);
-        }
-
-        @Override
-        public int hashCode() {
-            return fn.hashCode();
         }
 
         @Override
