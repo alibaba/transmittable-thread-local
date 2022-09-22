@@ -89,21 +89,6 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TtlCallable<?> that = (TtlCallable<?>) o;
-
-        return callable.equals(that.callable);
-    }
-
-    @Override
-    public int hashCode() {
-        return callable.hashCode();
-    }
-
-    @Override
     public String toString() {
         return this.getClass().getName() + " - " + callable.toString();
     }

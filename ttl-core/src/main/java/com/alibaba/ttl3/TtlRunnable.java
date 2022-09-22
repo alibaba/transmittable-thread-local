@@ -84,21 +84,6 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TtlRunnable that = (TtlRunnable) o;
-
-        return runnable.equals(that.runnable);
-    }
-
-    @Override
-    public int hashCode() {
-        return runnable.hashCode();
-    }
-
-    @Override
     public String toString() {
         return this.getClass().getName() + " - " + runnable.toString();
     }
