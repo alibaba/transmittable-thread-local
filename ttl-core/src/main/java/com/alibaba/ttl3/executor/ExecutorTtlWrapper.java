@@ -42,12 +42,15 @@ class ExecutorTtlWrapper implements Executor, TtlWrapper<Executor>, TtlEnhanced 
 
         ExecutorTtlWrapper that = (ExecutorTtlWrapper) o;
 
+        if (idempotent != that.idempotent) return false;
         return executor.equals(that.executor);
     }
 
     @Override
     public int hashCode() {
-        return executor.hashCode();
+        int result = executor.hashCode();
+        result = 31 * result + (idempotent ? 1 : 0);
+        return result;
     }
 
     @Override
