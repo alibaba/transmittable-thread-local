@@ -440,6 +440,7 @@
 									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
 							-->
 							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
+							<Agent-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Agent-Class>
 							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
 							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 							<Can-Retransform-Classes>true</Can-Retransform-Classes>
