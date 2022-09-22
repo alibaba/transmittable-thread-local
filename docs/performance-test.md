@@ -17,7 +17,7 @@
 
 ## 👻 内存泄漏
 
-对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
 简单一个线程一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
@@ -30,13 +30,13 @@
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`memoryleak-ThreadLocal.sh`](../scripts/perf-test/memoryleak-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.kt)。
+测试类是[`NoMemoryLeak_ThreadLocal_NoRemove`](../ttl-core/src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_ThreadLocal_NoRemove.kt)。
 * 脚本[`memoryleak-TransmittableThreadLocal.sh`](../scripts/perf-test/memoryleak-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
-测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.kt)。
+测试类是[`NoMemoryLeak_TransmittableThreadLocal_NoRemove`](../ttl-core/src/test/java/com/alibaba/perf/memoryleak/NoMemoryLeak_TransmittableThreadLocal_NoRemove.kt)。
 
 ## 🐎 TPS & 压力测试
 
-对比测试[`TransmittableThreadLocal`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
 
 2个线程并发一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
@@ -149,6 +149,6 @@ GC情况如下（1分钟输出一次）：
 可以通过执行工程下的脚本来运行Case验证：
 
 * 脚本[`tps-ThreadLocal.sh`](../scripts/perf-test/tps-ThreadLocal.sh)运行`ThreadLocal`的测试。  
-测试类是[`CreateThreadLocalInstanceTps`](../src/test/java/com/alibaba/perf/tps/CreateThreadLocalInstanceTps.kt)。
+测试类是[`CreateThreadLocalInstanceTps`](../ttl-core/src/test/java/com/alibaba/perf/tps/CreateThreadLocalInstanceTps.kt)。
 * [`tps-TransmittableThreadLocal.sh`](../scripts/perf-test/tps-TransmittableThreadLocal.sh)运行`TransmittableThreadLocal`的测试。
-测试类是[`CreateTransmittableThreadLocalInstanceTps`](../src/test/java/com/alibaba/perf/tps/CreateTransmittableThreadLocalInstanceTps.kt)。
+测试类是[`CreateTransmittableThreadLocalInstanceTps`](../ttl-core/src/test/java/com/alibaba/perf/tps/CreateTransmittableThreadLocalInstanceTps.kt)。

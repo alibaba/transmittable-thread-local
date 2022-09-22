@@ -20,7 +20,7 @@ import static com.alibaba.ttl.threadpool.agent.transformlet.helper.TtlTransforml
  * {@link TtlTransformlet} for {@link io.vertx.core.Future}.
  *
  * @author tk (305809299 at qq dot com)
- * @see com.alibaba.ttl.integration.vertx4.TtlVertxHandler
+ * @see com.alibaba.ttl.integration.vertx3.TtlVertxHandler
  * @see io.vertx.core.Future
  * @see io.vertx.core.Handler
  */
@@ -70,7 +70,7 @@ public class VertxFutureTtlTransformlet implements TtlTransformlet {
                     // decorate to TTL wrapper,
                     // and then set AutoWrapper attachment/Tag
                     "$%d = %s.get($%1$d, false, true);"
-                        + "\n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
+                        + "%n    com.alibaba.ttl.spi.TtlAttachmentsDelegate.setAutoWrapperAttachment($%1$d);",
                     i + 1, TTL_HANDLER_CLASS_NAME);
                 logger.info("insert code before method " + signatureOfMethod(method) + " of class " + method.getDeclaringClass().getName() + ":\n" + code);
                 insertCode.append(code);

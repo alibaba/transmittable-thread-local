@@ -3,11 +3,11 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.alibaba</groupId>
-	<artifactId>transmittable-thread-local</artifactId>
+	<groupId>com.alibaba.ttl3</groupId>
+	<artifactId>ttl3-parent</artifactId>
 	<version>3.x-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>TransmittableThreadLocal(TTL)</name>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
 	<description>
 		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
 		provide an enhanced InheritableThreadLocal that transmits values between threads even using thread pooling components.
@@ -40,61 +40,26 @@
 		<name>Alibaba</name>
 		<url>https://www.alibaba.com</url>
 	</organization>
-	<developers>
-		<developer>
-			<name>Jerry Lee</name>
-			<id>oldratlee</id>
-			<email>oldratlee(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/oldratlee</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>Yang Fang</name>
-			<id>driventokill</id>
-			<email>snoop(DOT)fy(AT)gmail(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/driventokill</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>wuwen</name>
-			<id>wuwen5</id>
-			<email>wuwen.55(AT)aliyun(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/wuwen5</url>
-			<organization>ofpay</organization>
-			<organizationUrl>https://www.ofpay.com</organizationUrl>
-		</developer>
-		<developer>
-			<name>David Dai</name>
-			<id>LNAmp</id>
-			<email>351450944(AT)qq(DOT)com</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
-			<timezone>+8</timezone>
-			<url>https://github.com/LNAmp</url>
-			<organization>Alibaba</organization>
-			<organizationUrl>https://www.alibaba.com</organizationUrl>
-		</developer>
-	</developers>
+
+	<modules>
+		<module>ttl-core</module>
+		<module>ttl-kotlin</module>
+		<module>ttl-agent</module>
+
+		<module>ttl2-compatible</module>
+
+		<module>ttl-integrations/vertx4-ttl-integration</module>
+		<module>ttl-integrations/vertx3-ttl-integration</module>
+
+		<module>ttl-integrations/sample-ttl-agent-extension-transformlet</module>
+	</modules>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- overridden by submodule that need skip deploy -->
+		<maven.deploy.skip>false</maven.deploy.skip>
 
 		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
@@ -115,20 +80,18 @@
 			https://www.slf4j.org/api/org/slf4j/simple/SimpleLogger.html
 		-->
 		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}</argLine.slf4j.simple.logger.default.d.options>
+		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err
+			-Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
+		</argLine.slf4j.simple.logger.default.d.options>
 		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options} ${argLine.slf4j.simple.logger.extra.d.options}</argLine.slf4j.simple.logger.d.options>
+		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options}
+			${argLine.slf4j.simple.logger.extra.d.options}
+		</argLine.slf4j.simple.logger.d.options>
 
 		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- updated in profile -->
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 		<!-- QA libs -->
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
@@ -144,29 +107,6 @@
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- test scope dependencies -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core-jvm</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxjava</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex.rxjava2</groupId>
-			<artifactId>rxkotlin</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- logging libs -->
@@ -255,7 +195,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.29.0-GA</version>
+				<version>3.29.2-GA</version>
 				<optional>true</optional>
 			</dependency>
 			<dependency>
@@ -364,13 +304,13 @@
 
 	<build>
 		<plugins>
-			<!--
-				Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
-				https://kotlinlang.org/docs/reference/using-maven.html#compiling-kotlin-and-java-sources
-
-				Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
-			-->
 			<plugin>
+				<!--
+					Compiling Kotlin and Java sources - Using Maven - Kotlin Programming Language
+					https://kotlinlang.org/docs/reference/using-maven.html#compiling-kotlin-and-java-sources
+
+					Making sure that the kotlin plugin is above the maven-compiler-plugin in your pom.xml file!
+				-->
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<executions>
@@ -424,61 +364,6 @@
 						<goals>
 							<goal>testCompile</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<!--
-								Instrumentation Specification
-									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html (this doc for java 8)
-									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
-								JAR Manifest - JAR File Specification
-									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
-							-->
-							<Premain-Class>com.alibaba.ttl.threadpool.agent.TtlAgent</Premain-Class>
-							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
-							<Can-Redefine-Classes>false</Can-Redefine-Classes>
-							<Can-Retransform-Classes>true</Can-Retransform-Classes>
-							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-shade-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>shade-when-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<relocations>
-								<relocation>
-									<pattern>javassist</pattern>
-									<shadedPattern>com.alibaba.ttl.threadpool.agent.transformlet.javassist</shadedPattern>
-								</relocation>
-							</relocations>
-							<artifactSet>
-								<includes>
-									<include>org.javassist:javassist</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>org.javassist:javassist</artifact>
-									<excludes>
-										<exclude>META-INF/MANIFEST.MF</exclude>
-									</excludes>
-								</filter>
-							</filters>
-							<shadeSourcesContent>true</shadeSourcesContent>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -634,87 +519,6 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>config-for-jdk16+</id>
-			<activation>
-				<jdk>[16,)</jdk>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<excludes>
-								<exclude>**/*$*</exclude>
-								<exclude>**/JavassistTest*</exclude>
-							</excludes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>enable-ttl-agent-for-test</id>
-			<properties>
-				<!-- https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html -->
-				<ttl.built.agent.jar>
-					${project.build.directory}/${project.artifactId}-${project.version}.jar
-				</ttl.built.agent.jar>
-				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
-				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
-				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
-				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
-				<ttl.agent.jvm.args>
-					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
-				</ttl.agent.jvm.args>
-				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<!--
-							reference: https://github.com/EMResearch/EvoMaster/blob/95163fb042101a71289c17f6e433f91fc1f868ef/pom.xml#L851
-						-->
-						<configuration>
-							<forkCount>1</forkCount>
-							<redirectTestOutputToFile>true</redirectTestOutputToFile>
-							<classpathDependencyExcludes>
-								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
-								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
-								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
-								<classpathDependencyExclude>org.jetbrains:annotations</classpathDependencyExclude>
-							</classpathDependencyExcludes>
-							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
-						</configuration>
-					</plugin>
-					<plugin>
-						<!--
-							https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html
-						-->
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<configuration>
-							<arguments>
-								<argument>-Xmx1g</argument>
-								<argument>-Xms256m</argument>
-								<argument>-ea</argument>
-								<argument>-server</argument>
-								<argument>-Duser.language=en</argument>
-								<argument>-Duser.country=US</argument>
-
-								<argument>${ttl.agent.jvm.arg}</argument>
-
-								<argument>-classpath</argument>
-								<classpath/>
-
-								<argument>${exec.mainClass}</argument>
-							</arguments>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>gen-src</id>
 			<activation>
 				<property>
@@ -726,20 +530,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
-						<configuration>
-							<attach>false</attach>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-shade-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>shade-when-package</id>
-								<configuration>
-									<createSourcesJar>true</createSourcesJar>
-								</configuration>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -776,37 +566,6 @@
 							<overview>src/api/overview.html</overview>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
-							<sourceFileExcludes>
-								<!-- exclude deprecated TtlEnhanced from javadoc -->
-								<sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
-							</sourceFileExcludes>
-							<isOffline>true</isOffline>
-							<offlineLinks>
-								<!--
-									Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
-									https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
-
-									more infos about link setting:
-									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
-									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
-									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
-
-									About package-list vs.element-list
-									- Can't link to JDK10 in Javadoc comments
-									  https://stackoverflow.com/a/49498219/922688
-									- Missing javadoc/package-list for release 5.1
-									  https://github.com/gradle/gradle/issues/8183
-									  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
-								-->
-								<offlineLink>
-									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${project.basedir}/src/package-list/java/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
-									<location>${project.basedir}/src/package-list/spotbugs-annotations/</location>
-								</offlineLink>
-							</offlineLinks>
 							<additionalJOptions>
 								<!--
 									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
@@ -919,7 +678,9 @@
 								</validationProperty>
 							</validationProperties>
 							<generateGitPropertiesFile>true</generateGitPropertiesFile>
-							<generateGitPropertiesFilename>${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties</generateGitPropertiesFilename>
+							<generateGitPropertiesFilename>
+								${project.build.outputDirectory}/META-INF/scm/${project.groupId}/${project.artifactId}/git.properties
+							</generateGitPropertiesFilename>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -949,12 +710,6 @@
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
-							<excludes>
-								<exclude>com/alibaba/ttl/threadpool/agent/**/*.class</exclude>
-								<exclude>com/alibaba/ttl/TtlTimerTask.class</exclude>
-							</excludes>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -1008,10 +763,29 @@
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<extensions>true</extensions>
+						<!--
+							In multi-module builds using the deploy-at-end feature,
+							the deployment of all components is performed in the last module based on the reactor order.
+							If this property is set to true in the last module,
+							all staging deployment for all modules will be skipped.
+							so, we'll config nexus deploy after every moudle's deploy phase
+
+							see: https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin#configuring-the-plugin
+						-->
 						<configuration>
 							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<!--
+								If you are deploying to Maven Central, it is the Nexus Staging Plugin that is
+								doing the deployment instead of the Deploy plugin,
+								so the configuration of the deploy plugin has no effect.
+								To make the Nexus deploy plugin skip, set skipNexusStagingDeployMojo
+								in its configuration to true.
+
+								see: https://stackoverflow.com/questions/59552549/preventing-maven-modules-from-being-deployed
+							-->
+							<skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
 						</configuration>
 					</plugin>
 				</plugins>

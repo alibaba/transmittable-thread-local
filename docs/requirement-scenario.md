@@ -26,7 +26,7 @@
 
 关于『分布式跟踪系统』可以了解一下`Google`的`Dapper`（介绍的论文：[中文](https://bigbully.github.io/Dapper-translation/)| [英文](https://research.google.com/pubs/pub36356.html)）。分布式跟踪系统作为基础设施，不会限制『使用线程池等会池化复用线程的组件』，并期望对业务逻辑尽可能的透明。
 
-分布式跟踪系统的实现的示意Demo参见[`DistributedTracerUseDemo.kt`](../src/test/java/com/alibaba/demo/distributed_tracer/refcount/DistributedTracerUseDemo.kt)
+分布式跟踪系统的实现的示意Demo参见[`DistributedTracerUseDemo.kt`](../ttl2-compatible/src/test/java/com/alibaba/demo/distributed_tracer/refcount/DistributedTracerUseDemo.kt)
 
 从技术能力上讲，全链路压测 与 分布式跟踪系统 是一样的，即链路打标。
 
