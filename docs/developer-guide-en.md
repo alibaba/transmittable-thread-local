@@ -18,7 +18,7 @@
 
 # 📌 Framework/Middleware integration to `TTL` transmittance
 
-[`TransmittableThreadLocal.Transmitter`](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L362) to capture all `TTL` values of current thread and replay them in another thread.
+[`TransmittableThreadLocal.Transmitter`](../ttl-core/src/main/java/com/alibaba/ttl3/transmitter/Transmitter.java) to capture all `TTL` values of current thread and replay them in another thread.
 
 There are following methods：
 
@@ -56,8 +56,8 @@ try {
 ```
 
 
-- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../src/main/java/com/alibaba/ttl/TransmittableThreadLocal.java#L266-L362).
-- For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../src/main/java/com/alibaba/ttl/TtlRunnable.java) and [`TtlCallable.java`](../src/main/java/com/alibaba/ttl/TtlCallable.java).
+- For more info about `TransmittableThreadLocal.Transmitter`, see [its Javadoc](../ttl-core/src/main/java/com/alibaba/ttl3/transmitter/Transmitter.java).
+- For more actual implementation code of `TTL` transmittance, see [`TtlRunnable.java`](../ttl-core/src/main/java/com/alibaba/ttl3/TtlRunnable.java) and [`TtlCallable.java`](../ttl-core/src/main/java/com/alibaba/ttl3/TtlCallable.java).
 
 # 📚 Related material
 
