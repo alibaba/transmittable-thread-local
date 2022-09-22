@@ -11,6 +11,8 @@ import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -75,29 +77,37 @@ public class VertxTransformletTest {
         final Vertx vertx = Vertx.vertx();
         //here will bind eventLoop to client and create a new Thread for eventLoop
         final WebClient client = WebClient.create(vertx);
+        client.get(80, "bing.com", "/")
+                .send()
+                .onSuccess(response -> {
+                    System.out.println("===================warmup callback=====================");
+                    System.out.println(response.headers());
+                    System.out.println("===================warmup  callback=====================");
+                })
+                .toCompletionStage().toCompletableFuture().get(10, TimeUnit.SECONDS);
 
         //set value after eventLoop thread was created
         transmittableThreadLocal.set(transmittedData);
         inheritableThreadLocal.set(inheritedData);
 
-        final Future<HttpResponse<Buffer>> future = client.get(80, "baidu.com", "/")
-            .send()
-            .onSuccess(response -> {
-                System.out.println("===================callback=====================");
-                System.out.println(response.body().toString(UTF_8));
+        final Future<HttpResponse<Buffer>> future = client.get(80, "bing.com", "/")
+                .send()
+                .onSuccess(response -> {
+                    System.out.println("===================callback=====================");
+                    System.out.println(response.headers());
 
-                if (TtlAgent.isTtlAgentLoaded()) {
-                    System.out.println("Test **WITH** TTL Agent");
-                    assertEquals(transmittedData, transmittableThreadLocal.get());
-                } else {
-                    System.out.println("Test WITHOUT TTL Agent");
-                    assertNull(transmittableThreadLocal.get());
-                }
+                    if (TtlAgent.isTtlAgentLoaded()) {
+                        System.out.println("Test **WITH** TTL Agent");
+                        assertEquals(transmittedData, transmittableThreadLocal.get());
+                    } else {
+                        System.out.println("Test WITHOUT TTL Agent");
+                        assertNull(transmittableThreadLocal.get());
+                    }
 
-                System.out.println("===================callback=====================");
-            });
+                    System.out.println("===================callback=====================");
+                });
 
         // block and wait to finish
-        future.toCompletionStage().toCompletableFuture().get();
+        future.toCompletionStage().toCompletableFuture().get(10, TimeUnit.SECONDS);
     }
 }

@@ -1,0 +1,307 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alibaba.ttl3</groupId>
+		<artifactId>ttl3-parent</artifactId>
+		<version>3.x-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>ttl-agent</artifactId>
+	<packaging>jar</packaging>
+	<name>TransmittableThreadLocal(TTL) Agent</name>
+	<description>${project.name}</description>
+	<url>https://github.com/alibaba/transmittable-thread-local</url>
+	<inceptionYear>2022</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</connection>
+		<developerConnection>scm:git:git@github.com:alibaba/transmittable-thread-local.git</developerConnection>
+		<url>https://github.com/alibaba/transmittable-thread-local</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<ciManagement>
+		<system>AppVeyor</system>
+		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
+	</ciManagement>
+	<organization>
+		<name>Alibaba</name>
+		<url>https://www.alibaba.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Jerry Lee</name>
+			<id>oldratlee</id>
+			<email>oldratlee(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/oldratlee</url>
+			<organization>Alibaba</organization>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>wuwen</name>
+			<id>wuwen5</id>
+			<email>wuwen.55(AT)aliyun(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/wuwen5</url>
+			<organization>ofpay</organization>
+			<organizationUrl>https://www.ofpay.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.alibaba.ttl3</groupId>
+			<artifactId>ttl-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<!--
+								Instrumentation Specification
+									- https://docs.oracle.com/javase/8/docs/technotes/guides/instrumentation/index.html (this doc for java 8)
+									- https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description
+								JAR Manifest - JAR File Specification
+									- https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest
+							-->
+							<Premain-Class>com.alibaba.ttl3.agent.TtlAgent</Premain-Class>
+							<Boot-Class-Path>${project.build.finalName}.jar</Boot-Class-Path>
+							<Can-Redefine-Classes>false</Can-Redefine-Classes>
+							<Can-Retransform-Classes>true</Can-Retransform-Classes>
+							<Can-Set-Native-Method-Prefix>false</Can-Set-Native-Method-Prefix>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>shade-when-package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>javassist</pattern>
+									<shadedPattern>com.alibaba.ttl3.agent.transformlet.javassist</shadedPattern>
+								</relocation>
+							</relocations>
+							<artifactSet>
+								<includes>
+									<include>org.javassist:javassist</include>
+									<include>com.alibaba.ttl3:ttl-core</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>org.javassist:javassist</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>com.alibaba.ttl3:ttl-core</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<shadeSourcesContent>true</shadeSourcesContent>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>config-for-jdk16+</id>
+			<activation>
+				<jdk>[16,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>**/*$*</exclude>
+								<exclude>**/JavassistTest*</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>enable-ttl-agent-for-test</id>
+			<properties>
+				<!-- https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html -->
+				<ttl.built.agent.jar>
+					${project.build.directory}/${project.artifactId}-${project.version}.jar
+				</ttl.built.agent.jar>
+				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
+				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
+				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
+				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
+				<ttl.agent.jvm.args>
+					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
+				</ttl.agent.jvm.args>
+				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!--
+							reference: https://github.com/EMResearch/EvoMaster/blob/95163fb042101a71289c17f6e433f91fc1f868ef/pom.xml#L851
+						-->
+						<configuration>
+							<forkCount>1</forkCount>
+							<redirectTestOutputToFile>true</redirectTestOutputToFile>
+							<classpathDependencyExcludes>
+								<classpathDependencyExclude>org.javassist:javassist</classpathDependencyExclude>
+								<classpathDependencyExclude>com.github.spotbugs:spotbugs-annotations</classpathDependencyExclude>
+								<classpathDependencyExclude>com.google.code.findbugs:jsr305</classpathDependencyExclude>
+								<classpathDependencyExclude>org.jetbrains:annotations</classpathDependencyExclude>
+							</classpathDependencyExcludes>
+							<argLine>@{argLine} ${ttl.agent.jvm.args}</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<!--
+							https://www.mojohaus.org/exec-maven-plugin/examples/example-exec-for-java-programs.html
+						-->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<arguments>
+								<argument>-Xmx1g</argument>
+								<argument>-Xms256m</argument>
+								<argument>-ea</argument>
+								<argument>-server</argument>
+								<argument>-Duser.language=en</argument>
+								<argument>-Duser.country=US</argument>
+
+								<argument>${ttl.agent.jvm.arg}</argument>
+
+								<argument>-classpath</argument>
+								<classpath/>
+
+								<argument>${exec.mainClass}</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-src</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-source-plugin</artifactId>
+						<configuration>
+							<attach>false</attach>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-shade-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>shade-when-package</id>
+								<configuration>
+									<createSourcesJar>true</createSourcesJar>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>gen-javadoc</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<isOffline>true</isOffline>
+							<offlineLinks>
+								<!--
+									Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
+									https://maven.apache.org/plugins/maven-javadoc-plugin/examples/links-configuration.html
+
+									more infos about link setting:
+									Links to JSR 305 in Javadoc are broken https://github.com/google/guava/issues/2479
+									Fix links to javadoc.io for Maven Javadoc Plugin #2628 https://github.com/google/guava/pull/2628
+									Can't link to JDK10 in Javadoc comments https://stackoverflow.com/questions/49457896
+
+									About package-list vs.element-list
+									- Can't link to JDK10 in Javadoc comments
+									  https://stackoverflow.com/a/49498219/922688
+									- Missing javadoc/package-list for release 5.1
+									  https://github.com/gradle/gradle/issues/8183
+									  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
+								-->
+								<offlineLink>
+									<url>https://docs.oracle.com/javase/10/docs/api/</url>
+									<location>${project.basedir}/../src/package-list/java/</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://static.javadoc.io/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
+									<location>${project.basedir}/../src/package-list/spotbugs-annotations/</location>
+								</offlineLink>
+							</offlineLinks>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
