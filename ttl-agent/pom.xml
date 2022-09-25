@@ -135,6 +135,8 @@
 								<filter>
 									<artifact>com.alibaba.ttl3:ttl-core</artifact>
 									<excludes>
+										<exclude>com/alibaba/ttl3/agent/package-info.class</exclude>
+										<exclude>com/alibaba/ttl3/agent/package-info.java</exclude>
 										<exclude>META-INF/MANIFEST.MF</exclude>
 									</excludes>
 								</filter>
