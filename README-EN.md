@@ -354,9 +354,11 @@ Some open-source projects used `TTL`:
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
+    - [`dromara/gobrs-async` ![](https://img.shields.io/github/stars/dromara/gobrs-async.svg?style=social&label=Star)](https://github.com/dromara/gobrs-async) [![star](https://gitee.com/dromara/gobrs-async/badge/star.svg?theme=gray)](https://gitee.com/dromara/gobrs-async)  
+      一款功能强大、配置灵活、带有全链路异常回调、内存优化、异常状态管理于一身的高性能异步编排框架。为企业提供在复杂应用场景下动态任务编排的能力。 针对于复杂场景下，异步线程复杂性、任务依赖性、异常状态难控制性。
     - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       Lightweight dynamic threadpool, with monitoring and alarming functions, base on popular config centers (already support Nacos、Apollo、Zookeeper, can be customized through SPI)
-    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/agentart/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/agentart/hippo4j)  
+    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/itmachen/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/itmachen/hippo4j)  
       动态线程池框架，附带监控报警功能，支持 JDK、Tomcat、Jetty、Undertow 线程池；Apache RocketMQ、Dubbo、RabbitMQ、Hystrix 消费等线程池。内置两种使用模式：轻量级依赖配置中心以及无中间件依赖版本
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       microservice route gateway(zuul-plus)
@@ -364,15 +366,17 @@ Some open-source projects used `TTL`:
       Sermant, a proxyless service mesh solution based on Javaagent.
     - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
       ZTO Message Service
+    - [`ytyht226/taskflow` ![](https://img.shields.io/github/stars/ytyht226/taskflow.svg?style=social&label=Star)](https://github.com/ytyht226/taskflow)  
+      一款轻量、简单易用、可灵活扩展的通用任务编排框架，基于有向无环图(DAG)的方式实现，框架提供了组件复用、同步/异步编排、条件判断、分支选择等能力，可以根据不同的业务场景对任意的业务流程进行编排
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
       The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms.
 - **Middleware/Data**
-    - [`FiboAI/FiboRule` ![](https://img.shields.io/github/stars/FiboAI/FiboRule.svg?style=social&label=Star)](https://github.com/FiboAI/FiboRule)  
-      斐波那契 FiboRule - 实时AI智能决策引擎、规则引擎、风控引擎、数据流引擎
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
+    - [`basicai/xtreme1` ![](https://img.shields.io/github/stars/basicai/xtreme1.svg?style=social&label=Star)](https://github.com/basicai/xtreme1)  
+      The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported.
     - [`didi/ALITA` ![](https://img.shields.io/github/stars/didi/ALITA.svg?style=social&label=Star)](https://github.com/didi/ALITA)  
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
@@ -422,6 +426,8 @@ Some open-source projects used `TTL`:
       新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫
     - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
       🍰 一个可视化的爬虫平台
+    - [`Jackson0714/PassJava-Platform` ![](https://img.shields.io/github/stars/Jackson0714/PassJava-Platform.svg?style=social&label=Star)](https://github.com/Jackson0714/PassJava-Platform)  
+      一款面试刷题的 Spring Cloud 开源系统。零碎时间利用小程序查看常见面试题，夯实Java基础。 该项目可以教会你如何搭建SpringBoot项目，Spring Cloud项目。 采用流行的技术，如 SpringBoot、MyBatis、Redis、 MySql、 MongoDB、 RabbitMQ、Elasticsearch，采用Docker容器化部署。
     - [`martin-chips/DimpleBlog` ![](https://img.shields.io/github/stars/martin-chips/DimpleBlog.svg?style=social&label=Star)](https://github.com/martin-chips/DimpleBlog)  
       基于`SpringBoot2`搭建的个人博客系统
     - [`zjcscut/octopus` ![](https://img.shields.io/github/stars/zjcscut/octopus.svg?style=social&label=Star)](https://github.com/zjcscut/octopus)  
@@ -460,12 +466,6 @@ Some open-source projects used `TTL`:
       整合Nacos、Spring Cloud Alibaba，提供了一系列starter组件， 同时提供服务治理、服务监控、OAuth2权限认证，支持服务降级/熔断、服务权重
     - [`mingyang66/spring-parent` ![](https://img.shields.io/github/stars/mingyang66/spring-parent.svg?style=social&label=Star)](https://github.com/mingyang66/spring-parent)  
       数据库多数据源、Redis多数据源、日志组件、全链路日志追踪、埋点扩展点、Netty、微服务、开发基础框架支持、异常统一处理、返回值、跨域、API路由、监控等
-    - [`yzcheng90/ms` ![](https://img.shields.io/github/stars/yzcheng90/ms.svg?style=social&label=Star)](https://github.com/yzcheng90/ms)  
-      一个前后分离的分布式 spring cloud 框架(全家桶)，这里有统一认证，统一网关等等功能，是一个非常简洁的微服务脚手架
-    - [`fafeidou/fast-cloud-nacos` ![](https://img.shields.io/github/stars/fafeidou/fast-cloud-nacos.svg?style=social&label=Star)](https://github.com/fafeidou/fast-cloud-nacos)  
-      致力于打造一个基于nacos为注册中心，结合企业开发习惯，总结的一些基本的实现方式
-    - [`HongZhaoHua/jstarcraft-core` ![](https://img.shields.io/github/stars/HongZhaoHua/jstarcraft-core.svg?style=social&label=Star)](https://github.com/HongZhaoHua/jstarcraft-core)  
-      目标是提供一个通用的Java核心编程框架,作为搭建其它框架或者项目的基础. 让相关领域的研发人员能够专注高层设计而不用关注底层实现. 涵盖了缓存,编解码,通讯,事件,输入/输出,监控,存储,配置,脚本和事务10个方面
     - [`budwk/budwk` ![](https://img.shields.io/github/stars/budwk/budwk.svg?style=social&label=Star)](https://github.com/budwk/budwk) [![star](https://gitee.com/budwk/budwk/badge/star.svg?theme=gray)](https://gitee.com/budwk/budwk)  
       `BudWk` 原名 [`NutzWk` ![](https://img.shields.io/github/stars/Wizzercn/NutzWk.svg?style=social&label=Star)](https://github.com/Wizzercn/NutzWk) [![star](https://gitee.com/wizzer/NutzWk/badge/star.svg?theme=gray)](https://gitee.com/wizzer/NutzWk)，基于国产框架 nutz 及 nutzboot 开发的开源Web基础项目，集权限体系、系统参数、数据字典、站内消息、定时任务、CMS、微信等最常用功能，不庞杂、不面面俱到，使其具有上手容易、开发便捷、扩展灵活等特性，特别适合各类大中小型定制化项目需求
     - [`yinjihuan/spring-cloud` ![](https://img.shields.io/github/stars/yinjihuan/spring-cloud.svg?style=social&label=Star)](https://github.com/yinjihuan/spring-cloud)  

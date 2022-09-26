@@ -14,7 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task to the thread of executing task.
+ * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task
+ * to the thread of executing task even using thread pooling components.
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link InheritableThreadLocal},
@@ -31,7 +32,7 @@ import java.util.logging.Logger;
  * {@link com.alibaba.ttl.threadpool.TtlForkJoinPoolHelper#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
  * Or you can turn on "disable inheritable for thread pool" by {@link com.alibaba.ttl.threadpool.agent.TtlAgent}
- * so as to wrap thread factories for thread pooling components automatically and transparently.
+ * to wrap thread factories for thread pooling components automatically and transparently.
  * <p>
  * ❷ In other cases, disable inheritable by overriding method {@link #childValue(Object)}.
  * <br>
@@ -275,7 +276,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     @Override
     public final T get() {
         T value = super.get();
-        if (disableIgnoreNullValueSemantics || null != value) addThisToHolder();
+        if (disableIgnoreNullValueSemantics || value != null) addThisToHolder();
         return value;
     }
 
@@ -284,7 +285,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @Override
     public final void set(T value) {
-        if (!disableIgnoreNullValueSemantics && null == value) {
+        if (!disableIgnoreNullValueSemantics && value == null) {
             // may set null to remove value
             remove();
         } else {
@@ -325,7 +326,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                 @Override
                 protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+                    return new WeakHashMap<>(parentValue);
                 }
             };
 
@@ -638,7 +639,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         /**
          * The transmittee is the extension point for other {@code ThreadLocal}s
          * which are registered by {@link #registerTransmittee(Transmittee) registerTransmittee} method.
-         * Transmittance is completed by by methods {@link #capture() capture()} =&gt;
+         * Transmittance is completed by methods {@link #capture() capture()} =&gt;
          * {@link #replay(Object) replay(Object)} =&gt; {@link #restore(Object) restore(Object)} (aka {@code CRR} operations),
          *
          * @param <C> the transmittee capture data type

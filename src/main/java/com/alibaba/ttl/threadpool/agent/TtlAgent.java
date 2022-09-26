@@ -202,7 +202,7 @@ public final class TtlAgent {
     }
 
     private static boolean isBooleanOptionSet(@Nullable final Map<String, String> kvs, @NonNull String key, boolean defaultValue) {
-        if (null == kvs) return defaultValue;
+        if (kvs == null) return defaultValue;
 
         final boolean containsKey = kvs.containsKey(key);
         if (!containsKey) return defaultValue;
