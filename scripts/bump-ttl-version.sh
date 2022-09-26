@@ -12,4 +12,5 @@ cd ..
 echo "bump TTL version of lib to $bump_version"
 ./mvnw versions:set \
   -DgenerateBackupPoms=false \
+  -DprocessAllModules=true \
   -DnewVersion="$bump_version"
