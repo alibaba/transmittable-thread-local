@@ -43,10 +43,12 @@
 
 	<modules>
 		<module>ttl-core</module>
-		<module>ttl-kotlin</module>
 		<module>ttl-agent</module>
 
+		<module>ttl-kotlin</module>
 		<module>ttl2-compatible</module>
+
+		<module>ttl3-bom</module>
 
 		<module>ttl-integrations/vertx4-ttl-integration</module>
 		<module>ttl-integrations/vertx3-ttl-integration</module>
