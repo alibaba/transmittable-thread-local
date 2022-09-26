@@ -180,6 +180,7 @@
 								</filter>
 							</filters>
 							<shadeSourcesContent>true</shadeSourcesContent>
+							<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
 						</configuration>
 					</execution>
 				</executions>
