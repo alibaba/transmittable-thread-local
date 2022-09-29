@@ -142,7 +142,7 @@ public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, T
      */
     @Nullable
     public static <T> TtlVertxHandler<T> get(@Nullable Handler<T> handler, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == handler) {
+        if (handler == null) {
             return null;
         }
 
@@ -195,7 +195,7 @@ public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, T
      */
     @NonNull
     public static <T> List<TtlVertxHandler<T>> gets(@Nullable Collection<? extends Handler<T>> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == tasks) {
+        if (tasks == null) {
             return Collections.emptyList();
         }
 
@@ -238,7 +238,7 @@ public class TtlVertxHandler<E> implements Handler<E>, TtlWrapper<Handler<E>>, T
      */
     @NonNull
     public static <T> List<Handler<T>> unwraps(@Nullable Collection<? extends Handler<T>> tasks) {
-        if (null == tasks) {
+        if (tasks == null) {
             return Collections.emptyList();
         }
 

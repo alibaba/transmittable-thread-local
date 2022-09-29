@@ -13,7 +13,8 @@ import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 /**
- * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task to the thread of executing task.
+ * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task
+ * to the thread of executing task even using thread pooling components.
  * <p>
  * <b>Note</b>:<br>
  * {@link TransmittableThreadLocal} extends {@link InheritableThreadLocal},
@@ -30,7 +31,7 @@ import java.util.function.Supplier;
  * {@link TtlExecutors#getDefaultDisableInheritableForkJoinWorkerThreadFactory() getDefaultDisableInheritableForkJoinWorkerThreadFactory}.
  * <br>
  * Or you can turn on "disable inheritable for thread pool" by {@code TTL Java Agent}
- * so as to wrap thread factories for thread pooling components automatically and transparently.
+ * to wrap thread factories for thread pooling components automatically and transparently.
  * <p>
  * ❷ In other cases, disable inheritable by overriding method {@link #childValue(Object)}.
  * <br>
@@ -130,12 +131,12 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * Creates a transmittable thread local variable.
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
-     * and the child value({@link #childValue(Object)}) and the transmitting value({@link #transmitteeValue(Object)}) of the variable is
+     * and the child value({@link #childValue(Object)}) and the transmittee value({@link #transmitteeValue(Object)}) of the variable is
      * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
      *
      * @param <S>                                    the type of the thread local's value
      * @param supplier                               the supplier to be used to determine the initial value
-     * @param copierForChildValueAndTransmitteeValue the ttl copier to be used to determine the child value and the transmitting value
+     * @param copierForChildValueAndTransmitteeValue the ttl copier to be used to determine the child value and the transmittee value
      * @return a new transmittable thread local variable
      * @throws NullPointerException if the specified supplier or copier is null
      * @see #withInitial(Supplier)
@@ -154,18 +155,18 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * Creates a transmittable thread local variable.
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
-     * and the child value({@link #childValue(Object)})}) and the transmitting value({@link #transmitteeValue(Object)}) of the variable is
+     * and the child value({@link #childValue(Object)})}) and the transmittee value({@link #transmitteeValue(Object)}) of the variable is
      * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
      * <p>
      * <B><I>NOTE:</I></B><br>
      * Recommend use {@link #withInitialAndCopier(Supplier, TtlCopier)} instead of this method.
      * In most cases, the logic of determining the child value({@link #childValue(Object)})
-     * and the transmitting value({@link #transmitteeValue(Object)}) should be the same.
+     * and the transmittee value({@link #transmitteeValue(Object)}) should be the same.
      *
      * @param <S>                       the type of the thread local's value
      * @param supplier                  the supplier to be used to determine the initial value
      * @param copierForChildValue       the ttl copier to be used to determine the child value
-     * @param copierForTransmitteeValue the ttl copier to be used to determine the transmitting value
+     * @param copierForTransmitteeValue the ttl copier to be used to determine the transmittee value
      * @return a new transmittable thread local variable
      * @throws NullPointerException if the specified supplier or copier is null
      * @see #withInitial(Supplier)
@@ -184,7 +185,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
     /**
      * An extension of ThreadLocal that obtains its initial value from the specified {@code Supplier}
-     * and obtains its child value and transmitting value from the specified ttl copier.
+     * and obtains its child value and transmittee value from the specified ttl copier.
      */
     private static final class SuppliedTransmittableThreadLocal<T> extends TransmittableThreadLocal<T> {
         private final Supplier<? extends T> supplier;
@@ -223,10 +224,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * thread before the child is started.
      * <p>
      * <b>Note</b>:<br>
-     * This method is overridden, merely call {@link #transmitteeValue(Object)};
+     * This method is overridden, and merely call {@link #transmitteeValue(Object)}.
      * In most cases, the logic of determining the child value({@link #childValue(Object)})
-     * the transmitting value({@link #transmitteeValue(Object)}) should be the same,
-     * so NOT recommend to override this method in subclass.
+     * and the transmittee value({@link #transmitteeValue(Object)}) should be the same,
+     * so it's NOT recommended to override this method in subclass.
      *
      * @param parentValue the parent thread's value
      * @return the child thread's initial value
@@ -244,8 +245,10 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * This method is called from {@link TtlRunnable} or
      * {@link TtlCallable} when it create, before the task is started.
      * <p>
+     * <b>Note</b>:<br>
      * This method merely returns reference of its source thread value(the shadow copy),
      * and should be overridden if a different behavior is desired.
+     * It's recommended to override this method in subclass.
      */
     protected T transmitteeValue(T parentValue) {
         return parentValue;
@@ -257,7 +260,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public final T get() {
         T value = super.get();
-        if (disableIgnoreNullValueSemantics || null != value) addThisToHolder();
+        if (disableIgnoreNullValueSemantics || value != null) addThisToHolder();
         return value;
     }
 
@@ -266,7 +269,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      */
     @Override
     public final void set(T value) {
-        if (!disableIgnoreNullValueSemantics && null == value) {
+        if (!disableIgnoreNullValueSemantics && value == null) {
             // may set null to remove value
             remove();
         } else {
@@ -307,7 +310,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
                 @Override
                 protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+                    return new WeakHashMap<>(parentValue);
                 }
             };
 

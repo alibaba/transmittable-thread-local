@@ -136,7 +136,7 @@ public final class TtlTimerTask extends TimerTask implements TtlWrapper<TimerTas
     @Nullable
     @Contract(value = "null, _, _ -> null; !null, _, _ -> !null", pure = true)
     public static TtlTimerTask get(@Nullable TimerTask timerTask, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == timerTask) return null;
+        if (timerTask == null) return null;
 
         if (timerTask instanceof TtlEnhanced) {
             // avoid redundant decoration, and ensure idempotency

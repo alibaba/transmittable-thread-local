@@ -129,7 +129,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
     @Nullable
     @Contract(value = "null, _, _ -> null; !null, _, _ -> !null", pure = true)
     public static TtlRunnable get(@Nullable Runnable runnable, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == runnable) return null;
+        if (runnable == null) return null;
 
         if (runnable instanceof TtlEnhanced) {
             // avoid redundant decoration, and ensure idempotency
@@ -177,7 +177,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      */
     @NonNull
     public static List<TtlRunnable> gets(@Nullable Collection<? extends Runnable> tasks, boolean releaseTtlValueReferenceAfterRun, boolean idempotent) {
-        if (null == tasks) return Collections.emptyList();
+        if (tasks == null) return Collections.emptyList();
 
         List<TtlRunnable> copy = new ArrayList<>();
         for (Runnable task : tasks) {
@@ -216,7 +216,7 @@ public final class TtlRunnable implements Runnable, TtlWrapper<Runnable>, TtlEnh
      */
     @NonNull
     public static List<Runnable> unwraps(@Nullable Collection<? extends Runnable> tasks) {
-        if (null == tasks) return Collections.emptyList();
+        if (tasks == null) return Collections.emptyList();
 
         List<Runnable> copy = new ArrayList<>();
         for (Runnable task : tasks) {

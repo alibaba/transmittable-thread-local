@@ -151,7 +151,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
     @Nullable
     @Contract(value = "null, _, _ -> null; !null, _, _ -> !null", pure = true)
     public static <T> TtlCallable<T> get(@Nullable Callable<T> callable, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
-        if (null == callable) return null;
+        if (callable == null) return null;
 
         if (callable instanceof TtlEnhanced) {
             // avoid redundant decoration, and ensure idempotency
@@ -194,7 +194,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
      */
     @NonNull
     public static <T> List<TtlCallable<T>> gets(@Nullable Collection<? extends Callable<T>> tasks, boolean releaseTtlValueReferenceAfterCall, boolean idempotent) {
-        if (null == tasks) return Collections.emptyList();
+        if (tasks == null) return Collections.emptyList();
 
         List<TtlCallable<T>> copy = new ArrayList<>();
         for (Callable<T> task : tasks) {
@@ -235,7 +235,7 @@ public final class TtlCallable<V> implements Callable<V>, TtlWrapper<Callable<V>
      */
     @NonNull
     public static <T> List<Callable<T>> unwraps(@Nullable Collection<? extends Callable<T>> tasks) {
-        if (null == tasks) return Collections.emptyList();
+        if (tasks == null) return Collections.emptyList();
 
         List<Callable<T>> copy = new ArrayList<>();
         for (Callable<T> task : tasks) {
