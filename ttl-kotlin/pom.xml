@@ -54,6 +54,18 @@
 			<organization>Alibaba</organization>
 			<organizationUrl>https://www.alibaba.com</organizationUrl>
 		</developer>
+		<developer>
+			<name>rybalkinsd</name>
+			<id>rybalkinsd</id>
+			<email>yan.brikl(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+3</timezone>
+			<url>https://github.com/rybalkinsd</url>
+			<organization>Alibaba</organization>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
+		</developer>
 	</developers>
 
 	<properties>
