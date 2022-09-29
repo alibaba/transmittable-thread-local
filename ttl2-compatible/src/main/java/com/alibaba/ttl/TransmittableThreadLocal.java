@@ -325,7 +325,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
                 @Override
                 protected WeakHashMap<TransmittableThreadLocal<Object>, ?> childValue(WeakHashMap<TransmittableThreadLocal<Object>, ?> parentValue) {
-                    return new WeakHashMap<TransmittableThreadLocal<Object>, Object>(parentValue);
+                    return new WeakHashMap<>(parentValue);
                 }
             };
 
