@@ -62,7 +62,7 @@ public final class TtlExecutors {
     @Nullable
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public static Executor getTtlExecutor(@Nullable Executor executor) {
-        if (TtlAgentStatus.getInstance().isTtlAgentLoaded() || null == executor || executor instanceof TtlEnhanced) {
+        if (TtlAgentStatus.getInstance().isTtlAgentLoaded() || executor == null || executor instanceof TtlEnhanced) {
             return executor;
         }
         return new ExecutorTtlWrapper(executor, true);
