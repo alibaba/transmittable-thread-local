@@ -65,18 +65,18 @@
 
 		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
 
-		<kotlin.version>1.7.10</kotlin.version>
+		<kotlin.version>1.7.20</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
-		<dokka.version>1.7.10</dokka.version>
+		<dokka.version>1.7.20</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
 		<slf4j.version>1.7.36</slf4j.version>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.1</junit5.version>
-		<kotest.version>5.4.2</kotest.version>
+		<kotest.version>5.5.1</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -272,7 +272,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.17</version>
+				<version>1.12.18</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
