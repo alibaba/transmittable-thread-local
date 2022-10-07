@@ -13,6 +13,7 @@
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.deploy.skip>true</maven.deploy.skip>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<jacoco.skip>true</jacoco.skip>
 
 		<ttl.version>3.x-SNAPSHOT</ttl.version>
@@ -40,22 +41,12 @@
 					<version>2.22.2</version>
 				</plugin>
 				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
-						<source>8</source>
-						<show>protected</show>
-						<charset>UTF-8</charset>
-						<encoding>UTF-8</encoding>
-						<docencoding>UTF-8</docencoding>
-						<quiet>true</quiet>
-						<doclint>all,-missing</doclint>
-						<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
-						<excludePackageNames>*.internal:*.internal.*:*.internal.*.*:*.internal.*.*.*:*.internal.*.*.*.*</excludePackageNames>
-						<additionalJOptions>
-							<additionalJOption>-J-Duser.language=en</additionalJOption>
-							<additionalJOption>-J-Duser.country=US</additionalJOption>
-						</additionalJOptions>
-					</configuration>
+					<version>3.4.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
