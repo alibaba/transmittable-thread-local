@@ -212,7 +212,7 @@ String value = context.get();
 
 省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.ttl3.executor.TtlExecutors`](ttl-core/src/main/java/com/alibaba/ttl3/executor/TtlExecutors.java)完成，有下面的方法：
+通过工具类[`TtlExecutors`](ttl-core/src/main/java/com/alibaba/ttl3/executor/TtlExecutors.java)完成，有下面的方法：
 
 - `getTtlExecutor`：修饰接口`Executor`
 - `getTtlExecutorService`：修饰接口`ExecutorService`
