@@ -87,16 +87,16 @@
 			the system properties are supported to configure the behavior of slf4j simple logger
 			https://www.slf4j.org/api/org/slf4j/simple/SimpleLogger.html
 		-->
-		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.default.d.options>-Dorg.slf4j.simpleLogger.logFile=System.err
-			-Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
+		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden by maven -D options -->
+		<argLine.slf4j.simple.logger.default.d.options>
+			-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
 		</argLine.slf4j.simple.logger.default.d.options>
-		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden in maven -D options -->
-		<argLine.slf4j.simple.logger.d.options>${argLine.slf4j.simple.logger.default.d.options}
-			${argLine.slf4j.simple.logger.extra.d.options}
+		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden by maven -D options -->
+		<argLine.slf4j.simple.logger.d.options>
+			${argLine.slf4j.simple.logger.default.d.options} ${argLine.slf4j.simple.logger.extra.d.options}
 		</argLine.slf4j.simple.logger.d.options>
 
-		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- updated in profile -->
+		<argLine>${argLine.slf4j.simple.logger.d.options}</argLine> <!-- overridden by profile -->
 	</properties>
 
 	<dependencies>

@@ -9,11 +9,13 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ThreadFactory;
 
 /**
- * Util methods to wrap/unwrap/check methods to disable Inheritable for {@link ForkJoinWorkerThreadFactory}.
+ * Util methods to wrap/check/unwrap methods for disable Inheritable wrapper of {@link ForkJoinWorkerThreadFactory}.
  * <p>
  * <b><i>Note:</i></b>
  * <p>
- * all method is {@code null}-safe, when input parameter(eg: {@link ForkJoinWorkerThreadFactory}) is {@code null}, return {@code null}.
+ * all method is {@code null}-safe.
+ * for wrap/unwrap methods when input parameter is {@code null}, return {@code null}.
+ * for check methods when input parameter is {@code null}, return {@code false}.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see ForkJoinPool

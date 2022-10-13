@@ -120,9 +120,9 @@ public class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> {
     }
 
     /**
-     * Restore the backup values from {@link #replay(Capture)} )}/{@link #clear()}.
+     * Restore the backup values from {@link #replay(Capture)}/{@link #clear()}.
      *
-     * @param backup the backup values from {@link #replay(Capture)} )}/{@link #clear()}
+     * @param backup the backup values from {@link #replay(Capture)}/{@link #clear()}
      * @see #replay(Capture)
      * @see #clear()
      */
