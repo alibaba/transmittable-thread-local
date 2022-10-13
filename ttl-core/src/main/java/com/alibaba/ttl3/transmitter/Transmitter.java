@@ -230,7 +230,7 @@ public final class Transmitter {
     }
 
     /**
-     * Util method for simplifying {@link #clear()} and {@link #restore(Backup)} )} operations.
+     * Util method for simplifying {@link #clear()} and {@link #restore(Backup)} operations.
      *
      * @param bizLogic biz logic
      * @param <R>      the return type of biz logic

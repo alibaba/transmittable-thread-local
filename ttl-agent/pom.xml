@@ -176,13 +176,13 @@
 					${project.build.directory}/${project.artifactId}-${project.version}.jar
 				</ttl.built.agent.jar>
 				<ttl.agent.args>ttl.agent.logger:STDOUT</ttl.agent.args>
-				<ttl.agent.extra.args/> <!-- overridden in maven -D options -->
-				<ttl.agent.extra.d.options/> <!-- overridden in maven -D options -->
+				<ttl.agent.extra.args/> <!-- overridden by maven -D options -->
+				<ttl.agent.extra.d.options/> <!-- overridden by maven -D options -->
 				<ttl.agent.jvm.arg>-javaagent:${ttl.built.agent.jar}=${ttl.agent.args},${ttl.agent.extra.args}</ttl.agent.jvm.arg>
 				<ttl.agent.jvm.args>
 					-Drun-ttl-test-under-agent=true ${ttl.agent.extra.d.options} ${ttl.agent.jvm.arg}
 				</ttl.agent.jvm.args>
-				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden in maven -D options -->
+				<exec.mainClass>com.alibaba.demo.ttl.agent.AgentDemo</exec.mainClass> <!-- overridden by maven -D options -->
 			</properties>
 			<build>
 				<plugins>
