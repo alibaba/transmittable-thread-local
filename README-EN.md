@@ -1,5 +1,12 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
+> 📒 This branch is `TransmittableThreadLocal(TTL) v3`, which is in development has not been released.  
+> See [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432) for the `v3` notes, work item list and its progress.
+>
+> 👉 The stable version `v2.x` currently in use is on [**branch `2.x`**](https://github.com/alibaba/transmittable-thread-local/tree/2.x).
+
+----------------------------------------
+
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/master?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
 <a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
@@ -136,7 +143,7 @@ executorService.submit(TtlRunnable.get(task));
 
 // ... some biz logic,
 // and modified TransmittableThreadLocal context ...
-// context.set("value-modified-in-parent");
+context.set("value-modified-in-parent");
 
 // next submission
 // reperform decoration to transmit the modified TransmittableThreadLocal context
@@ -171,10 +178,10 @@ String value = context.get();
 Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can be completed in the thread pool.
 
 Use util class
-[`com.alibaba.ttl.threadpool.TtlExecutors`](ttl-core/src/main/java/com/alibaba/ttl3/executor/TtlExecutors.java)
+[`TtlExecutors`](ttl-core/src/main/java/com/alibaba/ttl3/executor/TtlExecutors.java)
 to decorate thread pool.
 
-Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
+Util class `TtlExecutors` has below methods:
 
 - `getTtlExecutor`: decorate interface `Executor`
 - `getTtlExecutorService`: decorate interface `ExecutorService`
@@ -307,7 +314,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.0</version>
+    <version>2.14.1</version>
 </dependency>
 ```
 
@@ -412,6 +419,8 @@ Some open-source projects used `TTL`:
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
+    - [`qwdigital/LinkWechat` ![](https://img.shields.io/github/stars/qwdigital/LinkWechat.svg?style=social&label=Star)](https://github.com/qwdigital/LinkWechat) [![star](https://gitee.com/LinkWeChat/link-wechat/badge/star.svg?theme=gray)](https://gitee.com/LinkWeChat/link-wechat)  
+      基于企业微信的开源 SCRM 系统，是企业私域流量管理与营销的综合解决方案
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
       基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
     - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot)  
