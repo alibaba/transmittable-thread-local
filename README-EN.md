@@ -137,7 +137,7 @@ executorService.submit(TtlRunnable.get(task));
 
 // ... some biz logic,
 // and modified TransmittableThreadLocal context ...
-// context.set("value-modified-in-parent");
+context.set("value-modified-in-parent");
 
 // next submission
 // reperform decoration to transmit the modified TransmittableThreadLocal context
@@ -172,10 +172,10 @@ String value = context.get();
 Eliminating the work of `Runnable` and `Callable` Decoration every time it is submitted to thread pool. This work can be completed in the thread pool.
 
 Use util class
-[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
+[`TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)
 to decorate thread pool.
 
-Util class `com.alibaba.ttl.threadpool.TtlExecutors` has below methods:
+Util class `TtlExecutors` has below methods:
 
 - `getTtlExecutor`: decorate interface `Executor`
 - `getTtlExecutorService`: decorate interface `ExecutorService`
@@ -300,7 +300,7 @@ More info:
 
 # 🔌 Java API Docs
 
-The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.0/index.html>
+The current version Java API documentation: <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.1/index.html>
 
 # 🍪 Maven Dependency
 
@@ -308,7 +308,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.0</version>
+    <version>2.14.1</version>
 </dependency>
 ```
 

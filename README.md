@@ -184,7 +184,7 @@ executorService.submit(TtlRunnable.get(task));
 
 // ...业务逻辑代码，
 // 并且修改了 TransmittableThreadLocal上下文 ...
-// context.set("value-modified-in-parent");
+context.set("value-modified-in-parent");
 
 // 再次提交
 // 重新执行修饰，以传递修改了的 TransmittableThreadLocal上下文
@@ -222,7 +222,7 @@ String value = context.get();
 
 省去每次`Runnable`和`Callable`传入线程池时的修饰，这个逻辑可以在线程池中完成。
 
-通过工具类[`com.alibaba.ttl.threadpool.TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
+通过工具类[`TtlExecutors`](src/main/java/com/alibaba/ttl/threadpool/TtlExecutors.java)完成，有下面的方法：
 
 - `getTtlExecutor`：修饰接口`Executor`
 - `getTtlExecutorService`：修饰接口`ExecutorService`
@@ -376,7 +376,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.0/index.html>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.1/index.html>
 
 # 🍪 Maven依赖
 
@@ -386,7 +386,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.0</version>
+    <version>2.14.1</version>
 </dependency>
 ```
 
