@@ -774,7 +774,6 @@
 								https://stackoverflow.com/questions/39616344
 							-->
 							<doclint>all,-missing</doclint>
-							<overview>src/api/overview.html</overview>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
 							<sourceFileExcludes>

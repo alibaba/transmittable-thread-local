@@ -15,14 +15,16 @@ import java.util.concurrent.*;
  * Util methods for TTL wrapper of jdk executors.
  *
  * <ol>
- *     <li>wrap(factory)/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
- *     <li>wrap/unwrap/check methods to disable Inheritable for {@link ThreadFactory}.</li>
- *     <li>wrap/unwrap/check methods to {@code TtlRunnableUnwrapComparator} for {@link PriorityBlockingQueue}.</li>
+ *     <li>wrap/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
+ *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ThreadFactory}.</li>
+ *     <li>wrap/check/unwrap methods for {@code TtlRunnableUnwrapComparator} wrapper of {@link PriorityBlockingQueue}.</li>
  * </ol>
  * <p>
  * <b><i>Note:</i></b>
  * <ul>
- * <li>all method is {@code null}-safe, when input {@code executor} parameter is {@code null}, return {@code null}.</li>
+ * <li>all method is {@code null}-safe.
+ * for wrap/unwrap methods when input parameter is {@code null}, return {@code null}.
+ * for check methods when input parameter is {@code null}, return {@code false}.</li>
  * <li>skip wrap/decoration thread pool/{@code executor}(aka. just return input {@code executor})
  * when ttl agent is loaded, Or when input {@code executor} is already wrapped/decorated.</li>
  * </ul>
