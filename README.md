@@ -1,5 +1,12 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
+> 📒 这个分支是`TransmittableThreadLocal(TTL) v3`，在开发中还没有发布。  
+> `v3`的版本说明、工作项列表及其进展，参见 [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432)。
+>
+> 👉 目前使用中的稳定发布版本`v2.x`在 [**分支`2.x`**](https://github.com/alibaba/transmittable-thread-local/tree/2.x)上。
+
+----------------------------------------
+
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/master?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
 <a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/master?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
@@ -174,7 +181,7 @@ executorService.submit(TtlRunnable.get(task));
 
 // ...业务逻辑代码，
 // 并且修改了 TransmittableThreadLocal上下文 ...
-// context.set("value-modified-in-parent");
+context.set("value-modified-in-parent");
 
 // 再次提交
 // 重新执行修饰，以传递修改了的 TransmittableThreadLocal上下文
@@ -376,7 +383,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.0</version>
+    <version>2.14.1</version>
 </dependency>
 ```
 
@@ -557,6 +564,8 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
+    - [`qwdigital/LinkWechat` ![](https://img.shields.io/github/stars/qwdigital/LinkWechat.svg?style=social&label=Star)](https://github.com/qwdigital/LinkWechat) [![star](https://gitee.com/LinkWeChat/link-wechat/badge/star.svg?theme=gray)](https://gitee.com/LinkWeChat/link-wechat)  
+      基于企业微信的开源 SCRM 系统，是企业私域流量管理与营销的综合解决方案
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
       基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
     - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot)  
