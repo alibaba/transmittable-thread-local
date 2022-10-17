@@ -64,7 +64,7 @@
 		<maven.deploy.skip>false</maven.deploy.skip>
 		<javadoc.ttl.base.link>https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
 
