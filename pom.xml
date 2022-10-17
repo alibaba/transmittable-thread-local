@@ -64,22 +64,22 @@
 		<maven.deploy.skip>false</maven.deploy.skip>
 		<javadoc.ttl.base.link>https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
-		<jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
+		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
 
-		<kotlin.version>1.7.20</kotlin.version>
+		<kotlin.version>1.8.21</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.7.1</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
-		<dokka.version>1.7.20</dokka.version>
+		<dokka.version>1.8.10</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
-		<slf4j.version>1.7.36</slf4j.version>
+		<slf4j.version>2.0.3</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.1</junit5.version>
-		<kotest.version>5.5.1</kotest.version>
+		<junit5.version>5.9.3</junit5.version>
+		<kotest.version>5.5.5</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -275,7 +275,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.18</version>
+				<version>1.14.4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -408,7 +408,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jetbrains.kotlin</groupId>
@@ -417,11 +417,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
+					<version>3.11.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M7</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -429,7 +429,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.4.1</version>
 					<configuration>
 						<shadeSourcesContent>true</shadeSourcesContent>
 						<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
@@ -441,7 +441,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jetbrains.dokka</groupId>
@@ -462,7 +462,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
@@ -470,15 +470,15 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
@@ -488,12 +488,12 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.7.1.1</version>
+					<version>4.7.2.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version>
+					<version>0.8.10</version>
 				</plugin>
 				<plugin>
 					<!--
@@ -532,7 +532,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.12.0</version>
+					<version>2.15.0</version>
 					<configuration>
 						<rulesUri>file://${maven.multiModuleProjectDirectory}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
