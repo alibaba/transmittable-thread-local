@@ -1,9 +1,9 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 <p align="center">
-<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/2.x?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
-<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/2.x?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
-<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/2.x"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/v2.14.2?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
+<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.14.2?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
+<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/v2.14.2"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
 <a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://img.shields.io/codeclimate/maintainability/alibaba/transmittable-thread-local?logo=codeclimate&logoColor=white" alt="Maintainability"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
@@ -376,7 +376,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.1/index.html>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.2/index.html>
 
 # 🍪 Maven依赖
 
@@ -386,7 +386,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.1</version>
+    <version>2.14.2</version>
 </dependency>
 ```
 
