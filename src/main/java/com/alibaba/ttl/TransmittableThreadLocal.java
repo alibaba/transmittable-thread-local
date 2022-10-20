@@ -500,7 +500,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object capture() {
-            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = newHashMap(transmitteeSet.size());
             for (Transmittee<Object, Object> transmittee : transmitteeSet) {
                 try {
                     transmittee2Value.put(transmittee, transmittee.capture());
@@ -527,7 +527,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         public static Object replay(@NonNull Object captured) {
             final Snapshot capturedSnapshot = (Snapshot) captured;
 
-            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(capturedSnapshot.transmittee2Value.size());
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = newHashMap(capturedSnapshot.transmittee2Value.size());
             for (Map.Entry<Transmittee<Object, Object>, Object> entry : capturedSnapshot.transmittee2Value.entrySet()) {
                 Transmittee<Object, Object> transmittee = entry.getKey();
                 try {
@@ -562,7 +562,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
          */
         @NonNull
         public static Object clear() {
-            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = new HashMap<>(transmitteeSet.size());
+            final HashMap<Transmittee<Object, Object>, Object> transmittee2Value = newHashMap(transmitteeSet.size());
             for (Transmittee<Object, Object> transmittee : transmitteeSet) {
                 try {
                     transmittee2Value.put(transmittee, transmittee.clear());
@@ -722,7 +722,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> capture() {
-                        final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>(holder.get().size());
+                        final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = newHashMap(holder.get().size());
                         for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                             ttl2Value.put(threadLocal, threadLocal.copyValue());
                         }
@@ -732,7 +732,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> replay(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> captured) {
-                        final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>(holder.get().size());
+                        final HashMap<TransmittableThreadLocal<Object>, Object> backup = newHashMap(holder.get().size());
 
                         for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                             TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -760,7 +760,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<TransmittableThreadLocal<Object>, Object> clear() {
-                        return replay(new HashMap<>(0));
+                        return replay(newHashMap(0));
                     }
 
                     @Override
@@ -796,7 +796,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> capture() {
-                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
+                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
                         for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
                             final TtlCopier<Object> copier = entry.getValue();
@@ -809,7 +809,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> replay(@NonNull HashMap<ThreadLocal<Object>, Object> captured) {
-                        final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>(captured.size());
+                        final HashMap<ThreadLocal<Object>, Object> backup = newHashMap(captured.size());
 
                         for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -826,7 +826,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
                     @NonNull
                     @Override
                     public HashMap<ThreadLocal<Object>, Object> clear() {
-                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
+                        final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
 
                         for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                             final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -1086,5 +1086,15 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         private Transmitter() {
             throw new InstantiationError("Must not instantiate this class");
         }
+    }
+
+    /**
+     * @see <a href="https://github.com/spring-projects/spring-framework/blob/fcbd5ec80ab7eef636b48a87f0d2e37edfc150a5/spring-core/src/main/java/org/springframework/util/CollectionUtils.java#L87">
+     * <code>org.springframework.util.CollectionUtils#newHashMap</code></href>
+     */
+    private static <K, V> HashMap<K, V> newHashMap(int expectedSize) {
+        final float DEFAULT_LOAD_FACTOR = 0.75f;
+        final int initialCapacity = (int) Math.ceil(expectedSize / (double) DEFAULT_LOAD_FACTOR);
+        return new HashMap<>(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 }
