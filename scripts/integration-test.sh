@@ -18,6 +18,7 @@ readonly PREPARE_JDKS_INSTALL_BY_SDKMAN=(
   8
   "$default_build_jdk_version"
   17
+  19
 )
 
 source "$BASH_BUDDY_ROOT/lib/prepare_jdks.sh"
