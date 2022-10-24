@@ -75,11 +75,11 @@
 		<dokka.version>1.7.20</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
-		<slf4j.version>1.7.36</slf4j.version>
+		<slf4j.version>2.0.3</slf4j.version>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.1</junit5.version>
-		<kotest.version>5.5.1</kotest.version>
+		<kotest.version>5.5.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -488,7 +488,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.7.1.1</version>
+					<version>4.7.2.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -532,7 +532,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.12.0</version>
+					<version>2.13.0</version>
 					<configuration>
 						<rulesUri>file://${maven.multiModuleProjectDirectory}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
