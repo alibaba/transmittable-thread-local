@@ -108,4 +108,35 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.moditect</groupId>
+				<artifactId>moditect-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-module-infos</id>
+						<configuration>
+							<module>
+								<moduleInfoSource>
+									module com.alibaba.ttl3 {
+									exports com.alibaba.ttl3;
+									exports com.alibaba.ttl3.executor;
+									exports com.alibaba.ttl3.agent;
+
+									exports com.alibaba.ttl3.transmitter;
+									exports com.alibaba.ttl3.spi;
+
+									exports com.alibaba.crr;
+									exports com.alibaba.crr.composite;
+									}
+								</moduleInfoSource>
+							</module>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

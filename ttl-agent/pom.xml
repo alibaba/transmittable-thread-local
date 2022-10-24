@@ -104,6 +104,39 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.moditect</groupId>
+				<artifactId>moditect-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-module-infos</id>
+						<configuration>
+							<module>
+								<moduleInfoSource>
+									module com.alibaba.ttl3 {
+
+									exports com.alibaba.ttl3;
+									exports com.alibaba.ttl3.executor;
+									exports com.alibaba.ttl3.agent;
+
+									exports com.alibaba.ttl3.transmitter;
+									exports com.alibaba.ttl3.spi;
+
+									exports com.alibaba.crr;
+									exports com.alibaba.crr.composite;
+
+									exports com.alibaba.ttl3.agent.logging;
+
+									exports com.alibaba.ttl3.agent.transformlet;
+									exports com.alibaba.ttl3.agent.transformlet.helper;
+									}
+								</moduleInfoSource>
+							</module>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
 					<execution>
@@ -138,6 +171,7 @@
 									<excludes>
 										<exclude>com/alibaba/ttl3/agent/package-info.class</exclude>
 										<exclude>com/alibaba/ttl3/agent/package-info.java</exclude>
+										<exclude>META-INF/versions/9/module-info.class</exclude>
 										<exclude>META-INF/MANIFEST.MF</exclude>
 									</excludes>
 								</filter>
