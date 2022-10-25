@@ -19,9 +19,8 @@ branches:
     - gh-pages
 
 environment:
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
-  MAVEN_OPTS: "-Xmx1g -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2"
-  JAVA_OPTS: "-Xmx1g"
+  MAVEN_OPTS: -Xmx1g
+  JAVA_OPTS: -Xmx1g
 
 install:
   - git submodule update --init
@@ -30,13 +29,13 @@ test_script:
   - scripts/integration-test.sh
 
 after_test:
-  - scripts/codecov.sh -s
+  - PREPARE_JDKS_AUTO_SHOW_LS_JAVA= scripts/codecov.sh -s
   # remove self maven install files
   - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local*
   - rm -rf $HOME/.m2/repository/com/alibaba/ttl*
-  # remove maven install files
+  # remove install files of maven
   - rm -rf $HOME/.m2/wrapper/dists/*/*/*.zip
-  # remove sdkman install files
+  # remove install files of sdkman
   - rm -rf $HOME/.sdkman/archives/*
   - rm -rf $HOME/.sdkman/tmp/*
 
