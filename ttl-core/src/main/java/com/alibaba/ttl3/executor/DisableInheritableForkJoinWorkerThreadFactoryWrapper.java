@@ -14,7 +14,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.restore;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements ForkJoinWorkerThreadFactory, TtlWrapper<ForkJoinWorkerThreadFactory> {
+final class DisableInheritableForkJoinWorkerThreadFactoryWrapper implements ForkJoinWorkerThreadFactory, TtlWrapper<ForkJoinWorkerThreadFactory> {
     private final ForkJoinWorkerThreadFactory threadFactory;
 
     DisableInheritableForkJoinWorkerThreadFactoryWrapper(@NonNull ForkJoinWorkerThreadFactory threadFactory) {
