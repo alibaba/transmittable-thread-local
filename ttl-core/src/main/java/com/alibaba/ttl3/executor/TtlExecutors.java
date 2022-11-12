@@ -16,19 +16,21 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
  * Util methods for TTL wrapper of jdk executors.
  *
  * <ol>
- *     <li>wrap/check/unwrap methods for TTL wrapper of jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
+ *     <li>wrap/check/unwrap methods for TTL wrapper of
+ *         jdk executors({@link Executor}, {@link ExecutorService}, {@link ScheduledExecutorService}).</li>
  *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ThreadFactory}.</li>
  *     <li>wrap/check/unwrap methods for disable Inheritable wrapper of {@link ForkJoinWorkerThreadFactory}.</li>
- *     <li>wrap/check/unwrap methods for {@code TtlRunnableUnwrapComparator} wrapper of {@link PriorityBlockingQueue}.</li>
+ *     <li>wrap/check/unwrap methods for {@code TtlRunnableUnwrapComparator} wrapper of {@link PriorityBlockingQueue}
+ *         for {@link ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, TimeUnit, BlockingQueue)}.</li>
  * </ol>
  * <p>
  * <b><i>Note:</i></b>
  * <ul>
  * <li>all method is {@code null}-safe.
- * for wrap/unwrap methods when input parameter is {@code null}, return {@code null}.
- * for check methods when input parameter is {@code null}, return {@code false}.</li>
+ *     for wrap/unwrap methods when input parameter is {@code null}, return {@code null}.
+ *     for check methods when input parameter is {@code null}, return {@code false}.</li>
  * <li>skip wrap/decoration thread pool/{@code executor}(aka. just return input {@code executor})
- * when ttl agent is loaded, Or when input {@code executor} is already wrapped/decorated.</li>
+ *     when ttl agent is loaded, Or when input {@code executor} is already wrapped/decorated.</li>
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -40,10 +42,11 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
  * @see Executors
  * @see ThreadFactory
  * @see Executors#defaultThreadFactory()
- * @see PriorityBlockingQueue
  * @see ForkJoinPool
  * @see ForkJoinWorkerThreadFactory
  * @see ForkJoinPool#defaultForkJoinWorkerThreadFactory
+ * @see ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, TimeUnit, BlockingQueue)
+ * @see PriorityBlockingQueue
  */
 public final class TtlExecutors {
 

@@ -13,7 +13,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.restore;
 /**
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-class DisableInheritableThreadFactoryWrapper implements ThreadFactory, TtlWrapper<ThreadFactory> {
+final class DisableInheritableThreadFactoryWrapper implements ThreadFactory, TtlWrapper<ThreadFactory> {
     private final ThreadFactory threadFactory;
 
     DisableInheritableThreadFactoryWrapper(@NonNull ThreadFactory threadFactory) {
