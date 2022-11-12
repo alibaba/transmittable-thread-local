@@ -1,5 +1,7 @@
 package com.alibaba.ttl3.agent;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 final class EmptyTtlAgentStatus implements TtlAgentStatus {
     @Override
     public boolean isTtlAgentLoaded() {
@@ -16,6 +18,7 @@ final class EmptyTtlAgentStatus implements TtlAgentStatus {
 
     private static volatile TtlAgentStatus ttlAgentStatus = null;
 
+    @NonNull
     static TtlAgentStatus getLoadedAgentOrEmpty() {
         if (ttlAgentStatus != null) return ttlAgentStatus;
 
