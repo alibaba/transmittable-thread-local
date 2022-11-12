@@ -1,5 +1,7 @@
 package com.alibaba.ttl3.agent;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import static com.alibaba.ttl3.agent.EmptyTtlAgentStatus.getLoadedAgentOrEmpty;
 
 public interface TtlAgentStatus {
@@ -8,6 +10,7 @@ public interface TtlAgentStatus {
      */
     boolean isTtlAgentLoaded();
 
+    @NonNull
     static TtlAgentStatus getInstance() {
         return getLoadedAgentOrEmpty();
     }
