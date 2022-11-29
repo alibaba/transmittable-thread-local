@@ -1,8 +1,8 @@
 # Quickstart for GitHub Actions
 # https://docs.github.com/en/actions/quickstart
-
 name: CI
-on: [ push, pull_request ]
+on: [ push, pull_request, workflow_dispatch ]
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        java: [ 8, 11, 17, 18, 19, 20-ea ]
+        java: [ 8, 11, 17, 19, 20-ea ]
       fail-fast: false
       max-parallel: 64
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
@@ -20,8 +20,8 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'zulu'
-          cache: 'maven'
+          distribution: zulu
+          cache: maven
       - name: Build with Maven
         run: ./mvnw -V --no-transfer-progress clean package
       - name: Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool, Timer/TimerTask
