@@ -211,14 +211,7 @@ fun <R> (() -> R).ttlWrap(): () -> R {
     return object : () -> R, TtlWrapper<() -> R> {
         override fun unwrap(): () -> R = this@ttlWrap
 
-        override fun invoke(): R {
-            val backup = Transmitter.replay(captured)
-            try {
-                return this@ttlWrap.invoke()
-            } finally {
-                Transmitter.restore(backup)
-            }
-        }
+        override fun invoke(): R = ttlRun(captured) { this@ttlWrap.invoke() }
     }
 }
 
@@ -233,14 +226,7 @@ fun <P1, R> ((P1) -> R).ttlWrap(): (P1) -> R {
     return object : (P1) -> R, TtlWrapper<(P1) -> R> {
         override fun unwrap(): (P1) -> R = this@ttlWrap
 
-        override fun invoke(arg: P1): R {
-            val backup = Transmitter.replay(captured)
-            try {
-                return this@ttlWrap.invoke(arg)
-            } finally {
-                Transmitter.restore(backup)
-            }
-        }
+        override fun invoke(arg: P1): R = ttlRun(captured) { this@ttlWrap.invoke(arg) }
     }
 }
 
@@ -255,14 +241,7 @@ fun <P1, P2, R> ((P1, P2) -> R).ttlWrap(): (P1, P2) -> R {
     return object : (P1, P2) -> R, TtlWrapper<(P1, P2) -> R> {
         override fun unwrap(): (P1, P2) -> R = this@ttlWrap
 
-        override fun invoke(arg1: P1, arg2: P2): R {
-            val backup = Transmitter.replay(captured)
-            try {
-                return this@ttlWrap.invoke(arg1, arg2)
-            } finally {
-                Transmitter.restore(backup)
-            }
-        }
+        override fun invoke(arg1: P1, arg2: P2): R = ttlRun(captured) { this@ttlWrap.invoke(arg1, arg2) }
     }
 }
 
@@ -277,14 +256,8 @@ fun <P1, P2, P3, R> ((P1, P2, P3) -> R).ttlWrap(): (P1, P2, P3) -> R {
     return object : (P1, P2, P3) -> R, TtlWrapper<(P1, P2, P3) -> R> {
         override fun unwrap(): (P1, P2, P3) -> R = this@ttlWrap
 
-        override fun invoke(arg1: P1, arg2: P2, arg3: P3): R {
-            val backup = Transmitter.replay(captured)
-            try {
-                return this@ttlWrap.invoke(arg1, arg2, arg3)
-            } finally {
-                Transmitter.restore(backup)
-            }
-        }
+        override fun invoke(arg1: P1, arg2: P2, arg3: P3): R =
+            ttlRun(captured) { this@ttlWrap.invoke(arg1, arg2, arg3) }
     }
 }
 
@@ -299,14 +272,8 @@ fun <P1, P2, P3, P4, R> ((P1, P2, P3, P4) -> R).ttlWrap(): (P1, P2, P3, P4) -> R
     return object : (P1, P2, P3, P4) -> R, TtlWrapper<(P1, P2, P3, P4) -> R> {
         override fun unwrap(): (P1, P2, P3, P4) -> R = this@ttlWrap
 
-        override fun invoke(arg1: P1, arg2: P2, arg3: P3, arg4: P4): R {
-            val backup = Transmitter.replay(captured)
-            try {
-                return this@ttlWrap.invoke(arg1, arg2, arg3, arg4)
-            } finally {
-                Transmitter.restore(backup)
-            }
-        }
+        override fun invoke(arg1: P1, arg2: P2, arg3: P3, arg4: P4): R =
+            ttlRun(captured) { this@ttlWrap.invoke(arg1, arg2, arg3, arg4) }
     }
 }
 
