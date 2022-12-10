@@ -255,7 +255,7 @@ public final class Transmitter {
      * @return true if the input callback is not registered
      * @see #unregisterCallback(CrrTransmitCallback)
      */
-    public boolean registerCallback(@NonNull CrrTransmitCallback callback) {
+    public static boolean registerCallback(@NonNull CrrTransmitCallback callback) {
         return compositeCallback.registerCallback(callback);
     }
 
@@ -265,7 +265,7 @@ public final class Transmitter {
      * @return true if the input callback is registered
      * @see #registerCallback(CrrTransmitCallback)
      */
-    public boolean unregisterCallback(@NonNull CrrTransmitCallback callback) {
+    public static boolean unregisterCallback(@NonNull CrrTransmitCallback callback) {
         return compositeCallback.unregisterCallback(callback);
     }
 
