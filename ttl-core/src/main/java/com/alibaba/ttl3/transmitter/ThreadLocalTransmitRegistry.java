@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
+import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
+
 /**
  * {@code ThreadLocalTransmitRegistry}, {@code ThreadLocal} transmit integration.
  * <p>
@@ -142,7 +144,7 @@ public final class ThreadLocalTransmitRegistry {
         @NonNull
         @Override
         public HashMap<ThreadLocal<Object>, Object> capture() {
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
+            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 final TtlCopier<Object> copier = entry.getValue();
@@ -155,7 +157,7 @@ public final class ThreadLocalTransmitRegistry {
         @NonNull
         @Override
         public HashMap<ThreadLocal<Object>, Object> replay(@NonNull HashMap<ThreadLocal<Object>, Object> captured) {
-            final HashMap<ThreadLocal<Object>, Object> backup = new HashMap<>(captured.size());
+            final HashMap<ThreadLocal<Object>, Object> backup = newHashMap(captured.size());
 
             for (Map.Entry<ThreadLocal<Object>, Object> entry : captured.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
@@ -172,7 +174,7 @@ public final class ThreadLocalTransmitRegistry {
         @NonNull
         @Override
         public HashMap<ThreadLocal<Object>, Object> clear() {
-            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = new HashMap<>(threadLocalHolder.size());
+            final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
 
             for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
