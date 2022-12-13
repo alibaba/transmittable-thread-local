@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
+import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
+
 /**
  * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task
  * to the thread of executing task even using thread pooling components.
@@ -330,7 +332,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         @NonNull
         @Override
         public HashMap<TransmittableThreadLocal<Object>, Object> capture() {
-            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = new HashMap<>(holder.get().size());
+            final HashMap<TransmittableThreadLocal<Object>, Object> ttl2Value = newHashMap(holder.get().size());
             for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
                 ttl2Value.put(threadLocal, threadLocal.getTransmitteeValue());
             }
@@ -340,7 +342,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         @NonNull
         @Override
         public HashMap<TransmittableThreadLocal<Object>, Object> replay(@NonNull HashMap<TransmittableThreadLocal<Object>, Object> captured) {
-            final HashMap<TransmittableThreadLocal<Object>, Object> backup = new HashMap<>(holder.get().size());
+            final HashMap<TransmittableThreadLocal<Object>, Object> backup = newHashMap(holder.get().size());
 
             for (final Iterator<TransmittableThreadLocal<Object>> iterator = holder.get().keySet().iterator(); iterator.hasNext(); ) {
                 TransmittableThreadLocal<Object> threadLocal = iterator.next();
@@ -365,7 +367,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
         @NonNull
         @Override
         public HashMap<TransmittableThreadLocal<Object>, Object> clear() {
-            return replay(new HashMap<>(0));
+            return replay(newHashMap(0));
         }
 
         @Override
