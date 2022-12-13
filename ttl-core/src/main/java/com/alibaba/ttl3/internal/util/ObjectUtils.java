@@ -16,6 +16,19 @@
 
 package com.alibaba.ttl3.internal.util;
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// This source code file is copied from spring v5.3.24:
+//
+// https://github.com/spring-projects/spring-framework/blob/v5.3.24/spring-core/src/main/java/org/springframework/util/ObjectUtils.java
+//
+// with adoption:
+// - remove unused elements
+// - adjust visible modifier and code format
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.Arrays;

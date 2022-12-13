@@ -6,6 +6,18 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Most source code of this file is copied from spring v5.3.24:
+//
+// https://github.com/spring-projects/spring-framework/blob/v5.3.24/spring-core/src/main/java/org/springframework/util/CollectionUtils.java
+//
+// with adoption:
+// - adjust visible modifier and code format
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @ApiStatus.Internal
 public final class Utils {
     /**
