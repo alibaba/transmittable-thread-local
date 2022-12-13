@@ -474,6 +474,7 @@ class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements Conc
      * A single segment used to divide the map to allow better concurrent performance.
      */
     @SuppressWarnings("serial")
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     protected final class Segment extends ReentrantLock {
 
         private final ReferenceManager referenceManager;
@@ -735,6 +736,7 @@ class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements Conc
      * @param <K> the key type
      * @param <V> the value type
      */
+    @SuppressFBWarnings("NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION")
     protected static final class Entry<K, V> implements Map.Entry<K, V> {
 
         @Nullable
