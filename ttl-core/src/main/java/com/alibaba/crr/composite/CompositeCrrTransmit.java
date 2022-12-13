@@ -10,6 +10,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
+
 /**
  * {@link CompositeCrrTransmit} transmit all {@link CrrTransmit}
  * registered by {@link #registerCrrTransmit(CrrTransmit)}.
@@ -41,7 +43,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
      */
     @NonNull
     public Capture capture() {
-        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(registeredCrrTransmitSet.size());
+        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = newHashMap(registeredCrrTransmitSet.size());
         for (CrrTransmit<Object, Object> crrTransmit : registeredCrrTransmitSet) {
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.capture());
@@ -68,7 +70,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
         final Object data = callback.beforeReplay();
 
         final Snapshot capturedSnapshot = (Snapshot) captured;
-        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(capturedSnapshot.crrTransmit2Value.size());
+        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = newHashMap(capturedSnapshot.crrTransmit2Value.size());
         for (Map.Entry<CrrTransmit<Object, Object>, Object> entry : capturedSnapshot.crrTransmit2Value.entrySet()) {
             CrrTransmit<Object, Object> crrTransmit = entry.getKey();
             try {
@@ -105,7 +107,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
     public Backup clear() {
         final Object data = callback.beforeReplay();
 
-        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = new HashMap<>(registeredCrrTransmitSet.size());
+        final HashMap<CrrTransmit<Object, Object>, Object> crrTransmit2Value = newHashMap(registeredCrrTransmitSet.size());
         for (CrrTransmit<Object, Object> crrTransmit : registeredCrrTransmitSet) {
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.clear());
