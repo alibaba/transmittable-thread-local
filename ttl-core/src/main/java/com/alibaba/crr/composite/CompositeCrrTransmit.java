@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
+import static com.alibaba.ttl3.internal.util.Utils.propagateIfFatal;
 
 /**
  * {@link CompositeCrrTransmit} transmit all {@link CrrTransmit}
@@ -48,6 +49,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.capture());
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when capture for crrTransmit " + crrTransmit +
                             "(class " + crrTransmit.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -77,6 +79,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
                 Object transmitCaptured = entry.getValue();
                 crrTransmit2Value.put(crrTransmit, crrTransmit.replay(transmitCaptured));
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when replay for crrTransmit " + crrTransmit +
                             "(class " + crrTransmit.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -112,6 +115,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
             try {
                 crrTransmit2Value.put(crrTransmit, crrTransmit.clear());
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when clear for crrTransmit " + crrTransmit +
                             "(class " + crrTransmit.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -140,6 +144,7 @@ public final class CompositeCrrTransmit implements CrrTransmit<Capture, Backup> 
                 Object transmitBackup = entry.getValue();
                 crrTransmit.restore(transmitBackup);
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when restore for crrTransmit " + crrTransmit +
                             "(class " + crrTransmit.getClass().getName() + "), just ignored; cause: " + t, t);
