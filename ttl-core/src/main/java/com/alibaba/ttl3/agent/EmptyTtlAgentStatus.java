@@ -2,6 +2,8 @@ package com.alibaba.ttl3.agent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+import static com.alibaba.ttl3.internal.util.Utils.propagateIfFatal;
+
 final class EmptyTtlAgentStatus implements TtlAgentStatus {
     @Override
     public boolean isTtlAgentLoaded() {
@@ -34,6 +36,7 @@ final class EmptyTtlAgentStatus implements TtlAgentStatus {
             } catch (ClassNotFoundException e) {
                 ret = new EmptyTtlAgentStatus();
             } catch (Exception e) {
+                propagateIfFatal(e);
                 throw new IllegalStateException("Fail to create the TTL agent instance(" + TTL_AGENT_CLASS
                         + "), should be a bug! report to the TTL project. cause: " + e, e);
             }
