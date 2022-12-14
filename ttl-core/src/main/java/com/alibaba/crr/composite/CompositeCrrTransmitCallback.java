@@ -9,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.alibaba.ttl3.internal.util.Utils.propagateIfFatal;
+
 /**
  * Composite CrrTransmitCallback.
  *
@@ -26,6 +28,7 @@ public final class CompositeCrrTransmitCallback {
             try {
                 cb.beforeReplay();
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when beforeReplay for crrTransmitCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -42,6 +45,7 @@ public final class CompositeCrrTransmitCallback {
             try {
                 cb.afterReplay();
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when afterReplay for crrTransmitCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -58,6 +62,7 @@ public final class CompositeCrrTransmitCallback {
             try {
                 cb.beforeRestore();
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when beforeRestore for crrTransmitCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
@@ -74,6 +79,7 @@ public final class CompositeCrrTransmitCallback {
             try {
                 cb.afterRestore();
             } catch (Throwable t) {
+                propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
                     logger.log(Level.WARNING, "exception when afterRestore for crrTransmitCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
