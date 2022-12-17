@@ -1,9 +1,9 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 <p align="center">
-<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/workflow/status/alibaba/transmittable-thread-local/CI/2.x?logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=2.x&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
 <a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/2.x?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
-<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/2.x"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/2.x?logo=codecov&logoColor=white" alt="Coverage Status"></a>
+<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/2.x"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
 <a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://img.shields.io/codeclimate/maintainability/alibaba/transmittable-thread-local?logo=codeclimate&logoColor=white" alt="Maintainability"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
