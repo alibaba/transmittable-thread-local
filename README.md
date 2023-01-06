@@ -216,7 +216,7 @@ String value = context.get();
 
 #### 整个过程的完整时序图
 
-![时序图](docs/TransmittableThreadLocal-sequence-diagram.png)
+[![时序图](docs/TransmittableThreadLocal-sequence-diagram.png)](#dummy)
 
 ### 2.2 修饰线程池
 
@@ -343,8 +343,6 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
     com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
-
-
 <blockquote>
 <details>
 
@@ -386,7 +384,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.1</version>
+    <version>2.14.2</version>
 </dependency>
 ```
 
@@ -509,34 +507,32 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
     - [`dromara/gobrs-async` ![](https://img.shields.io/github/stars/dromara/gobrs-async.svg?style=social&label=Star)](https://github.com/dromara/gobrs-async) [![star](https://gitee.com/dromara/gobrs-async/badge/star.svg?theme=gray)](https://gitee.com/dromara/gobrs-async)  
-      一款功能强大、配置灵活、带有全链路异常回调、内存优化、异常状态管理于一身的高性能异步编排框架。为企业提供在复杂应用场景下动态任务编排的能力。 针对于复杂场景下，异步线程复杂性、任务依赖性、异常状态难控制性。
+      一款功能强大、配置灵活、带有全链路异常回调、内存优化、异常状态管理于一身的高性能异步编排框架。为企业提供在复杂应用场景下动态任务编排的能力。 针对于复杂场景下，异步线程复杂性、任务依赖性、异常状态难控制性
     - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       轻量级动态线程池，内置监控告警功能，支持线程池上下文传递，基于主流配置中心（已支持Nacos、Apollo，Zookeeper，可通过SPI自定义实现）
-    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/itmachen/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/itmachen/hippo4j)  
+    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/magestack/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/magestack/hippo4j)  
       动态线程池框架，附带监控报警功能，支持 JDK、Tomcat、Jetty、Undertow 线程池；Apache RocketMQ、Dubbo、RabbitMQ、Hystrix 消费等线程池。内置两种使用模式：轻量级依赖配置中心以及无中间件依赖版本
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       微服务路由网关（zuul-plus）
     - [`huaweicloud/Sermant` ![](https://img.shields.io/github/stars/huaweicloud/Sermant.svg?style=social&label=Star)](https://github.com/huaweicloud/Sermant)  
-      Sermant, a proxyless service mesh solution based on Javaagent.
+      Sermant, a proxyless service mesh solution based on Javaagent
     - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
       ZTO Message Service
     - [`ytyht226/taskflow` ![](https://img.shields.io/github/stars/ytyht226/taskflow.svg?style=social&label=Star)](https://github.com/ytyht226/taskflow)  
       一款轻量、简单易用、可灵活扩展的通用任务编排框架，基于有向无环图(DAG)的方式实现，框架提供了组件复用、同步/异步编排、条件判断、分支选择等能力，可以根据不同的业务场景对任意的业务流程进行编排
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
-      The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms.
-- **中间件/数据**
-    - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
-      数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
+      The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms
+- **中间件/数据处理**
+    - [`basicai/xtreme1` ![](https://img.shields.io/github/stars/basicai/xtreme1.svg?style=social&label=Star)](https://github.com/basicai/xtreme1)  
+      The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
-    - [`basicai/xtreme1` ![](https://img.shields.io/github/stars/basicai/xtreme1.svg?style=social&label=Star)](https://github.com/basicai/xtreme1)  
-      The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported.
+    - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
+      数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
     - [`didi/ALITA` ![](https://img.shields.io/github/stars/didi/ALITA.svg?style=social&label=Star)](https://github.com/didi/ALITA)  
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
       实现快速创建数据构造流程，数据构造流程的可视化、线上化、持久化、标准化
-    - [`aiwenmo/DataLink` ![](https://img.shields.io/github/stars/aiwenmo/DataLink.svg?style=social&label=Star)](https://github.com/aiwenmo/DataLink)  
-      a new open source solution to bring Flink development to data center
 - **中间件/流程引擎**
     - [`dromara/liteflow` ![](https://img.shields.io/github/stars/dromara/liteflow.svg?style=social&label=Star)](https://github.com/dromara/liteflow) [![star](https://gitee.com/dromara/liteFlow/badge/star.svg?theme=gray)](https://gitee.com/dromara/liteFlow)  
       a lightweight and practical micro-process framework
@@ -569,10 +565,12 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
       基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
-    - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot)  
+    - [`qwdigital/LinkWechat` ![](https://img.shields.io/github/stars/qwdigital/LinkWechat.svg?style=social&label=Star)](https://github.com/qwdigital/LinkWechat) [![star](https://gitee.com/LinkWeChat/link-wechat/badge/star.svg?theme=gray)](https://gitee.com/LinkWeChat/link-wechat)  
+      基于企业微信的开源 SCRM 系统，采用主流的 Java 微服务架构，是企业私域流量管理与营销的综合解决方案，助力企业提高客户运营效率，强化营销能力，拓展盈利空间
+    - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot) [![star](https://gitee.com/hiparker/opsli-boot/badge/star.svg?theme=gray)](https://gitee.com/hiparker/opsli-boot)  
       一款的低代码快速平台，零代码开发，致力于做更简洁的后台管理系统
-    - [`tengshe789/SpringCloud-miaosha` ![](https://img.shields.io/github/stars/tengshe789/SpringCloud-miaosha.svg?style=social&label=Star)](https://github.com/tengshe789/SpringCloud-miaosha)  
-      一个基于spring cloud Greenwich的简单秒杀电子商城项目
+    - [`topiam/eiam` ![](https://img.shields.io/github/stars/topiam/eiam.svg?style=social&label=Star)](https://github.com/topiam/eiam) [![star](https://gitee.com/topiam/eiam/badge/star.svg?theme=gray)](https://gitee.com/topiam/eiam)  
+      EIAM（Employee Identity and Access Management Program）企业级开源IAM平台，实现用户全生命周期的管理、统一认证和单点登录、为数字身份安全赋能
     - [`Newspiral/newspiral-business` ![](https://img.shields.io/github/stars/Newspiral/newspiral-business.svg?style=social&label=Star)](https://github.com/Newspiral/newspiral-business)  
       联盟区块链底层平台
 - **工具产品**
@@ -581,16 +579,18 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
     - [`nekolr/slime` ![](https://img.shields.io/github/stars/nekolr/slime.svg?style=social&label=Star)](https://github.com/nekolr/slime)  
       🍰 一个可视化的爬虫平台
     - [`Jackson0714/PassJava-Platform` ![](https://img.shields.io/github/stars/Jackson0714/PassJava-Platform.svg?style=social&label=Star)](https://github.com/Jackson0714/PassJava-Platform)  
-      一款面试刷题的 Spring Cloud 开源系统。零碎时间利用小程序查看常见面试题，夯实Java基础。 该项目可以教会你如何搭建SpringBoot项目，Spring Cloud项目。 采用流行的技术，如 SpringBoot、MyBatis、Redis、 MySql、 MongoDB、 RabbitMQ、Elasticsearch，采用Docker容器化部署。
+      一款面试刷题的 Spring Cloud 开源系统。零碎时间利用小程序查看常见面试题，夯实Java基础。 该项目可以教会你如何搭建SpringBoot项目，Spring Cloud项目。 采用流行的技术，如 SpringBoot、MyBatis、Redis、 MySql、 MongoDB、 RabbitMQ、Elasticsearch，采用Docker容器化部署
     - [`martin-chips/DimpleBlog` ![](https://img.shields.io/github/stars/martin-chips/DimpleBlog.svg?style=social&label=Star)](https://github.com/martin-chips/DimpleBlog)  
       基于`SpringBoot2`搭建的个人博客系统
     - [`zjcscut/octopus` ![](https://img.shields.io/github/stars/zjcscut/octopus.svg?style=social&label=Star)](https://github.com/zjcscut/octopus)  
       长链接压缩为短链接的服务
-    - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/molicloud/mqr/badge/star.svg?theme=gray)](https://gitee.com/molicloud/mqr)  
+    - [`xggz/mqr` ![](https://img.shields.io/github/stars/xggz/mqr.svg?style=social&label=Star)](https://github.com/xggz/mqr) [![star](https://gitee.com/mlyai/mqr/badge/star.svg?theme=gray)](https://gitee.com/mlyai/mqr)  
       茉莉QQ机器人（简称MQR），采用mirai的Android协议实现的QQ机器人服务，通过web控制机器人的启停和配置
 - **测试解决方案或工具**
     - [`alibaba/jvm-sandbox-repeater` ![](https://img.shields.io/github/stars/alibaba/jvm-sandbox-repeater.svg?style=social&label=Star)](https://github.com/alibaba/jvm-sandbox-repeater)  
       A Java server-side recording and playback solution based on JVM-Sandbox, 录制/回放通用解决方案
+    - [`vivo/MoonBox` ![](https://img.shields.io/github/stars/vivo/MoonBox.svg?style=social&label=Star)](https://github.com/vivo/MoonBox)  
+      Moonbox（月光宝盒）是JVM-Sandbox生态下的，基于jvm-sandbox-repeater重新开发的，一款流量回放平台产品。相较于jvm-sandbox-repeater，Moonbox功能更加丰富、数据可靠性更高，同时便于快速线上部署和使用
     - [`alibaba/testable-mock` ![](https://img.shields.io/github/stars/alibaba/testable-mock.svg?style=social&label=Star)](https://github.com/alibaba/testable-mock)  
       换种思路写Mock，让单元测试更简单
     - [`shulieTech/Takin` ![](https://img.shields.io/github/stars/shulieTech/Takin.svg?style=social&label=Star)](https://github.com/shulieTech/Takin)  
@@ -602,12 +602,12 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
 - **`Spring Cloud`/`Spring Boot`的框架方案/脚手架**
     - [`zlt2000/microservices-platform` ![](https://img.shields.io/github/stars/zlt2000/microservices-platform.svg?style=social&label=Star)](https://github.com/zlt2000/microservices-platform) [![star](https://gitee.com/zlt2000/microservices-platform/badge/star.svg?theme=gray)](https://gitee.com/zlt2000/microservices-platform)  
       基于SpringBoot2.x、SpringCloud和SpringCloudAlibaba并采用前后端分离的企业级微服务多租户系统架构
-    - [`zuihou/lamp-cloud` ![](https://img.shields.io/github/stars/zuihou/lamp-cloud.svg?style=social&label=Star)](https://github.com/zuihou/lamp-cloud) [![star](https://gitee.com/zuihou111/lamp-cloud/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-cloud)  
+    - [`dromara/lamp-cloud` ![](https://img.shields.io/github/stars/dromara/lamp-cloud.svg?style=social&label=Star)](https://github.com/zuihou/lamp-cloud) [![star](https://gitee.com/dromara/lamp-cloud/badge/star.svg?theme=gray)](https://gitee.com/dromara/lamp-cloud)  
       基于Jdk11 + SpringCloud + SpringBoot 的微服务快速开发平台，其中的可配置的SaaS功能尤其闪耀， 具备RBAC功能、网关统一鉴权、Xss防跨站攻击、自动代码生成、多种存储系统、分布式事务、分布式定时任务等多个模块，支持多业务系统并行开发， 支持多服务并行开发，可以作为后端服务的开发脚手架
         - [`zuihou/lamp-util` ![](https://img.shields.io/github/stars/zuihou/lamp-util.svg?style=social&label=Star)](https://github.com/zuihou/lamp-util) [![star](https://gitee.com/zuihou111/lamp-util/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-util)  
           打造一套兼顾 SpringBoot 和 SpringCloud 项目的公共工具类
     - [`YunaiV/ruoyi-vue-pro` ![](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Star)](https://github.com/YunaiV/ruoyi-vue-pro)  [![star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  
-      一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能。
+      一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能
     - [`YunaiV/yudao-cloud` ![](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Star)](https://github.com/YunaiV/yudao-cloud)  [![star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/yudao-cloud)  
       RuoYi-Vue 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue & Element 实现的后台管理系统 + 用户小程序，支持 RBAC 动态权限、多租户、数据权限、工作流、三方登录、支付、短信、商城等功能
     - [`matevip/matecloud` ![](https://img.shields.io/github/stars/matevip/matecloud.svg?style=social&label=Star)](https://github.com/matevip/matecloud) [![star](https://gitee.com/matevip/matecloud/badge/star.svg?theme=gray)](https://gitee.com/matevip/matecloud)  
@@ -625,7 +625,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
     - [`yinjihuan/spring-cloud` ![](https://img.shields.io/github/stars/yinjihuan/spring-cloud.svg?style=social&label=Star)](https://github.com/yinjihuan/spring-cloud)  
       《Spring Cloud微服务-全栈技术与案例解析》和《Spring Cloud微服务 入门 实战与进阶》配套源码
     - [`louyanfeng25/ddd-demo` ![](https://img.shields.io/github/stars/louyanfeng25/ddd-demo.svg?style=social&label=Star)](https://github.com/louyanfeng25/ddd-demo)  
-      《深入浅出DDD》讲解的演示项目，为了能够更好的理解Demo中的分层与逻辑处理，我强烈建议你配合小册来深入了解DDD。
+      《深入浅出DDD》讲解的演示项目，为了能够更好的理解Demo中的分层与逻辑处理，我强烈建议你配合小册来深入了解DDD
 
 更多使用`TTL`的开源项目 参见 [![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
 
