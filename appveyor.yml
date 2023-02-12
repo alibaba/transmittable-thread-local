@@ -34,7 +34,8 @@ after_test:
   - rm -rf $HOME/.m2/repository/com/alibaba/transmittable-thread-local*
   - rm -rf $HOME/.m2/repository/com/alibaba/ttl*
   # remove install files of maven
-  - rm -rf $HOME/.m2/wrapper/dists/*/*/*.zip
+  #   skip rm zip files, because maven wrapper 3.9 will download zip file if absent
+  # - rm -rf $HOME/.m2/wrapper/dists/*/*/*.zip
   # remove install files of sdkman
   - rm -rf $HOME/.sdkman/archives/*
   - rm -rf $HOME/.sdkman/tmp/*
