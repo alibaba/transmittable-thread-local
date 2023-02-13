@@ -274,7 +274,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.23</version>
+				<version>1.13.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
