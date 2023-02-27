@@ -1,6 +1,6 @@
 # <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
-> 📒 这个分支是`TransmittableThreadLocal(TTL) v3`，在开发中还没有发布。  
+> 🚧 这个分支是`TransmittableThreadLocal(TTL) v3`，在开发中还没有发布。  
 > `v3`的版本说明、工作项列表及其进展，参见 [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432)。
 >
 > 👉 目前使用中的稳定发布版本`v2.x`在 [**分支`2.x`**](https://github.com/alibaba/transmittable-thread-local/tree/2.x)上。
@@ -66,7 +66,8 @@
 
 本库提供的[`TransmittableThreadLocal`](ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见 [User Guide](#-user-guide)。
 
-整个`TransmittableThreadLocal`库的核心功能（用户`API`与框架/中间件的集成`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`），只有 **_~1000 `SLOC`代码行_**，非常精小。
+
+整个`TransmittableThreadLocal`库的核心功能（用户`API`、线程池`ExecutorService`/`ForkJoinPool`/`TimerTask`及其线程工厂的`Wrapper`；开发者`API`、框架/中间件的集成`API`），只有 **_~1000 `SLOC`代码行_**，非常精小。
 
 欢迎 👏
 
@@ -93,10 +94,12 @@
 
 使用类[`TransmittableThreadLocal`](ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)来保存值，并跨线程池传递。
 
-`TransmittableThreadLocal`继承`InheritableThreadLocal`，使用方式也类似。相比`InheritableThreadLocal`，添加了`protected`的`transmitteeValue`方法，用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的传递方式，缺省是简单的赋值传递。注意：如果传递的是一个对象（引用类型）且没有做深拷贝，如直接传递引用或是浅拷贝，那么
+`TransmittableThreadLocal`继承`InheritableThreadLocal`，使用方式也类似。相比`InheritableThreadLocal`，添加了`protected`的`transmitteeValue()`方法，用于定制 **任务提交给线程池时** 的`ThreadLocal`值传递到 **任务执行时** 的传递方式，缺省是简单的赋值传递。
 
-- 跨线程传递而不再有线程封闭，传递对象在多个线程之间是有共享的；
-- 与`InheritableThreadLocal.childValue`一样，使用者/业务逻辑要注意传递对象的线程安全。
+注意：如果传递的对象（引用类型）会被修改，且没有做深拷贝（如直接传递引用或是浅拷贝），那么
+
+- 因为跨线程传递而不再有线程封闭，传递对象在多个线程之间是有共享的。
+- 与`JDK`的[`InheritableThreadLocal.childValue()`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html#childValue(T))一样，需要使用者/业务逻辑注意保证传递对象的线程安全。
 
 <blockquote>
 <details>
@@ -517,13 +520,19 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       Sermant, a proxyless service mesh solution based on Javaagent
     - [`ZTO-Express/zms` ![](https://img.shields.io/github/stars/ZTO-Express/zms.svg?style=social&label=Star)](https://github.com/ZTO-Express/zms) [![star](https://gitee.com/zto_express/zms/badge/star.svg?theme=gray)](https://gitee.com/zto_express/zms)  
       ZTO Message Service
+    - [`lxchinesszz/tomato` ![](https://img.shields.io/github/stars/lxchinesszz/tomato.svg?style=social&label=Star)](https://github.com/lxchinesszz/tomato)  
+      一款专门为SpringBoot项目设计的幂等组件
     - [`ytyht226/taskflow` ![](https://img.shields.io/github/stars/ytyht226/taskflow.svg?style=social&label=Star)](https://github.com/ytyht226/taskflow)  
       一款轻量、简单易用、可灵活扩展的通用任务编排框架，基于有向无环图(DAG)的方式实现，框架提供了组件复用、同步/异步编排、条件判断、分支选择等能力，可以根据不同的业务场景对任意的业务流程进行编排
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
       The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms
 - **中间件/数据处理**
+    - [`apache/shardingsphere` ![](https://img.shields.io/github/stars/apache/shardingsphere.svg?style=social&label=Star)](https://github.com/apache/shardingsphere) [![star](https://gitee.com/Sharding-Sphere/sharding-sphere/badge/star.svg?theme=gray)](https://gitee.com/Sharding-Sphere/sharding-sphere)  
+      Ecosystem to transform any database into a distributed database system, and enhance it with sharding, elastic scaling, encryption features & more
     - [`basicai/xtreme1` ![](https://img.shields.io/github/stars/basicai/xtreme1.svg?style=social&label=Star)](https://github.com/basicai/xtreme1)  
       The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported
+    - [`sagframe/sagacity-sqltoy` ![](https://img.shields.io/github/stars/sagframe/sagacity-sqltoy.svg?style=social&label=Star)](https://github.com/sagframe/sagacity-sqltoy)  
+      Java真正智慧的ORM框架
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
@@ -556,10 +565,12 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
 - **业务服务或平台应用**
     - [`OpenBankProject/OBP-API` ![](https://img.shields.io/github/stars/OpenBankProject/OBP-API.svg?style=social&label=Star)](https://github.com/OpenBankProject/OBP-API)  
       An open source RESTful API platform for banks that supports Open Banking, XS2A and PSD2 through access to accounts, transactions, counterparties, payments, entitlements and metadata - plus a host of internal banking and management APIs
-    - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
-      JooLun微信商城
     - [`gz-yami/mall4j` ![](https://img.shields.io/github/stars/gz-yami/mall4j.svg?style=social&label=Star)](https://github.com/gz-yami/mall4j) [![star](https://gitee.com/gz-yami/mall4j/badge/star.svg?theme=gray)](https://gitee.com/gz-yami/mall4j)  
       电商商城 java电商商城系统 uniapp商城 多用户商城
+    - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
+      JooLun微信商城
+    - [`XiaoMi/mone` ![](https://img.shields.io/github/stars/XiaoMi/mone.svg?style=social&label=Star)](https://github.com/XiaoMi/mone)  
+      Mone以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
@@ -599,16 +610,16 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
     - [`alibaba/virtual-environment` ![](https://img.shields.io/github/stars/alibaba/virtual-environment.svg?style=social&label=Star)](https://github.com/alibaba/virtual-environment)  
       Route isolation with service sharing, 阿里测试环境服务隔离和联调机制的`Kubernetes`版实现
 - **`Spring Cloud`/`Spring Boot`的框架方案/脚手架**
+    - [`YunaiV/ruoyi-vue-pro` ![](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Star)](https://github.com/YunaiV/ruoyi-vue-pro)  [![star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  
+      一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能
+    - [`YunaiV/yudao-cloud` ![](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Star)](https://github.com/YunaiV/yudao-cloud)  [![star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/yudao-cloud)  
+      RuoYi-Vue 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue & Element 实现的后台管理系统 + 用户小程序，支持 RBAC 动态权限、多租户、数据权限、工作流、三方登录、支付、短信、商城等功能
     - [`zlt2000/microservices-platform` ![](https://img.shields.io/github/stars/zlt2000/microservices-platform.svg?style=social&label=Star)](https://github.com/zlt2000/microservices-platform) [![star](https://gitee.com/zlt2000/microservices-platform/badge/star.svg?theme=gray)](https://gitee.com/zlt2000/microservices-platform)  
       基于SpringBoot2.x、SpringCloud和SpringCloudAlibaba并采用前后端分离的企业级微服务多租户系统架构
     - [`dromara/lamp-cloud` ![](https://img.shields.io/github/stars/dromara/lamp-cloud.svg?style=social&label=Star)](https://github.com/zuihou/lamp-cloud) [![star](https://gitee.com/dromara/lamp-cloud/badge/star.svg?theme=gray)](https://gitee.com/dromara/lamp-cloud)  
       基于Jdk11 + SpringCloud + SpringBoot 的微服务快速开发平台，其中的可配置的SaaS功能尤其闪耀， 具备RBAC功能、网关统一鉴权、Xss防跨站攻击、自动代码生成、多种存储系统、分布式事务、分布式定时任务等多个模块，支持多业务系统并行开发， 支持多服务并行开发，可以作为后端服务的开发脚手架
         - [`zuihou/lamp-util` ![](https://img.shields.io/github/stars/zuihou/lamp-util.svg?style=social&label=Star)](https://github.com/zuihou/lamp-util) [![star](https://gitee.com/zuihou111/lamp-util/badge/star.svg?theme=gray)](https://gitee.com/zuihou111/lamp-util)  
           打造一套兼顾 SpringBoot 和 SpringCloud 项目的公共工具类
-    - [`YunaiV/ruoyi-vue-pro` ![](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Star)](https://github.com/YunaiV/ruoyi-vue-pro)  [![star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  
-      一套全部开源的企业级的快速开发平台。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Activiti + Flowable 工作流、三方登录、支付、短信、商城等功能
-    - [`YunaiV/yudao-cloud` ![](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Star)](https://github.com/YunaiV/yudao-cloud)  [![star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=gray)](https://gitee.com/zhijiantianya/yudao-cloud)  
-      RuoYi-Vue 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue & Element 实现的后台管理系统 + 用户小程序，支持 RBAC 动态权限、多租户、数据权限、工作流、三方登录、支付、短信、商城等功能
     - [`matevip/matecloud` ![](https://img.shields.io/github/stars/matevip/matecloud.svg?style=social&label=Star)](https://github.com/matevip/matecloud) [![star](https://gitee.com/matevip/matecloud/badge/star.svg?theme=gray)](https://gitee.com/matevip/matecloud)  
       一款基于Spring Cloud Alibaba的微服务架构
     - [`gavenwangcn/vole` ![](https://img.shields.io/github/stars/gavenwangcn/vole.svg?style=social&label=Star)](https://github.com/gavenwangcn/vole)  
