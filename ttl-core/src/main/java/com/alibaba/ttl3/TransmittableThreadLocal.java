@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
 
@@ -119,7 +120,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * @param supplier the supplier to be used to determine the initial value
      * @return a new transmittable thread local variable
      * @throws NullPointerException if the specified supplier is null
-     * @see #withInitialAndCopier(Supplier, TtlCopier)
+     * @see #withInitialAndGenerator(Supplier, UnaryOperator)
      */
     @NonNull
     @SuppressWarnings("ConstantConditions")
@@ -134,23 +135,23 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
      * and the child value({@link #childValue(Object)}) and the transmittee value({@link #transmitteeValue(Object)}) of the variable is
-     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
+     * determined by invoking the {@link UnaryOperator#apply(Object)} method on the {@code UnaryOperator}.
      *
-     * @param <S>                                    the type of the thread local's value
-     * @param supplier                               the supplier to be used to determine the initial value
-     * @param copierForChildValueAndTransmitteeValue the ttl copier to be used to determine the child value and the transmittee value
+     * @param <S>                                       the type of the thread local's value
+     * @param supplier                                  the supplier to be used to determine the initial value
+     * @param generatorForChildValueAndTransmitteeValue the value generator to be used to determine the child value and the transmittee value
      * @return a new transmittable thread local variable
-     * @throws NullPointerException if the specified supplier or copier is null
+     * @throws NullPointerException if the specified supplier or value generator is null
      * @see #withInitial(Supplier)
      */
     @NonNull
     @ParametersAreNonnullByDefault
     @SuppressWarnings("ConstantConditions")
-    public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValueAndTransmitteeValue) {
+    public static <S> TransmittableThreadLocal<S> withInitialAndGenerator(Supplier<? extends S> supplier, UnaryOperator<S> generatorForChildValueAndTransmitteeValue) {
         if (supplier == null) throw new NullPointerException("supplier is null");
-        if (copierForChildValueAndTransmitteeValue == null) throw new NullPointerException("ttl copier is null");
+        if (generatorForChildValueAndTransmitteeValue == null) throw new NullPointerException("value generator is null");
 
-        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValueAndTransmitteeValue, copierForChildValueAndTransmitteeValue);
+        return new SuppliedTransmittableThreadLocal<>(supplier, generatorForChildValueAndTransmitteeValue, generatorForChildValueAndTransmitteeValue);
     }
 
     /**
@@ -158,47 +159,47 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
      * The initial value({@link #initialValue()}) of the variable is
      * determined by invoking the {@link #get()} method on the {@code Supplier};
      * and the child value({@link #childValue(Object)})}) and the transmittee value({@link #transmitteeValue(Object)}) of the variable is
-     * determined by invoking the {@link  TtlCopier#copy(Object)} method on the {@code TtlCopier}.
+     * determined by invoking the {@link UnaryOperator#apply(Object)} method on the {@code UnaryOperator}.
      * <p>
      * <B><I>NOTE:</I></B><br>
-     * Recommend use {@link #withInitialAndCopier(Supplier, TtlCopier)} instead of this method.
+     * Recommend use {@link #withInitialAndGenerator(Supplier, UnaryOperator)} instead of this method.
      * In most cases, the logic of determining the child value({@link #childValue(Object)})
      * and the transmittee value({@link #transmitteeValue(Object)}) should be the same.
      *
-     * @param <S>                       the type of the thread local's value
-     * @param supplier                  the supplier to be used to determine the initial value
-     * @param copierForChildValue       the ttl copier to be used to determine the child value
-     * @param copierForTransmitteeValue the ttl copier to be used to determine the transmittee value
+     * @param <S>                          the type of the thread local's value
+     * @param supplier                     the supplier to be used to determine the initial value
+     * @param generatorForChildValue       the value generator to be used to determine the child value
+     * @param generatorForTransmitteeValue the value generator to be used to determine the transmittee value
      * @return a new transmittable thread local variable
-     * @throws NullPointerException if the specified supplier or copier is null
+     * @throws NullPointerException if the specified supplier or value generator is null
      * @see #withInitial(Supplier)
-     * @see #withInitialAndCopier(Supplier, TtlCopier)
+     * @see #withInitialAndGenerator(Supplier, UnaryOperator)
      */
     @NonNull
     @ParametersAreNonnullByDefault
     @SuppressWarnings("ConstantConditions")
-    public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValue, TtlCopier<S> copierForTransmitteeValue) {
+    public static <S> TransmittableThreadLocal<S> withInitialAndGenerator(Supplier<? extends S> supplier, UnaryOperator<S> generatorForChildValue, UnaryOperator<S> generatorForTransmitteeValue) {
         if (supplier == null) throw new NullPointerException("supplier is null");
-        if (copierForChildValue == null) throw new NullPointerException("ttl copier for child value is null");
-        if (copierForTransmitteeValue == null) throw new NullPointerException("ttl copier for copy value is null");
+        if (generatorForChildValue == null) throw new NullPointerException("value generator for child value is null");
+        if (generatorForTransmitteeValue == null) throw new NullPointerException("value generator for transmittee value is null");
 
-        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValue, copierForTransmitteeValue);
+        return new SuppliedTransmittableThreadLocal<>(supplier, generatorForChildValue, generatorForTransmitteeValue);
     }
 
     /**
      * An extension of ThreadLocal that obtains its initial value from the specified {@code Supplier}
-     * and obtains its child value and transmittee value from the specified ttl copier.
+     * and obtains its child value and transmittee value from the specified generator.
      */
     private static final class SuppliedTransmittableThreadLocal<T> extends TransmittableThreadLocal<T> {
         private final Supplier<? extends T> supplier;
-        private final TtlCopier<T> copierForChildValue;
-        private final TtlCopier<T> copierForTransmitteeValue;
+        private final UnaryOperator<T> generatorForChildValue;
+        private final UnaryOperator<T> generatorForTransmitteeValue;
 
-        SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier, TtlCopier<T> copierForChildValue, TtlCopier<T> copierForTransmitteeValue) {
+        SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier, UnaryOperator<T> generatorForChildValue, UnaryOperator<T> generatorForTransmitteeValue) {
             if (supplier == null) throw new NullPointerException("supplier is null");
             this.supplier = supplier;
-            this.copierForChildValue = copierForChildValue;
-            this.copierForTransmitteeValue = copierForTransmitteeValue;
+            this.generatorForChildValue = generatorForChildValue;
+            this.generatorForTransmitteeValue = generatorForTransmitteeValue;
         }
 
         @Override
@@ -208,13 +209,13 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> {
 
         @Override
         protected T childValue(T parentValue) {
-            if (copierForChildValue != null) return copierForChildValue.copy(parentValue);
+            if (generatorForChildValue != null) return generatorForChildValue.apply(parentValue);
             else return super.childValue(parentValue);
         }
 
         @Override
         public T transmitteeValue(T parentValue) {
-            if (copierForTransmitteeValue != null) return copierForTransmitteeValue.copy(parentValue);
+            if (generatorForTransmitteeValue != null) return generatorForTransmitteeValue.apply(parentValue);
             else return super.transmitteeValue(parentValue);
         }
     }

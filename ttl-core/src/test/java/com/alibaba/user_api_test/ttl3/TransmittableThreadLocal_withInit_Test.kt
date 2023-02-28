@@ -36,8 +36,8 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
     }
 
     @Test
-    fun test_withInitialAndCopier_2() {
-        val ttl = TransmittableThreadLocal.withInitialAndCopier(
+    fun test_withInitialAndGenerator_2() {
+        val ttl = TransmittableThreadLocal.withInitialAndGenerator(
             { 42 },
             { it + 100 },
         )
@@ -58,8 +58,8 @@ class TransmittableThreadLocal_withInit_Test : AnnotationSpec() {
     }
 
     @Test
-    fun test_withInitialAndCopier_3() {
-        val ttl = TransmittableThreadLocal.withInitialAndCopier(
+    fun test_withInitialAndGenerator_3() {
+        val ttl = TransmittableThreadLocal.withInitialAndGenerator(
             { 42 },
             { it + 100 },
             { it + 1000 },

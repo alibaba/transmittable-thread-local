@@ -95,7 +95,7 @@ import java.util.function.Supplier;
  * <p>
  * If you can not rewrite the existed code which use {@code JDK} {@link ThreadLocal}
  * to {@link TransmittableThreadLocal}, register the {@link ThreadLocal} instances via method
- * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, com.alibaba.ttl3.TtlCopier) ThreadLocalTransmitRegistry#registerThreadLocal}
+ * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, java.util.function.UnaryOperator) ThreadLocalTransmitRegistry#registerThreadLocal}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
  * <p>
  * For other {@code ThreadLocal}s integration(e.g. {@code FastThreadLocal} of {@code Netty}),
