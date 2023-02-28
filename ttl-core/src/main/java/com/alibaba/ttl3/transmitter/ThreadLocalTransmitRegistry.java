@@ -1,12 +1,12 @@
 package com.alibaba.ttl3.transmitter;
 
 import com.alibaba.ttl3.TransmittableThreadLocal;
-import com.alibaba.ttl3.TtlCopier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.UnaryOperator;
 import java.util.logging.Logger;
 
 import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
@@ -16,10 +16,10 @@ import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
  * <p>
  * If you can not rewrite the existed code which use {@link ThreadLocal} to {@link TransmittableThreadLocal},
  * register the {@link ThreadLocal} instances via the methods
- * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, TtlCopier)}
+ * {@link ThreadLocalTransmitRegistry#registerThreadLocal(ThreadLocal, UnaryOperator)}
  * to enhance the <b>Transmittable</b> ability for the existed {@link ThreadLocal} instances.
  * <p>
- * {@code ThreadLocalTransmitRegistry} implement a {@link Transmittee}  internally,
+ * {@code ThreadLocalTransmitRegistry} implement a {@link Transmittee} internally,
  * and register the {@link Transmittee} by {@link TransmitteeRegistry#registerTransmittee(Transmittee)}
  * to transmit all registered {@link ThreadLocal} instances.
  *
@@ -28,7 +28,7 @@ import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
  *
  * <pre>{@code
  * // the value of this ThreadLocal instance will be transmitted after registered
- * ThreadLocalTransmitRegistry.registerThreadLocal(aThreadLocal, copier);
+ * ThreadLocalTransmitRegistry.registerThreadLocal(aThreadLocal, generator);
  *
  * // Then the value of this ThreadLocal instance will not be transmitted after unregistered
  * ThreadLocalTransmitRegistry.unregisterThreadLocal(aThreadLocal);}</pre>
@@ -52,7 +52,7 @@ import static com.alibaba.ttl3.internal.util.Utils.newHashMap;
 public final class ThreadLocalTransmitRegistry {
     private static final Logger logger = Logger.getLogger(ThreadLocalTransmitRegistry.class.getName());
 
-    private static volatile WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> threadLocalHolder = new WeakHashMap<>();
+    private static volatile WeakHashMap<ThreadLocal<Object>, UnaryOperator<Object>> threadLocalHolder = new WeakHashMap<>();
 
     private static final Object threadLocalHolderUpdateLock = new Object();
 
@@ -69,12 +69,12 @@ public final class ThreadLocalTransmitRegistry {
      * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
      *
      * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
-     * @param copier      the {@link TtlCopier}
-     * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
-     * @see #registerThreadLocal(ThreadLocal, TtlCopier, boolean)
+     * @param generator   the value generator of type {@code UnaryOperator}
+     * @return {@code true} if register the {@link ThreadLocal} instance and set {@code generator}, otherwise {@code false}
+     * @see #registerThreadLocal(ThreadLocal, UnaryOperator, boolean)
      */
-    public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier) {
-        return registerThreadLocal(threadLocal, copier, false);
+    public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull UnaryOperator<T> generator) {
+        return registerThreadLocal(threadLocal, generator, false);
     }
 
     /**
@@ -90,14 +90,14 @@ public final class ThreadLocalTransmitRegistry {
      * the instance can NOT <B><I>{@code inherit}</I></B> value from parent thread(aka. the <b>inheritable</b> ability)!
      *
      * @param threadLocal the {@link ThreadLocal} instance that to enhance the <b>Transmittable</b> ability
-     * @param copier      the {@link TtlCopier}
-     * @param force       if {@code true}, update {@code copier} to {@link ThreadLocal} instance
+     * @param generator   the value generator of type {@code UnaryOperator}
+     * @param force       if {@code true}, update {@code generator} to {@link ThreadLocal} instance
      *                    when a {@link ThreadLocal} instance is already registered; otherwise, ignore.
-     * @return {@code true} if register the {@link ThreadLocal} instance and set {@code copier}, otherwise {@code false}
-     * @see #registerThreadLocal(ThreadLocal, TtlCopier)
+     * @return {@code true} if register the {@link ThreadLocal} instance and set {@code generator}, otherwise {@code false}
+     * @see #registerThreadLocal(ThreadLocal, UnaryOperator)
      */
     @SuppressWarnings("unchecked")
-    public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull TtlCopier<T> copier, boolean force) {
+    public static <T> boolean registerThreadLocal(@NonNull ThreadLocal<T> threadLocal, @NonNull UnaryOperator<T> generator, boolean force) {
         if (threadLocal instanceof TransmittableThreadLocal) {
             logger.warning("register a TransmittableThreadLocal instance, this is unnecessary!");
             return true;
@@ -106,8 +106,8 @@ public final class ThreadLocalTransmitRegistry {
         synchronized (threadLocalHolderUpdateLock) {
             if (!force && threadLocalHolder.containsKey(threadLocal)) return false;
 
-            WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
-            newHolder.put((ThreadLocal<Object>) threadLocal, (TtlCopier<Object>) copier);
+            WeakHashMap<ThreadLocal<Object>, UnaryOperator<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
+            newHolder.put((ThreadLocal<Object>) threadLocal, (UnaryOperator<Object>) generator);
             threadLocalHolder = newHolder;
             return true;
         }
@@ -119,7 +119,7 @@ public final class ThreadLocalTransmitRegistry {
      * <p>
      * If the {@link ThreadLocal} instance is {@link TransmittableThreadLocal} just ignores and return {@code true}.
      *
-     * @see #registerThreadLocal(ThreadLocal, TtlCopier)
+     * @see #registerThreadLocal(ThreadLocal, UnaryOperator)
      */
     public static <T> boolean unregisterThreadLocal(@NonNull ThreadLocal<T> threadLocal) {
         if (threadLocal instanceof TransmittableThreadLocal) {
@@ -130,7 +130,7 @@ public final class ThreadLocalTransmitRegistry {
         synchronized (threadLocalHolderUpdateLock) {
             if (!threadLocalHolder.containsKey(threadLocal)) return false;
 
-            WeakHashMap<ThreadLocal<Object>, TtlCopier<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
+            WeakHashMap<ThreadLocal<Object>, UnaryOperator<Object>> newHolder = new WeakHashMap<>(threadLocalHolder);
             newHolder.remove(threadLocal);
             threadLocalHolder = newHolder;
             return true;
@@ -145,11 +145,11 @@ public final class ThreadLocalTransmitRegistry {
         @Override
         public HashMap<ThreadLocal<Object>, Object> capture() {
             final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
-            for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
+            for (Map.Entry<ThreadLocal<Object>, UnaryOperator<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
-                final TtlCopier<Object> copier = entry.getValue();
+                final UnaryOperator<Object> generator = entry.getValue();
 
-                threadLocal2Value.put(threadLocal, copier.copy(threadLocal.get()));
+                threadLocal2Value.put(threadLocal, generator.apply(threadLocal.get()));
             }
             return threadLocal2Value;
         }
@@ -176,7 +176,7 @@ public final class ThreadLocalTransmitRegistry {
         public HashMap<ThreadLocal<Object>, Object> clear() {
             final HashMap<ThreadLocal<Object>, Object> threadLocal2Value = newHashMap(threadLocalHolder.size());
 
-            for (Map.Entry<ThreadLocal<Object>, TtlCopier<Object>> entry : threadLocalHolder.entrySet()) {
+            for (Map.Entry<ThreadLocal<Object>, UnaryOperator<Object>> entry : threadLocalHolder.entrySet()) {
                 final ThreadLocal<Object> threadLocal = entry.getKey();
                 threadLocal2Value.put(threadLocal, threadLocalClearMark);
             }

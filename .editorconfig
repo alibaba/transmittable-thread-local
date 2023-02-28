@@ -15,6 +15,9 @@ indent_style = tab
 [*.yml]
 indent_size = 2
 
+[*.java]
+ij_java_wrap_long_lines = false
+
 [*.{md,mkd,markdown}]
 indent_size = 4
 trim_trailing_whitespace = false
