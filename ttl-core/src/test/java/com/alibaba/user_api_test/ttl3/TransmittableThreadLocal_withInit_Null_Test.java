@@ -21,43 +21,43 @@ public class TransmittableThreadLocal_withInit_Null_Test {
     }
 
     @Test
-    public void test_null__withInitialAndCopier_2() {
+    public void test_null__withInitialAndGenerator_2() {
         try {
-            TransmittableThreadLocal.<String>withInitialAndCopier(null, null);
+            TransmittableThreadLocal.<String>withInitialAndGenerator(null, null);
             fail();
         } catch (NullPointerException e) {
             assertEquals("supplier is null", e.getMessage());
         }
 
         try {
-            TransmittableThreadLocal.withInitialAndCopier((Supplier<String>) () -> null, null);
+            TransmittableThreadLocal.withInitialAndGenerator((Supplier<String>) () -> null, null);
             fail();
         } catch (NullPointerException e) {
-            assertEquals("ttl copier is null", e.getMessage());
+            assertEquals("value generator is null", e.getMessage());
         }
     }
 
     @Test
-    public void test_null__withInitialAndCopier_3() {
+    public void test_null__withInitialAndGenerator_3() {
         try {
-            TransmittableThreadLocal.<String>withInitialAndCopier(null, null, null);
+            TransmittableThreadLocal.<String>withInitialAndGenerator(null, null, null);
             fail();
         } catch (NullPointerException e) {
             assertEquals("supplier is null", e.getMessage());
         }
 
         try {
-            TransmittableThreadLocal.withInitialAndCopier((Supplier<String>) () -> null, null, null);
+            TransmittableThreadLocal.withInitialAndGenerator((Supplier<String>) () -> null, null, null);
             fail();
         } catch (NullPointerException e) {
-            assertEquals("ttl copier for child value is null", e.getMessage());
+            assertEquals("value generator for child value is null", e.getMessage());
         }
 
         try {
-            TransmittableThreadLocal.withInitialAndCopier((Supplier<String>) () -> null, parentValue -> null, null);
+            TransmittableThreadLocal.withInitialAndGenerator((Supplier<String>) () -> null, parentValue -> null, null);
             fail();
         } catch (NullPointerException e) {
-            assertEquals("ttl copier for copy value is null", e.getMessage());
+            assertEquals("value generator for transmittee value is null", e.getMessage());
         }
     }
 }
