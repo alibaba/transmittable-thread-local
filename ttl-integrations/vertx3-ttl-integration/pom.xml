@@ -34,8 +34,8 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<ciManagement>
-		<system>travis-ci</system>
-		<url>https://travis-ci.org/github/alibaba/transmittable-thread-local</url>
+		<system>AppVeyor</system>
+		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
 	</ciManagement>
 
 	<properties>

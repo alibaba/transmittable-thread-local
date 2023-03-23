@@ -39,6 +39,20 @@
 		<name>Alibaba</name>
 		<url>https://www.alibaba.com</url>
 	</organization>
+	<developers>
+		<developer>
+			<name>Jerry Lee</name>
+			<id>oldratlee</id>
+			<email>oldratlee(AT)gmail(DOT)com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<url>https://github.com/oldratlee</url>
+			<organization>Alibaba</organization>
+			<organizationUrl>https://www.alibaba.com</organizationUrl>
+		</developer>
+	</developers>
 
 	<properties>
 		<jacoco.skip>true</jacoco.skip>
