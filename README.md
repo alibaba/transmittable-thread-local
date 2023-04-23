@@ -1,4 +1,4 @@
-# <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
+# <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/233595946-4493119e-4e0c-4081-a382-0a20731c578e.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 > 🚧 这个分支是`TransmittableThreadLocal(TTL) v3`，在开发中还没有发布。  
 > `v3`的版本说明、工作项列表及其进展，参见 [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432)。
@@ -51,7 +51,7 @@
 - [🗿 更多文档](#-%E6%9B%B4%E5%A4%9A%E6%96%87%E6%A1%A3)
 - [📚 相关资料](#-%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99)
     - [JDK Core Classes](#jdk-core-classes)
-- [💝 Who used](#-who-used)
+- [💗 Who Used](#-who-used)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -216,7 +216,7 @@ String value = context.get();
 
 #### 整个过程的完整时序图
 
-[![时序图](docs/TransmittableThreadLocal-sequence-diagram.png)](#dummy)
+[![时序图](https://user-images.githubusercontent.com/1063891/233595980-ef7f1f8b-36cd-45b3-b55b-45f7b3d1c94f.png)](#dummy)
 
 ### 2.2 修饰线程池
 
@@ -499,7 +499,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-# 💝 Who used
+# 💗 Who Used
 
 使用了`TTL`的一部分开源项目：
 
@@ -512,7 +512,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       一款功能强大、配置灵活、带有全链路异常回调、内存优化、异常状态管理于一身的高性能异步编排框架。为企业提供在复杂应用场景下动态任务编排的能力。 针对于复杂场景下，异步线程复杂性、任务依赖性、异常状态难控制性
     - [`dromara/dynamic-tp` ![](https://img.shields.io/github/stars/dromara/dynamic-tp.svg?style=social&label=Star)](https://github.com/dromara/dynamic-tp) [![star](https://gitee.com/dromara/dynamic-tp/badge/star.svg?theme=gray)](https://gitee.com/dromara/dynamic-tp)  
       轻量级动态线程池，内置监控告警功能，支持线程池上下文传递，基于主流配置中心（已支持Nacos、Apollo，Zookeeper，可通过SPI自定义实现）
-    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/magestack/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/magestack/hippo4j)  
+    - [`opengoofy/hippo4j` ![](https://img.shields.io/github/stars/opengoofy/hippo4j.svg?style=social&label=Star)](https://github.com/opengoofy/hippo4j) [![star](https://gitee.com/opengoofy/hippo4j/badge/star.svg?theme=gray)](https://gitee.com/magestack/hippo4j)  
       动态线程池框架，附带监控报警功能，支持 JDK、Tomcat、Jetty、Undertow 线程池；Apache RocketMQ、Dubbo、RabbitMQ、Hystrix 消费等线程池。内置两种使用模式：轻量级依赖配置中心以及无中间件依赖版本
     - [`siaorg/sia-gateway` ![](https://img.shields.io/github/stars/siaorg/sia-gateway.svg?style=social&label=Star)](https://github.com/siaorg/sia-gateway)  
       微服务路由网关（zuul-plus）
@@ -533,10 +533,14 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported
     - [`sagframe/sagacity-sqltoy` ![](https://img.shields.io/github/stars/sagframe/sagacity-sqltoy.svg?style=social&label=Star)](https://github.com/sagframe/sagacity-sqltoy)  
       Java真正智慧的ORM框架
+    - [`dromara/stream-query` ![](https://img.shields.io/github/stars/dromara/stream-query.svg?style=social&label=Star)](https://github.com/dromara/stream-query) [![star](https://gitee.com/dromara/stream-query/badge/star.svg?theme=gray)](https://gitee.com/dromara/stream-query)  
+      允许完全摆脱Mapper的mybatis-plus体验；可以使用类似“工具类”这样的静态函数进行数据库操作
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
+    - [`galaxy-data-cn/chitu-sdp` ![](https://img.shields.io/github/stars/galaxy-data-cn/chitu-sdp.svg?style=social&label=Star)](https://github.com/galaxy-data-cn/chitu-sdp)  
+      基于 Apache Flink 构建的企业级、一站式、高性能、低门槛大数据实时计算平台，广泛适用于流式数据应用开发场景
     - [`didi/ALITA` ![](https://img.shields.io/github/stars/didi/ALITA.svg?style=social&label=Star)](https://github.com/didi/ALITA)  
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
@@ -569,8 +573,10 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
       JooLun微信商城
+    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk) [![star](https://gitee.com/hummercloud/HummerRisk/badge/star.svg?theme=gray)](https://gitee.com/hummercloud/HummerRisk)  
+      云原生安全平台，包括混合云安全治理和容器云安全检测
     - [`XiaoMi/mone` ![](https://img.shields.io/github/stars/XiaoMi/mone.svg?style=social&label=Star)](https://github.com/XiaoMi/mone)  
-      Mone以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
+      `Mone`以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  

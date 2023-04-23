@@ -1,4 +1,4 @@
-# <div align="center"><a href="#dummy"><img src="docs/logo-blue.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
+# <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/233595946-4493119e-4e0c-4081-a382-0a20731c578e.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 > 🚧 This branch is `TransmittableThreadLocal(TTL) v3`, which is in development and has not been released yet.  
 > See [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432) for the `v3` notes, work item list and its progress.
@@ -47,7 +47,7 @@
 - [🗿 More Documentation](#-more-documentation)
 - [📚 Related Resources](#-related-resources)
     - [JDK Core Classes](#jdk-core-classes)
-- [💝 Who used](#-who-used)
+- [💗 Who Used](#-who-used)
 - [👷 Contributors](#-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -351,7 +351,7 @@ mvn install
 - [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
 - [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
 
-# 💝 Who used
+# 💗 Who Used
 
 Some open-source projects used `TTL`:
 
@@ -385,10 +385,14 @@ Some open-source projects used `TTL`:
       The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported
     - [`sagframe/sagacity-sqltoy` ![](https://img.shields.io/github/stars/sagframe/sagacity-sqltoy.svg?style=social&label=Star)](https://github.com/sagframe/sagacity-sqltoy)  
       Java真正智慧的ORM框架
+    - [`dromara/stream-query` ![](https://img.shields.io/github/stars/dromara/stream-query.svg?style=social&label=Star)](https://github.com/dromara/stream-query) [![star](https://gitee.com/dromara/stream-query/badge/star.svg?theme=gray)](https://gitee.com/dromara/stream-query)  
+      允许完全摆脱Mapper的mybatis-plus体验；可以使用类似“工具类”这样的静态函数进行数据库操作
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
+    - [`galaxy-data-cn/chitu-sdp` ![](https://img.shields.io/github/stars/galaxy-data-cn/chitu-sdp.svg?style=social&label=Star)](https://github.com/galaxy-data-cn/chitu-sdp)  
+      基于 Apache Flink 构建的企业级、一站式、高性能、低门槛大数据实时计算平台，广泛适用于流式数据应用开发场景
     - [`didi/ALITA` ![](https://img.shields.io/github/stars/didi/ALITA.svg?style=social&label=Star)](https://github.com/didi/ALITA)  
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
@@ -421,8 +425,10 @@ Some open-source projects used `TTL`:
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
       JooLun微信商城
+    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk) [![star](https://gitee.com/hummercloud/HummerRisk/badge/star.svg?theme=gray)](https://gitee.com/hummercloud/HummerRisk)  
+      云原生安全平台，包括混合云安全治理和容器云安全检测
     - [`XiaoMi/mone` ![](https://img.shields.io/github/stars/XiaoMi/mone.svg?style=social&label=Star)](https://github.com/XiaoMi/mone)  
-      Mone以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
+      `Mone`以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
     - [`yangzongzhuan/RuoYi-Cloud` ![](https://img.shields.io/github/stars/yangzongzhuan/RuoYi-Cloud.svg?style=social&label=Star)](https://github.com/yangzongzhuan/RuoYi-Cloud) [![star](https://gitee.com/y_project/RuoYi-Cloud/badge/star.svg?theme=gray)](https://gitee.com/y_project/RuoYi-Cloud)  
       基于Spring Boot、Spring Cloud & Alibaba的分布式微服务架构权限管理系统
     - [`somowhere/albedo` ![](https://img.shields.io/github/stars/somowhere/albedo.svg?style=social&label=Star)](https://github.com/somowhere/albedo) [![star](https://gitee.com/somowhere/albedo/badge/star.svg?theme=gray)](https://gitee.com/somowhere/albedo)  
