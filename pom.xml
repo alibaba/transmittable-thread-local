@@ -91,7 +91,7 @@
 		<slf4j.version>2.0.3</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.2</junit5.version>
+		<junit5.version>5.9.3</junit5.version>
 		<kotest.version>5.5.5</kotest.version>
 
 		<!--
