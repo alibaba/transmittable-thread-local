@@ -92,7 +92,7 @@
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.9.3</junit5.version>
-		<kotest.version>5.5.5</kotest.version>
+		<kotest.version>5.6.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -450,7 +450,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
@@ -496,7 +496,7 @@
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
 					<artifactId>git-commit-id-maven-plugin</artifactId>
-					<version>5.0.0</version>
+					<version>6.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
