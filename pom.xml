@@ -8,8 +8,8 @@
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>
-		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware,
-		provide an enhanced InheritableThreadLocal that transmits values between threads even using thread pooling components.
+		📌 The missing Java™ std lib(simple &amp; 0-dependency) for framework/middleware, provide an enhanced
+		InheritableThreadLocal that transmits values between threads even using thread pooling components.
 	</description>
 	<url>https://github.com/alibaba/transmittable-thread-local</url>
 	<inceptionYear>2013</inceptionYear>
@@ -75,7 +75,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- overridden by submodule that need skip deploy -->
 		<maven.deploy.skip>false</maven.deploy.skip>
-		<javadoc.ttl.base.link>https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}</javadoc.ttl.base.link>
+		<javadoc.ttl.base.link>
+			https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}
+		</javadoc.ttl.base.link>
 
 		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
@@ -102,7 +104,8 @@
 		-->
 		<ttl.test.logger.level>warn</ttl.test.logger.level> <!-- overridden by maven -D options -->
 		<argLine.slf4j.simple.logger.default.d.options>
-			-Dorg.slf4j.simpleLogger.logFile=System.err -Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
+			-Dorg.slf4j.simpleLogger.logFile=System.err
+			-Dorg.slf4j.simpleLogger.defaultLogLevel=${ttl.test.logger.level}
 		</argLine.slf4j.simple.logger.default.d.options>
 		<argLine.slf4j.simple.logger.extra.d.options/> <!-- overridden by maven -D options -->
 		<argLine.slf4j.simple.logger.d.options>
@@ -163,6 +166,11 @@
 			<artifactId>kotest-property-jvm</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.mockk</groupId>
+			<artifactId>mockk-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!--
 			Executing JUnit 4 and JUnit 5 tests in a same build
 				https://stackoverflow.com/a/47158584/922688
@@ -183,6 +191,37 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- bom -->
+			<dependency>
+				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-parent</artifactId>
+				<version>1.14.4</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kotlinx-coroutines-bom</artifactId>
+				<version>${kotlin.coroutine.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 			<!--
 				QA libs
 				make qa libs optional, 0-dependency and smaller deployment
@@ -282,36 +321,11 @@
 				<version>${kotest.version}</version>
 				<scope>test</scope>
 			</dependency>
-
-			<!-- bom -->
 			<dependency>
-				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
-				<groupId>net.bytebuddy</groupId>
-				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.14.4</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-bom</artifactId>
-				<version>${kotlin.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains.kotlinx</groupId>
-				<artifactId>kotlinx-coroutines-bom</artifactId>
-				<version>${kotlin.coroutine.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit5.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>io.mockk</groupId>
+				<artifactId>mockk-jvm</artifactId>
+				<version>1.13.5</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -445,7 +459,9 @@
 					<version>3.4.1</version>
 					<configuration>
 						<shadeSourcesContent>true</shadeSourcesContent>
-						<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+						<dependencyReducedPomLocation>
+							${project.build.directory}/dependency-reduced-pom.xml
+						</dependencyReducedPomLocation>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -603,8 +619,11 @@
 					Using the linkoffline Option
 					https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html#GUID-51213F2C-6E01-4A03-A82A-17428A258A0F
 				-->
-				<javadoc.package.list.dir>${maven.multiModuleProjectDirectory}/src/package-list</javadoc.package.list.dir>
-				<javadoc.extra.offlineLinks>-quiet</javadoc.extra.offlineLinks> <!-- dummy/repeated value, overridden by submodule -->
+				<javadoc.package.list.dir>
+					${maven.multiModuleProjectDirectory}/src/package-list
+				</javadoc.package.list.dir>
+				<!-- dummy/repeated value, overridden by submodule -->
+				<javadoc.extra.offlineLinks>-quiet</javadoc.extra.offlineLinks>
 			</properties>
 			<build>
 				<plugins>
@@ -638,15 +657,21 @@
 									<location>${javadoc.package.list.dir}/java/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://www.javadoc.io/doc/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/</url>
+									<url>
+										https://www.javadoc.io/doc/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/
+									</url>
 									<location>${javadoc.package.list.dir}/spotbugs-annotations/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/</url>
+									<url>
+										https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/
+									</url>
 									<location>${javadoc.package.list.dir}/jsr305/</location>
 								</offlineLink>
 								<offlineLink>
-									<url>https://www.javadoc.io/doc/org.jetbrains/annotations/${jetbrains.annotations.version}/</url>
+									<url>
+										https://www.javadoc.io/doc/org.jetbrains/annotations/${jetbrains.annotations.version}/
+									</url>
 									<location>${javadoc.package.list.dir}/jetbrains-annotations/</location>
 								</offlineLink>
 							</offlineLinks>
