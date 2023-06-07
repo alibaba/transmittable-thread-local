@@ -83,11 +83,11 @@
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
 
-		<kotlin.version>1.8.21</kotlin.version>
+		<kotlin.version>1.8.22</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.7.1</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
-		<dokka.version>1.8.10</dokka.version>
+		<dokka.version>1.8.20</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
 		<slf4j.version>2.0.3</slf4j.version>
@@ -196,7 +196,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.14.4</version>
+				<version>1.14.5</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -448,7 +448,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -561,7 +561,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.15.0</version>
+					<version>2.16.0</version>
 					<configuration>
 						<rulesUri>file://${maven.multiModuleProjectDirectory}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
