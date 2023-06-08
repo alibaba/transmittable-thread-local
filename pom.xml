@@ -83,7 +83,7 @@
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
 
-		<kotlin.version>1.8.21</kotlin.version>
+		<kotlin.version>1.8.22</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.7.1</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
