@@ -85,15 +85,15 @@
 
 		<kotlin.version>1.9.10</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<kotlin.coroutine.version>1.7.2</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
 		<dokka.version>1.9.0</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
-		<slf4j.version>2.0.3</slf4j.version>
+		<slf4j.version>2.0.7</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.3</junit5.version>
+		<junit5.version>5.10.0</junit5.version>
 		<kotest.version>5.6.2</kotest.version>
 
 		<!--
@@ -807,6 +807,13 @@
 		</profile>
 		<profile>
 			<id>gen-code-cov</id>
+			<activation>
+				<property>
+					<!-- https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables -->
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>

@@ -320,6 +320,13 @@
 		</profile>
 		<profile>
 			<id>gen-code-cov</id>
+			<activation>
+				<property>
+					<!-- https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables -->
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
 			<build>
 				<plugins>
 					<plugin>
