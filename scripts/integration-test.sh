@@ -4,25 +4,24 @@ cd "$(dirname "$(readlink -f "$0")")"
 
 BASH_BUDDY_ROOT="$(readlink -f bash-buddy)"
 readonly BASH_BUDDY_ROOT
-
 source "$BASH_BUDDY_ROOT/lib/trap_error_info.sh"
 source "$BASH_BUDDY_ROOT/lib/common_utils.sh"
+source "$BASH_BUDDY_ROOT/lib/java_utils.sh"
+source "$BASH_BUDDY_ROOT/lib/maven_utils.sh"
 
 ################################################################################
-# prepare
+# ci build logic
 ################################################################################
 
 readonly default_build_jdk_version=11
 # shellcheck disable=SC2034
-readonly PREPARE_JDKS_INSTALL_BY_SDKMAN=(
+readonly JDK_VERSIONS=(
   8
   "$default_build_jdk_version"
   17
+  20
+  21
 )
-
-source "$BASH_BUDDY_ROOT/lib/prepare_jdks.sh"
-
-source "$BASH_BUDDY_ROOT/lib/java_build_utils.sh"
 
 # here use `install` and `-D performRelease` intended
 #   to check release operations.
@@ -31,40 +30,44 @@ source "$BASH_BUDDY_ROOT/lib/java_build_utils.sh"
 #   https://stackoverflow.com/questions/25201430
 #
 # shellcheck disable=SC2034
-JVB_MVN_OPTS=(
-  "${JVB_DEFAULT_MVN_OPTS[@]}"
+readonly MVU_MVN_OPTS=(
+  "${MVU_DEFAULT_MVN_OPTS[@]}"
   -DperformRelease -P'!gen-sign'
+  # Maven Plugin Validation
+  # https://maven.apache.org/guides/plugins/validation/index.html
+  -Dmaven.plugin.validation=NONE
+  ${CI_MORE_MVN_OPTS:+${CI_MORE_MVN_OPTS}}
 )
 
-################################################################################
-# ci build logic
-################################################################################
-
-PROJECT_ROOT_DIR="$(readlink -f ..)"
-readonly PROJECT_ROOT_DIR
-cd "$PROJECT_ROOT_DIR"
+cd ..
 
 ########################################
-# do build and test by default version jdk
+# build and test by default version jdk
 ########################################
 
-prepare_jdks::switch_to_jdk "$default_build_jdk_version"
+jvu::switch_to_jdk "$default_build_jdk_version"
 
-cu::head_line_echo "build and test with Java: $JAVA_HOME"
-jvb::mvn_cmd clean install
+cu::head_line_echo "build and test with Java $default_build_jdk_version: $JAVA_HOME"
+mvu::mvn_cmd clean install
 
 ########################################
 # test by multi-version jdk
 ########################################
-for jdk in "${PREPARE_JDKS_INSTALL_BY_SDKMAN[@]}"; do
-  prepare_jdks::switch_to_jdk "$jdk"
+
+# about CI env var
+#   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${CI:-}" = true ]; then
+  readonly CI_MORE_BEGIN_OPTS=jacoco:prepare-agent CI_MORE_END_OPTS=jacoco:report
+fi
+
+for jdk_version in "${JDK_VERSIONS[@]}"; do
+  jvu::switch_to_jdk "$jdk_version"
 
   # just test without build
-
-  # default jdk already tested above
-  if [ "$jdk" != "$default_build_jdk_version" ]; then
+  if [ "$jdk_version" = "$default_build_jdk_version" ]; then
+    # default jdk already tested above
     cu::head_line_echo "test with Java: $JAVA_HOME"
-    jvb::mvn_cmd surefire:test -Denforcer.skip
+    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} surefire:test -Denforcer.skip ${CI_MORE_END_OPTS:-}
   fi
 
   (
@@ -72,17 +75,26 @@ for jdk in "${PREPARE_JDKS_INSTALL_BY_SDKMAN[@]}"; do
     cu::head_line_echo "test with TTL Agent and Java: $JAVA_HOME"
 
     cu::blue_echo 'Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool, Timer/TimerTask'
-    jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
-      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
+    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} \
+      surefire:test -Denforcer.skip \
+      -Penable-ttl-agent-for-test \
+      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true' \
+      ${CI_MORE_END_OPTS:-}
 
     cu::blue_echo 'Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement'
-    jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} \
+      surefire:test -Denforcer.skip \
+      -Penable-ttl-agent-for-test \
       -Dttl.agent.extra.args='ttl.agent.disable.inheritable.for.thread.pool:true' \
-      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-disable-inheritable=true'
+      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-disable-inheritable=true' \
+      ${CI_MORE_END_OPTS:-}
 
     cu::blue_echo 'Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task"'
-    jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} \
+      surefire:test -Denforcer.skip \
+      -Penable-ttl-agent-for-test \
       -Dttl.agent.extra.args='ttl.agent.enable.timer.task:true' \
-      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
+      -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true' \
+      ${CI_MORE_END_OPTS:-}
   )
 done
