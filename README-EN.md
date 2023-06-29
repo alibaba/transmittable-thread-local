@@ -51,7 +51,7 @@
 # 🔧 Functions
 
 👉 `TransmittableThreadLocal`(`TTL`): The missing Java™ std lib(simple & 0-dependency) for framework/middleware,
-provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components. Support `Java 6~19`.
+provide an enhanced `InheritableThreadLocal` that transmits values between threads even using thread pooling components. Support `Java 6~21`.
 
 Class [`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html) in `JDK`
 can transmit value to child thread from parent thread.
