@@ -95,17 +95,17 @@
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<spotbugs.annotations.version>4.7.2</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 
-		<kotlin.version>1.7.20</kotlin.version>
+		<kotlin.version>1.8.22</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<kotlin.coroutine.version>1.6.4</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.7.2</kotlin.coroutine.version>
 
 		<slf4j.version>1.7.36</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.9.1</junit5.version>
-		<kotest.version>5.5.1</kotest.version>
+		<junit5.version>5.9.3</junit5.version>
+		<kotest.version>5.6.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -201,6 +201,11 @@
 			<artifactId>kotest-property-jvm</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.mockk</groupId>
+			<artifactId>mockk-jvm</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!--
 			Executing JUnit 4 and JUnit 5 tests in a same build
 				https://stackoverflow.com/a/47158584/922688
@@ -221,6 +226,37 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- bom -->
+			<dependency>
+				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-parent</artifactId>
+				<version>1.14.5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-bom</artifactId>
+				<version>${kotlin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kotlinx-coroutines-bom</artifactId>
+				<version>${kotlin.coroutine.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 			<!--
 				QA libs
 				make qa libs optional, 0-dependency and smaller deployment
@@ -247,7 +283,7 @@
 				<!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
 				<groupId>org.jetbrains</groupId>
 				<artifactId>annotations</artifactId>
-				<version>23.0.0</version>
+				<version>24.0.1</version>
 				<optional>true</optional>
 			</dependency>
 
@@ -289,7 +325,7 @@
 			<dependency>
 				<groupId>io.github.microutils</groupId>
 				<artifactId>kotlin-logging-jvm</artifactId>
-				<version>3.0.0</version>
+				<version>3.0.5</version>
 			</dependency>
 
 			<!--
@@ -320,36 +356,11 @@
 				<version>${kotest.version}</version>
 				<scope>test</scope>
 			</dependency>
-
-			<!-- bom -->
 			<dependency>
-				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
-				<groupId>net.bytebuddy</groupId>
-				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.12.18</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-bom</artifactId>
-				<version>${kotlin.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jetbrains.kotlinx</groupId>
-				<artifactId>kotlinx-coroutines-bom</artifactId>
-				<version>${kotlin.coroutine.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit5.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>io.mockk</groupId>
+				<artifactId>mockk-jvm</artifactId>
+				<version>1.13.5</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -511,11 +522,11 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jetbrains.kotlin</groupId>
@@ -524,11 +535,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
+					<version>3.11.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M7</version>
+					<version>3.1.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -536,19 +547,19 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
@@ -556,20 +567,20 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
 					<artifactId>git-commit-id-maven-plugin</artifactId>
-					<version>5.0.0</version>
+					<version>6.0.0</version>
 				</plugin>
 				<!--
 					https://spotbugs.github.io/
@@ -579,12 +590,12 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.7.2.1</version>
+					<version>4.7.3.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version>
+					<version>0.8.10</version>
 				</plugin>
 				<plugin>
 					<!--
@@ -623,7 +634,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.12.0</version>
+					<version>2.16.0</version>
 					<configuration>
 						<rulesUri>file://${project.basedir}/src/versions-rules.xml</rulesUri>
 						<generateBackupPoms>false</generateBackupPoms>
