@@ -49,5 +49,9 @@ public class UtilsTest {
 
         assertTrue(isClassAtPackageJavaUtil("java.util.PriorityQueue"));
         assertFalse(isClassAtPackageJavaUtil("java.util.zip.ZipInputStream"));
+
+        assertTrue(isClassOrInnerClass(Map.class.getName(), Map.class.getName()));
+        assertTrue(isClassOrInnerClass(Map.Entry.class.getName(), Map.class.getName()));
+        assertTrue(isClassOrInnerClass(Map.Entry.class.getName(), Map.Entry.class.getName()));
     }
 }

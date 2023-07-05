@@ -146,16 +146,32 @@ public class Utils {
         return className.substring(0, idx);
     }
 
+    /**
+     * check the class at the package(not include sub-package).
+     */
     public static boolean isClassAtPackage(@NonNull String className, @NonNull String packageName) {
         return packageName.equals(getPackageName(className));
     }
 
+    /**
+     * check the class under the package or sub-package of the package.
+     */
     public static boolean isClassUnderPackage(@NonNull String className, @NonNull String packageName) {
         String packageOfClass = getPackageName(className);
         return packageOfClass.equals(packageName) || packageOfClass.startsWith(packageName + ".");
     }
 
+    /**
+     * check the class at the package {@code java.util}(not include sub-package).
+     */
     public static boolean isClassAtPackageJavaUtil(@NonNull String className) {
         return isClassAtPackage(className, "java.util");
+    }
+
+    /**
+     * check the class is the specified class or its inner class.
+     */
+    public static boolean isClassOrInnerClass(@NonNull String className, @NonNull String enclosingClassName) {
+        return className.equals(enclosingClassName) || className.startsWith(enclosingClassName + "$");
     }
 }

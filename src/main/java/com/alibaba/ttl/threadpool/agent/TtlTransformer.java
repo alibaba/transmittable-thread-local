@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.isClassOrInnerClass;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.isClassUnderPackage;
 
 /**
@@ -45,6 +46,19 @@ public class TtlTransformer implements ClassFileTransformer {
         }
     }
 
+    private static final String[] NO_TRANSFORM_PACKAGES_INCLUDING_SUB_PACKAGE = {
+            "com.alibaba.ttl",
+            "java.lang",
+    };
+    private static final String[] NO_TRANSFORM_ENCLOSING_CLASS_NAME = {
+            // work-around ClassCircularityError: https://github.com/alibaba/transmittable-thread-local/issues/399
+            "java.util.concurrent.ConcurrentHashMap",
+            "java.util.concurrent.ConcurrentSkipListMap",
+            "java.util.concurrent.ConcurrentSkipListSet",
+            "java.util.concurrent.CopyOnWriteArrayList",
+            "java.util.concurrent.CopyOnWriteArraySet",
+    };
+
     @Override
     public final byte[] transform(@Nullable final ClassLoader loader, @Nullable final String classFile, final Class<?> classBeingRedefined,
                                   final ProtectionDomain protectionDomain, @NonNull final byte[] classFileBuffer) {
@@ -53,8 +67,12 @@ public class TtlTransformer implements ClassFileTransformer {
             if (classFile == null) return NO_TRANSFORM;
 
             final String className = toClassName(classFile);
-            if (isClassUnderPackage(className, "com.alibaba.ttl")) return NO_TRANSFORM;
-            if (isClassUnderPackage(className, "java.lang")) return NO_TRANSFORM;
+            for (String packageName : NO_TRANSFORM_PACKAGES_INCLUDING_SUB_PACKAGE) {
+                if (isClassUnderPackage(className, packageName)) return NO_TRANSFORM;
+            }
+            for (String enclosingClassName : NO_TRANSFORM_ENCLOSING_CLASS_NAME) {
+                if (isClassOrInnerClass(className, enclosingClassName)) return NO_TRANSFORM;
+            }
 
             final ClassInfo classInfo = new ClassInfo(className, classFileBuffer, loader);
 
