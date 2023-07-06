@@ -1,14 +1,13 @@
 # <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/233595946-4493119e-4e0c-4081-a382-0a20731c578e.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
 <p align="center">
-<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=2.x&logo=github&logoColor=white" alt="Github Workflow Build Status"></a>
-<a href="https://ci.appveyor.com/project/oldratlee/transmittable-thread-local"><img src="https://img.shields.io/appveyor/ci/oldratlee/transmittable-thread-local/v2.14.3?logo=appveyor&logoColor=white" alt="Appveyor Build Status"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=2.x&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/strong_ci.yaml?branch=2.x&logo=github&logoColor=white&label=strong ci" alt="Strong CI"></a>
 <a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/v2.14.3"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
-<a href="https://codeclimate.com/github/alibaba/transmittable-thread-local/maintainability"><img src="https://img.shields.io/codeclimate/maintainability/alibaba/transmittable-thread-local?logo=codeclimate&logoColor=white" alt="Maintainability"></a>
-<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=openjdk&logoColor=white" alt="JDK support"></a>
+<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
-<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
-<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
+<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
@@ -16,7 +15,7 @@
 <a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/github/repo-size/alibaba/transmittable-thread-local" alt="GitHub repo size"></a>
-<a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready--to--code-green?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
+<a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
 
 

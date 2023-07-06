@@ -1,19 +1,19 @@
 # Quickstart for GitHub Actions
 # https://docs.github.com/en/actions/quickstart
 
-name: CI
-on: [ push, pull_request ]
+name: Fast CI
+on: [ push, pull_request, workflow_dispatch ]
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 5
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        java: [ 8, 11, 17, 19, 20, 21-ea ]
+        java: [ 8, 11, 17, 20, 21-ea ]
       fail-fast: false
       max-parallel: 64
-    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+    name: Fast Test on Java ${{ matrix.java }} OS ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
