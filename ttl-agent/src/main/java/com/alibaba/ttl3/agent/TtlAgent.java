@@ -14,6 +14,10 @@ import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * TTL Java Agent.
@@ -218,6 +222,8 @@ public final class TtlAgent implements TtlAgentStatus {
 
             final ClassFileTransformer transformer = new TtlTransformer(transformletList, isLogClassTransform());
             inst.addTransformer(transformer, true);
+
+            inst.retransformClasses(ThreadPoolExecutor.class, ScheduledThreadPoolExecutor.class, PriorityBlockingQueue.class, PriorityQueue.class);
             logger.info("[TtlAgent.premain] add Transformer " + transformer.getClass().getName() + " success");
 
             logger.info("[TtlAgent.premain] end");
