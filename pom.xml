@@ -97,15 +97,15 @@
 
         <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
 
-        <kotlin.version>1.8.22</kotlin.version>
+        <kotlin.version>1.9.10</kotlin.version>
         <kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-        <kotlin.coroutine.version>1.7.2</kotlin.coroutine.version>
+        <kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 
         <slf4j.version>1.7.36</slf4j.version>
 
         <!-- testing dependencies versions -->
-        <junit5.version>5.9.3</junit5.version>
-        <kotest.version>5.6.2</kotest.version>
+        <junit5.version>5.10.0</junit5.version>
+        <kotest.version>5.7.2</kotest.version>
 
         <!--
             slf4j simple logger configuration for test
@@ -231,7 +231,7 @@
                 <!-- https://github.com/raphw/byte-buddy/issues/1264 -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy-parent</artifactId>
-                <version>1.14.5</version>
+                <version>1.14.9</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -296,7 +296,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.12.0</version>
+                <version>3.13.0</version>
             </dependency>
 
             <dependency>
@@ -547,7 +547,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -555,7 +555,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -575,7 +575,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
@@ -590,7 +590,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.7.3.5</version>
+                    <version>4.7.3.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -772,13 +772,13 @@
                                 https://stackoverflow.com/questions/39616344
                             -->
                             <doclint>all,-missing</doclint>
+                            <overview>${project.basedir}/src/main/javadoc/overview.html</overview>
                             <!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
                             <excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
                             <sourceFileExcludes>
                                 <!-- exclude deprecated TtlEnhanced from javadoc -->
                                 <sourceFilesourceFileExclude>com/alibaba/ttl/TtlEnhanced.java</sourceFilesourceFileExclude>
                             </sourceFileExcludes>
-                            <isOffline>true</isOffline>
                             <offlineLinks>
                                 <!--
                                     Apache Maven Javadoc Plugin – Configuring links and offlineLinks Parameters
