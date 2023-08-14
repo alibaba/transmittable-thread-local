@@ -32,6 +32,7 @@ readonly default_jh_var_name="JAVA${default_build_jdk_version}_HOME"
 JVB_MVN_OPTS=(
   "${JVB_DEFAULT_MVN_OPTS[@]}"
   -DperformRelease -P'!gen-sign'
+  -Dmaven.plugin.validation=NONE
   ${CI_MORE_MVN_OPTS:+${CI_MORE_MVN_OPTS}}
 )
 
