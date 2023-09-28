@@ -7,7 +7,7 @@ jobs:
   test:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#choosing-github-hosted-runners
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     name: Strong Test by multiply java versions
 
     steps:
@@ -40,7 +40,7 @@ jobs:
       - name: setup Java 21
         uses: actions/setup-java@v3
         with:
-          java-version: 21-ea
+          java-version: 21
           distribution: zulu
 
       - name: run integration test
