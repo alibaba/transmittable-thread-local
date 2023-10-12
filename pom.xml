@@ -79,7 +79,7 @@
 			https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}
 		</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.0</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
 
@@ -87,14 +87,14 @@
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
-		<dokka.version>1.9.0</dokka.version>
+		<dokka.version>1.9.10</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
 		<slf4j.version>2.0.7</slf4j.version>
 
 		<!-- testing dependencies versions -->
 		<junit5.version>5.10.0</junit5.version>
-		<kotest.version>5.6.2</kotest.version>
+		<kotest.version>5.7.2</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -522,7 +522,7 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.10</version>
+					<version>0.8.11</version>
 				</plugin>
 				<plugin>
 					<!--
