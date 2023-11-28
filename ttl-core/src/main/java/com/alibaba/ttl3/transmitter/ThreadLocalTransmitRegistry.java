@@ -2,6 +2,7 @@ package com.alibaba.ttl3.transmitter;
 
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -199,6 +200,7 @@ public final class ThreadLocalTransmitRegistry {
         TransmitteeRegistry.registerTransmittee(threadLocalTransmittee);
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private ThreadLocalTransmitRegistry() {
         throw new InstantiationError("Must not instantiate this class");
     }

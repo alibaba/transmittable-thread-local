@@ -2,6 +2,7 @@ package com.alibaba.ttl3.agent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.*;
 
@@ -126,6 +127,7 @@ final class TtlAgentHelper {
     }
 
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlAgentHelper() {
         throw new InstantiationError("Must not instantiate this class");
     }

@@ -269,6 +269,7 @@ public final class Transmitter {
         return compositeCallback.unregisterCallback(callback);
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private Transmitter() {
         throw new InstantiationError("Must not instantiate this class");
     }

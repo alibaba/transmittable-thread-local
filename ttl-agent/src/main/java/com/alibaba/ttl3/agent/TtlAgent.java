@@ -8,6 +8,7 @@ import com.alibaba.ttl3.agent.transformlet.internal.PriorityBlockingQueueTtlTran
 import com.alibaba.ttl3.agent.transformlet.internal.TimerTaskTtlTransformlet;
 import com.alibaba.ttl3.executor.TtlExecutors;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -365,6 +366,7 @@ public final class TtlAgent implements TtlAgentStatus {
     }
 
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlAgent() {
         throw new InstantiationError("Must not instantiate this class");
     }

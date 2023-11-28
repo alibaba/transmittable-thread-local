@@ -7,6 +7,7 @@ import com.alibaba.ttl.threadpool.agent.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.*;
 
 import java.lang.reflect.Modifier;
@@ -207,6 +208,7 @@ public final class TtlTransformletHelper {
         return isClassAtPackage(className, "java.util");
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlTransformletHelper() {
         throw new InstantiationError("Must not instantiate this class");
     }
