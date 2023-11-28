@@ -6,6 +6,7 @@ import com.alibaba.ttl3.spi.TtlEnhanced;
 import com.alibaba.ttl3.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Comparator;
@@ -330,6 +331,7 @@ public final class TtlExecutors {
         return ((TtlUnwrapComparator<Runnable>) comparator).unwrap();
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlExecutors() {
         throw new InstantiationError("Must not instantiate this class");
     }

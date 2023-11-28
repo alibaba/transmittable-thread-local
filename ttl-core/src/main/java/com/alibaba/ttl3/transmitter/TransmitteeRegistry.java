@@ -2,6 +2,7 @@ package com.alibaba.ttl3.transmitter;
 
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Transmittee(aka {@code ThreadLocal}) Integration,
@@ -50,6 +51,7 @@ public final class TransmitteeRegistry {
         return Transmitter.compositeCrrTransmit.unregisterCrrTransmit(transmittee);
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TransmitteeRegistry() {
         throw new InstantiationError("Must not instantiate this class");
     }

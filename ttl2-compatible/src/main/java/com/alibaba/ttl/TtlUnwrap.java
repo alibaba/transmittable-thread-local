@@ -2,6 +2,7 @@ package com.alibaba.ttl;
 
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -64,6 +65,7 @@ public final class TtlUnwrap {
         return obj instanceof TtlWrapper;
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlUnwrap() {
         throw new InstantiationError("Must not instantiate this class");
     }
