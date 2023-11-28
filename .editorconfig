@@ -5,20 +5,21 @@ charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 tab_width = 4
+indent_size = 4
+ij_continuation_indent_size = 8
 indent_style = space
 trim_trailing_whitespace = true
 
 [*.xml]
-indent_size = 4
 indent_style = tab
 
-[*.yml]
+[*.{yml,yaml}]
 indent_size = 2
+ij_continuation_indent_size = 4
 
-[*.java]
+[*.{java,kt}]
 ij_java_wrap_long_lines = false
 
 [*.{md,mkd,markdown}]
-indent_size = 4
 trim_trailing_whitespace = false
 ij_markdown_wrap_text_if_long = false
