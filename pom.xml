@@ -517,7 +517,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.7.2.1</version>
+					<version>4.8.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
