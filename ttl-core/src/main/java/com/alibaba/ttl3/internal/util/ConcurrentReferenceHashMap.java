@@ -73,7 +73,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Juergen Hoeller
  */
 @SuppressWarnings("ALL")
-@SuppressFBWarnings("ALL")
+// Is there a class annotation in FindBugs to ignore all warning in a file
+// https://stackoverflow.com/questions/13398685
+@SuppressFBWarnings
 class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
