@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.alibaba.ttl3</groupId>
@@ -28,8 +28,8 @@
 		<url>https://github.com/alibaba/transmittable-thread-local</url>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
 		<system>GitHub Issues</system>
+		<url>https://github.com/alibaba/transmittable-thread-local/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>GitHub Actions</system>
@@ -79,11 +79,11 @@
 			https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}
 		</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.8.1</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
-		<kotlin.version>1.9.21</kotlin.version>
+		<kotlin.version>1.9.22</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
@@ -93,7 +93,7 @@
 		<slf4j.version>2.0.7</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.10.1</junit5.version>
+		<junit5.version>5.10.2</junit5.version>
 		<kotest.version>5.8.0</kotest.version>
 
 		<!--
@@ -196,7 +196,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.14.10</version>
+				<version>1.14.11</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -255,7 +255,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.29.2-GA</version>
+				<version>3.30.2-GA</version>
 				<optional>true</optional>
 			</dependency>
 			<dependency>
@@ -402,9 +402,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
-				official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
-			-->
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
@@ -415,6 +412,7 @@
 						</goals>
 						<configuration>
 							<rules>
+								<!-- official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html -->
 								<requireMavenVersion>
 									<version>3.3.9</version>
 								</requireMavenVersion>
@@ -441,11 +439,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>3.12.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -467,7 +465,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.2</version>
+					<version>3.6.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jetbrains.dokka</groupId>
@@ -514,7 +512,7 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>4.8.1.0</version>
+					<version>4.8.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -552,21 +550,10 @@
 					<artifactId>nexus-staging-maven-plugin</artifactId>
 					<version>1.6.13</version>
 				</plugin>
-				<plugin>
-					<!--
-						config example: https://github.com/mojohaus/versions-maven-plugin/issues/157#issuecomment-306041074
-					-->
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.16.2</version>
-					<configuration>
-						<rulesUri>file://${maven.multiModuleProjectDirectory}/src/versions-rules.xml</rulesUri>
-						<generateBackupPoms>false</generateBackupPoms>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>gen-src</id>
@@ -607,10 +594,10 @@
 
 					About package-list vs.element-list
 					- Can't link to JDK10 in Javadoc comments
-					  https://stackoverflow.com/a/49498219/922688
+						https://stackoverflow.com/a/49498219/922688
 					- Missing javadoc/package-list for release 5.1
-					  https://github.com/gradle/gradle/issues/8183
-					  https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
+						https://github.com/gradle/gradle/issues/8183
+						https://github.com/gradle/gradle/commit/5e88351dd456a5252d21f3a7ad25bff1b62a2fd2
 
 
 					Using the linkoffline Option
@@ -625,7 +612,6 @@
 					<plugin>
 						<!--
 							https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
-
 							https://docs.oracle.com/en/java/javase/21/javadoc/javadoc-command.html
 						-->
 						<artifactId>maven-javadoc-plugin</artifactId>
