@@ -34,10 +34,9 @@ jobs:
         run: rm -rf $HOME/.m2/repository/com/alibaba/{transmittable-thread-local,ttl}*
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          name: codecov-umbrella
-          token: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       # https://remarkablemark.org/blog/2017/10/12/check-git-dirty/
       - name: Check git dirty
