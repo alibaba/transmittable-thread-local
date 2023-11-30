@@ -20,6 +20,7 @@ readonly JDK_VERSIONS=(
   11
   "$default_build_jdk_version"
   21
+  22
 )
 
 # here use `install` and `-D performRelease` intended

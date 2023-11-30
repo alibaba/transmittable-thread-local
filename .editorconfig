@@ -4,22 +4,28 @@ root = true
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
-tab_width = 4
-indent_size = 4
-ij_continuation_indent_size = 8
+
+tab_width = 2
+indent_size = 2
+ij_continuation_indent_size = 4
 indent_style = space
 trim_trailing_whitespace = true
+
+ij_any_blank_lines_after_imports = 2
+ij_markdown_wrap_text_if_long = false
+
+
+[*.{java,kt}]
+indent_size = 4
+ij_continuation_indent_size = 8
+
+
+[*.{md,mkd,markdown}]
+indent_size = 4
+ij_continuation_indent_size = 8
+trim_trailing_whitespace = false
+
 
 [*.xml]
 indent_style = tab
 
-[*.{yml,yaml}]
-indent_size = 2
-ij_continuation_indent_size = 4
-
-[*.{java,kt}]
-ij_java_wrap_long_lines = false
-
-[*.{md,mkd,markdown}]
-trim_trailing_whitespace = false
-ij_markdown_wrap_text_if_long = false
