@@ -8,6 +8,7 @@ import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlPriorityBl
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlTimerTaskTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -230,6 +231,7 @@ public final class TtlAgent {
         return ret;
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlAgent() {
         throw new InstantiationError("Must not instantiate this class");
     }

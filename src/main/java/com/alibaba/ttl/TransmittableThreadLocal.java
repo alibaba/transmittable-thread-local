@@ -1083,6 +1083,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
 
         private static final TtlCopier<Object> shadowCopier = parentValue -> parentValue;
 
+        @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
         private Transmitter() {
             throw new InstantiationError("Must not instantiate this class");
         }

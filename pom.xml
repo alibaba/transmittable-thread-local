@@ -95,17 +95,17 @@
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
+        <spotbugs.annotations.version>4.8.2</spotbugs.annotations.version>
 
-        <kotlin.version>1.9.10</kotlin.version>
+        <kotlin.version>1.9.21</kotlin.version>
         <kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
         <kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 
         <slf4j.version>1.7.36</slf4j.version>
 
         <!-- testing dependencies versions -->
-        <junit5.version>5.10.0</junit5.version>
-        <kotest.version>5.7.2</kotest.version>
+        <junit5.version>5.10.1</junit5.version>
+        <kotest.version>5.8.0</kotest.version>
 
         <!--
             slf4j simple logger configuration for test
@@ -231,7 +231,7 @@
                 <!-- https://github.com/raphw/byte-buddy/issues/1264 -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy-parent</artifactId>
-                <version>1.14.9</version>
+                <version>1.14.10</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -283,7 +283,7 @@
                 <!-- https://www.jetbrains.com/help/idea/annotating-source-code.html -->
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>24.0.1</version>
+                <version>24.1.0</version>
                 <optional>true</optional>
             </dependency>
 
@@ -296,7 +296,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
             </dependency>
 
             <dependency>
@@ -359,7 +359,7 @@
             <dependency>
                 <groupId>io.mockk</groupId>
                 <artifactId>mockk-jvm</artifactId>
-                <version>1.13.5</version>
+                <version>1.13.7</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -522,7 +522,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -539,7 +539,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.2.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -555,7 +555,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -580,7 +580,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>6.0.0</version>
+                    <version>7.0.0</version>
                 </plugin>
                 <!--
                     https://spotbugs.github.io/
@@ -590,12 +590,12 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.7.3.6</version>
+                    <version>4.8.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.10</version>
+                    <version>0.8.11</version>
                 </plugin>
                 <plugin>
                     <!--
@@ -604,7 +604,7 @@
                     -->
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                     <configuration>
                         <executable>${java.home}/bin/java</executable>
                         <classpathScope>test</classpathScope>

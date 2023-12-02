@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.ForkJoinPool;
@@ -83,6 +84,7 @@ public final class TtlForkJoinPoolHelper {
         return ((DisableInheritableForkJoinWorkerThreadFactory) threadFactory).unwrap();
     }
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlForkJoinPoolHelper() {
         throw new InstantiationError("Must not instantiate this class");
     }

@@ -4,6 +4,7 @@ import com.alibaba.ttl.spi.TtlEnhanced;
 import com.alibaba.ttl.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.Contract;
 
 import java.util.function.*;
@@ -433,6 +434,7 @@ public final class TtlWrappers {
     }
 
 
+    @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
     private TtlWrappers() {
         throw new InstantiationError("Must not instantiate this class");
     }
