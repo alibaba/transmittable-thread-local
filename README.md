@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=2.x&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/strong_ci.yaml?branch=2.x&logo=github&logoColor=white&label=strong ci" alt="Strong CI"></a>
-<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/v2.14.3"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
+<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/2.x"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
 <a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
@@ -373,7 +373,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.3/index.html>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.4/index.html>
 
 # 🍪 Maven依赖
 
@@ -383,7 +383,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.3</version>
+    <version>2.14.4</version>
 </dependency>
 ```
 
@@ -521,6 +521,8 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       一款专门为SpringBoot项目设计的幂等组件
     - [`ytyht226/taskflow` ![](https://img.shields.io/github/stars/ytyht226/taskflow.svg?style=social&label=Star)](https://github.com/ytyht226/taskflow)  
       一款轻量、简单易用、可灵活扩展的通用任务编排框架，基于有向无环图(DAG)的方式实现，框架提供了组件复用、同步/异步编排、条件判断、分支选择等能力，可以根据不同的业务场景对任意的业务流程进行编排
+    - [`foldright/cffu` ![](https://img.shields.io/github/stars/foldright/cffu.svg?style=social&label=star)](https://github.com/foldright/cffu)  
+      🦝 Java CompletableFuture Fu, aka. CF-Fu, pronounced "Shifu"; include best practice/traps guide and a tiny sidekick library to improve user experience and reduce misuse.
     - [`tuya/connector` ![](https://img.shields.io/github/stars/tuya/connector.svg?style=social&label=Star)](https://github.com/tuya/connector)  
       The connector framework maps cloud APIs to local APIs based on simple configurations and flexible extension mechanisms
 - **中间件/数据处理**
@@ -536,8 +538,6 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
       数据库访问框架(data access service)，包括数据库控制台das console，数据库客户端das client和数据库服务端das server三部分
-    - [`galaxy-data-cn/chitu-sdp` ![](https://img.shields.io/github/stars/galaxy-data-cn/chitu-sdp.svg?style=social&label=Star)](https://github.com/galaxy-data-cn/chitu-sdp)  
-      基于 Apache Flink 构建的企业级、一站式、高性能、低门槛大数据实时计算平台，广泛适用于流式数据应用开发场景
     - [`didi/ALITA` ![](https://img.shields.io/github/stars/didi/ALITA.svg?style=social&label=Star)](https://github.com/didi/ALITA)  
       a layer-based data analysis tool
     - [`didi/daedalus` ![](https://img.shields.io/github/stars/didi/daedalus.svg?style=social&label=Star)](https://github.com/didi/daedalus)  
@@ -570,7 +570,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
       JooLun微信商城
-    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk) [![star](https://gitee.com/hummercloud/HummerRisk/badge/star.svg?theme=gray)](https://gitee.com/hummercloud/HummerRisk)  
+    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk)  
       云原生安全平台，包括混合云安全治理和容器云安全检测
     - [`XiaoMi/mone` ![](https://img.shields.io/github/stars/XiaoMi/mone.svg?style=social&label=Star)](https://github.com/XiaoMi/mone)  
       `Mone`以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
