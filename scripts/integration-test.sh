@@ -6,7 +6,8 @@ BASH_BUDDY_ROOT="$(readlink -f bash-buddy)"
 readonly BASH_BUDDY_ROOT
 source "$BASH_BUDDY_ROOT/lib/trap_error_info.sh"
 source "$BASH_BUDDY_ROOT/lib/common_utils.sh"
-source "$BASH_BUDDY_ROOT/lib/java_build_utils.sh"
+source "$BASH_BUDDY_ROOT/lib/java_utils.sh"
+source "$BASH_BUDDY_ROOT/lib/maven_utils.sh"
 
 ################################################################################
 # ci build logic
@@ -18,7 +19,6 @@ readonly JDK_VERSIONS=(
   8
   "$default_build_jdk_version"
   17
-  20
   21
 )
 readonly default_jh_var_name="JAVA${default_build_jdk_version}_HOME"
@@ -29,8 +29,8 @@ readonly default_jh_var_name="JAVA${default_build_jdk_version}_HOME"
 #   https://stackoverflow.com/questions/25201430
 #
 # shellcheck disable=SC2034
-JVB_MVN_OPTS=(
-  "${JVB_DEFAULT_MVN_OPTS[@]}"
+MVU_MVN_OPTS=(
+  "${MVU_DEFAULT_MVN_OPTS[@]}"
   -DperformRelease -P'!gen-sign'
   -Dmaven.plugin.validation=NONE
   ${CI_MORE_MVN_OPTS:+${CI_MORE_MVN_OPTS}}
@@ -48,7 +48,7 @@ cd "$PROJECT_ROOT_DIR"
 export JAVA_HOME="${!default_jh_var_name}"
 
 cu::head_line_echo "build and test with Java $default_build_jdk_version: $JAVA_HOME"
-jvb::mvn_cmd clean install
+mvu::mvn_cmd clean install
 
 ########################################
 # test by multi-version jdk
@@ -65,25 +65,25 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
     # about CI env var
     #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
     if [ "${CI:-}" = true ]; then
-      jvb::mvn_cmd jacoco:prepare-agent surefire:test -Denforcer.skip jacoco:report
+      mvu::mvn_cmd jacoco:prepare-agent surefire:test -Denforcer.skip jacoco:report
     else
-      jvb::mvn_cmd surefire:test -Denforcer.skip
+      mvu::mvn_cmd surefire:test -Denforcer.skip
     fi
   fi
 
   cu::head_line_echo "test with TTL Agent and Java $jdk_version: $JAVA_HOME"
 
   cu::blue_echo 'Run unit test under ttl agent, include check for ExecutorService, ForkJoinPool, Timer/TimerTask'
-  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+  mvu::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
     -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
 
   cu::blue_echo 'Run unit test under ttl agent, and turn on the disable inheritable for thread pool enhancement'
-  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+  mvu::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
     -Dttl.agent.extra.args='ttl.agent.disable.inheritable.for.thread.pool:true' \
     -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-disable-inheritable=true'
 
   cu::blue_echo 'Run agent check for Timer/TimerTask, explicit "ttl.agent.enable.timer.task"'
-  jvb::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
+  mvu::mvn_cmd -Penable-ttl-agent-for-test surefire:test -Denforcer.skip \
     -Dttl.agent.extra.args='ttl.agent.enable.timer.task:true' \
     -Dttl.agent.extra.d.options='-Drun-ttl-test-under-agent-with-enable-timer-task=true'
 done
