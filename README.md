@@ -8,13 +8,13 @@
 ----------------------------------------
 
 <p align="center">
-<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=master&logo=github&logoColor=white&label=fast ci" alt="Github Workflow Build Status"></a>
-<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/strong_ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/strong_ci.yaml?branch=master&logo=github&logoColor=white&label=strong ci" alt="Github Workflow Build Status"></a>
-<a href="https://codecov.io/gh/alibaba/transmittable-thread-local/branch/master"><img src="https://img.shields.io/codecov/c/github/alibaba/transmittable-thread-local/master?logo=codecov&logoColor=white" alt="Coverage Status"></a>
-<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-green?logo=openjdk&logoColor=white" alt="JDK support"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=master&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/strong_ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/strong_ci.yaml?branch=master&logo=github&logoColor=white&label=strong ci" alt="Strong CI"></a>
+<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/master"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/master?icon=codecov" alt="Coverage Status"></a>
+<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
-<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=3d7c47&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
-<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?color=2d545e&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+<a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
+<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
@@ -22,7 +22,7 @@
 <a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/github/repo-size/alibaba/transmittable-thread-local" alt="GitHub repo size"></a>
-<a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready--to--code-green?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
+<a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
 </p>
 
 [📖 English Documentation](README-EN.md) | 📖 中文文档
@@ -385,7 +385,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.2</version>
+    <version>2.14.4</version>
 </dependency>
 ```
 
@@ -572,7 +572,7 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       电商商城 java电商商城系统 uniapp商城 多用户商城
     - [`Joolun/JooLun-wx` ![](https://img.shields.io/github/stars/Joolun/JooLun-wx.svg?style=social&label=Star)](https://github.com/Joolun/JooLun-wx) [![star](https://gitee.com/joolun/JooLun-wx/badge/star.svg?theme=gray)](https://gitee.com/joolun/JooLun-wx)  
       JooLun微信商城
-    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk) [![star](https://gitee.com/hummercloud/HummerRisk/badge/star.svg?theme=gray)](https://gitee.com/hummercloud/HummerRisk)  
+    - [`HummerRisk/HummerRisk` ![](https://img.shields.io/github/stars/HummerRisk/HummerRisk.svg?style=social&label=Star)](https://github.com/HummerRisk/HummerRisk)  
       云原生安全平台，包括混合云安全治理和容器云安全检测
     - [`XiaoMi/mone` ![](https://img.shields.io/github/stars/XiaoMi/mone.svg?style=social&label=Star)](https://github.com/XiaoMi/mone)  
       `Mone`以微服务为核心的一站式企业协同研发平台。支持公共云、专有云和混合云多种部署形态；提供从“项目创建->开发->部署->治理->应用观测”端到端的研发全流程服务；通过云原生新技术和研发新模式，打造“双敏”，敏捷研发和敏捷组织，保障小米-中国区高复杂业务、大规模团队的敏捷研发协同，实现多倍效能提升。
