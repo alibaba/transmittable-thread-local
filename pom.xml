@@ -4,7 +4,7 @@
 
 	<groupId>com.alibaba.ttl3</groupId>
 	<artifactId>ttl3-parent</artifactId>
-	<version>3.x-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>
@@ -867,6 +867,23 @@
 											<version>11</version>
 										</requireJavaVersion>
 									</rules>
+								</configuration>
+							</execution>
+							<execution>
+								<id>enforce-property</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<!-- https://maven.apache.org/enforcer/enforcer-rules/requireProperty.html -->
+										<requireProperty>
+											<property>project.version</property>
+											<regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+|-SNAPSHOT)$</regex>
+											<regexMessage>"Project version(${project.version}) format is invalid!"</regexMessage>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
 								</configuration>
 							</execution>
 						</executions>

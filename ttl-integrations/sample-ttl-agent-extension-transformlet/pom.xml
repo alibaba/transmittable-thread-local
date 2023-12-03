@@ -16,7 +16,7 @@
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<jacoco.skip>true</jacoco.skip>
 
-		<ttl.version>3.x-SNAPSHOT</ttl.version>
+		<ttl.version>3.0.0-SNAPSHOT</ttl.version>
 	</properties>
 
 	<dependencies>
