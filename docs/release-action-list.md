@@ -16,7 +16,7 @@
 2. 新建并Push Tag，如`v2.x.y`  
     - `git tag -m 'release v2.x.y' v2.x.y`
     - `git push origin v2.x.y`
-3. 等待Tag的CI通过 https://ci.appveyor.com/project/oldratlee/transmittable-thread-local/history
+3. 等待Tag的CI通过 https://github.com/alibaba/transmittable-thread-local/actions
 4. 执行[`scripts/check-japi-compliance.sh`](../scripts/check-japi-compliance.sh)，检查`API`兼容性
 5. 发布版本到`Maven`中央库  
     `./mvnw clean && ./mvnw deploy -DperformRelease`
