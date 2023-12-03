@@ -36,8 +36,8 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<ciManagement>
-		<system>AppVeyor</system>
-		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/alibaba/transmittable-thread-local/actions</url>
 	</ciManagement>
 	<organization>
 		<name>Alibaba</name>

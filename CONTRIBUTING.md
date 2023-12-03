@@ -210,10 +210,7 @@ disclosure!
 
 ## Continuous integration
 
-TransmittableThreadLocal(TTL) currently uses a combination of Travis and Appveyor for Continuous Integration:
-
-* Travis [runs all tests for each commit and PR on wide range JDK](https://travis-ci.org/alibaba/transmittable-thread-local)
-* Appveyor [runs the tests for each commit and PR on windows](https://ci.appveyor.com/project/oldratlee/transmittable-thread-local)
+TransmittableThreadLocal(TTL) uses GitHub actions for Continuous Integration: https://github.com/alibaba/transmittable-thread-local/actions
 
 ## Related links
 

@@ -32,8 +32,8 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<ciManagement>
-		<system>AppVeyor</system>
-		<url>https://ci.appveyor.com/project/oldratlee/transmittable-thread-local</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/alibaba/transmittable-thread-local/actions</url>
 	</ciManagement>
 	<organization>
 		<name>Alibaba</name>
@@ -648,7 +648,6 @@
 							<doclint>all,-missing</doclint>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
-							<isOffline>true</isOffline>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#detectOfflineLinks -->
 							<detectOfflineLinks>false</detectOfflineLinks>
 							<offlineLinks>
