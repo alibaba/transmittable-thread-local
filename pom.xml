@@ -495,9 +495,6 @@
             </plugin>
             <!--
                 official docs: https://maven.apache.org/enforcer/enforcer-rules/requireMavenVersion.html
-
-                add maven-enforce-plugin to make sure the right jdk is used
-                https://stackoverflow.com/a/18420462/922688
             -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -981,7 +978,7 @@
             <build>
                 <plugins>
                     <!--
-                        add maven-enforce-plugin to make sure the right jdk is used
+                        add maven-enforcer-plugin to make sure the right jdk is used
                         https://stackoverflow.com/a/18420462/922688
                     -->
                     <plugin>
@@ -998,6 +995,23 @@
                                             <version>11</version>
                                         </requireJavaVersion>
                                     </rules>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>enforce-property</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <!-- https://maven.apache.org/enforcer/enforcer-rules/requireProperty.html -->
+                                        <requireProperty>
+                                            <property>project.version</property>
+                                            <regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$|^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</regex>
+                                            <regexMessage>"Project version(${project.version}) format is invalid!"</regexMessage>
+                                        </requireProperty>
+                                    </rules>
+                                    <fail>true</fail>
                                 </configuration>
                             </execution>
                         </executions>
