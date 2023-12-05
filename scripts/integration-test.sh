@@ -13,12 +13,12 @@ source "$BASH_BUDDY_ROOT/lib/maven_utils.sh"
 # ci build logic
 ################################################################################
 
-readonly default_build_jdk_version=11
+readonly default_build_jdk_version=17
 # shellcheck disable=SC2034
 readonly JDK_VERSIONS=(
   8
+  11
   "$default_build_jdk_version"
-  17
   21
 )
 readonly default_jh_var_name="JAVA${default_build_jdk_version}_HOME"

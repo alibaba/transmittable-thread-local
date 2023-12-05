@@ -992,7 +992,7 @@
                                 <configuration>
                                     <rules>
                                         <requireJavaVersion>
-                                            <version>11</version>
+                                            <version>17</version>
                                         </requireJavaVersion>
                                     </rules>
                                 </configuration>
