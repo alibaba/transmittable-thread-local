@@ -90,29 +90,29 @@ public class TtlExecutorTransformlet implements JavassistTransformlet {
         if ("java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask".equals(runnable.getClass().getName())) {
             return runnable;
         }
-        return com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doAutoWrap(runnable);
+        return Utils.doAutoWrap(runnable);
     }
 
     /**
-     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#doAutoWrap(Runnable)
-     * @see com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils#doAutoWrap(Callable)
+     * @see Utils#doAutoWrap(Runnable)
+     * @see Utils#doAutoWrap(Callable)
      * @see #doAutoWrapForMethodRemove(Runnable)
      */
     @SuppressFBWarnings("VA_FORMAT_STRING_USES_NEWLINE") // [ERROR] Format string should use %n rather than \n
     private void updateSubmitMethodsOfExecutorClass_decorateToTtlWrapperAndSetAutoWrapperAttachment(@NonNull final CtMethod method) throws NotFoundException, CannotCompileException {
         final int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || method.getParameterTypes().length == 0) return;
+        final CtClass[] parameterTypes = method.getParameterTypes();
+        if (!Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || parameterTypes.length == 0) return;
 
         // special handle for remove(Runnable) method of ScheduledThreadPoolExecutor(ThreadPoolExecutor)
         //   more info see https://github.com/alibaba/transmittable-thread-local/issues/547
-        if("remove".equals(method.getName()) && method.getParameterTypes().length == 1
-                && RUNNABLE_CLASS_NAME.equals(method.getParameterTypes()[0].getName())) {
+        if ("remove".equals(method.getName()) && parameterTypes.length == 1
+                && RUNNABLE_CLASS_NAME.equals(parameterTypes[0].getName())) {
             String code = "$1 = com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet.doAutoWrapForMethodRemove($1);";
             method.insertBefore(code);
             return;
         }
 
-        CtClass[] parameterTypes = method.getParameterTypes();
         StringBuilder insertCode = new StringBuilder();
         for (int i = 0; i < parameterTypes.length; i++) {
             final String paramTypeName = parameterTypes[i].getName();
