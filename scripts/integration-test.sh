@@ -63,7 +63,7 @@ for jdk_version in "${JDK_VERSIONS[@]}"; do
   jvu::switch_to_jdk "$jdk_version"
 
   # just test without build
-  if [ "$jdk_version" = "$default_build_jdk_version" ]; then
+  if [ "$jdk_version" != "$default_build_jdk_version" ]; then
     # default jdk already tested above
     cu::head_line_echo "test with Java: $JAVA_HOME"
     mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} surefire:test -Denforcer.skip ${CI_MORE_END_OPTS:-}
