@@ -614,11 +614,9 @@
 
 
 					Using the linkoffline Option
-					https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html#GUID-51213F2C-6E01-4A03-A82A-17428A258A0F
+					https://docs.oracle.com/en/java/javase/21/javadoc/javadoc-command.html#GUID-51213F2C-6E01-4A03-A82A-17428A258A0F
 				-->
-				<javadoc.package.list.dir>
-					${maven.multiModuleProjectDirectory}/src/package-list
-				</javadoc.package.list.dir>
+				<javadoc.package.list.dir>${maven.multiModuleProjectDirectory}/src/package-list</javadoc.package.list.dir>
 				<!-- dummy/repeated value, overridden by submodule -->
 				<javadoc.extra.offlineLinks>-quiet</javadoc.extra.offlineLinks>
 			</properties>
@@ -628,7 +626,7 @@
 						<!--
 							https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
 
-							https://docs.oracle.com/en/java/javase/11/javadoc/javadoc-command.html
+							https://docs.oracle.com/en/java/javase/21/javadoc/javadoc-command.html
 						-->
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
@@ -643,41 +641,36 @@
 								https://stackoverflow.com/questions/39616344
 							-->
 							<doclint>all,-missing</doclint>
+							<overview>${project.basedir}/src/main/javadoc/overview.html</overview>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/exclude-package-names.html -->
 							<excludePackageNames>${javadoc.default.exclude.packages}</excludePackageNames>
 							<!-- https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#detectOfflineLinks -->
 							<detectOfflineLinks>false</detectOfflineLinks>
-							<offlineLinks>
-								<offlineLink>
-									<url>https://docs.oracle.com/javase/10/docs/api/</url>
-									<location>${javadoc.package.list.dir}/java/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>
-										https://www.javadoc.io/doc/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/
-									</url>
-									<location>${javadoc.package.list.dir}/spotbugs-annotations/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>
-										https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/
-									</url>
-									<location>${javadoc.package.list.dir}/jsr305/</location>
-								</offlineLink>
-								<offlineLink>
-									<url>
-										https://www.javadoc.io/doc/org.jetbrains/annotations/${jetbrains.annotations.version}/
-									</url>
-									<location>${javadoc.package.list.dir}/jetbrains-annotations/</location>
-								</offlineLink>
-							</offlineLinks>
 							<additionalOptions>
 								<!--
 									Maven javadoc Search redirects to "/undefined/.." url - Stack Overflow
 									https://stackoverflow.com/questions/52326318
 								-->
-								<additionalOption>--no-module-directories</additionalOption>
 								<additionalOption>-html5</additionalOption>
+
+								<additionalOption>-linkoffline</additionalOption>
+								<additionalOption>
+									https://www.javadoc.io/doc/com.github.spotbugs/spotbugs-annotations/${spotbugs.annotations.version}/
+								</additionalOption>
+								<additionalOption>${javadoc.package.list.dir}/spotbugs-annotations/</additionalOption>
+								<additionalOption>-linkoffline</additionalOption>
+								<additionalOption>
+									https://www.javadoc.io/doc/org.jetbrains/annotations/${jetbrains.annotations.version}/
+								</additionalOption>
+								<additionalOption>${javadoc.package.list.dir}/jetbrains-annotations/</additionalOption>
+								<additionalOption>-linkoffline</additionalOption>
+								<additionalOption>
+									https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/${jsr305.version}/
+								</additionalOption>
+								<additionalOption>${javadoc.package.list.dir}/jsr305/</additionalOption>
+								<additionalOption>-linkoffline</additionalOption>
+								<additionalOption>https://docs.oracle.com/en/java/javase/21/docs/api/java.base/</additionalOption>
+								<additionalOption>${javadoc.package.list.dir}/java/</additionalOption>
 
 								<additionalOption>${javadoc.extra.offlineLinks}</additionalOption>
 							</additionalOptions>
@@ -861,7 +854,7 @@
 								<configuration>
 									<rules>
 										<requireJavaVersion>
-											<version>11</version>
+											<version>17</version>
 										</requireJavaVersion>
 									</rules>
 								</configuration>

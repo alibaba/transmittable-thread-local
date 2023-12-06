@@ -17,7 +17,7 @@
 
 ## 👻 内存泄漏
 
-对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ThreadLocal.html)，测试Case是：
 
 简单一个线程一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 
@@ -36,7 +36,7 @@
 
 ## 🐎 TPS & 压力测试
 
-对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/ThreadLocal.html)，测试Case是：
+对比测试[`TransmittableThreadLocal`](../ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)和[`ThreadLocal`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ThreadLocal.html)，测试Case是：
 
 2个线程并发一直循环`new` `TransmittableThreadLocal`、`ThreadLocal`实例，不主动做任何清理操作，即不调用`ThreadLocal`的`remove`方法主动清空。
 

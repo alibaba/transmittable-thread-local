@@ -138,12 +138,12 @@ import java.util.Map;
  * </blockquote>
  * <p>
  * More info about {@code Boot-Class-Path} see
- * <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>.
+ * <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see Instrumentation
- * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
- * @see <a href="https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest">JAR File Specification - JAR Manifest</a>
+ * @see <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+ * @see <a href="https://docs.oracle.com/en/java/javase/21/docs/specs/jar/jar.html#jar-manifest">JAR File Specification - JAR Manifest</a>
  * @see <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html">Working with Manifest Files - The Java™ Tutorials</a>
  * @see com.alibaba.ttl3.TransmittableThreadLocal
  * @see java.util.concurrent.ThreadPoolExecutor

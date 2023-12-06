@@ -19,7 +19,7 @@ import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.i
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
  * @see ClassFileTransformer
- * @see <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
+ * @see <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html">The mechanism for instrumentation</a>
  */
 public class TtlTransformer implements ClassFileTransformer {
     private static final Logger logger = Logger.getLogger(TtlTransformer.class);

@@ -63,12 +63,12 @@ try {
 
 ## `JDK` core classes
 
-- [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
-- [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/InheritableThreadLocal.html)
 
 ## `Java` Agent
 
-- [Java Agent Specification](https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html)
+- [Java Agent Specification](https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html)
 
 ## `Javassist`
 

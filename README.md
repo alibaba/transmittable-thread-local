@@ -61,7 +61,7 @@
 
 👉 `TransmittableThreadLocal`(`TTL`)：在使用线程池等会池化复用线程的执行组件情况下，提供`ThreadLocal`值的传递功能，解决异步执行时上下文传递的问题。一个`Java`标准库本应为框架/中间件设施开发提供的标配能力，本库功能聚焦 & 0依赖，支持`Java 6~21`。
 
-`JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
+`JDK`的[`InheritableThreadLocal`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/InheritableThreadLocal.html)类可以完成父线程到子线程的值传递。但对于使用线程池等会池化复用线程的执行组件的情况，线程由线程池创建好，并且线程是池化起来反复使用的；这时父子线程关系的`ThreadLocal`值传递已经没有意义，应用需要的实际上是把 **任务提交给线程池时**的`ThreadLocal`值传递到 **任务执行时**。
 
 本库提供的[`TransmittableThreadLocal`](ttl-core/src/main/java/com/alibaba/ttl3/TransmittableThreadLocal.java)类继承并加强`InheritableThreadLocal`类，解决上述的问题，使用详见 [User Guide](#-user-guide)。
 
@@ -98,7 +98,7 @@
 注意：如果传递的对象（引用类型）会被修改，且没有做深拷贝（如直接传递引用或是浅拷贝），那么
 
 - 因为跨线程传递而不再有线程封闭，传递对象在多个线程之间是有共享的。
-- 与`JDK`的[`InheritableThreadLocal.childValue()`](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html#childValue(T))一样，需要使用者/业务逻辑注意保证传递对象的线程安全。
+- 与`JDK`的[`InheritableThreadLocal.childValue()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/InheritableThreadLocal.html#childValue(T))一样，需要使用者/业务逻辑注意保证传递对象的线程安全。
 
 <blockquote>
 <details>
@@ -287,7 +287,7 @@ Demo参见[`AgentDemo.kt`](ttl2-compatible/src/test/java/com/alibaba/demo/ttl/ag
     - 修饰实现代码在[`JdkExecutorTtlTransformlet.java`](ttl-agent/src/main/java/com/alibaba/ttl3/agent/transformlet/internal/JdkExecutorTtlTransformlet.java)。
 1. `java.util.concurrent.ForkJoinTask`（对应的执行器组件是`java.util.concurrent.ForkJoinPool`）
     - 修饰实现代码在[`ForkJoinTtlTransformlet.java`](ttl-agent/src/main/java/com/alibaba/ttl3/agent/transformlet/internal/ForkJoinTtlTransformlet.java)。从版本 **_`2.5.1`_** 开始支持。
-    - **_注意_**：`Java 8`引入的[**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CompletableFuture.html)与（并行执行的）[**_`Stream`_**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html)底层是通过`ForkJoinPool`来执行，所以支持`ForkJoinPool`后，`TTL`也就透明支持了`CompletableFuture`与`Stream`。🎉
+    - **_注意_**：`Java 8`引入的[**_`CompletableFuture`_**](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html)与（并行执行的）[**_`Stream`_**](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)底层是通过`ForkJoinPool`来执行，所以支持`ForkJoinPool`后，`TTL`也就透明支持了`CompletableFuture`与`Stream`。🎉
 1. `java.util.TimerTask`的子类（对应的执行器组件是`java.util.Timer`）
     - 修饰实现代码在[`TimerTaskTtlTransformlet.java`](ttl-agent/src/main/java/com/alibaba/ttl3/agent/transformlet/internal/TimerTaskTtlTransformlet.java)。从版本 **_`2.7.0`_** 开始支持。
     - **_注意_**：从`2.11.2`版本开始缺省开启`TimerTask`的修饰（因为保证正确性是第一位，而不是最佳实践『不推荐使用`TimerTask`』:）；`2.11.1`版本及其之前的版本没有缺省开启`TimerTask`的修饰。
@@ -304,7 +304,7 @@ Demo参见[`AgentDemo.kt`](ttl2-compatible/src/test/java/com/alibaba/demo/ttl/ag
 
 <p><code>Timer</code>是<code>JDK 1.3</code>的老类，不推荐使用<code>Timer</code>类。
 
-<p>推荐用<a href="https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/ScheduledExecutorService.html" rel="nofollow"><code>ScheduledExecutorService</code></a>。<br>
+<p>推荐用<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ScheduledExecutorService.html" rel="nofollow"><code>ScheduledExecutorService</code></a>。<br>
 <code>ScheduledThreadPoolExecutor</code>实现更强壮，并且功能更丰富。
 如支持配置线程池的大小（<code>Timer</code>只有一个线程）；<code>Timer</code>在<code>Runnable</code>中抛出异常会中止定时执行。更多说明参见 <a href="https://alibaba.github.io/Alibaba-Java-Coding-Guidelines/#concurrency" rel="nofollow">10. <strong>Mandatory</strong> Run multiple TimeTask by using ScheduledExecutorService rather than Timer because Timer will kill all running threads in case of failing to catch exceptions. - Alibaba Java Coding Guidelines</a>。</p>
 
@@ -365,8 +365,8 @@ These paths are searched by the bootstrap class loader after the platform specif
 <p>更多详见</p>
 
 <ul>
-<li><a href="https://docs.oracle.com/javase/10/docs/api/java/lang/instrument/package-summary.html#package.description" rel="nofollow"><code>Java Agent</code>规范 - <code>JavaDoc</code></a></li>
-<li><a href="https://docs.oracle.com/javase/10/docs/specs/jar/jar.html#jar-manifest" rel="nofollow">JAR File Specification - JAR Manifest</a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html#package.description" rel="nofollow"><code>Java Agent</code>规范 - <code>JavaDoc</code></a></li>
+<li><a href="https://docs.oracle.com/en/java/javase/21/docs/specs/jar/jar.html#jar-manifest" rel="nofollow">JAR File Specification - JAR Manifest</a></li>
 <li><a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html" rel="nofollow">Working with Manifest Files - The Java™ Tutorials</a></li>
 </ul>
 
@@ -495,8 +495,8 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
 
 ## JDK Core Classes
 
-- [WeakHashMap](https://docs.oracle.com/javase/10/docs/api/java/util/WeakHashMap.html)
-- [InheritableThreadLocal](https://docs.oracle.com/javase/10/docs/api/java/lang/InheritableThreadLocal.html)
+- [WeakHashMap](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/WeakHashMap.html)
+- [InheritableThreadLocal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/InheritableThreadLocal.html)
 
 # 💗 Who Used
 

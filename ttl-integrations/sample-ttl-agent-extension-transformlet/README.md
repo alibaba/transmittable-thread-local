@@ -11,7 +11,7 @@
       在这个示例工程是`com.alibaba.ttl.agent.extension_transformlet.sample.transformlet.SampleExtensionTransformlet`。
     - `TTL Agent`会扫描`Class Path`上的`META-INF/ttl.agent.transformlets`文件，自动发现并启用这些扩展`Transformlet`。  
       即只要将扩展`Transformlet`的依赖`Jar`引入到应用中就会自动生效。
-    - 这个扫描并自动加载生效与`JDK`的[`ServiceLoader`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html)一样，只是使用不同的扩展配置文件。
+    - 这个扫描并自动加载生效与`JDK`的[`ServiceLoader`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html)一样，只是使用不同的扩展配置文件。
 
 ## 扩展`Transformlet`实现的注意点
 
