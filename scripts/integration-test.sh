@@ -21,9 +21,9 @@ readonly JDK_VERSIONS=(
   "$default_build_jdk_version"
   21
 )
-readonly default_jh_var_name="JAVA${default_build_jdk_version}_HOME"
 
-# Here use `-D performRelease` intendedly to check release operations.
+# here use `install` and `-D performRelease` intended
+#   to check release operations.
 #
 # De-activate a maven profile from command line
 #   https://stackoverflow.com/questions/25201430
@@ -44,8 +44,7 @@ cd "$PROJECT_ROOT_DIR"
 # do build and test by default version jdk
 ########################################
 
-[ -d "${!default_jh_var_name:-}" ] || cu::die "\$${default_jh_var_name}(${!default_jh_var_name:-}) dir is not existed!"
-export JAVA_HOME="${!default_jh_var_name}"
+jvu::switch_to_jdk "$default_build_jdk_version"
 
 cu::head_line_echo "build and test with Java $default_build_jdk_version: $JAVA_HOME"
 mvu::mvn_cmd clean install
@@ -54,21 +53,19 @@ mvu::mvn_cmd clean install
 # test by multi-version jdk
 ########################################
 
+# about CI env var
+#   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+if [ "${CI:-}" = true ]; then
+  readonly CI_MORE_BEGIN_OPTS=jacoco:prepare-agent CI_MORE_END_OPTS=jacoco:report
+fi
+
 for jdk_version in "${JDK_VERSIONS[@]}"; do
-  jh_var_name="JAVA${jdk_version}_HOME"
-  [ -d "${!jh_var_name:-}" ] || cu::die "\$${jh_var_name}(${!jh_var_name:-}) dir is not existed!"
-  export JAVA_HOME="${!jh_var_name}"
+  jvu::switch_to_jdk "$jdk_version"
 
   if [ "$jdk_version" != "$default_build_jdk_version" ]; then
     # skip default jdk, already tested above
     cu::head_line_echo "test with Java $jdk_version: $JAVA_HOME"
-    # about CI env var
-    #   https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-    if [ "${CI:-}" = true ]; then
-      mvu::mvn_cmd jacoco:prepare-agent surefire:test -Denforcer.skip jacoco:report
-    else
-      mvu::mvn_cmd surefire:test -Denforcer.skip
-    fi
+    mvu::mvn_cmd ${CI_MORE_BEGIN_OPTS:-} surefire:test -Denforcer.skip ${CI_MORE_END_OPTS:-}
   fi
 
   cu::head_line_echo "test with TTL Agent and Java $jdk_version: $JAVA_HOME"
