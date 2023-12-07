@@ -1,11 +1,10 @@
 # <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/233595946-4493119e-4e0c-4081-a382-0a20731c578e.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
+> [!IMPORTANT]
 > 🚧 This branch is `TransmittableThreadLocal(TTL) v3`, which is in development and has not been released yet.  
 > See [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432) for the `v3` notes, work item list and its progress.
 >
 > 👉 The stable version `v2.x` currently in use is on [**branch `2.x`**](https://github.com/alibaba/transmittable-thread-local/tree/2.x).
-
-----------------------------------------
 
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=master&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
@@ -14,10 +13,10 @@
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
 <a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
-<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+<a href="https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
-<a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
-<a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local?style=flat" alt="GitHub Stars"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local?style=flat" alt="GitHub Forks"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/network/dependents"><img src="https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos" alt="user repos"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
@@ -66,8 +65,9 @@ Application need transmit value from the time task is created to the time task i
 
 If you have problem or question, please [submit Issue](https://github.com/alibaba/transmittable-thread-local/issues) or play [fork](https://github.com/alibaba/transmittable-thread-local/fork) and pull request dance.
 
-> From `TTL v2.13+` upgrade to `Java 8`.  
-> If you need `Java 6` support, use version `2.12.x` <a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+> [!NOTE]
+> From `TTL v2.13+` upgrade to `Java 8`. 🚀  
+> If you need `Java 6` support, use version `2.12.x` <a href="https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 
 # 🎨 Requirements
 
@@ -292,6 +292,7 @@ to start demo of "Use Java Agent to decorate thread pool implementation class".
 
 The implementation of auto adding self agent jar to `boot classpath` use the `Boot-Class-Path` property of manifest file(`META-INF/MANIFEST.MF`) in the TTL Java Agent Jar:
 
+> [!NOTE]
 > `Boot-Class-Path`
 >
 > A list of paths to be searched by the bootstrap class loader. Paths represent directories or libraries (commonly referred to as JAR or zip libraries on many platforms).
@@ -317,7 +318,7 @@ The current version Java API documentation: <https://alibaba.github.io/transmitt
 </dependency>
 ```
 
-Check available version at [search.maven.org](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local).
+Check available version at [maven.org](https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml).
 
 # 🔨 How to compile and build
 

@@ -1,11 +1,10 @@
 # <div align="center"><a href="#dummy"><img src="https://user-images.githubusercontent.com/1063891/233595946-4493119e-4e0c-4081-a382-0a20731c578e.png" alt="📌 TransmittableThreadLocal(TTL)"></a></div>
 
+> [!IMPORTANT]
 > 🚧 这个分支是`TransmittableThreadLocal(TTL) v3`，在开发中还没有发布。  
 > `v3`的版本说明、工作项列表及其进展，参见 [issue 432](https://github.com/alibaba/transmittable-thread-local/issues/432)。
 >
 > 👉 目前使用中的稳定发布版本`v2.x`在 [**分支`2.x`**](https://github.com/alibaba/transmittable-thread-local/tree/2.x)上。
-
-----------------------------------------
 
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=master&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
@@ -14,10 +13,10 @@
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
 <a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
-<a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+<a href="https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/releases"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local" alt="GitHub release"></a>
-<a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local" alt="GitHub Stars"></a>
-<a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local" alt="GitHub Forks"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/stargazers"><img src="https://img.shields.io/github/stars/alibaba/transmittable-thread-local?style=flat" alt="GitHub Stars"></a>
+<a href="https://github.com/alibaba/transmittable-thread-local/fork"><img src="https://img.shields.io/github/forks/alibaba/transmittable-thread-local?style=flat" alt="GitHub Forks"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/network/dependents"><img src="https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos" alt="user repos"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/issues"><img src="https://img.shields.io/github/issues/alibaba/transmittable-thread-local" alt="GitHub issues"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
@@ -73,8 +72,9 @@
 - 建议和提问，[提交 Issue](https://github.com/alibaba/transmittable-thread-local/issues/new)
 - 贡献和改进，[Fork 后提通过 Pull Request 贡献代码](https://github.com/alibaba/transmittable-thread-local/fork)
 
-> 从`TTL v2.13+`开始，升级到`Java 8`。  
-> 如果需要`Java 6`的支持，使用版本`2.12.x` <a href="https://search.maven.org/artifact/com.alibaba/transmittable-thread-local"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
+> [!NOTE]
+> 从`TTL v2.13+`开始，升级到`Java 8`。🚀  
+> 如果需要`Java 6`的支持，使用版本`2.12.x` <a href="https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml"><img src="https://img.shields.io/maven-central/v/com.alibaba/transmittable-thread-local?versionPrefix=2.12.&color=lightgrey&logo=apache-maven&logoColor=white" alt="Maven Central"></a>
 
 # 🎨 需求场景
 
@@ -389,7 +389,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 </dependency>
 ```
 
-可以在 [search.maven.org](https://search.maven.org/artifact/com.alibaba/transmittable-thread-local) 查看可用的版本。
+可以在 [maven.org](https://repo1.maven.org/maven2/com/alibaba/transmittable-thread-local/maven-metadata.xml) 查看可用的版本。
 
 # 🔨 关于编译构建
 
@@ -437,7 +437,8 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
 
 # ✨ 使用`TTL`的好处与必要性
 
-> 注：不读这一节，并不会影响你使用`TTL`来解决你碰到的问题，可以放心跳过；读了 [User Guide](#-user-guide) 就可以快速用起来了～ 😄 这一节信息密度较高不易读。
+> [!NOTE]
+> 不读这一节，并不会影响你使用`TTL`来解决你碰到的问题，可以放心跳过；读了 [User Guide](#-user-guide) 就可以快速用起来了～ 😄 这一节信息密度较高不易读。
 
 **_好处：透明且自动完成所有异步执行上下文的可定制、规范化的捕捉与传递。_**  
 这个好处也是`TransmittableThreadLocal`的目标。
