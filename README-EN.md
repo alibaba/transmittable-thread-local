@@ -357,6 +357,10 @@ Some open-source projects used `TTL`:
 - **Middleware**
     - [`sofastack/sofa-rpc` ![](https://img.shields.io/github/stars/sofastack/sofa-rpc.svg?style=social&label=Star)](https://github.com/sofastack/sofa-rpc) [![star](https://gitee.com/sofastack/sofa-rpc/badge/star.svg?theme=gray)](https://gitee.com/sofastack/sofa-rpc)  
       SOFARPC is a high-performance, high-extensibility, production-level Java RPC framework
+    - [`trpc-group/trpc-java` ![](https://img.shields.io/github/stars/trpc-group/trpc-java.svg?style=social&label=Star)](https://github.com/trpc-group/trpc-java)  
+      A pluggable, high-performance RPC framework written in java
+    - [`tencentmusic/supersonic` ![](https://img.shields.io/github/stars/tencentmusic/supersonic.svg?style=social&label=Star)](https://github.com/tencentmusic/supersonic)  
+      SuperSonic is an out-of-the-box yet highly extensible framework for building ChatBI
     - [`dromara/hmily` ![](https://img.shields.io/github/stars/dromara/hmily.svg?style=social&label=Star)](https://github.com/dromara/hmily) [![star](https://gitee.com/dromara/hmily/badge/star.svg?theme=gray)](https://gitee.com/dromara/hmily)  
       Distributed transaction solutions
     - [`dromara/gobrs-async` ![](https://img.shields.io/github/stars/dromara/gobrs-async.svg?style=social&label=Star)](https://github.com/dromara/gobrs-async) [![star](https://gitee.com/dromara/gobrs-async/badge/star.svg?theme=gray)](https://gitee.com/dromara/gobrs-async)  
@@ -382,12 +386,20 @@ Some open-source projects used `TTL`:
 - **Middleware/Data Processing**
     - [`apache/shardingsphere` ![](https://img.shields.io/github/stars/apache/shardingsphere.svg?style=social&label=Star)](https://github.com/apache/shardingsphere) [![star](https://gitee.com/Sharding-Sphere/sharding-sphere/badge/star.svg?theme=gray)](https://gitee.com/Sharding-Sphere/sharding-sphere)  
       Ecosystem to transform any database into a distributed database system, and enhance it with sharding, elastic scaling, encryption features & more
+    - [`apache/kylin` ![](https://img.shields.io/github/stars/apache/kylin.svg?style=social&label=Star)](https://github.com/apache/kylin)  
+      A unified and powerful OLAP platform for Hadoop and Cloud.
+    - [`mybatis-flex/mybatis-flex` ![](https://img.shields.io/github/stars/mybatis-flex/mybatis-flex.svg?style=social&label=Star)](https://github.com/mybatis-flex/mybatis-flex) [![star](https://gitee.com/mybatis-flex/mybatis-flex/badge/star.svg?theme=gray)](https://gitee.com/mybatis-flex/mybatis-flex)  
+      mybatis-flex is an elegant Mybatis Enhancement Framework
     - [`basicai/xtreme1` ![](https://img.shields.io/github/stars/basicai/xtreme1.svg?style=social&label=Star)](https://github.com/basicai/xtreme1)  
       The Next GEN Platform for Multisensory Training Data. #3D annotation, lidar-camera annotation and image annotation tools are supported
+    - [`oceanbase/odc` ![](https://img.shields.io/github/stars/oceanbase/odc.svg?style=social&label=Star)](https://github.com/oceanbase/odc)  
+      An open-source, enterprise-grade database tool for collaborative development
     - [`sagframe/sagacity-sqltoy` ![](https://img.shields.io/github/stars/sagframe/sagacity-sqltoy.svg?style=social&label=Star)](https://github.com/sagframe/sagacity-sqltoy)  
       Java真正智慧的ORM框架
     - [`dromara/stream-query` ![](https://img.shields.io/github/stars/dromara/stream-query.svg?style=social&label=Star)](https://github.com/dromara/stream-query) [![star](https://gitee.com/dromara/stream-query/badge/star.svg?theme=gray)](https://gitee.com/dromara/stream-query)  
       允许完全摆脱Mapper的mybatis-plus体验；可以使用类似“工具类”这样的静态函数进行数据库操作
+    - [`luo-zhan/Transformer` ![](https://img.shields.io/github/stars/luo-zhan/Transformer.svg?style=social&label=Star)](https://github.com/luo-zhan/Transformer)  
+      Transformer可能是最简单，但最强大的字段转换插件，一个注解搞定任意转换，让开发变得更加丝滑
     - [`SimonAlong/Neo` ![](https://img.shields.io/github/stars/SimonAlong/Neo.svg?style=social&label=Star)](https://github.com/SimonAlong/Neo)  
       Orm框架：基于ActiveRecord思想开发的至简化且功能很全的Orm框架
     - [`ppdaicorp/das` ![](https://img.shields.io/github/stars/ppdaicorp/das.svg?style=social&label=Star)](https://github.com/ppdaicorp/das)  
@@ -434,6 +446,8 @@ Some open-source projects used `TTL`:
       基于 Spring Boot 、Spring Security、Mybatis 的RBAC权限管理系统
     - [`qwdigital/LinkWechat` ![](https://img.shields.io/github/stars/qwdigital/LinkWechat.svg?style=social&label=Star)](https://github.com/qwdigital/LinkWechat) [![star](https://gitee.com/LinkWeChat/link-wechat/badge/star.svg?theme=gray)](https://gitee.com/LinkWeChat/link-wechat)  
       基于企业微信的开源 SCRM 系统，采用主流的 Java 微服务架构，是企业私域流量管理与营销的综合解决方案，助力企业提高客户运营效率，强化营销能力，拓展盈利空间
+    - [`fushengqian/fuint` ![](https://img.shields.io/github/stars/fushengqian/fuint.svg?style=social&label=Star)](https://github.com/fushengqian/fuint) [![star](https://gitee.com/fuint/fuint-uniapp/badge/star.svg?theme=gray)](https://gitee.com/fuint/fuint-uniapp)  
+      fuint会员营销系统是一套开源的实体店铺会员管理和营销系统
     - [`hiparker/opsli-boot` ![](https://img.shields.io/github/stars/hiparker/opsli-boot.svg?style=social&label=Star)](https://github.com/hiparker/opsli-boot) [![star](https://gitee.com/hiparker/opsli-boot/badge/star.svg?theme=gray)](https://gitee.com/hiparker/opsli-boot)  
       一款的低代码快速平台，零代码开发，致力于做更简洁的后台管理系统
     - [`topiam/eiam` ![](https://img.shields.io/github/stars/topiam/eiam.svg?style=social&label=Star)](https://github.com/topiam/eiam) [![star](https://gitee.com/topiam/eiam/badge/star.svg?theme=gray)](https://gitee.com/topiam/eiam)  
@@ -493,6 +507,8 @@ Some open-source projects used `TTL`:
       《Spring Cloud微服务-全栈技术与案例解析》和《Spring Cloud微服务 入门 实战与进阶》配套源码
     - [`louyanfeng25/ddd-demo` ![](https://img.shields.io/github/stars/louyanfeng25/ddd-demo.svg?style=social&label=Star)](https://github.com/louyanfeng25/ddd-demo)  
       《深入浅出DDD》讲解的演示项目，为了能够更好的理解Demo中的分层与逻辑处理，我强烈建议你配合小册来深入了解DDD
+    - [`nageoffer/12306` ![](https://img.shields.io/github/stars/nageoffer/12306.svg?style=social&label=Star)](https://github.com/nageoffer/12306)  
+      12306 铁路购票服务是与大家生活和出行相关的关键系统，包括会员、购票、订单、支付和网关等服务。
 
 more open-source projects used `TTL`, see [![user repos](https://badgen.net/github/dependents-repo/alibaba/transmittable-thread-local?label=user%20repos)](https://github.com/alibaba/transmittable-thread-local/network/dependents)
 
