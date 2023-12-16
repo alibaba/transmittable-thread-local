@@ -2,7 +2,6 @@ package com.alibaba.ttl3;
 
 import com.alibaba.crr.composite.Backup;
 import com.alibaba.crr.composite.Capture;
-import com.alibaba.ttl3.executor.TtlExecutors;
 import com.alibaba.ttl3.spi.TtlEnhanced;
 import com.alibaba.ttl3.spi.TtlWrapper;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -10,7 +9,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.Contract;
 
-import java.util.concurrent.Callable;
 import java.util.function.*;
 
 import static com.alibaba.ttl3.transmitter.Transmitter.*;
@@ -30,8 +28,10 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * <ul>
  * <li>all methods is {@code null}-safe, when input parameter is {@code null}, return {@code null}.</li>
  * <li>all wrap method skip wrapping (aka. just return input parameter), when input parameter is already wrapped.</li>
- * <li>the wrap methods for {@link Runnable} and {@link java.util.concurrent.Callable} are provided
- *     by {@link TtlRunnable#get(Runnable)} and {@link TtlCallable#get(Callable)}.</li>
+ * <li>the wrap methods for {@link Runnable} and {@link java.util.concurrent.Callable Callable} are provided
+ *     by {@link TtlRunnable#get(Runnable)} and {@link TtlCallable#get(java.util.concurrent.Callable) TtlCallable.get(Callable)}.</li>
+ * <li>the wrap methods for {@link java.util.concurrent.Executor Executor} are provided
+ *     by {@link com.alibaba.ttl3.executor.TtlExecutors TtlExecutors}.</li>
  * </ul>
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
@@ -39,6 +39,7 @@ import static com.alibaba.ttl3.transmitter.Transmitter.*;
  * @see TtlRunnable
  * @see TtlCallable
  * @see TtlWrapper
+ * @see com.alibaba.ttl3.executor.TtlExecutors TtlExecutors
  */
 public final class TtlWrappers {
     /**
@@ -122,17 +123,23 @@ public final class TtlWrappers {
      * this method is {@code null}-safe, when input parameter is {@code null}, return {@code null};
      * if input parameter is not a {@link TtlWrapper} just return input.
      *
-     * @see TtlRunnable#unwrap(Runnable)
-     * @see TtlCallable#unwrap(java.util.concurrent.Callable)
-     * @see TtlExecutors#unwrapTtlExecutor(java.util.concurrent.Executor)
-     * @see TtlExecutors#unwrapDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory)
-     * @see TtlExecutors#unwrapDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory)
-     * @see TtlExecutors#unwrapTtlRunnableUnwrapComparator(java.util.Comparator)
      * @see TtlWrappers#wrapSupplier(Supplier)
      * @see TtlWrappers#wrapConsumer(Consumer)
      * @see TtlWrappers#wrapBiConsumer(BiConsumer)
      * @see TtlWrappers#wrapFunction(Function)
      * @see TtlWrappers#wrapBiFunction(BiFunction)
+     * @see TtlRunnable#get(Runnable)
+     * @see TtlCallable#get(java.util.concurrent.Callable) TtlCallable.get(Callable)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#getTtlExecutor(java.util.concurrent.Executor) TtlExecutors.getTtlExecutor(Executor)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#getTtlExecutorService(java.util.concurrent.ExecutorService) TtlExecutors.getTtlExecutorService(ExecutorService)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#getDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) TtlExecutors.getDisableInheritableThreadFactory(ThreadFactory)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#getDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory) TtlExecutors.getDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
+     * @see TtlRunnable#unwrap(Runnable)
+     * @see TtlCallable#unwrap(java.util.concurrent.Callable) TtlCallable.unwrap(Callable)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#unwrapTtlExecutor(java.util.concurrent.Executor) TtlExecutors.unwrapTtlExecutor(Executor)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#unwrapDisableInheritableThreadFactory(java.util.concurrent.ThreadFactory) TtlExecutors.unwrapDisableInheritableThreadFactory(ThreadFactory)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#unwrapDisableInheritableForkJoinWorkerThreadFactory(java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory) TtlExecutors.unwrapDisableInheritableForkJoinWorkerThreadFactory(ForkJoinWorkerThreadFactory)
+     * @see com.alibaba.ttl3.executor.TtlExecutors#unwrapTtlRunnableUnwrapComparator(java.util.Comparator) TtlExecutors.unwrapTtlRunnableUnwrapComparator(Comparator)
      * @see #isWrapper(Object)
      */
     @Nullable
