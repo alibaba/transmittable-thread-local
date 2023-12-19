@@ -47,7 +47,7 @@ public class ClassInfo {
     public CtClass getCtClass() throws IOException {
         if (ctClass != null) return ctClass;
 
-        final ClassPool classPool = new ClassPool(true);
+        final ClassPool classPool = new ClassPool(false);
         if (loader == null) {
             classPool.appendClassPath(new LoaderClassPath(ClassLoader.getSystemClassLoader()));
         } else {
