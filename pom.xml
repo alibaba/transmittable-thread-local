@@ -415,6 +415,10 @@
 						</goals>
 						<configuration>
 							<rules>
+								<enforceBytecodeVersion>
+									<maxJdkVersion>${maven.compiler.source}</maxJdkVersion>
+									<ignoredScopes>test</ignoredScopes>
+								</enforceBytecodeVersion>
 								<requireMavenVersion>
 									<version>3.3.9</version>
 								</requireMavenVersion>
@@ -422,6 +426,13 @@
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>extra-enforcer-rules</artifactId>
+						<version>1.7.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 		<pluginManagement>
