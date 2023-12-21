@@ -502,7 +502,7 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>enforce-maven</id>
+                        <id>enforces</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
@@ -966,7 +966,7 @@
             </build>
         </profile>
         <profile>
-            <id>force-jdk11-when-release</id>
+            <id>enforce-when-release</id>
             <activation>
                 <property>
                     <name>performRelease</name>
@@ -975,44 +975,44 @@
             </activation>
             <build>
                 <plugins>
-                    <!--
-                        add maven-enforcer-plugin to make sure the right jdk is used
-                        https://stackoverflow.com/a/18420462/922688
-                    -->
                     <plugin>
                         <artifactId>maven-enforcer-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>enforce-jdk-versions</id>
+                                <id>enforces</id>
                                 <goals>
                                     <goal>enforce</goal>
                                 </goals>
                                 <configuration>
                                     <rules>
+                                        <!--
+                                            add maven-enforcer-plugin to make sure the right jdk is used
+                                            https://stackoverflow.com/a/18420462/922688
+                                        -->
                                         <requireJavaVersion>
                                             <version>17</version>
                                         </requireJavaVersion>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>enforce-property</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
                                         <!-- https://maven.apache.org/enforcer/enforcer-rules/requireProperty.html -->
                                         <requireProperty>
                                             <property>project.version</property>
                                             <regex>^\d\.\d+\.\d+(-(Alpha|Beta|RC)\d+)?$|^\d(\.\d+)?\.(\d+|x)-SNAPSHOT$</regex>
                                             <regexMessage>"Project version(${project.version}) format is invalid!"</regexMessage>
                                         </requireProperty>
+                                        <!-- https://www.mojohaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
+                                        <enforceBytecodeVersion>
+                                            <maxJdkVersion>${maven.compiler.source}</maxJdkVersion>
+                                        </enforceBytecodeVersion>
                                     </rules>
-                                    <fail>true</fail>
                                 </configuration>
                             </execution>
                         </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>extra-enforcer-rules</artifactId>
+                                <version>1.7.0</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
