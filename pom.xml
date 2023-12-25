@@ -255,7 +255,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.29.2-GA</version>
+				<version>3.30.2-GA</version>
 				<optional>true</optional>
 			</dependency>
 			<dependency>
