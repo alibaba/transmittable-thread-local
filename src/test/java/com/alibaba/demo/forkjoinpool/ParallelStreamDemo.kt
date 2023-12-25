@@ -135,17 +135,17 @@ map 11 @ thread ForkJoinPool.commonPool-worker-31
 map 24 @ thread ForkJoinPool.commonPool-worker-23
 sum result: 5050
 run threads(12):
-	ForkJoinPool.commonPool-worker-13
-	ForkJoinPool.commonPool-worker-17
-	ForkJoinPool.commonPool-worker-19
-	ForkJoinPool.commonPool-worker-21
-	ForkJoinPool.commonPool-worker-23
-	ForkJoinPool.commonPool-worker-27
-	ForkJoinPool.commonPool-worker-3
-	ForkJoinPool.commonPool-worker-31
-	ForkJoinPool.commonPool-worker-5
-	ForkJoinPool.commonPool-worker-7
-	ForkJoinPool.commonPool-worker-9
-	main
+    ForkJoinPool.commonPool-worker-13
+    ForkJoinPool.commonPool-worker-17
+    ForkJoinPool.commonPool-worker-19
+    ForkJoinPool.commonPool-worker-21
+    ForkJoinPool.commonPool-worker-23
+    ForkJoinPool.commonPool-worker-27
+    ForkJoinPool.commonPool-worker-3
+    ForkJoinPool.commonPool-worker-31
+    ForkJoinPool.commonPool-worker-5
+    ForkJoinPool.commonPool-worker-7
+    ForkJoinPool.commonPool-worker-9
+    main
 
  */
