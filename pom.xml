@@ -95,11 +95,11 @@
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spotbugs.annotations.version>4.8.2</spotbugs.annotations.version>
+        <spotbugs.annotations.version>4.8.3</spotbugs.annotations.version>
         <jsr305.version>3.0.2</jsr305.version>
         <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
-        <kotlin.version>1.9.21</kotlin.version>
+        <kotlin.version>1.9.22</kotlin.version>
         <kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
         <kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
 
@@ -233,7 +233,7 @@
                 <!-- https://github.com/raphw/byte-buddy/issues/1264 -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy-parent</artifactId>
-                <version>1.14.10</version>
+                <version>1.14.11</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -534,11 +534,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>3.12.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.2.3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -554,7 +554,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.2</version>
+                    <version>3.6.3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -589,7 +589,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.8.1.0</version>
+                    <version>4.8.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
