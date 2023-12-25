@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/ci.yaml?branch=2.x&logo=github&logoColor=white&label=fast ci" alt="Fast CI"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/alibaba/transmittable-thread-local/strong_ci.yaml?branch=2.x&logo=github&logoColor=white&label=strong ci" alt="Strong CI"></a>
-<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/2.x"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
+<a href="https://app.codecov.io/gh/alibaba/transmittable-thread-local/tree/v2.14.5"><img src="https://badgen.net/codecov/c/github/alibaba/transmittable-thread-local/2.x?icon=codecov" alt="Coverage Status"></a>
 <a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-6+-339933?logo=openjdk&logoColor=white" alt="JDK support"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/github/license/alibaba/transmittable-thread-local?color=4D7A97&logo=apache" alt="License"></a>
 <a href="https://alibaba.github.io/transmittable-thread-local/apidocs/"><img src="https://img.shields.io/github/release/alibaba/transmittable-thread-local?label=javadoc&color=339933&logo=microsoft-academic&logoColor=white" alt="Javadocs"></a>
@@ -373,7 +373,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 
 # 🔌 Java API Docs
 
-当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.4/index.html>
+当前版本的Java API文档地址： <https://alibaba.github.io/transmittable-thread-local/apidocs/2.14.5/index.html>
 
 # 🍪 Maven依赖
 
@@ -383,7 +383,7 @@ These paths are searched by the bootstrap class loader after the platform specif
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>transmittable-thread-local</artifactId>
-    <version>2.14.4</version>
+    <version>2.14.5</version>
 </dependency>
 ```
 
