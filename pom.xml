@@ -627,26 +627,8 @@
       </plugins>
     </pluginManagement>
   </build>
+
   <profiles>
-    <profile>
-      <id>config-for-jdk16+</id>
-      <activation>
-        <jdk>[16,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/*$*</exclude>
-                <exclude>**/JavassistTest*</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>enable-ttl-agent-for-test</id>
       <properties>

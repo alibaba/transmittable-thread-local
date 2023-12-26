@@ -9,19 +9,44 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import javassist.ClassPool
 import javassist.CtClass
+import org.apache.commons.lang3.JavaVersion
+import org.apache.commons.lang3.SystemUtils
 
 /**
  * [simplify the try-finally code gen by javassist, do not need copy method #115](https://github.com/alibaba/transmittable-thread-local/issues/115)
  */
 class JavassistTest : AnnotationSpec() {
     /**
-     * when run unit test under TTL agent,
-     * javassist is repackaged and excluded.
+     * ## skip test case when run unit test under TTL agent
      *
-     * skip this test case.
+     * Because javassist is repackaged and excluded, javassist-classes is not found.
+     *
+     * ## skip test case when run unit test under java 16+
+     *
+     * Because with the release of Java 16 the access control of the new Jigsaw module system is starting to be enforced by the JVM,
+     * encounter `InaccessibleObjectException`:
+     *
+     * ```
+     * Caused by: java.lang.reflect.InaccessibleObjectException: Unable to make protected final java.lang.Class java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain) throws java.lang.ClassFormatError accessible: module java.base does not "opens java.lang" to unnamed module @604cb8dc
+     * at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:354)
+     * at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:297)
+     * at java.base/java.lang.reflect.Method.checkCanSetAccessible(Method.java:199)
+     * at java.base/java.lang.reflect.Method.setAccessible(Method.java:193)
+     * at javassist.util.proxy.SecurityActions.setAccessible(SecurityActions.java:159)
+     * at javassist.util.proxy.DefineClassHelper$JavaOther.defineClass(DefineClassHelper.java:213)
+     * at javassist.util.proxy.DefineClassHelper$Java11.defineClass(DefineClassHelper.java:52)
+     * at javassist.util.proxy.DefineClassHelper.toClass(DefineClassHelper.java:260)
+     * at javassist.ClassPool.toClass(ClassPool.java:1240)
+     * at javassist.ClassPool.toClass(ClassPool.java:1098)
+     * at javassist.ClassPool.toClass(ClassPool.java:1056)
+     * at javassist.CtClass.toClass(CtClass.java:1298)
+     * at com.alibaba.third_part_lib_test.JavassistTest.insertAfter_as_finally()
+     * ...
+     * ```
      */
     @Suppress("OVERRIDE_DEPRECATION")
-    override fun defaultTestCaseConfig(): TestCaseConfig = TestCaseConfig(enabled = noTtlAgentRun())
+    override fun defaultTestCaseConfig(): TestCaseConfig =
+        TestCaseConfig(enabled = noTtlAgentRun() && SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_15))
 
     @Test
     fun insertAfter_as_finally() {
