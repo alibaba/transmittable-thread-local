@@ -101,12 +101,12 @@
 
     <kotlin.version>1.9.22</kotlin.version>
     <kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-    <kotlin.coroutine.version>1.7.3</kotlin.coroutine.version>
+    <kotlin.coroutine.version>1.8.0</kotlin.coroutine.version>
 
     <slf4j.version>1.7.36</slf4j.version>
 
     <!-- testing dependencies versions -->
-    <junit5.version>5.10.1</junit5.version>
+    <junit5.version>5.10.2</junit5.version>
     <kotest.version>5.8.0</kotest.version>
 
     <!--
@@ -233,7 +233,7 @@
         <!-- https://github.com/raphw/byte-buddy/issues/1264 -->
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy-parent</artifactId>
-        <version>1.14.11</version>
+        <version>1.14.12</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -535,7 +535,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.2.3</version>
+          <version>3.2.5</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -543,7 +543,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.5.1</version>
+          <version>3.5.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
@@ -586,7 +586,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.8.2.0</version>
+          <version>4.8.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -600,7 +600,7 @@
           -->
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.0</version>
           <configuration>
             <executable>${java.home}/bin/java</executable>
             <classpathScope>test</classpathScope>
