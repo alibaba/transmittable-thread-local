@@ -15,28 +15,17 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Java 8
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 8
+          # https://github.com/actions/setup-java?tab=readme-ov-file#install-multiple-jdks
+          java-version: |
+            8
+            11
+            17
+            21
           distribution: zulu
-          # only first java setup need enable cache
           cache: maven
-      - name: Setup Java 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: microsoft
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: microsoft
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21
-          distribution: zulu
 
       - name: Run integration test
         run: scripts/integration-test.sh
@@ -49,3 +38,9 @@ jobs:
         with:
           name: codecov-umbrella
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      # https://remarkablemark.org/blog/2017/10/12/check-git-dirty/
+      - name: Check git dirty
+        run: |
+          git status --short
+          [ -z "$(git status --short)" ]
