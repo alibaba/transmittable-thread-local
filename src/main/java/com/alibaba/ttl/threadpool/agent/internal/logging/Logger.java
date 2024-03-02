@@ -37,12 +37,10 @@ public abstract class Logger {
     public static Logger getLogger(Class<?> clazz) {
         if (loggerImplType == -1) throw new IllegalStateException("TTL logger implementation type is NOT set!");
 
-        switch (loggerImplType) {
-            case 1:
-                return new StdOutLogger(clazz);
-            default:
-                return new StdErrorLogger(clazz);
+        if (loggerImplType == 1) {
+            return new StdOutLogger(clazz);
         }
+        return new StdErrorLogger(clazz);
     }
 
     final Class<?> logClass;
@@ -67,7 +65,7 @@ public abstract class Logger {
             if (level == Level.SEVERE) {
                 final String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
                 System.err.printf("%s %s [%s] %s: %s%n", time, level, Thread.currentThread().getName(), logClass.getSimpleName(), msg);
-                if (thrown != null) thrown.printStackTrace();
+                if (thrown != null) thrown.printStackTrace(System.err);
             }
         }
     }

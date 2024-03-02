@@ -13,6 +13,9 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.Objects.requireNonNull;
+
+
 /**
  * {@link TransmittableThreadLocal}({@code TTL}) can transmit the value from the thread of submitting task
  * to the thread of executing task even using thread pooling components.
@@ -128,11 +131,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * @since 2.12.2
      */
     @NonNull
-    @SuppressWarnings("ConstantConditions")
     public static <S> TransmittableThreadLocal<S> withInitial(@NonNull Supplier<? extends S> supplier) {
-        if (supplier == null) throw new NullPointerException("supplier is null");
-
-        return new SuppliedTransmittableThreadLocal<>(supplier, null, null);
+        return new SuppliedTransmittableThreadLocal<>(requireNonNull(supplier, "supplier is null"), null, null);
     }
 
     /**
@@ -152,12 +152,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @NonNull
     @ParametersAreNonnullByDefault
-    @SuppressWarnings("ConstantConditions")
     public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValueAndCopy) {
-        if (supplier == null) throw new NullPointerException("supplier is null");
-        if (copierForChildValueAndCopy == null) throw new NullPointerException("ttl copier is null");
-
-        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValueAndCopy, copierForChildValueAndCopy);
+        return new SuppliedTransmittableThreadLocal<>(
+                requireNonNull(supplier, "supplier is null"),
+                requireNonNull(copierForChildValueAndCopy, "ttl copier is null"),
+                copierForChildValueAndCopy);
     }
 
     /**
@@ -184,13 +183,11 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @NonNull
     @ParametersAreNonnullByDefault
-    @SuppressWarnings("ConstantConditions")
     public static <S> TransmittableThreadLocal<S> withInitialAndCopier(Supplier<? extends S> supplier, TtlCopier<S> copierForChildValue, TtlCopier<S> copierForCopy) {
-        if (supplier == null) throw new NullPointerException("supplier is null");
-        if (copierForChildValue == null) throw new NullPointerException("ttl copier for child value is null");
-        if (copierForCopy == null) throw new NullPointerException("ttl copier for copy value is null");
-
-        return new SuppliedTransmittableThreadLocal<>(supplier, copierForChildValue, copierForCopy);
+        return new SuppliedTransmittableThreadLocal<>(
+                requireNonNull(supplier, "supplier is null"),
+                requireNonNull(copierForChildValue, "ttl copier for child value is null"),
+                requireNonNull(copierForCopy, "ttl copier for copy value is null"));
     }
 
     /**
@@ -203,7 +200,6 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
         private final TtlCopier<T> copierForCopy;
 
         SuppliedTransmittableThreadLocal(Supplier<? extends T> supplier, TtlCopier<T> copierForChildValue, TtlCopier<T> copierForCopy) {
-            if (supplier == null) throw new NullPointerException("supplier is null");
             this.supplier = supplier;
             this.copierForChildValue = copierForChildValue;
             this.copierForCopy = copierForCopy;
@@ -363,7 +359,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      */
     @TestOnly
     static void dump(@Nullable String title) {
-        if (title != null && title.length() > 0) {
+        if (title != null && !title.isEmpty()) {
             System.out.printf("Start TransmittableThreadLocal[%s] Dump...%n", title);
         } else {
             System.out.println("Start TransmittableThreadLocal Dump...");
