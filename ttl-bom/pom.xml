@@ -128,7 +128,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
