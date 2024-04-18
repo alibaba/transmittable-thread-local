@@ -575,6 +575,8 @@ JDK Bug: <https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8021205>
       logback扩展，集成transmittable-thread-local支持跨线程池的mdc跟踪
     - [`oldratlee/log4j2-ttl-thread-context-map` ![](https://img.shields.io/github/stars/oldratlee/log4j2-ttl-thread-context-map.svg?style=social&label=Star)](https://github.com/oldratlee/log4j2-ttl-thread-context-map)  
       Log4j2 TTL ThreadContextMap, Log4j2 extension integrated TransmittableThreadLocal to MDC
+    - [`qqxx6661/log-record` ![](https://img.shields.io/github/stars/qqxx6661/log-record.svg?style=social&label=Star)](https://github.com/qqxx6661/log-record)
+      业务日志记录框架，使用注解优雅记录日志，支持SpEL表达式，自定义上下文，自定义函数，实体类DIFF等特性。
 - **中间件/字节码**
     - [`ymm-tech/easy-byte-coder` ![](https://img.shields.io/github/stars/ymm-tech/easy-byte-coder.svg?style=social&label=Star)](https://github.com/ymm-tech/easy-byte-coder)  
       Easy-byte-coder is a non-invasive bytecode injection framework based on JVM
