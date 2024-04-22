@@ -486,7 +486,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.2.3</version>
+					<version>3.2.4</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
