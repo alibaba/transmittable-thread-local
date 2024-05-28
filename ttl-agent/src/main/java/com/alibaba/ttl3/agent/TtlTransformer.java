@@ -1,18 +1,20 @@
 package com.alibaba.ttl3.agent;
 
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
+
 import com.alibaba.ttl3.agent.logging.Logger;
 import com.alibaba.ttl3.agent.transformlet.ClassInfo;
 import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -63,6 +65,7 @@ public class TtlTransformer implements ClassFileTransformer {
             final ClassInfo classInfo = new ClassInfo(classFile, classFileBuffer, loader);
             if (isClassUnderPackage(classInfo.getClassName(), "com.alibaba.ttl")) return NO_TRANSFORM;
             if (isClassUnderPackage(classInfo.getClassName(), "java.lang")) return NO_TRANSFORM;
+            if (isExcludedPackages(classInfo.getClassName())) return NO_TRANSFORM;
 
             if (logClassTransform)
                 logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
@@ -95,5 +98,16 @@ public class TtlTransformer implements ClassFileTransformer {
         }
 
         return NO_TRANSFORM;
+    }
+
+    private boolean isExcludedPackages(String packageName) {
+        // -DexcludePackages=com.xxx, org.xxx
+        String excludePackages = System.getProperty("excludePackages");
+        if (excludePackages == null) {
+            return false;
+        }
+        Set<String> packageSet = Arrays.stream(excludePackages.split(","))
+            .collect(Collectors.toSet());
+        return packageSet.contains(packageName);
     }
 }
