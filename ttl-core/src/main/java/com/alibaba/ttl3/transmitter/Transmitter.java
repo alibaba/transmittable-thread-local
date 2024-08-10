@@ -1,10 +1,10 @@
 package com.alibaba.ttl3.transmitter;
 
-import com.alibaba.crr.CrrTransmitCallback;
+import com.alibaba.crr.TransmitCallback;
 import com.alibaba.crr.composite.Backup;
 import com.alibaba.crr.composite.Capture;
-import com.alibaba.crr.composite.CompositeCrrTransmit;
-import com.alibaba.crr.composite.CompositeCrrTransmitCallback;
+import com.alibaba.crr.composite.CompositeTransmittable;
+import com.alibaba.crr.composite.CompositeTransmitCallback;
 import com.alibaba.ttl3.TransmittableThreadLocal;
 import com.alibaba.ttl3.TtlCallable;
 import com.alibaba.ttl3.TtlRunnable;
@@ -109,9 +109,9 @@ import java.util.function.Supplier;
  * @see TransmitteeRegistry
  */
 public final class Transmitter {
-    private static final CompositeCrrTransmitCallback compositeCallback = new CompositeCrrTransmitCallback();
+    private static final CompositeTransmitCallback compositeCallback = new CompositeTransmitCallback();
 
-    static final CompositeCrrTransmit compositeCrrTransmit = new CompositeCrrTransmit(compositeCallback);
+    static final CompositeTransmittable compositeTransmittable = new CompositeTransmittable(compositeCallback);
 
     /**
      * Capture all {@link TransmittableThreadLocal} and registered {@link ThreadLocal} values in the current thread.
@@ -120,7 +120,7 @@ public final class Transmitter {
      */
     @NonNull
     public static Capture capture() {
-        return compositeCrrTransmit.capture();
+        return compositeTransmittable.capture();
     }
 
     /**
@@ -133,7 +133,7 @@ public final class Transmitter {
      */
     @NonNull
     public static Backup replay(@NonNull Capture captured) {
-        return compositeCrrTransmit.replay(captured);
+        return compositeTransmittable.replay(captured);
     }
 
     /**
@@ -154,7 +154,7 @@ public final class Transmitter {
      */
     @NonNull
     public static Backup clear() {
-        return compositeCrrTransmit.clear();
+        return compositeTransmittable.clear();
     }
 
     /**
@@ -166,7 +166,7 @@ public final class Transmitter {
      * @see #clear()
      */
     public static void restore(@NonNull Backup backup) {
-        compositeCrrTransmit.restore(backup);
+        compositeTransmittable.restore(backup);
     }
 
     /**
@@ -250,22 +250,22 @@ public final class Transmitter {
     }
 
     /**
-     * Register the {@link CrrTransmitCallback}.
+     * Register the {@link TransmitCallback}.
      *
      * @return true if the input callback is not registered
-     * @see #unregisterCallback(CrrTransmitCallback)
+     * @see #unregisterCallback(TransmitCallback)
      */
-    public static boolean registerCallback(@NonNull CrrTransmitCallback callback) {
+    public static boolean registerCallback(@NonNull TransmitCallback callback) {
         return compositeCallback.registerCallback(callback);
     }
 
     /**
-     * Unregister the {@link CrrTransmitCallback}.
+     * Unregister the {@link TransmitCallback}.
      *
      * @return true if the input callback is registered
-     * @see #registerCallback(CrrTransmitCallback)
+     * @see #registerCallback(TransmitCallback)
      */
-    public static boolean unregisterCallback(@NonNull CrrTransmitCallback callback) {
+    public static boolean unregisterCallback(@NonNull TransmitCallback callback) {
         return compositeCallback.unregisterCallback(callback);
     }
 

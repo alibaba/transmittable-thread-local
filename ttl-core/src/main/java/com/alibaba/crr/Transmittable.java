@@ -10,7 +10,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <B> the backup data type of transmittance
  * @author Jerry Lee (oldratlee at gmail dot com)
  */
-public interface CrrTransmit<C, B> {
+public interface Transmittable<C, B> {
     /**
      * Capture.
      * <p>
