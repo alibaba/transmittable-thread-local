@@ -81,7 +81,7 @@
 
 		<spotbugs.annotations.version>4.8.6</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
-		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
+		<jetbrains.annotations.version>26.0.0</jetbrains.annotations.version>
 
 		<kotlin.version>1.9.25</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
