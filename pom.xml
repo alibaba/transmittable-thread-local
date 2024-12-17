@@ -87,7 +87,7 @@
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
 		<kotlin.coroutine.version>1.9.0</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
-		<dokka.version>1.9.20</dokka.version>
+		<dokka.version>2.0.0</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
 
 		<slf4j.version>2.0.7</slf4j.version>
