@@ -79,7 +79,7 @@
 			https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}
 		</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.8.6</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.9.3</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
