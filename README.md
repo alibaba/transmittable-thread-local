@@ -84,7 +84,7 @@
 
 1. 分布式跟踪系统 或 全链路压测（即链路打标）
 2. 日志收集记录系统上下文
-3. `Session`级`Cache`
+3. `Request`级`Cache`
 4. 应用容器或上层框架跨应用代码给下层`SDK`传递信息
 
 各个场景的展开说明参见子文档 [需求场景](docs/requirement-scenario.md)。
