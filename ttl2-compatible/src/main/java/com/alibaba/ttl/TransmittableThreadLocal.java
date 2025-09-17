@@ -70,6 +70,16 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     private static final Logger logger = Logger.getLogger(TransmittableThreadLocal.class.getName());
 
     private final boolean disableIgnoreNullValueSemantics;
+    /**
+     * Supplier for providing initial values in quick get mode.
+     * When set, this supplier is used to provide initial values when the ThreadLocal value is null.
+     * This field is used to optimize performance by avoiding unnecessary calls to addThisToHolder()
+     * in the get() method. The supplier should only be set when initialValue() returns null.
+     *
+     * Purpose: To reduce the overhead in get() method by calling addThisToHolder() only when
+     * value initialization is actually needed, rather than on every get() call.
+     */
+    private final Supplier<? extends T> initialValueSupplierForQuickGet;
 
     /**
      * Default constructor. Create a {@link TransmittableThreadLocal} instance with "Ignore-Null-Value Semantics".
@@ -100,7 +110,7 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * @see #TransmittableThreadLocal(boolean)
      */
     public TransmittableThreadLocal() {
-        this(false);
+        this(false, null);
     }
 
     /**
@@ -112,7 +122,40 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
      * @since 2.11.3
      */
     public TransmittableThreadLocal(boolean disableIgnoreNullValueSemantics) {
+        this(disableIgnoreNullValueSemantics, null);
+    }
+
+    /**
+     * Constructor, create a {@link TransmittableThreadLocal} instance
+     * with parameter {@code initialValueSupplierForQuickGet} to control "Quick Get" feature.
+     * This constructor enables the "Quick Get" optimization where addThisToHolder() is only called
+     * when value initialization is actually needed.
+     *
+     * @param initialValueSupplierForQuickGet the supplier to be used to determine the initial value for "Quick Get" feature.
+     *                                        Requires that initialValue() returns null and this supplier returns a non-null value.
+     */
+    public TransmittableThreadLocal(Supplier<? extends T> initialValueSupplierForQuickGet) {
+        this(false, initialValueSupplierForQuickGet);
+    }
+
+    /**
+     * Constructor, create a {@link TransmittableThreadLocal} instance
+     * with parameter {@code disableIgnoreNullValueSemantics} to control "Ignore-Null-Value Semantics"
+     * and parameter {@code initialValueSupplierForQuickGet} to control "Quick Get" feature.
+     * This constructor enables the "Quick Get" optimization where addThisToHolder() is only called
+     * when value initialization is actually needed.
+     *
+     * @param disableIgnoreNullValueSemantics disable "Ignore-Null-Value Semantics"
+     * @param initialValueSupplierForQuickGet the supplier to be used to determine the initial value for "Quick Get" feature.
+     *                                        Requires that initialValue() returns null.
+     */
+    public TransmittableThreadLocal(boolean disableIgnoreNullValueSemantics, Supplier<? extends T> initialValueSupplierForQuickGet) {
         this.disableIgnoreNullValueSemantics = disableIgnoreNullValueSemantics;
+        this.initialValueSupplierForQuickGet = initialValueSupplierForQuickGet;
+        // Validate initialValueSupplierForQuickGet
+        if (initialValueSupplierForQuickGet != null && initialValue() != null) {
+            throw new IllegalStateException("initialValue need return null value");
+        }
     }
 
     /**
@@ -276,7 +319,20 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     @Override
     public final T get() {
         T value = super.get();
-        if (disableIgnoreNullValueSemantics || value != null) addThisToHolder();
+        if (initialValueSupplierForQuickGet != null) {
+            // Quick Get mode: Only call addThisToHolder() when it's null
+            if (value == null) {
+                value = initialValueSupplierForQuickGet.get();
+                if (disableIgnoreNullValueSemantics || value != null) {
+                    super.set(value);
+                    addThisToHolder();
+                }
+            }
+        } else if (disableIgnoreNullValueSemantics || value != null) {
+            // Standard mode: Always call addThisToHolder() for non-null values
+            // WeakHashMap#containsKey might be relatively slow, primarily due to its design constraints and internal cleanup mechanisms
+            addThisToHolder();
+        }
         return value;
     }
 
