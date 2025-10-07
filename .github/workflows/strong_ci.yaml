@@ -11,31 +11,29 @@ jobs:
     name: Strong CI by multiply java versions
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        # https://github.com/actions/cache/blob/main/examples.md#java---maven
         with:
-          # https://github.com/actions/setup-java?tab=readme-ov-file#install-multiple-jdks
-          java-version: |
-            8
-            11
-            17
-            21
-            22
-          distribution: zulu
-          cache: maven
-
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      # image(ubuntu-latest/ubuntu-24.04) included Java 8/11/17/21/25
+      #   https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#java
       - name: Run integration test
         run: scripts/integration-test.sh
 
       - name: Remove self maven install files
         run: rm -rf $HOME/.m2/repository/com/alibaba/{transmittable-thread-local,ttl}*
 
+      # https://github.com/codecov/codecov-action
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
