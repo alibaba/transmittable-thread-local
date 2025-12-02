@@ -16,7 +16,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           # https://github.com/actions/setup-java?tab=readme-ov-file#install-multiple-jdks
           java-version: |
