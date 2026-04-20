@@ -22,6 +22,7 @@
 <a href="https://github.com/alibaba/transmittable-thread-local/graphs/contributors"><img src="https://img.shields.io/github/contributors/alibaba/transmittable-thread-local" alt="GitHub Contributors"></a>
 <a href="https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/github/repo-size/alibaba/transmittable-thread-local" alt="GitHub repo size"></a>
 <a href="https://gitpod.io/#https://github.com/alibaba/transmittable-thread-local"><img src="https://img.shields.io/badge/Gitpod-ready to code-339933?label=gitpod&logo=gitpod&logoColor=white" alt="gitpod: Ready to Code"></a>
+<a href="https://libs.tech/project/13536393/transmittable-thread-local"><img src="https://libs.tech/project/13536393/badge.svg" alt="libs.tech recommends" /></a>
 </p>
 
 [📖 English Documentation](README-EN.md) | 📖 中文文档
