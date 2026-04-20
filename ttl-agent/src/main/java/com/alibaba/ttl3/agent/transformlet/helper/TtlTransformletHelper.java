@@ -8,6 +8,9 @@ import com.alibaba.ttl3.spi.TtlEnhanced;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javassist.*;
 
 import java.lang.reflect.Modifier;
@@ -201,6 +204,17 @@ public final class TtlTransformletHelper {
     public static boolean isClassUnderPackage(@NonNull String className, @NonNull String packageName) {
         String packageOfClass = getPackageName(className);
         return packageOfClass.equals(packageName) || packageOfClass.startsWith(packageName + ".");
+    }
+
+    public static boolean isUnnecessaryPackage(String packageName) {
+        // -DexcludePackages=com.xxx, org.xxx
+        String excludePackages = System.getProperty("excludePackages");
+        if (excludePackages == null) {
+            return false;
+        }
+        Set<String> packageSet = Arrays.stream(excludePackages.split(","))
+            .collect(Collectors.toSet());
+        return packageSet.contains(packageName);
     }
 
     public static boolean isClassAtPackageJavaUtil(@NonNull String className) {

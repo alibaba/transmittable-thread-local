@@ -1,18 +1,18 @@
 package com.alibaba.ttl3.agent;
 
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
+import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isUnnecessaryPackage;
+
 import com.alibaba.ttl3.agent.logging.Logger;
 import com.alibaba.ttl3.agent.transformlet.ClassInfo;
 import com.alibaba.ttl3.agent.transformlet.TtlTransformlet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.alibaba.ttl3.agent.transformlet.helper.TtlTransformletHelper.isClassUnderPackage;
 
 /**
  * TTL {@link ClassFileTransformer} of Java Agent
@@ -68,6 +68,7 @@ public class TtlTransformer implements ClassFileTransformer {
             // introspection side effects (exceptions, allocations) produce nested JFR events
             // that corrupt the in-progress event buffer.
             if (isClassUnderPackage(classInfo.getClassName(), "jdk.jfr")) return NO_TRANSFORM;
+            if (isUnnecessaryPackage(classInfo.getClassName())) return NO_TRANSFORM;
 
             if (logClassTransform)
                 logger.info("[TtlTransformer] transforming " + classInfo.getClassName()
