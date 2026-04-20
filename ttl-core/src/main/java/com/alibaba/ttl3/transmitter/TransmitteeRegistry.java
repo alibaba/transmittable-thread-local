@@ -36,7 +36,7 @@ public final class TransmitteeRegistry {
      * @see #unregisterTransmittee(Transmittee)
      */
     public static <C, B> boolean registerTransmittee(@NonNull Transmittee<C, B> transmittee) {
-        return Transmitter.compositeCrrTransmit.registerCrrTransmit(transmittee);
+        return Transmitter.compositeTransmittable.registerTransmittable(transmittee);
     }
 
     /**
@@ -48,7 +48,7 @@ public final class TransmitteeRegistry {
      * @see #registerTransmittee(Transmittee)
      */
     public static <C, B> boolean unregisterTransmittee(@NonNull Transmittee<C, B> transmittee) {
-        return Transmitter.compositeCrrTransmit.unregisterCrrTransmit(transmittee);
+        return Transmitter.compositeTransmittable.unregisterTransmittable(transmittee);
     }
 
     @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")

@@ -63,6 +63,11 @@ public class TtlTransformer implements ClassFileTransformer {
             final ClassInfo classInfo = new ClassInfo(classFile, classFileBuffer, loader);
             if (isClassUnderPackage(classInfo.getClassName(), "com.alibaba.ttl")) return NO_TRANSFORM;
             if (isClassUnderPackage(classInfo.getClassName(), "java.lang")) return NO_TRANSFORM;
+            // Exclude JFR classes to prevent reentrancy corruption in JFR EventWriter.
+            // During event writing, class loading can trigger this transformer, and Javassist
+            // introspection side effects (exceptions, allocations) produce nested JFR events
+            // that corrupt the in-progress event buffer.
+            if (isClassUnderPackage(classInfo.getClassName(), "jdk.jfr")) return NO_TRANSFORM;
             if (isUnnecessaryPackage(classInfo.getClassName())) return NO_TRANSFORM;
 
             if (logClassTransform)

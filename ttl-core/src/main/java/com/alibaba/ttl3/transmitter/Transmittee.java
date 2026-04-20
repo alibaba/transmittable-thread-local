@@ -1,11 +1,11 @@
 package com.alibaba.ttl3.transmitter;
 
-import com.alibaba.crr.CrrTransmit;
+import com.alibaba.crr.Transmittable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * The transmittee is the extension point to transmit {@code ThreadLocal}s
- * ({@code JDK} {@link ThreadLocal}, {@code FastThreadLocal} of {@code Netty}, etc).
+ * ({@code JDK} {@link ThreadLocal}, {@code FastThreadLocal} of {@code Netty}, etc.).
  * <p>
  * {@code ThreadLocal} transmittance is registered
  * by {@link TransmitteeRegistry#registerTransmittee(Transmittee)} method.
@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see TransmitteeRegistry#registerTransmittee(Transmittee)
  * @see TransmitteeRegistry#unregisterTransmittee(Transmittee)
  */
-public interface Transmittee<C, B> extends CrrTransmit<C, B> {
+public interface Transmittee<C, B> extends Transmittable<C, B> {
     /**
      * Capture.
      * <p>

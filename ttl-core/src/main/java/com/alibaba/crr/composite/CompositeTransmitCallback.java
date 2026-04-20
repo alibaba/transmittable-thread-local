@@ -1,6 +1,6 @@
 package com.alibaba.crr.composite;
 
-import com.alibaba.crr.CrrTransmitCallback;
+import com.alibaba.crr.TransmitCallback;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 import java.util.HashSet;
@@ -12,25 +12,25 @@ import java.util.logging.Logger;
 import static com.alibaba.ttl3.internal.util.Utils.propagateIfFatal;
 
 /**
- * Composite CrrTransmitCallback.
+ * Composite TransmitCallback.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see CrrTransmitCallback
+ * @see TransmitCallback
  */
-public final class CompositeCrrTransmitCallback {
-    private static final Logger logger = Logger.getLogger(CompositeCrrTransmitCallback.class.getName());
+public final class CompositeTransmitCallback {
+    private static final Logger logger = Logger.getLogger(CompositeTransmitCallback.class.getName());
 
-    private final Set<CrrTransmitCallback> registeredCrrTransmitCallbackSet = new CopyOnWriteArraySet<>();
+    private final Set<TransmitCallback> registeredTransmitCallbackSet = new CopyOnWriteArraySet<>();
 
     Object beforeReplay() {
-        Set<CrrTransmitCallback> callbacks = new HashSet<>(registeredCrrTransmitCallbackSet);
-        for (CrrTransmitCallback cb : callbacks) {
+        Set<TransmitCallback> callbacks = new HashSet<>(registeredTransmitCallbackSet);
+        for (TransmitCallback cb : callbacks) {
             try {
                 cb.beforeReplay();
             } catch (Throwable t) {
                 propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "exception when beforeReplay for crrTransmitCallback " + cb +
+                    logger.log(Level.WARNING, "exception when beforeReplay for transmittableCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
                 }
             }
@@ -40,14 +40,14 @@ public final class CompositeCrrTransmitCallback {
 
     Object afterReplay(Object data) {
         @SuppressWarnings("unchecked")
-        Set<CrrTransmitCallback> callbacks = (Set<CrrTransmitCallback>) data;
-        for (CrrTransmitCallback cb : callbacks) {
+        Set<TransmitCallback> callbacks = (Set<TransmitCallback>) data;
+        for (TransmitCallback cb : callbacks) {
             try {
                 cb.afterReplay();
             } catch (Throwable t) {
                 propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "exception when afterReplay for crrTransmitCallback " + cb +
+                    logger.log(Level.WARNING, "exception when afterReplay for transmittableCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
                 }
             }
@@ -57,14 +57,14 @@ public final class CompositeCrrTransmitCallback {
 
     Object beforeRestore(Object data) {
         @SuppressWarnings("unchecked")
-        Set<CrrTransmitCallback> callbacks = (Set<CrrTransmitCallback>) data;
-        for (CrrTransmitCallback cb : callbacks) {
+        Set<TransmitCallback> callbacks = (Set<TransmitCallback>) data;
+        for (TransmitCallback cb : callbacks) {
             try {
                 cb.beforeRestore();
             } catch (Throwable t) {
                 propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "exception when beforeRestore for crrTransmitCallback " + cb +
+                    logger.log(Level.WARNING, "exception when beforeRestore for transmittableCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
                 }
             }
@@ -74,14 +74,14 @@ public final class CompositeCrrTransmitCallback {
 
     void afterRestore(Object data) {
         @SuppressWarnings("unchecked")
-        Set<CrrTransmitCallback> callbacks = (Set<CrrTransmitCallback>) data;
-        for (CrrTransmitCallback cb : callbacks) {
+        Set<TransmitCallback> callbacks = (Set<TransmitCallback>) data;
+        for (TransmitCallback cb : callbacks) {
             try {
                 cb.afterRestore();
             } catch (Throwable t) {
                 propagateIfFatal(t);
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "exception when afterRestore for crrTransmitCallback " + cb +
+                    logger.log(Level.WARNING, "exception when afterRestore for transmittableCallback " + cb +
                             "(class " + cb.getClass().getName() + "), just ignored; cause: " + t, t);
                 }
             }
@@ -90,22 +90,22 @@ public final class CompositeCrrTransmitCallback {
 
 
     /**
-     * Register the {@link CrrTransmitCallback}.
+     * Register the {@link TransmitCallback}.
      *
      * @return true if the input callback is not registered
-     * @see #unregisterCallback(CrrTransmitCallback)
+     * @see #unregisterCallback(TransmitCallback)
      */
-    public boolean registerCallback(@NonNull CrrTransmitCallback callback) {
-        return registeredCrrTransmitCallbackSet.add(callback);
+    public boolean registerCallback(@NonNull TransmitCallback callback) {
+        return registeredTransmitCallbackSet.add(callback);
     }
 
     /**
-     * Unregister the {@link CrrTransmitCallback}.
+     * Unregister the {@link TransmitCallback}.
      *
      * @return true if the input callback is registered
-     * @see #registerCallback(CrrTransmitCallback)
+     * @see #registerCallback(TransmitCallback)
      */
-    public boolean unregisterCallback(@NonNull CrrTransmitCallback callback) {
-        return registeredCrrTransmitCallbackSet.remove(callback);
+    public boolean unregisterCallback(@NonNull TransmitCallback callback) {
+        return registeredTransmitCallbackSet.remove(callback);
     }
 }

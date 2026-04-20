@@ -1,32 +1,32 @@
 package com.alibaba.crr;
 
 /**
- * The callback of {@link CrrTransmit} process.
+ * The callback of {@link Transmittable} process.
  *
  * @author Jerry Lee (oldratlee at gmail dot com)
- * @see CrrTransmit
+ * @see Transmittable
  */
-public interface CrrTransmitCallback {
+public interface TransmitCallback {
     /**
-     * @see CrrTransmit#replay(Object)
+     * @see Transmittable#replay(Object)
      */
     default void beforeReplay() {
     }
 
     /**
-     * @see CrrTransmit#replay(Object)
+     * @see Transmittable#replay(Object)
      */
     default void afterReplay() {
     }
 
     /**
-     * @see CrrTransmit#restore(Object)
+     * @see Transmittable#restore(Object)
      */
     default void beforeRestore() {
     }
 
     /**
-     * @see CrrTransmit#restore(Object)
+     * @see Transmittable#restore(Object)
      */
     default void afterRestore() {
     }

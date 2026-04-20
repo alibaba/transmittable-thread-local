@@ -79,13 +79,13 @@
 			https://alibaba.github.io/transmittable-thread-local/apidocs/${project.version}
 		</javadoc.ttl.base.link>
 
-		<spotbugs.annotations.version>4.8.4</spotbugs.annotations.version>
+		<spotbugs.annotations.version>4.8.6</spotbugs.annotations.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
 
-		<kotlin.version>1.9.24</kotlin.version>
+		<kotlin.version>1.9.25</kotlin.version>
 		<kotlin.compiler.jvmTarget>${maven.compiler.source}</kotlin.compiler.jvmTarget>
-		<kotlin.coroutine.version>1.8.0</kotlin.coroutine.version>
+		<kotlin.coroutine.version>1.9.0</kotlin.coroutine.version>
 		<!-- https://kotlin.github.io/dokka/1.7.10/user_guide/maven/usage/ -->
 		<dokka.version>1.9.20</dokka.version>
 		<dokka.link.jdk.version>8</dokka.link.jdk.version>
@@ -93,8 +93,8 @@
 		<slf4j.version>2.0.7</slf4j.version>
 
 		<!-- testing dependencies versions -->
-		<junit5.version>5.10.2</junit5.version>
-		<kotest.version>5.9.0</kotest.version>
+		<junit5.version>5.11.4</junit5.version>
+		<kotest.version>5.9.1</kotest.version>
 
 		<!--
 			slf4j simple logger configuration for test
@@ -196,7 +196,7 @@
 				<!-- https://github.com/raphw/byte-buddy/issues/1264 -->
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-parent</artifactId>
-				<version>1.14.15</version>
+				<version>1.15.11</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -324,7 +324,7 @@
 			<dependency>
 				<groupId>io.mockk</groupId>
 				<artifactId>mockk-jvm</artifactId>
-				<version>1.13.7</version>
+				<version>1.14.5</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -426,7 +426,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.3.2</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -439,19 +439,19 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.13.0</version>
+					<version>3.14.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.5</version>
+					<version>3.5.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.4.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.5.3</version>
+					<version>3.6.0</version>
 					<configuration>
 						<shadeSourcesContent>true</shadeSourcesContent>
 						<dependencyReducedPomLocation>
@@ -465,7 +465,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.3</version>
+					<version>3.8.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jetbrains.dokka</groupId>
@@ -486,28 +486,28 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>3.2.4</version>
+					<version>3.2.7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.1</version>
+					<version>3.21.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.1.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.1.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.4.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
 					<artifactId>git-commit-id-maven-plugin</artifactId>
-					<version>8.0.2</version>
+					<version>9.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
@@ -526,7 +526,7 @@
 					-->
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.4.1</version>
 					<configuration>
 						<executable>${java.home}/bin/java</executable>
 						<classpathScope>test</classpathScope>
@@ -548,7 +548,7 @@
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.13</version>
+					<version>1.7.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
