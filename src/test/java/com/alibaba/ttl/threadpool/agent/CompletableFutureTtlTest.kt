@@ -486,33 +486,44 @@ class TtlCompletionTransformletRequiresForkJoinTransformletTest : AnnotationSpec
 
     @Suppress("UNCHECKED_CAST")
     private fun callPremainAndGetTransformletList(agentArgs: String): List<JavassistTransformlet> {
-        // Reset Logger's impl type so premain can set it again
         val loggerImplTypeField = com.alibaba.ttl.threadpool.agent.internal.logging.Logger::class.java
             .getDeclaredField("loggerImplType")
         loggerImplTypeField.isAccessible = true
-        loggerImplTypeField.setInt(null, -1)
+        val originalLoggerImplType = loggerImplTypeField.getInt(null)
 
-        // Reset ttlAgentLoaded so premain doesn't short-circuit
         val loadedField = TtlAgent::class.java.getDeclaredField("ttlAgentLoaded")
         loadedField.isAccessible = true
-        loadedField.setBoolean(null, false)
+        val originalLoaded = loadedField.getBoolean(null)
 
-        var capturedTransformer: java.lang.instrument.ClassFileTransformer? = null
-        val mockInst = java.lang.reflect.Proxy.newProxyInstance(
-            Instrumentation::class.java.classLoader,
-            arrayOf(Instrumentation::class.java)
-        ) { _, method, args ->
-            if (method.name == "addTransformer") {
-                capturedTransformer = args[0] as java.lang.instrument.ClassFileTransformer
-            }
-            null
-        } as Instrumentation
+        val kvsField = TtlAgent::class.java.getDeclaredField("kvs")
+        kvsField.isAccessible = true
+        val originalKvs = kvsField.get(null)
 
-        TtlAgent.premain(agentArgs, mockInst)
+        try {
+            loggerImplTypeField.setInt(null, -1)
+            loadedField.setBoolean(null, false)
 
-        val transformer = capturedTransformer!!
-        val field = TtlTransformer::class.java.getDeclaredField("transformletList")
-        field.isAccessible = true
-        return field.get(transformer) as List<JavassistTransformlet>
+            var capturedTransformer: java.lang.instrument.ClassFileTransformer? = null
+            val mockInst = java.lang.reflect.Proxy.newProxyInstance(
+                Instrumentation::class.java.classLoader,
+                arrayOf(Instrumentation::class.java)
+            ) { _, method, args ->
+                if (method.name == "addTransformer") {
+                    capturedTransformer = args[0] as java.lang.instrument.ClassFileTransformer
+                }
+                null
+            } as Instrumentation
+
+            TtlAgent.premain(agentArgs, mockInst)
+
+            val transformer = capturedTransformer!!
+            val field = TtlTransformer::class.java.getDeclaredField("transformletList")
+            field.isAccessible = true
+            return field.get(transformer) as List<JavassistTransformlet>
+        } finally {
+            loggerImplTypeField.setInt(null, originalLoggerImplType)
+            loadedField.setBoolean(null, originalLoaded)
+            kvsField.set(null, originalKvs)
+        }
     }
 }
