@@ -9,6 +9,7 @@ import javassist.*;
 
 import java.io.IOException;
 
+import static com.alibaba.ttl.threadpool.agent.TtlAgent.isEnableCompletionTransformlet;
 import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.*;
 
 /**
@@ -21,6 +22,8 @@ import static com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.
  * @since 2.5.1
  */
 public class TtlForkJoinTransformlet implements JavassistTransformlet {
+    public static final String capturedFieldName = "captured$field$added$by$ttl";
+
     private static final Logger logger = Logger.getLogger(TtlForkJoinTransformlet.class);
 
     private static final String FORK_JOIN_TASK_CLASS_NAME = "java.util.concurrent.ForkJoinTask";
@@ -45,23 +48,44 @@ public class TtlForkJoinTransformlet implements JavassistTransformlet {
     }
 
     /**
+     * Declares a {@link #capturedFieldName} field on {@link java.util.concurrent.ForkJoinTask}.
+     * <p>
+     * Single source of truth for the field's type and modifiers: besides the real field added here,
+     * {@link TtlCompletionTransformlet} declares it on {@code ForkJoinTask} in its own
+     * {@link ClassPool} so that the code it injects into the {@code Completion} subclasses can be
+     * compiled against it.
+     *
+     * @see TtlCompletionTransformlet
+     */
+    static CtField makeCapturedField(@NonNull final CtClass forkJoinTask) throws CannotCompileException {
+        return CtField.make("protected final Object " + capturedFieldName + ";", forkJoinTask);
+    }
+
+    /**
      * @see Utils#doCaptureWhenNotTtlEnhanced(java.lang.Object)
      */
     private void updateForkJoinTaskClass(@NonNull final CtClass clazz) throws CannotCompileException, NotFoundException {
         final String className = clazz.getName();
 
         // add new field
-        final String capturedFieldName = "captured$field$added$by$ttl";
-        final CtField capturedField = CtField.make("private final Object " + capturedFieldName + ";", clazz);
+        final CtField capturedField = makeCapturedField(clazz);
         clazz.addField(capturedField, "com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.Utils.doCaptureWhenNotTtlEnhanced(this);");
         logger.info("add new field " + capturedFieldName + " to class " + className);
 
         final CtMethod doExecMethod = clazz.getDeclaredMethod("doExec", new CtClass[0]);
         final String doExec_renamed_method_name = renamedMethodNameByTtl(doExecMethod);
 
+        // Prevents double replay on classes instrumented by TtlCompletionTransformlet
+        final String completionGuard = isEnableCompletionTransformlet()
+                ? "if (this instanceof " + TtlCompletionTransformlet.Enhanced.class.getName() + ") {\n" +
+                  "    return " + doExec_renamed_method_name + "($$);\n" +
+                  "}\n"
+                : "";
+
         final String beforeCode = "if (this instanceof " + TtlEnhanced.class.getName() + ") {\n" + // if the class is already TTL enhanced(eg: com.alibaba.ttl.TtlRecursiveTask)
                 "    return " + doExec_renamed_method_name + "($$);\n" +                           // return directly/do nothing
                 "}\n" +
+                completionGuard +
                 "Object backup = com.alibaba.ttl.TransmittableThreadLocal.Transmitter.replay(" + capturedFieldName + ");";
 
         final String finallyCode = "com.alibaba.ttl.TransmittableThreadLocal.Transmitter.restore(backup);";

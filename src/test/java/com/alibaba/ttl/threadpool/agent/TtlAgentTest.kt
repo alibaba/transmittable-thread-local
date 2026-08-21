@@ -33,4 +33,5 @@ class TtlAgentTest : AnnotationSpec() {
         splitCommaColonStringToKV("     k1     :v1  , ttl.agent.logger    :STDOUT   ,k3") shouldBe
                 mapOf("k1" to "v1", "ttl.agent.logger" to "STDOUT", "k3" to "")
     }
+
 }

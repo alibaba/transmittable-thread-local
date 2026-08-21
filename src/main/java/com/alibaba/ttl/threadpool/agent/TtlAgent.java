@@ -2,6 +2,7 @@ package com.alibaba.ttl.threadpool.agent;
 
 import com.alibaba.ttl.threadpool.agent.internal.logging.Logger;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.JavassistTransformlet;
+import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlCompletionTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlExecutorTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlForkJoinTransformlet;
 import com.alibaba.ttl.threadpool.agent.internal.transformlet.impl.TtlPriorityBlockingQueueTransformlet;
@@ -139,7 +140,11 @@ public final class TtlAgent {
             transformletList.add(new TtlExecutorTransformlet(disableInheritableForThreadPool));
             transformletList.add(new TtlPriorityBlockingQueueTransformlet());
 
-            transformletList.add(new TtlForkJoinTransformlet(disableInheritableForThreadPool));
+            final TtlForkJoinTransformlet forkJoinTransformlet = new TtlForkJoinTransformlet(disableInheritableForThreadPool);
+            transformletList.add(forkJoinTransformlet);
+
+            // This transformlet must be added with forkJoinTransformlet!
+            if (isEnableCompletionTransformlet()) transformletList.add(new TtlCompletionTransformlet());
 
             if (isEnableTimerTask()) transformletList.add(new TtlTimerTaskTransformlet());
 
@@ -176,6 +181,8 @@ public final class TtlAgent {
 
     private static final String TTL_AGENT_ENABLE_TIMER_TASK_KEY = "ttl.agent.enable.timer.task";
 
+    private static final String TTL_AGENT_ENABLE_COMPLETION_TRANSFORMLET_KEY = "ttl.agent.enable.completion.transformlet";
+
     private static final String TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL = "ttl.agent.disable.inheritable.for.thread.pool";
 
     /**
@@ -191,6 +198,17 @@ public final class TtlAgent {
      */
     public static boolean isDisableInheritableForThreadPool() {
         return isBooleanOptionSet(kvs, TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL, false);
+    }
+
+    /**
+     * Whether {@link java.util.concurrent.CompletableFuture} completion stage context propagation
+     * is enhanced by ttl agent, check {@link #isTtlAgentLoaded()} first.
+     *
+     * @see TtlCompletionTransformlet
+     * @since 2.14.5
+     */
+    public static boolean isEnableCompletionTransformlet() {
+        return isBooleanOptionSet(kvs, TTL_AGENT_ENABLE_COMPLETION_TRANSFORMLET_KEY, false);
     }
 
     /**
